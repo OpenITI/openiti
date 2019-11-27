@@ -3,6 +3,7 @@ import re
 import math
 import random
 import urllib.request as url
+import os
 
 splitter = "#META#Header#End#"
 ar_ch = "[ذ١٢٣٤٥٦٧٨٩٠ّـضصثقفغعهخحجدًٌَُلإإشسيبلاتنمكطٍِلأأـئءؤرلاىةوزظْلآآ]"
@@ -22,8 +23,8 @@ def roundup(x, par):
     return new_x
 
 
-def generate_ids_through_permutations(char_string_for_ids, id_len_char,  limit):
-    list_char = list(char_string_for_ids)*id_len_char
+def generate_ids_through_permutations(char_string_for_ids, id_len_char, limit):
+    list_char = list(char_string_for_ids) * id_len_char
 
     dic = {}
     iterations = 0
@@ -43,11 +44,11 @@ def generate_ids_through_permutations(char_string_for_ids, id_len_char,  limit):
     with open(file_name, 'w', encoding='utf8') as outfile:
         outfile.write(ids)
 
-    print("="*80)
+    print("=" * 80)
     print("Generating TXT file with unique IDs, based on:")
     print("\tPermuations (L=%d) of: %s" % (id_len_char, char_string_for_ids))
     print("\tTotal number of IDs: %s" % '{:,}'.format(len(dic)))
-    print("="*80)
+    print("=" * 80)
 
 
 # Count the length of a text in Arabic characters
@@ -71,3 +72,7 @@ def ar_ch_len(file):
             print("The file is missing the splitter!")
             print(file)
             return 0
+
+
+def absolute_path(path):
+    return os.path.abspath(path)
