@@ -33,7 +33,7 @@ def reformatting(path_full, target_folder):
 
             data = re.sub(" +", " ", data)
 
-            data = hlp.ar
+            data = hlp.ara.normalize_ara_extra_light(data)
             data = re.sub("Page\w+|[#\|\-\%\d]", "", data)
 
             with open(target_path, "w", encoding="utf8") as ft:
@@ -41,10 +41,11 @@ def reformatting(path_full, target_folder):
 
             count = 1
 
-    return (count)
+    return count
 
 
 def load_meta_data():
+    # TODO: interactive path to metedata file
     meta_file = "../Annotation/OpenITI_metadata_light.csv"
     meta = {}
     with open(meta_file, "r", encoding="utf8") as f1:

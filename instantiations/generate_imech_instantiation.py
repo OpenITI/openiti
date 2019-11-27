@@ -1,6 +1,6 @@
 import re, os
 import zfunc
-import helper.funcs as hlp
+import helper as hlp
 
 
 def mechanical_chunking(path_full, target_folder):
