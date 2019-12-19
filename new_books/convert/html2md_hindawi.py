@@ -19,20 +19,20 @@ Examples (doctests):
 
     Headings: h1 (from superclass html2md.MarkdownConverter)
 
-    >>> import hindawi_html2md
+    >>> import html2md_hindawi
     >>> h = '<h1>abc</h1>'
-    >>> hindawi_html2md.markdownify(h)
+    >>> html2md_hindawi.markdownify(h)
     '\\n\\n### | abc\\n\\n'
 
     NB: heading style is OpenITI mARkdown style by default,
         but can be set to other styles as well:
 
     >>> h = '<h1>abc</h1>'
-    >>> hindawi_html2md.markdownify(h, md_style=UNDERLINED)
+    >>> html2md_hindawi.markdownify(h, md_style=UNDERLINED)
     '\\n\\nabc\\n===\\n\\n'
 
     >>> h = '<h1>abc</h1>'
-    >>> hindawi_html2md.markdownify(h, md_style=ATX)
+    >>> html2md_hindawi.markdownify(h, md_style=ATX)
     '\\n\\n# abc\\n\\n'
 
     Headings: <h4>
@@ -41,11 +41,11 @@ Examples (doctests):
         The section level must be derived from the id of the parent div. 
 
     >>> h = '<div class="section" id="sect2_4"><h4>abc</h4></div>'
-    >>> hindawi_html2md.markdownify(h)
+    >>> html2md_hindawi.markdownify(h)
     '\\n\\n### ||| abc\\n\\n'
 
     >>> h = '<div class="section" id="sect5_2"><h4>abc</h4></div>'
-    >>> hindawi_html2md.markdownify(h)
+    >>> html2md_hindawi.markdownify(h)
     '\\n\\n### |||||| abc\\n\\n'
 
 
@@ -58,7 +58,7 @@ Examples (doctests):
         <div>hemistich2</div>\
       </div>\
     </div>'
-    >>> hindawi_html2md.markdownify(h)
+    >>> html2md_hindawi.markdownify(h)
     '\\n# hemistich1 %~% hemistich2\\n'
     
     Poetry div, multiple line:
@@ -76,7 +76,7 @@ Examples (doctests):
       </div>\
     </div>\
     def'
-    >>> hindawi_html2md.markdownify(h)
+    >>> html2md_hindawi.markdownify(h)
     ' abc\\n# hemistich1 %~% hemistich2\\n# hemistich3 %~% hemistich4\\ndef'
     
     Section div without heading:
@@ -84,7 +84,7 @@ Examples (doctests):
     >>> h = 'abc\
              <div class="section" id="sect2_9">def</div>\
              ghi'
-    >>> hindawi_html2md.markdownify(h)
+    >>> html2md_hindawi.markdownify(h)
     'abc\\n\\n### |||\\ndef\\n\\nghi'
 
     Section div with heading (handled by h4):
@@ -95,13 +95,13 @@ Examples (doctests):
                <p>def</p>\
              </div>\
              ghi'
-    >>> hindawi_html2md.markdownify(h)
+    >>> html2md_hindawi.markdownify(h)
     'abc\\n\\n### ||| title\\n\\n# def\\n\\nghi'
 
     Footnote divs:
     
     >>> h = '<div class="footnote"><sup>1 </sup>footnotetext</div>'
-    >>> hindawi_html2md.markdownify(h)
+    >>> html2md_hindawi.markdownify(h)
     '\\n\\nFOOTNOTE1 footnotetext\\n\\n'
 
     NB: FOOTNOTE is a tag that will be used to extract all footnotes
@@ -110,7 +110,7 @@ Examples (doctests):
     Subtitle divs:
 
     >>> h = '<h1>Title text</h1><div class="subtitle">Subtitle text</div>'
-    >>> hindawi_html2md.markdownify(h)
+    >>> html2md_hindawi.markdownify(h)
     '\\n\\n### | Title text Subtitle text\\n\\n'
 
     Divs without class or with an unsupported class are simply stripped:
@@ -118,78 +118,78 @@ Examples (doctests):
     >>> h = 'abc\
              <div>def</div>\
              ghi'
-    >>> hindawi_html2md.markdownify(h)
+    >>> html2md_hindawi.markdownify(h)
     'abc def ghi'
         
     >>> h = 'abc\
              <div class="unknown_div_class">def</div>\
              ghi'
-    >>> hindawi_html2md.markdownify(h)
+    >>> html2md_hindawi.markdownify(h)
     'abc def ghi'
 
     Spans with class "quran":
 
     >>> h = 'abc <span class="quran">def</span> ghi'
-    >>> hindawi_html2md.markdownify(h)
+    >>> html2md_hindawi.markdownify(h)
     'abc @QUR@ def\\nghi'
 
 
     Spans without class or with an unsupported class are stripped:
     
     >>> h = 'abc <span>def</span> ghi'
-    >>> hindawi_html2md.markdownify(h)
+    >>> html2md_hindawi.markdownify(h)
     'abc def ghi'
     
     >>> h = 'abc <span class="unknown_span_class">def</span> ghi'
-    >>> hindawi_html2md.markdownify(h)
+    >>> html2md_hindawi.markdownify(h)
     'abc def ghi'
 
 
     Links: 
 
     >>> h = '<a href="a/b/c">abc</a>'
-    >>> hindawi_html2md.markdownify(h)
+    >>> html2md_hindawi.markdownify(h)
     '[abc](a/b/c)'
 
     
     Unordered lists: 
 
     >>> h = '<ul><li>item1</li><li>item2</li></ul>'
-    >>> hindawi_html2md.markdownify(h)
+    >>> html2md_hindawi.markdownify(h)
     '\\n* item1\\n* item2\\n\\n'
     
     Ordered lists:
 
     >>> h = '<ol><li>item1</li><li>item2</li></ol>'
-    >>> hindawi_html2md.markdownify(h)
+    >>> html2md_hindawi.markdownify(h)
     '\\n1. item1\\n2. item2\\n\\n'
 
     Nested lists:
     
     >>> h = '<ol><li>item1</li><li>item2:<ul><li>item3</li><li>item4</li></ul></li></ol>'
-    >>> hindawi_html2md.markdownify(h)
+    >>> html2md_hindawi.markdownify(h)
     '\\n1. item1\\n2. item2:\\n\\n\\t* item3\\n\\t* item4\\n\\t\\n\\n'
 
 
     Italics (<i> and <em> tags):
 
     >>> h = 'abc <em>def</em> ghi'
-    >>> hindawi_html2md.markdownify(h)
+    >>> html2md_hindawi.markdownify(h)
     'abc *def* ghi'
 
     >>> h = 'abc <i>def</i> ghi'
-    >>> hindawi_html2md.markdownify(h)
+    >>> html2md_hindawi.markdownify(h)
     'abc *def* ghi'
 
 
     Bold (<b> and <strong> tags):
 
     >>> h = 'abc <b>def</b> ghi'
-    >>> hindawi_html2md.markdownify(h)
+    >>> html2md_hindawi.markdownify(h)
     'abc **def** ghi'
 
     >>> h = 'abc <strong>def</strong> ghi'
-    >>> hindawi_html2md.markdownify(h)
+    >>> html2md_hindawi.markdownify(h)
     'abc **def** ghi'
 
 
@@ -204,7 +204,7 @@ Examples (doctests):
         <td>td1</td><td>td2</td>\
       </tr>\
     </table>'
-    >>> hindawi_html2md.markdownify(h)
+    >>> html2md_hindawi.markdownify(h)
     '\\n\\n|th1aaa|th2   \\n|-------------\\n|td1   |td2   \\n\\n'
 
 """
@@ -263,14 +263,14 @@ class HindawiConverter(html2md.MarkdownConverter):
         and footnootes. 
 
         Example:
-            >>> import hindawi_html2md
+            >>> import html2md_hindawi
             >>> h = '<a href="a/b/c">abc</a>'
-            >>> hindawi_html2md.markdownify(h)
+            >>> html2md_hindawi.markdownify(h)
             '[abc](a/b/c)'
 
-            >>> import hindawi_html2md
+            >>> import html2md_hindawi
             >>> h = 'abc <a href="ftn1">1</a>'
-            >>> hindawi_html2md.markdownify(h)
+            >>> html2md_hindawi.markdownify(h)
             'abc [1]'
         """
         href = el.get('href')
@@ -290,20 +290,20 @@ class HindawiConverter(html2md.MarkdownConverter):
         
             # no div class: tags are stripped off
             
-            >>> import hindawi_html2md
+            >>> import html2md_hindawi
             >>> h = 'abc\
                      <div>def</div>\
                      ghi'
-            >>> hindawi_html2md.markdownify(h)
+            >>> html2md_hindawi.markdownify(h)
             'abc def ghi'
             
             # unknown div class: tags are stripped off
             
-            >>> import hindawi_html2md
+            >>> import html2md_hindawi
             >>> h = 'abc\
                      <div class="unknown_div_class">def</div>\
                      ghi'
-            >>> hindawi_html2md.markdownify(h)
+            >>> html2md_hindawi.markdownify(h)
             'abc def ghi'
             
             # poetry single-line:
@@ -315,7 +315,7 @@ class HindawiConverter(html2md.MarkdownConverter):
                 <div>hemistich2</div>\
               </div>\
             </div>'
-            >>> hindawi_html2md.markdownify(h)
+            >>> html2md_hindawi.markdownify(h)
             '\\n# hemistich1 %~% hemistich2\\n'
             
             # poetry multiple line:
@@ -333,7 +333,7 @@ class HindawiConverter(html2md.MarkdownConverter):
               </div>\
             </div>\
             def'
-            >>> hindawi_html2md.markdownify(h)
+            >>> html2md_hindawi.markdownify(h)
             ' abc\\n# hemistich1 %~% hemistich2\\n# hemistich3 %~% hemistich4\\ndef'
             
             # section without heading:
@@ -341,7 +341,7 @@ class HindawiConverter(html2md.MarkdownConverter):
             >>> h = 'abc\
                      <div class="section" id="sect2_9">def</div>\
                      ghi'
-            >>> hindawi_html2md.markdownify(h)
+            >>> html2md_hindawi.markdownify(h)
             'abc\\n\\n### |||\\ndef\\n\\nghi'
 
             # section with heading (handled by h4):
@@ -352,31 +352,31 @@ class HindawiConverter(html2md.MarkdownConverter):
                        <p>def</p>\
                      </div>\
                      ghi'
-            >>> hindawi_html2md.markdownify(h)
+            >>> html2md_hindawi.markdownify(h)
             'abc\\n\\n### ||| title\\n\\n# def\\n\\nghi'
 
             # footnote:
             
             >>> h = '<div class="footnote"><sup>1 </sup>footnotetext</div>'
-            >>> hindawi_html2md.markdownify(h)
+            >>> html2md_hindawi.markdownify(h)
             '\\n\\nFOOTNOTE1 footnotetext\\n\\n'
 
             Paragraph block (similar to <p>):
 
             >>> h = '<div class="paragraph-block">abc def ghi</div>'
-            >>> hindawi_html2md.markdownify(h)
+            >>> html2md_hindawi.markdownify(h)
             '\\n\\n# abc def ghi\\n\\n'
 
             >>> h = '<div class="paragraph-block"><p>abc def ghi</p></div>'
-            >>> hindawi_html2md.markdownify(h)
+            >>> html2md_hindawi.markdownify(h)
             '\\n\\n# abc def ghi\\n\\n'
 
             >>> h = '<div class="paragraph-block"></div>'
-            >>> hindawi_html2md.markdownify(h)
+            >>> html2md_hindawi.markdownify(h)
             ''
 
             >>> h = '<div class="paragraph-block"><div class="paragraph-block">abc</div></div>'
-            >>> hindawi_html2md.markdownify(h)
+            >>> html2md_hindawi.markdownify(h)
             '\\n\\n# abc\\n\\n'
 
         """
@@ -416,17 +416,17 @@ class HindawiConverter(html2md.MarkdownConverter):
         The section level must be derived from the id of the parent div.
         
         Example:
-            >>> import hindawi_html2md
+            >>> import html2md_hindawi
             >>> h = '<h1>abc</h1>'
-            >>> hindawi_html2md.markdownify(h)
+            >>> html2md_hindawi.markdownify(h)
             '\\n\\n### | abc\\n\\n'
 
             >>> h = '<h3>abc</h3>'
-            >>> hindawi_html2md.markdownify(h)
+            >>> html2md_hindawi.markdownify(h)
             '\\n\\n### ||| abc\\n\\n'
 
             >>> h = '<div class="section" id="sect5_2"><h4>abc</h4></div>'
-            >>> hindawi_html2md.markdownify(h)
+            >>> html2md_hindawi.markdownify(h)
             '\\n\\n### |||||| abc\\n\\n'
         """
 
@@ -444,13 +444,13 @@ class HindawiConverter(html2md.MarkdownConverter):
         NB: the ### | level in Hindawi is 0.
 
         Example:
-            >>> import hindawi_html2md
+            >>> import html2md_hindawi
             >>> h = '<div class="section" id="sect2_4"><h4>abc</h4></div>'
-            >>> hindawi_html2md.markdownify(h)
+            >>> html2md_hindawi.markdownify(h)
             '\\n\\n### ||| abc\\n\\n'
 
             >>> h = '<div class="section" id="sect5_2"><h4>abc</h4></div>'
-            >>> hindawi_html2md.markdownify(h)
+            >>> html2md_hindawi.markdownify(h)
             '\\n\\n### |||||| abc\\n\\n'
         """
         
@@ -472,17 +472,17 @@ class HindawiConverter(html2md.MarkdownConverter):
         (key: span class (str); value: formatting string)
 
         Example:
-            >>> import hindawi_html2md
+            >>> import html2md_hindawi
             >>> h = 'abc <span>def</span> ghi'
-            >>> hindawi_html2md.markdownify(h)
+            >>> html2md_hindawi.markdownify(h)
             'abc def ghi'
             
             >>> h = 'abc <span class="unknown_span_class">def</span> ghi'
-            >>> hindawi_html2md.markdownify(h)
+            >>> html2md_hindawi.markdownify(h)
             'abc def ghi'
             
             >>> h = 'abc <span class="quran">def</span> ghi'
-            >>> hindawi_html2md.markdownify(h)
+            >>> html2md_hindawi.markdownify(h)
             'abc @QUR@ def\\nghi'
         """
         try:
@@ -523,7 +523,7 @@ if __name__ == "__main__":
 ##        text = re.sub(r" +", r" ", text)
 ##        return text
 ##
-##class hindawi_html2md(Html2md):
+##class html2md_hindawi(Html2md):
 ##    def post_process(self, text):
 ##        text = super().post_process(text)
 ##        # remove blank lines marked with "DELETE_PREVIOUS_BLANKLINES" tag
@@ -540,7 +540,7 @@ if __name__ == "__main__":
 ##test = """ab \ncd\n ef\n\n\n\ngh          ij\n\nDELETE_PREVIOUS_BLANKLINESklçççmn"""
 ##h1 = Html2md()
 ##
-##h2 = hindawi_html2md()
+##h2 = html2md_hindawi()
 ##print(h1.post_process(test))
 ##print("+"*40)
 ##print(h2.post_process(test))
