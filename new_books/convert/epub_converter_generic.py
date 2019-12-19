@@ -325,6 +325,9 @@ Write the filename (with extension) of the table of contents
 
 
 if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
+    
 ##    c = GenericEpubConverter()
 ##    c.make_dest_fp("a/b/c.epub")
 ##    print(c.dest_fp)
