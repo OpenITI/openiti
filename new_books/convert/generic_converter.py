@@ -37,6 +37,7 @@ class GenericConverter(object):
         self.header_splitter = "\n\n#META#Header#End#\n"
         self.endnote_splitter = "\n\n### |EDITOR|\nENDNOTES:\n\n"
         self.dest_folder = "converted"
+        self.extension = ".automARkdown"
 
         # settings for the chunking of the text:
 
@@ -131,8 +132,10 @@ class GenericConverter(object):
         """
 ##        print("""WRITE A make_dest_fp FUNCTION \
 ##THAT CREATES A FILEPATH FOR THE CONVERTED TEXT FILE.""")
-        source_fn = os.path.split(source_fp)[1]
-        source_fn = os.path.splitext(source_fn)[0]+".mARkdown"
+        source_folder, source_fn = os.path.split(source_fp)
+        source_fn = os.path.splitext(source_fn)[0]+self.extension
+        if self.dest_folder == "converted":
+            self.dest_folder = os.path.join(source_folder, "converted")
         self.dest_fp = os.path.join(self.dest_folder, source_fn)
         return self.dest_fp
 
@@ -393,7 +396,7 @@ if __name__ == "__main__":
     import doctest
     doctest.testmod()
 
-    input()
+    input("Press Enter to start converting")
 
     conv = GenericConverter()
     conv.convert_file("test/test.txt")
