@@ -442,6 +442,10 @@ class MarkdownConverter(object):
             >>> h = "<p>abc</p>"
             >>> html2md.markdownify(h, md_style=ATX)
             '\\n\\nabc\\n\\n'
+
+            >>> h = "<p></p>"
+            >>> html2md.markdownify(h, md_style=ATX)
+            ''
         """
         if self.options['md_style'] == OPENITI:
             return '\n\n# %s\n\n' % text if text else ''
