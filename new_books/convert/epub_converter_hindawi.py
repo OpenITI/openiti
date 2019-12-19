@@ -41,7 +41,7 @@ in GenericEpubConverter are overwritten by the latter)
 | convert_files_in_folder     | (inherited)             | (inherited)
 | convert file                | (inherited)             | (inherited)
 | make_dest_fp                | (inherited)             | (inherited)
-| get_metadata                | (inherited)             | (inherited)
+| get_metadata                | (inherited)             | get_metadata
 | get_data                    | get_data                | (inherited)
 | pre_process                 | (inherited)             | (inherited)
 | add_page_numbers            | (inherited)             | (inherited)
