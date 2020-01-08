@@ -11,8 +11,8 @@ to add methods, adapt the post-processing method etc.
 
 E.g.:
     def Class Hindawi_converter(html2md.MarkdownConverter):   
-        def post_process(self, text):
-            text = super().post_process(text)
+        def post_process_md(self, text):
+            text = super().post_process_md(text)
             # remove blank lines marked with "DELETE_PREVIOUS_BLANKLINES" tag
             text = re.sub(r"\n+DELETE_PREVIOUS_BLANKLINES", "", text)
             # replace placeholders for spaces in tables: 
@@ -135,8 +135,11 @@ Examples (doctests):
       </tr>\
     </table>'
     >>> html2md.markdownify(h)
-    '\\n\\n|th1aaa|th2   \\n|-------------\\n|td1   |td2   \\n\\n'
-
+    '\\n\\n| th1aaa | th2 |\\n| ------ | --- |\\n| td1    | td2 |\\n\\n'
+            
+    # i.e.,
+    # | th1aaa | th2 |
+    # | td1    | td2 |
 """
 
 from bs4 import BeautifulSoup, NavigableString
@@ -216,7 +219,7 @@ class MarkdownConverter(object):
 ##        # replace placeholders for spaces in tables: 
 ##        text = re.sub("ç", " ", text)
 ##        return text
-        return self.post_process(text)
+        return self.post_process_md(text)
 
     def process_tag(self, node, children_only=False):
         """Process each tag and its children.
@@ -247,14 +250,69 @@ class MarkdownConverter(object):
             return whitespace_re.sub(' ', text)
         return ""
 
-    def post_process(self, text):
+    def fill_out_columns(self, match):
+        """Find the longest cell in a column; add spaces to shorter columns."""
+
+        # split the table into a list of lists:
+        
+        table = match.group(1)
+        #print(table)
+        if "|--" in table:
+            header = True
+        else:
+            header = False
+        table = table.splitlines()
+        if header:
+            del table[1]  # remove horizontal lines separating header from body
+        table = [(row.split("|"))[1:] for row in table]  # remove empty string
+
+        # get length of longest cell per column:
+        
+        column_length = dict()
+        for row in table:
+            for i, cell in enumerate(row):
+                try:
+                    if len(cell) > column_length[i]:
+                        column_length[i] = len(cell)
+                except:
+                    column_length[i] = len(cell)
+
+        # fill out shorter cells:
+        
+        new_table = []
+        for row in table:
+            new_row = []
+            for i, cell in enumerate(row):
+                new_cell = cell + " "*(column_length[i]-len(cell))
+                new_cell = new_cell + (" " * len(re.findall("لا|لأ|لإ", new_cell)))
+                #combining = re.findall("[ؐ-ًؚ-ٰٟۖ-ۜ۟-۪ۤۧۨ-ۭ]", new_cell)
+                #new_cell = re.sub(" {%s}" % len(combining), "", new_cell)
+                new_row.append(new_cell)
+            new_table.append(new_row)
+
+        # re-build the table:
+        
+        new_table = [" | ".join(row).strip() for row in new_table]
+        if header:
+            lines = " | ".join(["-" * v for k,v in column_length.items()])
+            new_table = [new_table[0], lines.strip()]+new_table[1:]
+        new_table = "\n| ".join(new_table)
+        new_table = "\n\n| {}\n\n".format(new_table)
+        
+        #print("new_table: ")
+        #print(new_table)
+        return new_table
+        
+
+    def post_process_md(self, text):
         # remove leading and trailing spaces in lines:
         text = re.sub(r" *(\n+) *", r"\1", text)
         # remove unwanted additional spaces and lines:
         text = re.sub(r"\n{3,}", r"\n\n", text)
         text = re.sub(r" +", r" ", text)
-        # replace placeholders for spaces in tables: 
-        text = re.sub("ç", " ", text)
+        text = re.sub(r"\n\n([^#|])", r"\n\n# \1", text)
+        # fill out columns in tables:
+        text = re.sub("\n\n(\|.+?)\n\n", self.fill_out_columns, text, flags=re.DOTALL)
         return text
 
     def __getattr__(self, attr):
@@ -458,14 +516,13 @@ class MarkdownConverter(object):
 
         NB: conversion of the tables takes place on the tr level."""
         #print("CONVERTING TABLE")
-        self.max_len = 0            
         return '\n\n' + text + '\n\n'
 
     def convert_tr(self, el, text):
         """Convert table rows.
         
         NB: rows are processed before the table tag is.
-        TO DO: spaces and pipes not yet correct!
+        Spaces to fill out columns are added in post-processing!
 
         Examples:
             >>> import html2md
@@ -479,36 +536,42 @@ class MarkdownConverter(object):
               </tr>\
             </table>'
             >>> html2md.markdownify(h)
-            '\\n\\n|th1aaa|th2   \\n|-------------\\n|td1   |td2   \\n\\n'
+            '\\n\\n| th1aaa | th2 |\\n| ------ | --- |\\n| td1    | td2 |\\n\\n'
+            
+            # i.e.,
+            # | th1aaa | th2 |
+            # | td1    | td2 |
         """
-        def wrap_cell_text(cell_text):
-            while len(cell_text) < self.max_len:
-                cell_text += "ç" # placeholder; will be replaced by spaces later
-            return cell_text
-
-        try:
-            self.max_len
-        except:
-            self.max_len = 0
-        if self.max_len == 0:
-            max_len = 0
-            for desc in el.find_all():
-                if len(desc.text) > max_len:
-                    max_len = len(desc.text)
-            if max_len>30:
-                max_len = 30
-            self.max_len = max_len
+##        def wrap_cell_text(cell_text):
+##            while len(cell_text) < self.max_len:
+##                cell_text += "ç" # placeholder; will be replaced by spaces later
+##            return cell_text
+##
+##        try:
+##            self.max_len
+##        except:
+##            self.max_len = 0
+##        if self.max_len == 0:
+##            max_len = 0
+##            for desc in el.find_all():
+##                if len(desc.text) > max_len:
+##                    max_len = len(desc.text)
+##            if max_len>30:
+##                max_len = 30
+##            self.max_len = max_len
                 
         t = []
-        if el.find('th'):
+        if el.find('th'): # headers: 
             for th in el.find_all('th'):
-                t.append(wrap_cell_text(th.text))
+                #t.append(wrap_cell_text(th.text))
+                t.append(th.text)
             t = "|".join(t)
-            return '|{}\n|{}\n'.format(t, self.create_underline_line(t, '-'))
+            return '|{}|\n|{}|\n'.format(t, self.create_underline_line(t, '-'))
         else:
             for td in el.find_all('td'):
-                t.append(wrap_cell_text(td.text))
-            return '|{}\n'.format("|".join(t))      
+                #t.append(wrap_cell_text(td.text))
+                t.append(td.text)
+            return '|{}|\n'.format("|".join(t))      
 
     convert_ul = convert_list
         

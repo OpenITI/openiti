@@ -129,10 +129,13 @@ Examples (doctests):
 
     Spans with class "quran":
 
-    >>> h = 'abc <span class="quran">def</span> ghi'
+    >>> h = 'abc <span class="quran">def ghi</span> jkl'
     >>> html2md_hindawi.markdownify(h)
-    'abc @QUR@ def\\nghi'
+    'abc @QUR02 def ghi jkl'
 
+    # the latter is a result of post-processing;
+    # the function itself will produce: 
+    # 'abc @QUR@ def ghi\\njkl'
 
     Spans without class or with an unsupported class are stripped:
     
@@ -205,7 +208,7 @@ Examples (doctests):
       </tr>\
     </table>'
     >>> html2md_hindawi.markdownify(h)
-    '\\n\\n|th1aaa|th2   \\n|-------------\\n|td1   |td2   \\n\\n'
+    '\\n\\n| th1aaa | th2 |\\n| ------ | --- |\\n| td1    | td2 |\\n\\n'
 
 """
 import re
@@ -223,11 +226,27 @@ class HindawiConverter(html2md.MarkdownConverter):
         self.class_dict["subtitle"] = 'DELETE_PREVIOUS_BLANKLINES {text}\n\n'
         self.class_dict["footnote"] = '\n\nFOOTNOTE{text}\n\n'
 
-    def post_process(self, text):
-        """Appends to the MarkdownConverter.post_process() method."""
-        text = super().post_process(text)
+    def process_Quran(self, match):
+        """Reformat Quran quote matches to mARkdown named entity standard."""
+        
+        prec_char = match.group(0)[0]
+        if prec_char == "\n":
+            prec_char = "\n\n# "
+        foll_char = match.group(0)[-1]
+        quote = match.group(0)[7:-2]
+        quote_words = len(re.findall(" +|\n", quote)) + 1
+        #print(match.group(0))
+        #print(quote)
+        return "{}@QUR0{} {}{}".format(prec_char, quote_words, quote, foll_char)
+
+
+    def post_process_md(self, text):
+        """Appends to the MarkdownConverter.post_process_md() method."""
         # remove blank lines marked with "DELETE_PREVIOUS_BLANKLINES" tag
         text = re.sub(r"\n+DELETE_PREVIOUS_BLANKLINES", "", text)
+        text = re.sub(".@QUR@ .+?\n[^~]", self.process_Quran, text,
+                      flags=re.DOTALL)
+        text = super().post_process_md(text)
         return text
 
     def get_section_level(self, el):
@@ -258,7 +277,7 @@ class HindawiConverter(html2md.MarkdownConverter):
     def convert_a(self, el, text):
         """Converts html links.
 
-        Overwrites the MarkdownConverter.post_process() method.
+        Overwrites the MarkdownConverter.post_process_md() method.
         Introduces an exception for links between footnote markers
         and footnootes. 
 
@@ -481,9 +500,13 @@ class HindawiConverter(html2md.MarkdownConverter):
             >>> html2md_hindawi.markdownify(h)
             'abc def ghi'
             
-            >>> h = 'abc <span class="quran">def</span> ghi'
+            >>> h = 'abc <span class="quran">def  ghi</span> jkl'
             >>> html2md_hindawi.markdownify(h)
-            'abc @QUR@ def\\nghi'
+            'abc @QUR02 def ghi jkl'
+
+            # the latter is a result of post-processing;
+            # the function itself will produce: 
+            # 'abc @QUR@ def ghi\\njkl'
         """
         try:
             for c in el["class"]:

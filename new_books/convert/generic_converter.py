@@ -42,7 +42,7 @@ class GenericConverter(object):
         # settings for the chunking of the text:
 
         self.chunk_length = 300
-        self.milestone_tag = " Milestone300 "
+        self.milestone_tag = "Milestone300"
 
         # regexes describing Arabic characters and tokens:
 
@@ -331,7 +331,9 @@ class GenericConverter(object):
  * اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ\
  * ### صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ ### الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ'
         """
-        ms_text = ""  # the text with the milestones added
+        # start counting only after the first ### | tag
+        editorial, text = text.split("### | ", maxsplit=1)
+        ms_text = "### | "  # the text with the milestones added
         token_count = 0
         milestones = 0
         for token in self.ara_tok.finditer(text):
@@ -347,9 +349,11 @@ class GenericConverter(object):
                 pass  # do not increment the token count for non-Arabic tokens
             ms_text += token.group()
 
-        # add a spaces before and after the milestone_tag:
+        # add spaces before and after the milestone_tag:
+        ms_text = re.sub(" *({}) *".format(self.milestone_tag), r" \1 ", ms_text)
 
-        return re.sub(" *({}) *".format(self.milestone_tag), r" \1 ", ms_text)
+        return editorial + ms_text
+
 
     def post_process(self, text):
         """Carry out post-processing operations on the text.
