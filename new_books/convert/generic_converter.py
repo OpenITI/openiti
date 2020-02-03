@@ -50,6 +50,8 @@ class GenericConverter(object):
         ara_tok = "{}+|[^{}+".format(self.ara_char, self.ara_char[1:])
         self.ara_tok = re.compile(ara_tok)
 
+        self.VERBOSE = False
+
 ##        self.conversion_procedure(source_fp, dest_dir)
 
 
@@ -89,7 +91,8 @@ class GenericConverter(object):
         Returns:
             None
         """
-        print("converting", source_fp)
+        if self.VERBOSE:
+            print("converting", source_fp)
         dest_fp = self.make_dest_fp(source_fp)
         metadata = self.get_metadata(source_fp)
 
@@ -263,6 +266,17 @@ class GenericConverter(object):
 
         Returns:
             newtext (str): wrapped string
+
+        Examples:
+            >>> import generic_converter
+            >>> g = generic_converter.GenericConverter()
+            >>> text = "# This is a short paragraph\\n\\n\
+# This is a longer paragraph (longer than max_len)"
+            >>> g.reflow(text, max_len=40)
+            '# This is a short paragraph\\n\\n\
+# This is a longer paragraph (longer\\n\
+~~than max_len)'
+            
         """
         newtext = []
 
@@ -297,7 +311,7 @@ class GenericConverter(object):
         
         newtext = "".join(newtext)
 
-        # unwrap lines that are less than 10 characters long
+        # unwrap lines that are less than 10 characters long:
         
         newtext = re.sub(r"[\r\n]+~~(.{1,6}?[\r\n]+)", r" \1", newtext)
         return newtext
@@ -332,8 +346,12 @@ class GenericConverter(object):
  * ### صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ ### الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ'
         """
         # start counting only after the first ### | tag
-        editorial, text = text.split("### | ", maxsplit=1)
-        ms_text = "### | "  # the text with the milestones added
+        try:
+            editorial, text = text.split("### | ", maxsplit=1)
+            text = "### | " + text
+        except:
+            editorial = ""
+        ms_text = ""  # the text with the milestones added
         token_count = 0
         milestones = 0
         for token in self.ara_tok.finditer(text):
@@ -350,7 +368,8 @@ class GenericConverter(object):
             ms_text += token.group()
 
         # add spaces before and after the milestone_tag:
-        ms_text = re.sub(" *({}) *".format(self.milestone_tag), r" \1 ", ms_text)
+        ms_text = re.sub(" *({}) *".format(self.milestone_tag),
+                         r" \1 ", ms_text)
 
         return editorial + ms_text
 
@@ -368,7 +387,7 @@ class GenericConverter(object):
         """
 ##        print("""WRITE A post_process FUNCTION \
 ##THAT CARRIES OUT THE LAST POST-PROCESSING OPERATIONS ON THE TEXT""")
-        processed = text
+        processed = re.sub("[\n\r]{2,}(?![#\|])", "\n\n# ", text)
         return processed
 
     def compose(self, metadata, text, notes):
@@ -385,7 +404,7 @@ class GenericConverter(object):
         Returns:
             composite_text (str)
         """
-        composite_text = metadata+text+notes
+        composite_text = metadata + text + notes
         return composite_text
 
 
@@ -400,7 +419,7 @@ if __name__ == "__main__":
     import doctest
     doctest.testmod()
 
-    input("Press Enter to start converting")
+    #input("Press Enter to start converting")
 
     conv = GenericConverter()
     conv.convert_file("test/test.txt")

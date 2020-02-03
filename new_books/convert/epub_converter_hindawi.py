@@ -40,16 +40,16 @@ in GenericEpubConverter are overwritten by the latter)
 | __init__                   | __init__                 | __init__ 
 | convert_files_in_folder    | (inherited)              | (inherited)
 | convert file               | (inherited)              | (inherited)
-| make_dest_fp               | (inherited)              | (inherited)
-| get_metadata               | (inherited)              | get_metadata
+| make_dest_fp               | (inherited - generic!)   | (inherited - generic!)
+| get_metadata               | (inherited - generic!)   | get_metadata
 | get_data                   | get_data                 | (inherited)
 | pre_process                | (inherited)              | (inherited)
-| add_page_numbers           | (inherited)              | (inherited)
-| add_structural_annotations | (inherited)              | (inherited)
+| add_page_numbers           | (inherited - generic!)   | (inherited - generic!)
+| add_structural_annotations | (inherited - generic!)   | (inherited - generic!) 
 | remove_notes               | remove_notes             | (inherited)
 | reflow                     | (inherited)              | (inherited)
 | add_milestones             | (inherited)              | (inherited)
-| post_process               | (inherited)              | (inherited)
+| post_process               | (inherited - generic!)   | (inherited - generic!) 
 | compose                    | (inherited)              | (inherited)
 | save_file                  | (inherited)              | (inherited)
 |                            | convert_html2md          | convert_html2md
@@ -74,10 +74,12 @@ class HindawiEpubConverter(GenericEpubConverter):
         self.toc_fn = "nav.xhtml"
 
     def convert_html2md(self, html):
+        """Use custom html to mARKdown function for Hindawi epubs."""
         text = html2md_hindawi.markdownify(html)
         return text
 
     def get_metadata(self, source_fp):
+        """Custom method to get the metadata of the Hindawi epub file."""
         bookID = os.path.split(source_fp)[1]
         bookID = os.path.splitext(bookID)[0]
         meta_dic = self.metadata[bookID]
@@ -88,6 +90,7 @@ class HindawiEpubConverter(GenericEpubConverter):
 if __name__== "__main__":
     hc = HindawiEpubConverter(dest_folder="test/converted")
 
+    # identify the location of the yml file containing the metadata:
     meta_fp = r"test\hindawi_metadata_man.yml"
     hc.metadata = yml2json(meta_fp, container={})
     
@@ -95,7 +98,6 @@ if __name__== "__main__":
     hc.convert_file(fp)
     print("converted Hindawi epub", fp)
 
-    hc.convert_files_in_folder(r"D:\London\OpenITI\Hindawi\2_epub\ihwanSafa")
-    #hc.convert_files_in_folder("test/hindawi")
-    #print("converted all epub files in folder", "test/hindawi")
+    hc.convert_files_in_folder("test/hindawi")
+    print("converted all epub files in folder", "test/hindawi")
 

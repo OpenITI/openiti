@@ -4,6 +4,7 @@ Examples:
     Generic epub conversion:
     >>> from epub_converter_generic import GenericEpubConverter
     >>> gen_converter = GenericEpubConverter(dest_folder="test/converted")
+    >>> gen_converter.VERBOSE = False
     >>> folder = r"test"
     >>> fn = r"Houellebecq 2019 - serotonine.epub"
     >>> gen_converter.convert_file(os.path.join(folder, fn))
@@ -11,12 +12,14 @@ Examples:
 
     Sub-class to create a converter specific to epubs from the Hindawi library:
     >>> HindawiConverter = GenericEpubConverter("test/converted")
-    >>> import hindawi_html2md
-    >>> HindawiConverter.convert_html2md = hindawi_html2md.markdownify  # (1)
+    >>> HindawiConverter.VERBOSE = False
+    >>> import html2md_hindawi
+    >>> HindawiConverter.convert_html2md = html2md_hindawi.markdownify  # (1)
     >>> HindawiConverter.toc_fn = "nav.xhtml"  # (2)
     >>> folder = r"test"
     >>> fn = r"26362727.epub"
     >>> HindawiConverter.convert_file(os.path.join(folder, fn))
+    
     # (1) overwrite the convert_html2md function
     # (2) specify the filename of the table of contents in Hindawi epub files
 
@@ -47,16 +50,16 @@ in GenericEpubConverter are overwritten by the latter)
 | __init__                    | __init__
 | convert_files_in_folder     | (inherited)
 | convert file                | (inherited)
-| make_dest_fp                | (inherited)
-| get_metadata                | (inherited)
+| make_dest_fp                | (inherited - generic!)
+| get_metadata                | (inherited - generic!)
 | get_data                    | get_data
 | pre_process                 | (inherited)
-| add_page_numbers            | (inherited)
-| add_structural_annotations  | (inherited)
+| add_page_numbers            | (inherited - generic!)
+| add_structural_annotations  | (inherited - generic!)
 | remove_notes                | remove_notes
 | reflow                      | (inherited)
 | add_milestones              | (inherited)
-| post_process                | (inherited)
+| post_process                | (inherited - generic!)
 | compose                     | (inherited)
 | save_file                   | (inherited)
 |                             | inspect_epub
@@ -97,7 +100,7 @@ class GenericEpubConverter(GenericConverter):
             self.dest_folder = "converted"
         else:
             self.dest_folder = dest_folder
-        self.VERBOSE = False
+        self.VERBOSE = True
 
 
 ##    def make_dest_fp(self, source_fp):
@@ -108,12 +111,14 @@ class GenericEpubConverter(GenericConverter):
 
     def inspect_epub(self, src_fp):
         """Print the contents of the zip archive."""
-        print("-"*60)
-        print("Contents of  {}:".format(src_fp))
+        if self.VERBOSE:
+            print("-"*60)
+            print("Contents of  {}:".format(src_fp))
         if src_fp.endswith(".epub"):
             zp = zipfile.ZipFile(src_fp)
-            for info in zp.infolist():
-                print(info.filename)
+            if self.VERBOSE:
+                for info in zp.infolist():
+                    print(info.filename)
 
 
     def convert_html2md(self, html):
@@ -242,7 +247,10 @@ class GenericEpubConverter(GenericConverter):
             toc_input = """\
 Write the filename (with extension) of the table of contents
 (if there is no table of contents, simply press Enter): """
-            resp = input(toc_input)
+            if self.VERBOSE:
+                resp = input(toc_input)
+            else:
+                resp = ""
             #print(resp)
             if resp.endswith("ml"):
                 self.toc_fn = resp
@@ -277,8 +285,8 @@ Write the filename (with extension) of the table of contents
             zp = zipfile.ZipFile(src_fp)
             if self.VERBOSE:
                 fn = os.path.basename(src_fp)
-                msg = "Press Enter to convert %s to txt..." % fn
-                input(msg)
+##                msg = "Press Enter to convert %s to txt..." % fn
+##                input(msg)
 
             # make a list of the html files in the epub:
 
@@ -327,6 +335,7 @@ Write the filename (with extension) of the table of contents
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
+    print("Testing finished.")
     
 ##    c = GenericEpubConverter()
 ##    c.make_dest_fp("a/b/c.epub")
@@ -348,11 +357,11 @@ if __name__ == "__main__":
 ##
 ##    print("-"*60)
 
-    import hindawi_html2md
+    import html2md_hindawi
     HindawiConverter = GenericEpubConverter("test/converted")
-    HindawiConverter.convert_html2md = hindawi_html2md.markdownify
+    HindawiConverter.convert_html2md = html2md_hindawi.markdownify
     HindawiConverter.toc_fn = "nav.xhtml"
-    fp = r"D:\London\OpenITI\Hindawi\1_epub\26362727.epub"
+    fp = r"test\26362727.epub"
     HindawiConverter.convert_file(fp)
     print("converted Hindawi text")
 

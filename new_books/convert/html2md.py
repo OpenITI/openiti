@@ -310,7 +310,6 @@ class MarkdownConverter(object):
         # remove unwanted additional spaces and lines:
         text = re.sub(r"\n{3,}", r"\n\n", text)
         text = re.sub(r" +", r" ", text)
-        text = re.sub(r"\n\n([^#|])", r"\n\n# \1", text)
         # fill out columns in tables:
         text = re.sub("\n\n(\|.+?)\n\n", self.fill_out_columns, text, flags=re.DOTALL)
         return text
