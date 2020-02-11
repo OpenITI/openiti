@@ -1,9 +1,15 @@
-import helper.ara as ara
 import re
 import math
 import random
 import urllib.request as url
 import os
+
+
+if __name__ == '__main__':
+    from os import sys, path
+    root_folder = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
+    sys.path.append(root_folder)
+from openiti.helper import ara
 
 splitter = "#META#Header#End#"
 ar_ch = "[ذ١٢٣٤٥٦٧٨٩٠ّـضصثقفغعهخحجدًٌَُلإإشسيبلاتنمكطٍِلأأـئءؤرلاىةوزظْلآآ]"
@@ -51,27 +57,57 @@ def generate_ids_through_permutations(char_string_for_ids, id_len_char, limit):
     print("=" * 80)
 
 
-# Count the length of a text in Arabic characters
-def ar_ch_len(file):
-    print(file)
+def ar_ch_len(fp):
+    """Count the length of a text in Arabic characters, given its URL"""
 
-    with url.urlopen(file) as f1:
-        book = f1.read().decode('utf-8')
+    try:
+        with url.urlopen(fp) as f:
+            book = f.read().decode('utf-8')
+    except:
+        with open(fp, mode="r", encoding="utf-8") as f:
+            book = f.read()
 
         # splitter/header test
         if splitter in book:
-            # split the header and body of the text.
+            # split the header and body of the text:
             text = book.split(splitter)[1]
 
-            # count the number of Arabic letters or numbers
+            # remove Editorial sections:
+            text = re.sub("### \|EDITOR.+?### ", "### ", text,
+                          flags = re.DOTALL)
+
+            # count the number of Arabic letters or numbers:
             toks = re.findall(ar_ch, text)
             ar_ch_cnt = len([c for c in toks if c in ar_ch])
-            print(ar_ch_cnt)
+            print("{} Arabic character count: {}".format(fp, ar_ch_cnt))
             return ar_ch_cnt
         else:
-            print("The file is missing the splitter!")
-            print(file)
+            print("{} is missing the splitter!".format(fp))
             return 0
+
+
+def read_header(fp):
+    """Read only the OpenITI header of a file without opening the entire file.
+
+    Args:
+        fp (str): path to the text file
+
+    Returns:
+        header (list): A list of all metadata lines in the header
+    """
+    with open(fp, mode="r", encoding="utf-8") as file:
+        header = []
+        line = file.readline()
+        i=0
+        while i < 100:
+        #while "#META#Header#End" not in line and i < 100:
+            #if "#META#" in line or "#NewRec#" in line:
+            header.append(line)
+            if "#META#Header#End" in line:
+                return header
+            line = file.readline() # move to next line
+            i += 1
+    return header
 
 
 def absolute_path(path):
