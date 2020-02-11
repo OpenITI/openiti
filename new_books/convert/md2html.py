@@ -6,18 +6,19 @@ TO DO:
 """
 import re
 from bs4 import BeautifulSoup
+from openiti.helper.templates import HTML_HEADER, HTML_FOOTER
 
-HTML_HEADER = """<html>
-<head>
-<style>
-  .entry-title {
-      font-size: 20px;
-  }
-</style>
-</head>
-<body>"""
-
-HTML_FOOTER = "</body></html>"
+##HTML_HEADER = """<html>
+##<head>
+##<style>
+##  .entry-title {
+##      font-size: 20px;
+##  }
+##</style>
+##</head>
+##<body>"""
+##
+##HTML_FOOTER = "</body></html>"
 
 def header(text):
     return re.sub(".+?#META#HEADER#END", HTML_HEADER, text)
