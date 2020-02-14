@@ -142,7 +142,7 @@ Examples (doctests):
     # | td1    | td2 |
 """
 
-from bs4 import BeautifulSoup, NavigableString
+from bs4 import BeautifulSoup, NavigableString, Comment
 import re
 import six
 
@@ -231,7 +231,8 @@ class MarkdownConverter(object):
         for el in node.children:
             
             if isinstance(el, NavigableString):
-                text += self.process_text(six.text_type(el))
+                if not isinstance(el, Comment):  # remove html comments
+                    text += self.process_text(six.text_type(el))
             else:
                 text += self.process_tag(el)
 
