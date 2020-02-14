@@ -2,32 +2,19 @@
 
 Subclass the GenericConverter to make a converter for a new
 source of scraped books.
-
-TO DO:
-    import the deNoise function from the library instead of
-        defining it here in the module.
 """
 
 import os
 import re
 import textwrap
 
+if __name__ == '__main__':
+    from os import sys, path
+    root_folder = path.dirname(path.dirname(path.abspath(__file__)))
+    root_folder = path.dirname(path.dirname(root_folder))
+    sys.path.append(root_folder)
 
-def deNoise(text):
-    """Eliminate all diacritics from the text."""
-    noise = re.compile(""" َ  | # Fatha
-                             ً  | # Tanwin Fath
-                             ُ  | # Damma
-                             ٌ  | # Tanwin Damm
-                             ِ  | # Kasra
-                             ٍ  | # Tanwin Kasr
-                             ْ  | # Sukun
-                             ـ | # Tatwil/Kashida
-                             ّ # Tashdid
-                             """, re.VERBOSE)
-    text = re.sub(noise, "", text)
-    text = re.sub("ﭐ", "ا", text) # replace alif-wasla with simple alif
-    return text
+from openiti.helper.ara import deNoise
 
 class GenericConverter(object):
 
@@ -38,6 +25,10 @@ class GenericConverter(object):
         self.endnote_splitter = "\n\n### |EDITOR|\nENDNOTES:\n\n"
         self.dest_folder = "converted"
         self.extension = ".automARkdown"
+
+        # settings for line wrapping: max number of characters in a line
+
+        self.max_line_len = 72
 
         # settings for the chunking of the text:
 
@@ -253,7 +244,7 @@ class GenericConverter(object):
         return text_without_notes, notes
 
 
-    def reflow(self, text, max_len=72):
+    def reflow(self, text, max_len=None):
         """wrap long lines, i.e. break long lines down
         by inserting a new line character (and two tildes)
         so that no line is longer than max_len characters.
@@ -278,6 +269,8 @@ class GenericConverter(object):
 ~~than max_len)'
             
         """
+        if max_len:
+            self.max_line_len = max_len
         newtext = []
 
         # split the text, keeping the number of newline characters:
@@ -299,7 +292,8 @@ class GenericConverter(object):
                     sublines = line.split("\n")
                     new_line = []
                     for s in sublines:
-                        new_line.append("\n~~".join(textwrap.wrap(s, max_len)))
+                        s_wrap = textwrap.wrap(s, self.max_line_len)
+                        new_line.append("\n~~".join(s_wrap))
                     line = "\n".join(new_line)
 ##                if line != "" and "\n" not in line:
 ##                    if not line.startswith("# "):
