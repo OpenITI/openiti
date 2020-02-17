@@ -1,6 +1,6 @@
 """Functions to read and write yaml files.
 
-OpenITI metadata is stored in yaml files. 
+OpenITI metadata is stored in yaml files.
 """
 
 import re
@@ -8,7 +8,7 @@ import textwrap
 
 if __name__ == '__main__':
     from os import sys, path
-    root_folder = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
+    root_folder = path.dirname(path.dirname(path.abspath(__file__)))
     sys.path.append(root_folder)
 
 from openiti.helper.templates import author_yml_template, book_yml_template, \
@@ -28,10 +28,12 @@ def ymlToDic(yml_str):
         dic[d[1]] = d[2].strip()
     return dic
 
+
 def readYML(fp):
     """Read a yml file and convert it into a dictionary"""
     with open(fp, "r", encoding="utf8") as file:
         return ymlToDic(file.read())
+
 
 def dicToYML(dic):
     """Convert a dictionary into a yml string"""
