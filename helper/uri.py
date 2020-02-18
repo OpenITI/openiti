@@ -69,7 +69,7 @@ Examples:
     digits or non-ASCII characters(culprits: ['0', '2', '5', '5'])
     # >>> URI("0255Jahiz.Al-Hayawan")
     Exception: Book title Error: Book title (Al-Hayawan) should not contain
-    digits or non-ASCII characters(culprits: ['-'])
+    non-ASCII characters(culprits: ['-'])
     # >>> URI("0255Jahiz.Hayawan.Shāmila00123545-ara1")
     Exception: Version string Error: Version string (Shāmila00123545)
     should not contain non-ASCII characters(culprits: ['ā'])
@@ -195,6 +195,7 @@ from openiti.helper.funcs import ar_ch_len, read_header
 from openiti.helper.templates import author_yml_template, book_yml_template, \
                                      version_yml_template
 from openiti.helper import yml
+
 
 os.sep = "/"
 ISO_CODES = re.split("[\n\r\s]+",
@@ -333,7 +334,7 @@ class URI:
         digits or non-ASCII characters(culprits: ['0', '2', '5', '5'])
         # >>> URI("0255Jahiz.Al-Hayawan")
         Exception: Book title Error: Book title (Al-Hayawan) should not contain
-        digits or non-ASCII characters(culprits: ['-'])
+        non-ASCII characters(culprits: ['-'])
         # >>> URI("0255Jahiz.Hayawan.Shāmila00123545-ara1")
         Exception: Version string Error: Version string (Shāmila00123545)
         should not contain non-ASCII characters(culprits: ['ā'])
@@ -450,6 +451,7 @@ class URI:
     @title.setter
     def title(self, title):
         """Set the URI's title property, after checking its conformity."""
+        #self.__title = self.check_ASCII_letters(title, "Book title")
         self.__title = self.check_ASCII_letters(title, "Book title")
 
 
@@ -1497,7 +1499,7 @@ def check_yml_files(start_folder, exclude=[], execute=False):
                                 # create a new yml file:
                                 if execute:
                                     new_yml(yml_fp, yml_type, execute)
-                                    input("yml file created. Continue?")
+                                    print("yml file created.")
                                 else:
                                     print("create yml file {}?".format(yml_fp))
 
@@ -1513,7 +1515,16 @@ def check_yml_files(start_folder, exclude=[], execute=False):
                                 msg = "Yml file {} could not be read. Check manually!"
                                 print(msg.format(uri(yml_type)))
                                 erratic_ymls.append(yml_fp)
-                            if ymlD: 
+                            if ymlD == {}:
+                                print(yml_fp, "empty")
+                                missing_ymls.append(yml_fp)
+                                if execute:
+                                    new_yml(yml_fp, yml_type, execute)
+                                    print("yml file created.")
+                                else:
+                                    msg = "Replace empty yml file {}?"
+                                    print(msg.format(uri(yml_type)))
+                            else:
                                 key = uri_key.format(yml_type[:4].upper())
                                 if ymlD[key] != uri(yml_type[:-4]):
                                     print("URI in yml file wrong!",
@@ -1558,7 +1569,7 @@ def check_yml_files(start_folder, exclude=[], execute=False):
         print("Check manually:")
         print()
         for file in sorted(erratic_ymls):
-            print(file)
+            print("    ", file)
 
     if not execute and (missing_ymls!=[] or missing_char_count !=[]):
         print()
@@ -1576,7 +1587,7 @@ def check_yml_files(start_folder, exclude=[], execute=False):
         print("The following files could have problems with their URI:")
         print()
         for file in sorted(set(non_uri_files)):
-            print(file)
+            print("    ", file)
 
     return missing_ymls, missing_char_count, non_uri_files, erratic_ymls
 
@@ -1584,20 +1595,21 @@ def check_yml_files(start_folder, exclude=[], execute=False):
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
+    print("passed doctests")
 
     # tests: 
     
 
-##    URI.base_pth = r"D:\London\OpenITI\25Y_repos"
-##    exclude = (["OpenITI.github.io", "Annotation", "maintenance", "i.mech00",
-##                "i.mech01", "i.mech02", "i.mech03", "i.mech04", "i.mech05",
-##                "i.mech06", "i.mech07", "i.mech08", "i.mech09", "i.logic",
-##                "i.cex", "i.cex_Temp", "i.mech", "i.mech_Temp", ".git"])
-##    resp = check_yml_files(r"D:\London\OpenITI\25Y_repos",
-##                           exclude=exclude, execute=False)
-##    missing_ymls, missing_char_count, non_uri_files, erratic_ymls = resp
-##    #print(non_uri_files)
-##    input("continue?")
+    URI.base_pth = r"D:\London\OpenITI\25Y_repos"
+    exclude = (["OpenITI.github.io", "Annotation", "maintenance", "i.mech00",
+                "i.mech01", "i.mech02", "i.mech03", "i.mech04", "i.mech05",
+                "i.mech06", "i.mech07", "i.mech08", "i.mech09", "i.logic",
+                "i.cex", "i.cex_Temp", "i.mech", "i.mech_Temp", ".git"])
+    resp = check_yml_files(r"D:\London\OpenITI\25Y_repos",
+                           exclude=exclude, execute=False)
+    missing_ymls, missing_char_count, non_uri_files, erratic_ymls = resp
+    #print(non_uri_files)
+    input("continue?")
     
     base_pth = r"D:\London\OpenITI\python_library\openiti\test"
 
@@ -1624,12 +1636,12 @@ if __name__ == "__main__":
 ##               old_base_pth=base_pth, new_base_pth=base_pth,
 ##               execute=False)
 
-    # test change_uri function for version uri change:
-    old = "0001Allah.KitabMuqaddas.BibleCorpus002-per1"
-    new = "0001Allah.KitabMuqaddas.BibleCorpus2-per1"
-    change_uri(old, new,
-               old_base_pth=base_pth, new_base_pth=base_pth,
-               execute=False)
+##    # test change_uri function for version uri change:
+##    old = "0001Allah.KitabMuqaddas.BibleCorpus002-per1"
+##    new = "0001Allah.KitabMuqaddas.BibleCorpus2-per1"
+##    change_uri(old, new,
+##               old_base_pth=base_pth, new_base_pth=base_pth,
+##               execute=False)
 
     input("URI changed??")
 
