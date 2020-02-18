@@ -1120,18 +1120,6 @@ def initialize_new_text(origin_fp, target_base_pth, execute=False):
 
     add_character_count(char_count, tar_uri, execute)
 
-    # add readme and text_questionnaire files:
-
-    if "README.md" not in os.listdir(target_folder):
-        with open(os.path.join(target_folder, "README.md"),
-                  mode="w", encoding="utf-8") as file:
-            file.write(readme_template)
-
-    if "text_questionnaire.md" not in os.listdir(target_folder):
-        with open(os.path.join(target_folder, "text_questionnaire.md"),
-                  mode="w", encoding="utf-8") as file:
-            file.write(text_questionnaire_template)
-
     # Give the option to execute the changes:
 
     if execute:
@@ -1144,6 +1132,15 @@ def initialize_new_text(origin_fp, target_base_pth, execute=False):
         else:
             print("User aborted the execution of the changes.")
 
+def add_readme(target_folder):
+    with open(os.path.join(target_folder, "README.md"),
+              mode="w", encoding="utf-8") as file:
+        file.write(readme_template)
+
+def add_text_questionnaire(target_folder):
+    with open(os.path.join(target_folder, "text_questionnaire.md"),
+              mode="w", encoding="utf-8") as file:
+        file.write(text_questionnaire_template)
 
 def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False):
     """Change a uri and put all files in the correct folder.
@@ -1208,6 +1205,14 @@ def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False):
                     new_uri.extension = old_file_uri.extension
                     move_to_new_uri_pth(fp, new_uri, execute)
 
+        # add readme and text_questionnaire files:
+
+        target_folder = new_uri.build_pth("version")
+        if "README.md" not in os.listdir(target_folder):
+            add_readme(target_folder)
+        if "text_questionnaire.md" not in os.listdir(target_folder):
+            add_text_questionnaire(target_folder)
+
     else: # move all impacted files and directories
         for root, dirs, files in os.walk(old_folder):
             for file in files:
@@ -1262,8 +1267,6 @@ def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False):
             shutil.rmtree(old_folder)
         else:
             print("REMOVE BOOK FOLDER", old_folder)
-
-
 
     if not execute:
         resp = input("To carry out these changes: press OK+Enter; \
@@ -1441,6 +1444,11 @@ Make sure base path is correct.""".format(new_uri.base_pth)
             if new_uri.uri_type == "version":
                 new_yml(new_uri.build_pth("version_yml"),
                             "version_yml", execute)
+                target_folder = new_uri.build_pth("version")
+                if "README.md" not in os.listdir(target_folder):
+                    add_readme(target_folder)
+                if "text_questionnaire.md" not in os.listdir(target_folder):
+                    add_text_questionnaire(target_folder)
 
 
 def move_to_new_uri_pth(old_fp, new_uri, execute=False):
