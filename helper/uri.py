@@ -40,14 +40,14 @@ Examples:
     0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed
 
     - Accessing components of the URI:
-    
+
     >>> t.author
     'Jahiz'
     >>> t.date
     '0255'
 
     - Changing components of the URI by setting properties to a new value:
-    
+
     >>> u = URI("0255Jahiz.Hayawan")
     >>> u.author = "JahizBasri"
     >>> print(u)
@@ -113,7 +113,7 @@ Examples:
 
     Simply calling the URI object (i.e., writing parentheses after
     the variable name works as an alias for the build_uri function:
-    
+
     >>> t = URI("0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed")
     >>> t(uri_type="author")
     '0255Jahiz'
@@ -1351,7 +1351,7 @@ def add_character_count(tok_count, tar_uri, execute=False):
     else:
         print("  Add the character count to the version yml file")
 
-        
+
 def new_yml(tar_yfp, yml_type, execute=False):
     """Create a new yml file from template.
 
@@ -1488,7 +1488,7 @@ def check_token_count(version_uri, ymlD):
     if yml_tok_count == "":
         print("NO TOKEN COUNT", uri)
         replace_tok_count = True
-    else: 
+    else:
         try:
             if int(yml_tok_count) != tok_count:
                 replace_tok_count = True
@@ -1510,7 +1510,7 @@ def replace_tok_counts(missing_tok_count):
     Returns:
         None
     """
-    print("replacing token count in {} files".format(len(missing_tok_count))
+    print("replacing token count in {} files".format(len(missing_tok_count)))
     for uri, tok_count in missing_tok_count:
         yml_fp = uri.build_pth("version_yml")
         ymlD = yml.readYML(yml_fp)
@@ -1519,7 +1519,7 @@ def replace_tok_counts(missing_tok_count):
         ymlS = yml.dicToYML(ymlD)
         with open(yml_fp, mode="w", encoding="utf-8") as outf:
             outf.write(ymlS)
-            
+
 
 def check_yml_files(start_folder, exclude=[],
                     execute=False, check_token_counts=True):
@@ -1540,11 +1540,11 @@ def check_yml_files(start_folder, exclude=[],
     erratic_ymls = []
     for root, dirs, files in os.walk(start_folder):
         dirs[:] = [d for d in dirs if d not in exclude]
-        
+
         for file in files:
             if file not in ["README.md", ".DS_Store",
-                            ".gitignore", "text_questionnaire.md"]:                fp = os.path.join(root, file)
-                print(file)
+                            ".gitignore", "text_questionnaire.md"]:
+                fp = os.path.join(root, file)
 
                 # Check whether a filename has the uri format:
                 try:
@@ -1555,7 +1555,7 @@ def check_yml_files(start_folder, exclude=[],
 
                 # Check for every text file whether a version, book and author yml file
                 # are associated with it:
-                
+
                 if uri:
                     if uri.uri_type == "version" and not file.endswith(".yml"):
                         for yml_type in ["version_yml", "book_yml", "author_yml"]:
@@ -1599,7 +1599,7 @@ def check_yml_files(start_folder, exclude=[],
                                 if ymlD[key] != uri(yml_type[:-4]):
                                     print("URI in yml file wrong!",
                                           ymlD[key], "!=", uri(yml_type[:-4]))
-                                    if execute: 
+                                    if execute:
                                         ymlD[key] = uri(yml_type[:-4])
                                         ymlS = yml.dicToYML(ymlD)
                                         with open(yml_fp, mode="w",
@@ -1655,8 +1655,8 @@ if __name__ == "__main__":
     doctest.testmod()
     print("passed doctests")
 
-    # tests: 
-    
+    # tests:
+
 
     URI.base_pth = r"D:\London\OpenITI\25Y_repos"
     exclude = (["OpenITI.github.io", "Annotation", "maintenance", "i.mech00",
@@ -1668,7 +1668,7 @@ if __name__ == "__main__":
     missing_ymls, missing_tok_count, non_uri_files, erratic_ymls = resp
     #print(non_uri_files)
     input("continue?")
-    
+
     base_pth = r"D:\London\OpenITI\python_library\openiti\test"
 
     # test initialize_new_texts_in_folder function:
