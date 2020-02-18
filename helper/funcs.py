@@ -86,6 +86,34 @@ def ar_ch_len(fp):
             return 0
 
 
+def ar_ch_cnt(text):
+    """
+    Count the length of a text in Arabic characters
+
+    :param text: text
+    :return: number of the Arabic characters in the text
+    """
+
+    ar_chars = re.compile("[ذ١٢٣٤٥٦٧٨٩٠ّـضصثقفغعهخحجدًٌَُلإإشسيبلاتنمكطٍِلأأـئءؤرلاىةوزظْلآآ]+")
+
+    toks = re.findall(ar_chars, text)
+    return len(''.join(toks))
+
+
+def ar_toks_cnt(text):
+    """
+    Count the length of a text in Arabic tokens
+
+    :param text: text
+    :return: number of Arabic tokens in the text
+    """
+
+    ar_chars = re.compile("[ذ١٢٣٤٥٦٧٨٩٠ّـضصثقفغعهخحجدًٌَُلإإشسيبلاتنمكطٍِلأأـئءؤرلاىةوزظْلآآ]+")
+    toks = re.findall(ar_chars, text)
+
+    return len(toks)
+
+
 def read_header(fp):
     """Read only the OpenITI header of a file without opening the entire file.
 

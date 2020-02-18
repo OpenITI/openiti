@@ -2,7 +2,7 @@
 Test relative speed of string.replace, re.sub replacement
 and mixed replacement (using re.sub for character disjunctions
 like [أاإآ] and string replace for single replacements)
-for the deNoise and normalize functions.
+for the denoise and normalize functions.
 
 Conclusion of the test:
 
@@ -19,30 +19,30 @@ in very large texts or after 100.000 loops in the short string.
 Output: 
 
 ----------------------------------------
-Testing functions re.sub deNoise, string replace deNoise:
+Testing functions re.sub denoise, string replace denoise:
 
 Results after 100 loops, with 30 first lines of the Qur'an:
-1 - string replace deNoise: 0.008388800000000002
-2 - re.sub deNoise: 0.0274035
-(string replace deNoise ca. 3.3 times faster than re.sub deNoise)
+1 - string replace denoise: 0.008388800000000002
+2 - re.sub denoise: 0.0274035
+(string replace denoise ca. 3.3 times faster than re.sub denoise)
 
 Results after 10000 loops, with 30 first lines of the Qur'an:
-1 - string replace deNoise: 0.8215248000000002
-2 - re.sub deNoise: 2.6362182
-(string replace deNoise ca. 3.2 times faster than re.sub deNoise)
+1 - string replace denoise: 0.8215248000000002
+2 - re.sub denoise: 2.6362182
+(string replace denoise ca. 3.2 times faster than re.sub denoise)
 
 ----------------------------------------
-Testing functions re.sub deNoise, string replace deNoise:
+Testing functions re.sub denoise, string replace denoise:
 
 Results after 10 loops, with large text of 75MB:
-1 - re.sub deNoise: 4.5313052
-2 - string replace deNoise: 6.2427817999999995
-(re.sub deNoise ca. 1.4 times faster than string replace deNoise)
+1 - re.sub denoise: 4.5313052
+2 - string replace denoise: 6.2427817999999995
+(re.sub denoise ca. 1.4 times faster than string replace denoise)
 
 Results after 50 loops, with large text of 75MB:
-1 - re.sub deNoise: 21.9464538
-2 - string replace deNoise: 31.245985300000008
-(re.sub deNoise ca. 1.4 times faster than string replace deNoise)
+1 - re.sub denoise: 21.9464538
+2 - string replace denoise: 31.245985300000008
+(re.sub denoise ca. 1.4 times faster than string replace denoise)
 
 ----------------------------------------
 Testing functions re.sub normalization, string replace normalization, mixed normalization:
@@ -573,15 +573,15 @@ with open(fp, mode="r", encoding="utf-8") as file:
 ##    
 ##text = page  # set the global text variable
 ##
-##time_functions([("re_sub_deNoise_test", "re.sub deNoise"),
-##                ("repl_deNoise_test", "string replace deNoise"),],
+##time_functions([("re_sub_deNoise_test", "re.sub denoise"),
+##                ("repl_deNoise_test", "string replace denoise"),],
 ##               [100, 10000],
 ##               "30 first lines of the Qur'an")
 ##
 ##text = large_text  # reset the global text variable
 ##
-##time_functions([("re_sub_deNoise_test", "re.sub deNoise"),
-##                ("repl_deNoise_test", "string replace deNoise")],
+##time_functions([("re_sub_deNoise_test", "re.sub denoise"),
+##                ("repl_deNoise_test", "string replace denoise")],
 ##               [10, 50],
 ##               "large text of 75MB")
 ##
