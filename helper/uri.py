@@ -452,7 +452,7 @@ class URI:
     def title(self, title):
         """Set the URI's title property, after checking its conformity."""
         #self.__title = self.check_ASCII_letters(title, "Book title")
-        self.__title = self.check_ASCII_letters(title, "Book title")
+        self.__title = self.check_ASCII(title, "Book title")
 
 
     @property
