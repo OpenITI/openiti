@@ -1,0 +1,32 @@
+Metadata-Version: 2.1
+Name: openiti
+Version: 0.0.5
+Summary: A package for dealing with the openITI corpus
+Home-page: https://https://github.com/OpenITI
+Author: Soheil Merchant, Maxim Romanov, Masoumeh Seydi, Peter Verkinderen
+Author-email: peter.verkinderen@gmail.com
+License: UNKNOWN
+Description: # openiti
+        
+        This is a first attempt to create a Python library that combines all often-used code in the OpenITI project. 
+        
+        ## Change log: 
+        
+        ### v.0.0.5:
+        
+        * openiti.helper.funcs: added Arabic token count function
+        * openiti.helper.uri: use Arabic token count instead of Arabic character count for yml file revision. Also, revise token count for every version yml file instead of only for version yml files that do not contain a count.
+        
+        ### v.0.0.4: 
+        
+        * openiti.helper.uri: removed the restriction on the use of digits in book titles
+        * openiti.helper.uri: added a check for empty yml files
+        * openiti.helper.yml: added documentation and doctests
+        * openiti.helper.yml: added check for empty yml files + changed splitting of yml files so that even unindented multi-line values can be correctly parsed.
+        
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.4
+Description-Content-Type: text/markdown
