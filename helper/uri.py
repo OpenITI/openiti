@@ -193,7 +193,8 @@ if __name__ == '__main__':
 
 from openiti.helper.funcs import ar_ch_len, read_header
 from openiti.helper.templates import author_yml_template, book_yml_template, \
-                                     version_yml_template
+                                     version_yml_template, readme_template, \
+                                     text_questionnaire_template
 from openiti.helper import yml
 
 
@@ -1048,7 +1049,7 @@ def initialize_new_text(origin_fp, target_base_pth, execute=False):
     """Move a new text file to its OpenITI repo, creating yml files\
     if necessary (or copying them from the same folder if present).
 
-    The function also checks whether the new text adheres to OpenITI tet format.
+    The function also checks whether the new text adheres to OpenITI text format.
 
     Args:
         origin_fp (str): filepath of the text file (filename must be
@@ -1118,6 +1119,18 @@ def initialize_new_text(origin_fp, target_base_pth, execute=False):
     # Add the character count to the new yml file:
 
     add_character_count(char_count, tar_uri, execute)
+
+    # add readme and text_questionnaire files:
+
+    if "README.md" not in os.listdir(target_folder):
+        with open(os.path.join(target_folder, "README.md"),
+                  mode="w", encoding="utf-8") as file:
+            file.write(readme_template)
+
+    if "text_questionnaire.md" not in os.listdir(target_folder):
+        with open(os.path.join(target_folder, "text_questionnaire.md"),
+                  mode="w", encoding="utf-8") as file:
+            file.write(text_questionnaire_template)
 
     # Give the option to execute the changes:
 
