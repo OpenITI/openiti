@@ -191,7 +191,8 @@ if __name__ == '__main__':
     root_folder = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
     sys.path.append(root_folder)
 
-from openiti.helper.funcs import ar_ch_len, read_header
+from openiti.helper.funcs import read_header
+from openiti.helper.ara import ar_cnt_file
 from openiti.helper.templates import author_yml_template, book_yml_template, \
                                      version_yml_template, readme_template, \
                                      text_questionnaire_template
@@ -1090,7 +1091,8 @@ def initialize_new_text(origin_fp, target_base_pth, execute=False):
 
     # Count the Arabic characters in the text file:
 
-    char_count = ar_ch_len(origin_fp)
+    #tok_count = ar_ch_len(origin_fp)
+    tok_count = ar_cnt_file(origin_fp, mode="token")
 
     # Move the text file:
 
@@ -1118,7 +1120,7 @@ def initialize_new_text(origin_fp, target_base_pth, execute=False):
 
     # Add the character count to the new yml file:
 
-    add_character_count(char_count, tar_uri, execute)
+    add_character_count(tok_count, tar_uri, execute)
 
     # Give the option to execute the changes:
 
@@ -1317,11 +1319,12 @@ def initialize_texts_from_CSV(csv_fp, old_base_pth="", new_base_pth="",
         new_uri = URI(new)
         if new_base_pth:
             new_uri.base_pth = new_base_pth
-        char_count = ar_ch_len(old_fp)
+        #char_count = ar_ch_len(old_fp)
+        tok_count = ar_cnt_file(old_fp, mode="token")
 
         move_to_new_uri_pth(old_fp, new_uri, execute)
 
-        add_character_count(char_count, new_uri, execute)
+        add_character_count(tok_count, new_uri, execute)
 
     if not execute:
         resp = input("To carry out these changes: press OK+Enter; \
@@ -1335,14 +1338,14 @@ to abort: press Enter. ")
             print("*"*60)
 
 
-def add_character_count(char_count, tar_uri, execute=False):
+def add_character_count(tok_count, tar_uri, execute=False):
     """Add the character count to the new version yml file"""
 
     tar_yfp = tar_uri.build_pth("version_yml")
     if execute:
         with open(tar_yfp, mode="r", encoding="utf-8") as file:
             yml_dic = yml.ymlToDic(file.read().strip())
-            yml_dic["00#VERS#LENGTH###:"] = char_count
+            yml_dic["00#VERS#LENGTH###:"] = tok_count
         with open(tar_yfp, mode="w", encoding="utf-8") as file:
             file.write(yml.dicToYML(yml_dic))
     else:
@@ -1473,7 +1476,53 @@ def move_to_new_uri_pth(old_fp, new_uri, execute=False):
     return new_fp
 
 
-def check_yml_files(start_folder, exclude=[], execute=False):
+def check_token_count(version_uri, ymlD):
+    """Check whether the token count in the version yml file agrees with the\
+    actual token count of the text file.
+    """
+    fp = version_uri.build_pth(uri_type="version_file")
+    tok_count = ar_cnt_file(fp, mode="token")
+    len_key = "00#VERS#LENGTH###:"
+    yml_tok_count = ymlD[len_key].strip()
+    replace_tok_count = False
+    if yml_tok_count == "":
+        print("NO TOKEN COUNT", uri)
+        replace_tok_count = True
+    else: 
+        try:
+            if int(yml_tok_count) != tok_count:
+                replace_tok_count = True
+                #print("TOKEN COUNT CHANGED", uri)
+                #print(yml_tok_count, "!=", tok_count)
+        except:
+            print("TOKEN COUNT {} IS NOT A NUMBER".format(yml_tok_count), uri)
+            replace_tok_count = True
+    if replace_tok_count:
+        return tok_count
+
+def replace_tok_counts(missing_tok_count):
+    """Replace the token counts in the relevant yml files.
+
+    Args:
+        missing_tok_count (list): a list of tuples (uri, token_count):
+            uri (OpenITI URI object)
+            token_count (int): the number of Arabic tokens in the text file
+    Returns:
+        None
+    """
+    print("replacing token count in {} files".format(len(missing_tok_count))
+    for uri, tok_count in missing_tok_count:
+        yml_fp = uri.build_pth("version_yml")
+        ymlD = yml.readYML(yml_fp)
+        len_key = "00#VERS#LENGTH###:"
+        ymlD[len_key] = str(tok_count)
+        ymlS = yml.dicToYML(ymlD)
+        with open(yml_fp, mode="w", encoding="utf-8") as outf:
+            outf.write(ymlS)
+            
+
+def check_yml_files(start_folder, exclude=[],
+                    execute=False, check_token_counts=True):
     """Check whether yml files are missing or have faulty data in them.
 
     Args:
@@ -1485,17 +1534,17 @@ def check_yml_files(start_folder, exclude=[], execute=False):
             After it has looped through all files and folders, it will give
             the user the option to execute the proposed changes."""
     uri_key = "00#{}#URI######:"
-    len_key = "00#VERS#LENGTH###:"
     missing_ymls = []
-    missing_char_count = []
+    missing_tok_count = []
     non_uri_files = []
     erratic_ymls = []
     for root, dirs, files in os.walk(start_folder):
         dirs[:] = [d for d in dirs if d not in exclude]
+        
         for file in files:
             if file not in ["README.md", ".DS_Store",
-                            ".gitignore", "text_questionnaire.md"]:
-                fp = os.path.join(root, file)
+                            ".gitignore", "text_questionnaire.md"]:                fp = os.path.join(root, file)
+                print(file)
 
                 # Check whether a filename has the uri format:
                 try:
@@ -1557,33 +1606,14 @@ def check_yml_files(start_folder, exclude=[], execute=False):
                                                   encoding="utf-8") as outf:
                                             outf.write(ymlS)
 
-                                # check whether version yml file
-                                # has a length:
+                                # check whether token count in version yml file
+                                # agrees with the current token count of the text
 
                                 if yml_type == "version_yml":
-                                    replace_char_count = False
-                                    if ymlD[len_key].strip() == "":
-                                        print("NO LEN INFO", uri)
-                                        replace_char_count = True
-                                    else:
-                                        try:
-                                            int(ymlD[len_key].strip())
-                                        except:
-                                            print("LEN INFO NOT A NUMBER", uri)
-                                            replace_char_count = True
-                                    if replace_char_count:
-                                        missing_char_count.append(uri(yml_type))
-                                        char_count = ar_ch_len(fp)
-                                        if execute:
-                                            ymlD[len_key] = str(char_count)
-                                            ymlS = yml.dicToYML(ymlD)
-                                            with open(yml_fp, mode="w",
-                                                      encoding="utf-8") as outf:
-                                                outf.write(ymlS)
-                                        else:
-                                            msg = "Add character count ({}) to {}"
-                                            print(msg.format(char_count, uri(yml_type)))
-    
+                                    if check_token_counts:
+                                        tok_count = check_token_count(uri, ymlD)
+                                        if tok_count:
+                                            missing_tok_count.append((uri, tok_count))
     if  erratic_ymls:
         print()
         print("The following yml files were found to contain errors.")
@@ -1592,16 +1622,23 @@ def check_yml_files(start_folder, exclude=[], execute=False):
         for file in sorted(erratic_ymls):
             print("    ", file)
 
-    if not execute and (missing_ymls!=[] or missing_char_count !=[]):
+    cnt = len(missing_tok_count)
+    if not execute and (missing_ymls!=[] or missing_tok_count !=[]):
         print()
+        print("Token count must be changed in {} files".format(cnt))
         print("Execute these changes?")
         resp = input("Press OK+Enter to execute; press Enter to abort: ")
         if resp == "OK":
-            check_yml_files(start_folder, exclude=exclude, execute=True)
+            replace_tok_counts(missing_tok_count)
+            check_yml_files(start_folder, exclude=exclude,
+                            execute=True, check_token_counts=False)
+            print()
+            print("Token count changed in {} files".format(cnt))
+            print()
         else:
             print("Changes aborted by user")
     else:
-        print("No missing yml files; all files contain character count.")
+        print("No missing yml files.")
 
     if non_uri_files:
         print()
@@ -1610,7 +1647,7 @@ def check_yml_files(start_folder, exclude=[], execute=False):
         for file in sorted(set(non_uri_files)):
             print("    ", file)
 
-    return missing_ymls, missing_char_count, non_uri_files, erratic_ymls
+    return missing_ymls, missing_tok_count, non_uri_files, erratic_ymls
 
 
 if __name__ == "__main__":
@@ -1628,7 +1665,7 @@ if __name__ == "__main__":
                 "i.cex", "i.cex_Temp", "i.mech", "i.mech_Temp", ".git"])
     resp = check_yml_files(r"D:\London\OpenITI\25Y_repos",
                            exclude=exclude, execute=False)
-    missing_ymls, missing_char_count, non_uri_files, erratic_ymls = resp
+    missing_ymls, missing_tok_count, non_uri_files, erratic_ymls = resp
     #print(non_uri_files)
     input("continue?")
     
@@ -1663,8 +1700,8 @@ if __name__ == "__main__":
 ##    change_uri(old, new,
 ##               old_base_pth=base_pth, new_base_pth=base_pth,
 ##               execute=False)
-
-    input("URI changed??")
+##
+##    input("URI changed??")
 
     my_uri = "0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed"
 

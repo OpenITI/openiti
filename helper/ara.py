@@ -18,6 +18,8 @@ noise = re.compile(""" ّ    | # Tashdīd / Shadda
                        ٰ    | # Dagger Alif
                        ـ     # Taṭwīl / Kashīda
                    """, re.VERBOSE)
+splitter = "#META#Header#End#"
+
 
 def denoise(text):
     """Remove non-consonantal characters from Arabic text.
@@ -119,9 +121,18 @@ def denormalize(text):
     return text
 
 
-def ar_ch_len(fp):
-    """Count the length of a text in Arabic characters, given its pth"""
+#def ar_ch_len(fp):
+def ar_cnt_file(fp, mode="token"):
+    """Count the number of Arabic characters/tokens in a text, given its pth
 
+    Args:
+        fp (str): url / path to a file
+        mode (str): either "char" for count of Arabic characters,
+                    or "token" for count of Arabic tokens
+
+    Returns:
+        length (int): Arabic character/token count 
+    """
     try:
         with url.urlopen(fp) as f:
             book = f.read().decode('utf-8')
@@ -129,23 +140,23 @@ def ar_ch_len(fp):
         with open(fp, mode="r", encoding="utf-8") as f:
             book = f.read()
 
-        # splitter/header test
-        if splitter in book:
-            # split the header and body of the text:
-            text = book.split(splitter)[1]
+    if splitter in book:
+        text = book.split(splitter)[1]
 
-            # remove Editorial sections:
-            text = re.sub("### \|EDITOR.+?### ", "### ", text,
-                          flags = re.DOTALL)
+        # remove Editorial sections:
+        
+        text = re.sub(r"### \|EDITOR.+?(### |\Z)", r"\1", text,
+                      flags = re.DOTALL)
 
-            # count the number of Arabic letters or numbers:
-            toks = re.findall(ar_ch, text)
-            ar_ch_cnt = len([c for c in toks if c in ar_ch])
-            print("{} Arabic character count: {}".format(fp, ar_ch_cnt))
-            return ar_ch_cnt
+        # count the number of Arabic letters or tokens:
+        
+        if mode == "char":
+            return ar_ch_cnt(text)
         else:
-            print("{} is missing the splitter!".format(fp))
-            return 0
+            return ar_tok_cnt(text)
+    else:
+        print("{} is missing the splitter!".format(fp))
+        return 0
 
 
 def ar_ch_cnt(text):
@@ -163,7 +174,7 @@ def ar_ch_cnt(text):
     return len(ar_char.findall(text))
 
 
-def ar_toks_cnt(text):
+def ar_tok_cnt(text):
     """
     Count the number of Arabic tokens in a string
 
@@ -172,7 +183,7 @@ def ar_toks_cnt(text):
 
     Examples:
         >>> a = "ابجد ابجد اَبًجٌدُ"
-        >>> ar_toks_cnt(a)
+        >>> ar_tok_cnt(a)
         3
     """
     return len(ar_tok.findall(text))
