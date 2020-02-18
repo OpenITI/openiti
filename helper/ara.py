@@ -1,5 +1,23 @@
 import re
 
+ar_chars = "ذ١٢٣٤٥٦٧٨٩٠ّـضصثقفغعهخحجدًٌَُلإإشسيبلاتنمكطٍِلأأـئءؤرلاىةوزظْلآآ"
+ar_char = re.compile("[{}]".format(ar_chars)) # regex for one Arabic character
+ar_tok = re.compile("[{}]+".format(ar_chars)) # regex for one Arabic token
+noise = re.compile(""" ّ    | # Tashdīd / Shadda
+                       َ    | # Fatḥa
+                       ً    | # Tanwīn Fatḥ / Fatḥatān
+                       ُ    | # Ḍamma
+                       ٌ    | # Tanwīn Ḍamm / Ḍammatān
+                       ِ    | # Kasra
+                       ٍ    | # Tanwīn Kasr / Kasratān
+                       ْ    | # Sukūn
+                       ۡ    | # Quranic Sukūn
+                       ࣰ    | # Quranic Open Fatḥatān
+                       ࣱ    | # Quranic Open Ḍammatān
+                       ࣲ    | # Quranic Open Kasratān
+                       ٰ    | # Dagger Alif
+                       ـ     # Taṭwīl / Kashīda
+                   """, re.VERBOSE)
 
 def denoise(text):
     """Remove non-consonantal characters from Arabic text.
@@ -10,21 +28,6 @@ def denoise(text):
         >>> denoise(" ْ ً ٌ ٍ َ ُ ِ ّ ۡ ࣰ ࣱ ࣲ ٰ ")
         '              '
     """
-    noise = re.compile(""" ّ    | # Tashdīd / Shadda
-                           َ    | # Fatḥa
-                           ً    | # Tanwīn Fatḥ / Fatḥatān
-                           ُ    | # Ḍamma
-                           ٌ    | # Tanwīn Ḍamm / Ḍammatān
-                           ِ    | # Kasra
-                           ٍ    | # Tanwīn Kasr / Kasratān
-                           ْ    | # Sukūn
-                           ۡ    | # Quranic Sukūn
-                           ࣰ    | # Quranic Open Fatḥatān
-                           ࣱ    | # Quranic Open Ḍammatān
-                           ࣲ    | # Quranic Open Kasratān
-                           ٰ    | # Dagger Alif
-                           ـ     # Taṭwīl / Kashīda
-                       """, re.VERBOSE)
     return re.sub(noise, "", text)
 
 
@@ -116,7 +119,67 @@ def denormalize(text):
     return text
 
 
+def ar_ch_len(fp):
+    """Count the length of a text in Arabic characters, given its pth"""
+
+    try:
+        with url.urlopen(fp) as f:
+            book = f.read().decode('utf-8')
+    except:
+        with open(fp, mode="r", encoding="utf-8") as f:
+            book = f.read()
+
+        # splitter/header test
+        if splitter in book:
+            # split the header and body of the text:
+            text = book.split(splitter)[1]
+
+            # remove Editorial sections:
+            text = re.sub("### \|EDITOR.+?### ", "### ", text,
+                          flags = re.DOTALL)
+
+            # count the number of Arabic letters or numbers:
+            toks = re.findall(ar_ch, text)
+            ar_ch_cnt = len([c for c in toks if c in ar_ch])
+            print("{} Arabic character count: {}".format(fp, ar_ch_cnt))
+            return ar_ch_cnt
+        else:
+            print("{} is missing the splitter!".format(fp))
+            return 0
+
+
+def ar_ch_cnt(text):
+    """
+    Count the number of Arabic characters in a string
+
+    :param text: text
+    :return: number of the Arabic characters in the text
+
+    Examples:
+        >>> a = "ابجد ابجد اَبًجٌدُ"
+        >>> ar_ch_cnt(a)
+        16
+    """
+    return len(ar_char.findall(text))
+
+
+def ar_toks_cnt(text):
+    """
+    Count the number of Arabic tokens in a string
+
+    :param text: text
+    :return: number of Arabic tokens in the text
+
+    Examples:
+        >>> a = "ابجد ابجد اَبًجٌدُ"
+        >>> ar_toks_cnt(a)
+        3
+    """
+    return len(ar_tok.findall(text))
+
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
+    
     

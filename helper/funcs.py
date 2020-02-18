@@ -12,10 +12,8 @@ if __name__ == '__main__':
 from openiti.helper import ara
 
 splitter = "#META#Header#End#"
-ar_ch = "[ذ١٢٣٤٥٦٧٨٩٠ّـضصثقفغعهخحجدًٌَُلإإشسيبلاتنمكطٍِلأأـئءؤرلاىةوزظْلآآ]"
 milestone = "Milestone300"
 thresh = 1000
-
 
 def text_cleaner(text):
     text = ara.normalize_ara_extra_light(text)
@@ -57,62 +55,6 @@ def generate_ids_through_permutations(char_string_for_ids, id_len_char, limit):
     print("=" * 80)
 
 
-def ar_ch_len(fp):
-    """Count the length of a text in Arabic characters, given its URL"""
-
-    try:
-        with url.urlopen(fp) as f:
-            book = f.read().decode('utf-8')
-    except:
-        with open(fp, mode="r", encoding="utf-8") as f:
-            book = f.read()
-
-        # splitter/header test
-        if splitter in book:
-            # split the header and body of the text:
-            text = book.split(splitter)[1]
-
-            # remove Editorial sections:
-            text = re.sub("### \|EDITOR.+?### ", "### ", text,
-                          flags = re.DOTALL)
-
-            # count the number of Arabic letters or numbers:
-            toks = re.findall(ar_ch, text)
-            ar_ch_cnt = len([c for c in toks if c in ar_ch])
-            print("{} Arabic character count: {}".format(fp, ar_ch_cnt))
-            return ar_ch_cnt
-        else:
-            print("{} is missing the splitter!".format(fp))
-            return 0
-
-
-def ar_ch_cnt(text):
-    """
-    Count the length of a text in Arabic characters
-
-    :param text: text
-    :return: number of the Arabic characters in the text
-    """
-
-    ar_chars = re.compile("[ذ١٢٣٤٥٦٧٨٩٠ّـضصثقفغعهخحجدًٌَُلإإشسيبلاتنمكطٍِلأأـئءؤرلاىةوزظْلآآ]+")
-
-    toks = re.findall(ar_chars, text)
-    return len(''.join(toks))
-
-
-def ar_toks_cnt(text):
-    """
-    Count the length of a text in Arabic tokens
-
-    :param text: text
-    :return: number of Arabic tokens in the text
-    """
-
-    ar_chars = re.compile("[ذ١٢٣٤٥٦٧٨٩٠ّـضصثقفغعهخحجدًٌَُلإإشسيبلاتنمكطٍِلأأـئءؤرلاىةوزظْلآآ]+")
-    toks = re.findall(ar_chars, text)
-
-    return len(toks)
-
 
 def read_header(fp):
     """Read only the OpenITI header of a file without opening the entire file.
@@ -140,3 +82,8 @@ def read_header(fp):
 
 def absolute_path(path):
     return os.path.abspath(path)
+
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
