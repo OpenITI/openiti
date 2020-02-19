@@ -31,14 +31,14 @@ def get_all_characters_in_text(fp):
         fp (str): path to a text file.
 
     Returns:
-        all_chars (set): a set of all characters used in the text.
+        all_characters (set): a set of all characters used in the text.
     """
     with open(fp, mode="r", encoding="utf-8") as file:
         text = file.read()
         return set(text)
     
 
-def get_all_characters_in_folder(start_folder, verbose=False
+def get_all_characters_in_folder(start_folder, verbose=False,
                                  exclude_folders=[], exclude_files=[]):
     """Get a set of all characters used in all OpenITI text files \
     in a folder and its subfolders.
@@ -53,7 +53,7 @@ def get_all_characters_in_folder(start_folder, verbose=False
         exclude_folders (list): list of file names to be excluded.
 
     Returns:
-        all_chars (set): a set of all characters used in the folder.
+        all_characters (set): a set of all characters used in the folder.
     """
     all_characters = set()
     for root, dirs, files in os.walk(start_folder):
@@ -66,7 +66,7 @@ def get_all_characters_in_folder(start_folder, verbose=False
               or re.findall(r"(ara|per)\d$", fn):
                 if verbose:
                     print(len(all_characters), fn)
-                text_chars = get_characters_from_text(fp)
+                text_chars = get_all_characters_in_text(fp)
                 all_characters = all_characters.union(text_chars)
     return all_characters
 
@@ -175,3 +175,9 @@ def absolute_path(path):
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
+
+    start_folder = r"D:\London\OpenITI\25Y_repos"
+    chars = get_all_characters_in_folder(start_folder, verbose=False,
+                                         exclude_folders=exclude_folders,
+                                         exclude_files=exclude_files)
+    get_character_names(chars, verbose=True)
