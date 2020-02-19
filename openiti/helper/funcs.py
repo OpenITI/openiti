@@ -38,18 +38,23 @@ def get_all_characters_in_text(fp):
         return set(text)
     
 
-def get_all_characters_in_folder(start_folder,
+def get_all_characters_in_folder(start_folder, verbose=False
                                  exclude_folders=[], exclude_files=[]):
-    """Get a set of all characters used in files in a folder and subfolders.
+    """Get a set of all characters used in all OpenITI text files \
+    in a folder and its subfolders.
 
     Args:
-        start_folder (str): path to a directory
+        start_folder (str): path to the root directory. All files and folders
+            in it, except if they are in the exclude lists, will be processed.
+        verbose (bool): if True, filenames and current number of characters
+            in the set will be printed.
         exclude_folders (list): list of folder names to be excluded
             from the process.
         exclude_folders (list): list of file names to be excluded.
 
     Returns:
-        all_chars (set): a set of all characters used in the folder."""
+        all_chars (set): a set of all characters used in the folder.
+    """
     all_characters = set()
     for root, dirs, files in os.walk(start_folder):
         dirs[:] = [d for d in dirs if d not in exclude_folders]
@@ -59,7 +64,8 @@ def get_all_characters_in_folder(start_folder,
             extensions = [".completed", ".mARkdown", ".inProgress"]
             if os.path.splitext(fn)[1] in extensions \
               or re.findall(r"(ara|per)\d$", fn):
-                print(len(all_characters), fn)
+                if verbose:
+                    print(len(all_characters), fn)
                 text_chars = get_characters_from_text(fp)
                 all_characters = all_characters.union(text_chars)
     return all_characters
