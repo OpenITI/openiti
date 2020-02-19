@@ -1,9 +1,9 @@
-import re
 import math
-import random
-import urllib.request as url
 import os
-
+import random
+import re
+import unicodedata
+import urllib.request as url
 
 if __name__ == '__main__':
     from os import sys, path
@@ -14,6 +14,88 @@ from openiti.helper import ara
 splitter = "#META#Header#End#"
 milestone = "Milestone300"
 thresh = 1000
+
+exclude_folders = ["OpenITI.github.io", "Annotation", "maintenance",
+                   "i.mech00", "i.mech01", "i.mech02", "i.mech03",
+                   "i.mech04", "i.mech05", "i.mech06", "i.mech07",
+                   "i.mech", "i.mech_Temp", "i.mech08", "i.mech09",
+                   "i.logic", "i.cex", "i.cex_Temp", ".git"]
+
+exclude_files = ["README.md", ".DS_Store",
+                 ".gitignore", "text_questionnaire.md"]
+
+def get_all_characters_in_text(fp):
+    """Get a set of all characters used in a text.
+
+    Args:
+        fp (str): path to a text file.
+
+    Returns:
+        all_chars (set): a set of all characters used in the text.
+    """
+    with open(fp, mode="r", encoding="utf-8") as file:
+        text = file.read()
+        return set(text)
+    
+
+def get_all_characters_in_folder(start_folder,
+                                 exclude_folders=[], exclude_files=[]):
+    """Get a set of all characters used in files in a folder and subfolders.
+
+    Args:
+        start_folder (str): path to a directory
+        exclude_folders (list): list of folder names to be excluded
+            from the process.
+        exclude_folders (list): list of file names to be excluded.
+
+    Returns:
+        all_chars (set): a set of all characters used in the folder."""
+    all_characters = set()
+    for root, dirs, files in os.walk(start_folder):
+        dirs[:] = [d for d in dirs if d not in exclude_folders]
+        files[:] = [f for f in files if f not in exclude_files]
+        for fn in files:
+            fp = os.path.join(root, fn)
+            extensions = [".completed", ".mARkdown", ".inProgress"]
+            if os.path.splitext(fn)[1] in extensions \
+              or re.findall(r"(ara|per)\d$", fn):
+                print(len(all_characters), fn)
+                text_chars = get_characters_from_text(fp)
+                all_characters = all_characters.union(text_chars)
+    return all_characters
+
+
+def get_character_names(characters, verbose=False):
+    """Print the unicode name of a list/set/string of characters.
+
+    Args:
+        characters (list/set/string): a list, string or set of characters.
+        verbose (bool): if set to True, the output will be printed
+
+    Returns:
+        char_dict (dict): a dictionary of characters and their names.
+
+    Examples:
+        >>> char_dict = {"١": "ARABIC-INDIC DIGIT ONE",\
+                         "٢": "ARABIC-INDIC DIGIT TWO"}
+        >>> char_dict == get_character_names("١٢")
+        True
+        >>> char_dict == get_character_names(["١", "٢"])
+        True
+        >>> char_dict == get_character_names({"١", "٢"})
+        True
+    """
+    char_dict = dict() 
+    for c in sorted(list(characters)):
+        try:
+            name = unicodedata.name(c)            
+        except:
+            name = None
+        char_dict[c] = name
+        if verbose:
+            print("{}\t{}".format(c, name))
+    
+    return char_dict
 
 def text_cleaner(text):
     text = ara.normalize_ara_extra_light(text)
