@@ -8,6 +8,7 @@ Welcome to openiti's documentation!
 
 .. toctree::
    :maxdepth: 3
+
    source/quickstart
    source/usermanual
    source/forcontributors
