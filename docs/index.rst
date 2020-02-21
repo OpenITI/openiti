@@ -6,6 +6,8 @@
 Welcome to openiti's documentation!
 ===================================
 
+Test
+
 .. toctree::
    :maxdepth: 3
 
