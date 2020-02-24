@@ -1,10 +1,50 @@
+"""Clone github repositories to your local machine.
+
+Examples:
+    Clone all OpenITI 25-year repos: 
+    # >>> repo_list = get_total_repos(group="orgs", name="OpenITI", \
+                                      path_pattern="\d{4}AH$")
+    # >>> clone_repos(repo_list, r"D:\OpenITI")
+
+    Clone specific repos:
+    # >>> base = ""https://github.com/OpenITI/"
+    # >>> repo_list = [base+"mARkdown_scheme", base+"RELEASE"]
+    # >>> clone_repos(repo_list, r"D:\OpenITI")
+
+Command line usage:
+    To clone all the OpenITI organization's 25-years repos:
+      ``python clone_OpenITI.py ["orgs" or "users"] [user or org name] [path_pattern] [[dest_folder]]``
+
+    ``dest_folder$ python pth/to/clone_OpenITI.py orgs OpenITI \d+AH$``
+    ``other_folder$ python pth/to/clone_OpenITI.py orgs OpenITI \d+AH$ path/to/dest_folder``
+
+    If fewer than 3 arguments are given, the program will prompt you for the arguments:
+    ``$ python clone_OpenITI.py``
+    Enter the organization/user name:
+    Organization or User? (orgs/users):
+    Enter the regex pattern to match desired repo URLs:
+    Enter the destination folder for the clone: 
+"""
+
 import sys
 import requests
 import re
 import subprocess
 
 
-def get_total_repos(group, name, path_pattern):
+def get_total_repos(group="orgs", name="OpenITI", path_pattern=r"\d{4}AH$"):
+    """Get a list of all repos owned by organisation/user `name`
+    that match the regex `path_pattern`
+
+    Args:
+        group (str): either "users" or "orgs". Defaults to "orgs"
+        name (str): GitHub name of the user/organization. Defaults to "OpenITI"
+        path_pattern(str): regex pattern that matches the desired repository names.
+            If none is defined, all repos will be cloned. Defaults to r"\d{4}AH$".
+
+    Returns:
+        repo_urls (list): a list of repo urls that matches the `path_pattern` regex.
+    """
     repo_urls = []
     page = 1
     while True:
@@ -14,7 +54,10 @@ def get_total_repos(group, name, path_pattern):
         if r.status_code == 200:
             rdata = r.json()
             for repo in rdata:
-                if re.compile(path_pattern).search(repo['full_name']):
+                if path_pattern:
+                    if re.compile(path_pattern).search(repo['full_name']):
+                        repo_urls.append(repo['clone_url'])
+                else:
                     repo_urls.append(repo['clone_url'])
             if (len(rdata) >= 100):
                 page = page + 1
@@ -27,7 +70,17 @@ def get_total_repos(group, name, path_pattern):
     return repo_urls
 
 
-def clone_repos(all_repos, clone_dir):
+def clone_repos(all_repos, clone_dir="."):
+    """Clone the list of repo urls `all_repos` to the `clone_dir`
+
+    Args:
+        all_repos (list): a list of repo urls.
+        clone_dir (str): path to the local folder where the repos are to be cloned.
+            Defaults to the current active directory.
+
+    Returns:
+        None
+    """
     print('Cloning...')
     counter = 1
     total_repo_nr = str(len(all_repos))
@@ -44,15 +97,23 @@ def clone_repos(all_repos, clone_dir):
 if __name__ == '__main__':
 
     # path_pattern = re.compile("\d{4}AH$")
-    type = input("Organization or User (orgs/users)?: ")
-    org_name = input("Enter the organization name: ")
-    path_pattern = input("Enter the regex pattern in repo URL: ")
-    clone_dir = input("Enter the path to clone: ")
+    if len(sys.argv) < 4:
+        name = input("Enter the organization/user name: ")
+        group = input("Organization or User? (orgs/users): ")
+        path_pattern = input("Enter the regex pattern in repo URL: ")
+        clone_dir = input("Enter the destination folder for the clone: ")
+    else:
+        name = sys.argv[1]
+        group = sys.argv[2]
+        path_pattern = sys.argv[3]
+        if sys.argv < 5:
+            clone_dir = "."
+        else:
+            clone_dir = sys.argv[4]
+
     # print("arg: " ,sys.argv)
     if len(sys.argv) > 0:
-        total = get_total_repos(type, org_name, path_pattern)
-        # for clone_OpenITI.py orgs OpenITI usage. Then, len(sys.argv) have to be >2!
-        # total = get_total_repos(sys.argv[1], sys.argv[2])
+        total = get_total_repos(group, name, path_pattern)
         if total:
             clone_repos(total, clone_dir)
         else:
