@@ -95,7 +95,7 @@ noise = re.compile(""" ّ    | # Tashdīd / Shadda
 splitter = "#META#Header#End#"
 
 
-def denoise(text):
+def deNoise(text):
     """Remove non-consonantal characters from Arabic text.
 
     Examples:
