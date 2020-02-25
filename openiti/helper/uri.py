@@ -1,14 +1,18 @@
 """Classes and functions to work with OpenITI URIs
 
 
-To do:
-* make the print output look nicer
-* reflow texts + insert milestones?
-* compare with Maxim's script: _add_new_text_from_folder.py in maintenance repo
+Todo:
+    * make the print output look nicer
+    * reflow texts + insert milestones?
+    * compare with Maxim's script: _add_new_text_from_folder.py
+      in maintenance repo
 
 
 The Module contains a URI class that represents an OpenITI URI as an object.
 The URI class's methods allow
+
+test
+
 * Checking whether all components of the URI are valid
 * Accessing and changing components of the URI
 * Getting the URI's current uri_type ("author", "book", "version", None)
@@ -16,7 +20,9 @@ The URI class's methods allow
 * Building paths based on the URI
 
 In addition to the URI class, the module contains a number of functions for
+
 * implementing URI changes in the OpenITI corpus
+
 * initializing new texts in the OpenITI corpus (a single text,
   all texts in a folder, or using a csv file)
 
@@ -755,13 +761,13 @@ Did you put a dot between date and author name?"
                     split_components.append(self.language)
                 self.check_language_code(self.language)
         if len(split_uri) > 3:
-            if split_uri[3] != "yml":
-                self.extension = split_uri[3]
-                split_components.append(self.extension)
-            else:
+            #if split_uri[3] != "yml":
+            self.extension = split_uri[3]
+            split_components.append(self.extension)
+            #else:
 ##                print("ERROR: extension '{}' not in the list\
 ##of acceptable extensions. No extension recorded".format(split_uri[3]))
-                self.extension = ""
+            #    self.extension = ""
         return split_components
 
 
