@@ -31,7 +31,8 @@ setuptools.setup(
     install_requires=[
         "beautifulsoup4",
         "requests",
-        "six"
+        "six",
+        "sphinx_rtd_theme"
     ],
     python_requires='>=3.4',
 )
