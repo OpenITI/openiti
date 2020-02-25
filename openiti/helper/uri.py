@@ -362,11 +362,12 @@ class URI:
         it will be split into its components.
 
         Args:
-            uri_string (str, default: None): (a path to) an OpenITI URI, e.g.,
-                0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1
-                0768IbnMuhammadTaqiDinBaclabakki.Hadith
-                0768IbnMuhammadTaqiDinBaclabakki
-                D:\OpenITI\25Yrepos\data\0275AH\0255Jahiz
+            uri_string (str): (a path to) an OpenITI URI, e.g.,
+                0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1; 
+                0768IbnMuhammadTaqiDinBaclabakki.Hadith; 
+                0768IbnMuhammadTaqiDinBaclabakki; 
+                D:\OpenITI\25Yrepos\data\0275AH\0255Jahiz. 
+                Defaults to None
 
         Examples:
             >>> uri1 = URI("0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed")
@@ -776,7 +777,7 @@ Did you put a dot between date and author name?"
         Build an OpenITI URI string from its components.
 
         Args:
-            uri_type (str; default: None): the uri type to be returned:
+            uri_type (str): the uri type to be returned (defaults to None):
                 - "date" : only the date (format: 0000)
                 - "author" : authorUri (format: 0255Jahiz)
                 - "author_yml" : filename of the author yml file
@@ -930,7 +931,8 @@ Did you put a dot between date and author name?"
         """build the path to a file or folder using the OpenITI uri system
 
         Args:
-            uri_type ((str; default: None): the uri type of the path to be returned:
+            uri_type (str): the uri type of the path to be returned
+            (defaults to None):
                 - "date" : only the 25-years openITI folder (format: 0275AH)
                 - "author" : authorUri (format: 0255Jahiz)
                 - "author_yml" : path to the author yml file
