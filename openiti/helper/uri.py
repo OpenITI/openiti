@@ -11,8 +11,6 @@ Todo:
 The Module contains a URI class that represents an OpenITI URI as an object.
 The URI class's methods allow
 
-test
-
 * Checking whether all components of the URI are valid
 * Accessing and changing components of the URI
 * Getting the URI's current uri_type ("author", "book", "version", None)
@@ -64,27 +62,35 @@ Examples:
 
     # >>> URI("255Jahiz")
     Exception: Date Error: URI must start with a date of 4 digits (255 has 3!)
+
     # >>> URI("0255Jāḥiẓ")
     Exception: Author name Error: Author name (Jāḥiẓ) should not contain
     digits or non-ASCII characters(culprits: ['ā', 'ḥ', 'ẓ'])
+
     # >>> t.author = "Jāḥiẓ"
     Exception: Author name Error: Author name (Jāḥiẓ) should not contain
     digits or non-ASCII characters(culprits: ['ā', 'ḥ', 'ẓ'])
+
     # >>> t.author = "0255Jahiz"
     Exception: Author name Error: Author name (0255Jahiz) should not contain
     digits or non-ASCII characters(culprits: ['0', '2', '5', '5'])
+
     # >>> URI("0255Jahiz.Al-Hayawan")
     Exception: Book title Error: Book title (Al-Hayawan) should not contain
     non-ASCII characters(culprits: ['-'])
+
     # >>> URI("0255Jahiz.Hayawan.Shāmila00123545-ara1")
     Exception: Version string Error: Version string (Shāmila00123545)
     should not contain non-ASCII characters(culprits: ['ā'])
+
     # >>> URI("0255Jahiz.Hayawan.Shamela00123545-arab1")
     Exception: Language code (arab) should be an ISO 639-2 language code,
     consisting of 3 characters
+
     # >>> t.extension = "markdown"
     Exception: Extension (markdown) is not among the allowed extensions
     (['inProgress', 'completed', 'mARkdown', 'yml', ''])
+
     # >>> URI("0255Jahiz.Hayawan.Shamela00123545-ara1.markdown")
     Exception: Extension (markdown) is not among the allowed extensions
     (['inProgress', 'completed', 'mARkdown', 'yml', ''])
@@ -236,7 +242,8 @@ ton tpi tsi tsn tso tuk tum tup tur tut tvl twi tyv udm uga uig ukr umb und urd
 uzb vai ven vie vol vot wak wal war was wel cym wen wln wol xal xho yao yap yid
 yor ypk zap zbl zen zgh zha chi zho znd zul zun zxx zza""")
 
-extensions = ["inProgress", "completed", "mARkdown", "yml", ""]
+extensions = ["inProgress", "completed", "mARkdown", "yml", "",
+              "pdf", "zip", "rar"]
 
 created_folders = []
 created_ymls = []
@@ -1345,6 +1352,69 @@ to abort: press Enter. ")
             print("User aborted carrying out these changes!")
             print("*"*60)
 
+def download_texts_from_CSV(csv_fp, old_base_pth="", new_base_pth=""):
+    """
+    Use a CSV file (filename, URI) to download a list of texts to the relevant \
+    OpenITI folder.
+
+    The CSV file (which should not contain a heading) can contain
+    full urls to the original files, or only filenames;
+    in the latter case, the path to the website where these files are located
+    should be passed to the function as the old_base_pth argument.
+    Similarly, the URI column can contain full OpenITI URI filepaths
+    or only the URIs; in the latter case, the path to the folder
+    containing the OpenITI 25-years folders should be passed to the function
+    as the new_base_pth argument.
+
+    Args:
+        csv_fp (str): path to a csv file that contains the following columns:
+            0. filepath to (or filename of) the text file
+            1. full version uri of the text file
+            (no headings!)
+        old_base_path (str): path to the folder containing
+            the files that need to be initialized. Defaults to "".
+        new_base_pth (str): path to the folder containing
+            the OpenITI 25-years repos. Defaults to "".
+    """
+    with open(csv_fp, mode="r", encoding="utf-8") as file:
+        csv = file.read().splitlines()
+        csv = [re.split("[,\t]", row) for row in csv]
+
+    temp_folder = "temp"
+    if not os.path.exists(temp_folder):
+        os.makedirs(temp_folder)
+
+    import requests
+
+    for old_fp, new in csv:
+        print(old_fp)
+        if not os.path.exists(new):
+            if old_base_pth:
+                old_fp = os.path.join(old_base_pth, old_fp)
+            new_uri = URI(new)
+            if new_base_pth:
+                new_uri.base_pth = new_base_pth
+            #char_count = ar_ch_len(old_fp)
+
+            fn = os.path.split(old_fp)[1]
+            temp_fp = os.path.join(temp_folder, fn)
+
+            with requests.get(old_fp, stream=True) as r:
+                r.raise_for_status()
+                with open(temp_fp, mode="wb") as f:
+                    for chunk in r.iter_content(chunk_size=8192):
+                        if chunk:
+                            f.write(chunk)
+            
+
+            move_to_new_uri_pth(temp_fp, new_uri, execute=True)
+
+            if not temp_fp.endswith("pdf") and not temp_fp.endswith("zip"):
+                tok_count = ar_cnt_file(temp_fp, mode="token")
+                add_character_count(tok_count, new_uri, execute=True)
+
+    shutil.rmtree(temp_folder)
+
 
 def add_character_count(tok_count, tar_uri, execute=False):
     """Add the character count to the new version yml file"""
@@ -1456,10 +1526,11 @@ Make sure base path is correct.""".format(new_uri.base_pth)
                 new_yml(new_uri.build_pth("version_yml"),
                             "version_yml", execute)
                 target_folder = new_uri.build_pth("version")
-                if "README.md" not in os.listdir(target_folder):
-                    add_readme(target_folder)
-                if "text_questionnaire.md" not in os.listdir(target_folder):
-                    add_text_questionnaire(target_folder)
+                if execute:
+                    if "README.md" not in os.listdir(target_folder):
+                        add_readme(target_folder)
+                    if "text_questionnaire.md" not in os.listdir(target_folder):
+                        add_text_questionnaire(target_folder)
 
 
 def move_to_new_uri_pth(old_fp, new_uri, execute=False):
@@ -1488,7 +1559,13 @@ def check_token_count(version_uri, ymlD):
     """Check whether the token count in the version yml file agrees with the\
     actual token count of the text file.
     """
-    fp = version_uri.build_pth(uri_type="version_file")
+    # Get the count from the most complete version of the text file: 
+    #fp = version_uri.build_pth(uri_type="version_file")
+    for ext in ["mARkdown", "completed", "inProgress", ""]:
+        version_uri.extension = ext
+        fp = version_uri.build_pth(uri_type="version_file")
+        if os.path.exists(fp):
+            break
     tok_count = ar_cnt_file(fp, mode="token")
     len_key = "00#VERS#LENGTH###:"
     yml_tok_count = ymlD[len_key].strip()
@@ -1590,9 +1667,7 @@ def check_yml_files(start_folder, exclude=[],
                                 ymlD = yml.readYML(yml_fp)
                             except:
                                 ymlD = None # mistake in the yml file!
-                                msg = "Yml file {} could not be read. Check manually!"
-                                print(msg.format(uri(yml_type)))
-                                erratic_ymls.append(yml_fp)
+                                
                             if ymlD == {}:
                                 print(yml_fp, "empty")
                                 missing_ymls.append(yml_fp)
@@ -1602,6 +1677,10 @@ def check_yml_files(start_folder, exclude=[],
                                 else:
                                     msg = "Replace empty yml file {}?"
                                     print(msg.format(uri(yml_type)))
+                            elif ymlD == None:
+                                msg = "Yml file {} could not be read. Check manually!"
+                                print(msg.format(uri(yml_type)))
+                                erratic_ymls.append(yml_fp)
                             else:
                                 key = uri_key.format(yml_type[:4].upper())
                                 if ymlD[key] != uri(yml_type[:-4]):
@@ -1667,23 +1746,23 @@ if __name__ == "__main__":
 
 
     URI.base_pth = r"D:\London\OpenITI\25Y_repos"
-    exclude = (["OpenITI.github.io", "Annotation", "maintenance", "i.mech00",
-                "i.mech01", "i.mech02", "i.mech03", "i.mech04", "i.mech05",
-                "i.mech06", "i.mech07", "i.mech08", "i.mech09", "i.logic",
-                "i.cex", "i.cex_Temp", "i.mech", "i.mech_Temp", ".git"])
-    resp = check_yml_files(r"D:\London\OpenITI\25Y_repos",
-                           exclude=exclude, execute=False)
-    missing_ymls, missing_tok_count, non_uri_files, erratic_ymls = resp
-    #print(non_uri_files)
-    input("continue?")
-
-    base_pth = r"D:\London\OpenITI\python_library\openiti\test"
-
-    # test initialize_new_texts_in_folder function:
-    barzakh = r"D:\London\OpenITI\python_library\openiti\test\barzakh"
-    initialize_new_texts_in_folder(barzakh, base_pth, execute=True)
-
-##    # test initialize_texts_from_CSV function:
+##    exclude = (["OpenITI.github.io", "Annotation", "maintenance", "i.mech00",
+##                "i.mech01", "i.mech02", "i.mech03", "i.mech04", "i.mech05",
+##                "i.mech06", "i.mech07", "i.mech08", "i.mech09", "i.logic",
+##                "i.cex", "i.cex_Temp", "i.mech", "i.mech_Temp", ".git"])
+##    resp = check_yml_files(r"D:\London\OpenITI\25Y_repos",
+##                           exclude=exclude, execute=False)
+##    missing_ymls, missing_tok_count, non_uri_files, erratic_ymls = resp
+##    #print(non_uri_files)
+##    input("continue?")
+##
+##    base_pth = r"D:\London\OpenITI\python_library\openiti\test"
+##
+##    # test initialize_new_texts_in_folder function:
+##    barzakh = r"D:\London\OpenITI\python_library\openiti\test\barzakh"
+##    initialize_new_texts_in_folder(barzakh, base_pth, execute=True)
+##
+####    # test initialize_texts_from_CSV function:
 ##    csv_fp = r"D:\London\OpenITI\python_library\openiti\test\initialize.csv"
 ##    initialize_texts_from_CSV(csv_fp, old_base_pth="", new_base_pth=base_pth,
 ##                              execute=False)
@@ -1695,12 +1774,16 @@ if __name__ == "__main__":
 ##               old_base_pth=base_pth, new_base_pth=base_pth,
 ##               execute=False)
 
-##    # test change_uri function for book uri change:
+    # test change_uri function for book uri change:
 ##    old = "0375IkhwanSafa.RisalatJamicaJamica"
 ##    new = "0375IkhwanSafa.RisalatJamica"
-##    change_uri(old, new,
-##               old_base_pth=base_pth, new_base_pth=base_pth,
-##               execute=False)
+    base_pth = r"D:\London\OpenITI\25Y_repos"
+    old = "0204HishamKalbi"
+    new = "0204IbnKalbi"
+    change_uri(old, new,
+               old_base_pth=base_pth, new_base_pth=base_pth,
+               execute=False)
+    input()
 
 ##    # test change_uri function for version uri change:
 ##    old = "0001Allah.KitabMuqaddas.BibleCorpus002-per1"

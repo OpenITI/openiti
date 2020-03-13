@@ -207,8 +207,9 @@ def ar_cnt_file(fp, mode="token"):
     Returns:
         length (int): Arabic character/token count 
     """
+    import urllib
     try:
-        with url.urlopen(fp) as f:
+        with urllib.request.urlopen(fp) as f:
             book = f.read().decode('utf-8')
     except:
         with open(fp, mode="r", encoding="utf-8") as f:
