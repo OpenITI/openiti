@@ -7,10 +7,10 @@ openiti.egg-info/dependency_links.txt
 openiti.egg-info/requires.txt
 openiti.egg-info/top_level.txt
 openiti/git/__init__.py
-openiti/git/check_ymls.py
 openiti/git/clone_OpenITI.py
 openiti/git/collect_txt_files.py
 openiti/git/get_issues.py
+openiti/git/initialize_texts.py
 openiti/helper/__init__.py
 openiti/helper/ara.py
 openiti/helper/funcs.py
