@@ -1,0 +1,2049 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>User manual &#8212; openiti 0.0.2 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Contributor Manual" href="forcontributors.html" />
+    <link rel="prev" title="Quick start" href="quickstart.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="user-manual">
+<h1>User manual<a class="headerlink" href="#user-manual" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="modules">
+<h2>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="openiti-helper">
+<h3>openiti.helper<a class="headerlink" href="#openiti-helper" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="module-openiti.helper.ara">
+<span id="openiti-helper-ara"></span><h4>openiti.helper.ara<a class="headerlink" href="#module-openiti.helper.ara" title="Permalink to this headline">¶</a></h4>
+<dl class="function">
+<dt id="openiti.helper.ara.ar_ch_cnt">
+<code class="descclassname">openiti.helper.ara.</code><code class="descname">ar_ch_cnt</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.ara.ar_ch_cnt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Count the number of Arabic characters in a string</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>text</strong> – text</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">number of the Arabic characters in the text</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="s">&quot;ابجد ابجد اَبًجٌدُ&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ar_ch_cnt</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="go">16</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.ara.ar_cnt_file">
+<code class="descclassname">openiti.helper.ara.</code><code class="descname">ar_cnt_file</code><span class="sig-paren">(</span><em>fp</em>, <em>mode='token'</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.ara.ar_cnt_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Count the number of Arabic characters/tokens in a text, given its pth</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fp</strong> (<em>str</em>) – url / path to a file</li>
+<li><strong>mode</strong> (<em>str</em>) – either “char” for count of Arabic characters,
+or “token” for count of Arabic tokens</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Arabic character/token count</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">length (int)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.ara.ar_tok_cnt">
+<code class="descclassname">openiti.helper.ara.</code><code class="descname">ar_tok_cnt</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.ara.ar_tok_cnt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Count the number of Arabic tokens in a string</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>text</strong> – text</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">number of Arabic tokens in the text</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="s">&quot;ابجد ابجد اَبًجٌدُ&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ar_tok_cnt</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="go">3</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.ara.deNoise">
+<code class="descclassname">openiti.helper.ara.</code><code class="descname">deNoise</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.ara.deNoise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove non-consonantal characters from Arabic text.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">denoise</span><span class="p">(</span><span class="s">&quot;وَالَّذِينَ يُؤْمِنُونَ بِمَا أُنْزِلَ إِلَيْكَ وَمَا أُنْزِلَ مِنْ قَبْلِكَ وَبِالْآخِرَةِ هُمْ يُوقِنُونَ&quot;</span><span class="p">)</span>
+<span class="go">&#39;والذين يؤمنون بما أنزل إليك وما أنزل من قبلك وبالآخرة هم يوقنون&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">denoise</span><span class="p">(</span><span class="s">&quot; ْ ً ٌ ٍ َ ُ ِ ّ ۡ ࣰ ࣱ ࣲ ٰ &quot;</span><span class="p">)</span>
+<span class="go">&#39;              &#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.ara.denormalize">
+<code class="descclassname">openiti.helper.ara.</code><code class="descname">denormalize</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.ara.denormalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace complex characters with a regex covering all variants.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">denormalize</span><span class="p">(</span><span class="s">&quot;يحيى&quot;</span><span class="p">)</span>
+<span class="go">&#39;يحي[يى]&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">denormalize</span><span class="p">(</span><span class="s">&quot;هوية&quot;</span><span class="p">)</span>
+<span class="go">&#39;هوي[هة]&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">denormalize</span><span class="p">(</span><span class="s">&quot;مقرئ&quot;</span><span class="p">)</span>
+<span class="go">&#39;مقر(?:[ؤئ]|[وي]ء)&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">denormalize</span><span class="p">(</span><span class="s">&quot;فيء&quot;</span><span class="p">)</span>
+<span class="go">&#39;في(?:[ؤئ]|[وي]ء)&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.ara.normalize">
+<code class="descclassname">openiti.helper.ara.</code><code class="descname">normalize</code><span class="sig-paren">(</span><em>text</em>, <em>replacement_tuples=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.ara.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize Arabic text by replacing complex characters by simple ones.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>text</strong> (<em>str</em>) – the string that needs to be normalized</li>
+<li><strong>replacement_tuples</strong> (<em>list of tuple pairs</em>) – (character, replacement)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">normalize</span><span class="p">(</span><span class="s">&#39;AlphaBet&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&quot;A&quot;</span><span class="p">,</span> <span class="s">&quot;a&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s">&quot;B&quot;</span><span class="p">,</span> <span class="s">&quot;b&quot;</span><span class="p">)])</span>
+<span class="go">&#39;alphabet&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.ara.normalize_ara_heavy">
+<code class="descclassname">openiti.helper.ara.</code><code class="descname">normalize_ara_heavy</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.ara.normalize_ara_heavy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize Arabic text by simplifying complex characters:
+alifs, alif maqsura, hamzas, ta marbutas</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">normalize_ara_heavy</span><span class="p">(</span><span class="s">&quot;ألف الف إلف آلف ٱلف&quot;</span><span class="p">)</span>
+<span class="go">&#39;الف الف الف الف الف&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">normalize_ara_heavy</span><span class="p">(</span><span class="s">&quot;يحيى&quot;</span><span class="p">)</span>
+<span class="go">&#39;يحيي&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">normalize_ara_heavy</span><span class="p">(</span><span class="s">&quot;مقرئ فيء&quot;</span><span class="p">)</span>
+<span class="go">&#39;مقر في&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">normalize_ara_heavy</span><span class="p">(</span><span class="s">&quot;قهوة&quot;</span><span class="p">)</span>
+<span class="go">&#39;قهوه&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.ara.normalize_ara_light">
+<code class="descclassname">openiti.helper.ara.</code><code class="descname">normalize_ara_light</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.ara.normalize_ara_light" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lighlty normalize Arabic strings:
+fixing only Alifs, Alif Maqsuras;
+replacing hamzas on carriers with standalone hamzas</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">normalize_ara_light</span><span class="p">(</span><span class="s">&quot;ألف الف إلف آلف ٱلف&quot;</span><span class="p">)</span>
+<span class="go">&#39;الف الف الف الف الف&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">normalize_ara_light</span><span class="p">(</span><span class="s">&quot;يحيى&quot;</span><span class="p">)</span>
+<span class="go">&#39;يحيي&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">normalize_ara_light</span><span class="p">(</span><span class="s">&quot;مقرئ فيء&quot;</span><span class="p">)</span>
+<span class="go">&#39;مقرء فء&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">normalize_ara_light</span><span class="p">(</span><span class="s">&quot;قهوة&quot;</span><span class="p">)</span>
+<span class="go">&#39;قهوة&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-openiti.helper.funcs">
+<span id="openiti-helper-funcs"></span><h4>openiti.helper.funcs<a class="headerlink" href="#module-openiti.helper.funcs" title="Permalink to this headline">¶</a></h4>
+<dl class="function">
+<dt id="openiti.helper.funcs.get_all_characters_in_folder">
+<code class="descclassname">openiti.helper.funcs.</code><code class="descname">get_all_characters_in_folder</code><span class="sig-paren">(</span><em>start_folder</em>, <em>verbose=False</em>, <em>exclude_folders=[]</em>, <em>exclude_files=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.funcs.get_all_characters_in_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a set of all characters used in all OpenITI text files     in a folder and its subfolders.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>start_folder</strong> (<em>str</em>) – path to the root directory. All files and folders
+in it, except if they are in the exclude lists, will be processed.</li>
+<li><strong>verbose</strong> (<em>bool</em>) – if True, filenames and current number of characters
+in the set will be printed.</li>
+<li><strong>exclude_folders</strong> (<em>list</em>) – list of folder names to be excluded
+from the process.</li>
+<li><strong>exclude_folders</strong> – list of file names to be excluded.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a set of all characters used in the folder.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">all_characters (set)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.funcs.get_all_characters_in_text">
+<code class="descclassname">openiti.helper.funcs.</code><code class="descname">get_all_characters_in_text</code><span class="sig-paren">(</span><em>fp</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.funcs.get_all_characters_in_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a set of all characters used in a text.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fp</strong> (<em>str</em>) – path to a text file.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a set of all characters used in the text.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">all_characters (set)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.funcs.get_character_names">
+<code class="descclassname">openiti.helper.funcs.</code><code class="descname">get_character_names</code><span class="sig-paren">(</span><em>characters</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.funcs.get_character_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the unicode name of a list/set/string of characters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>characters</strong> (<em>list/set/string</em>) – a list, string or set of characters.</li>
+<li><strong>verbose</strong> (<em>bool</em>) – if set to True, the output will be printed</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a dictionary of characters and their names.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">char_dict (dict)</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">char_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;١&quot;</span><span class="p">:</span> <span class="s">&quot;ARABIC-INDIC DIGIT ONE&quot;</span><span class="p">,</span>                         <span class="s">&quot;٢&quot;</span><span class="p">:</span> <span class="s">&quot;ARABIC-INDIC DIGIT TWO&quot;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">char_dict</span> <span class="o">==</span> <span class="n">get_character_names</span><span class="p">(</span><span class="s">&quot;١٢&quot;</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">char_dict</span> <span class="o">==</span> <span class="n">get_character_names</span><span class="p">([</span><span class="s">&quot;١&quot;</span><span class="p">,</span> <span class="s">&quot;٢&quot;</span><span class="p">])</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">char_dict</span> <span class="o">==</span> <span class="n">get_character_names</span><span class="p">({</span><span class="s">&quot;١&quot;</span><span class="p">,</span> <span class="s">&quot;٢&quot;</span><span class="p">})</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.funcs.read_header">
+<code class="descclassname">openiti.helper.funcs.</code><code class="descname">read_header</code><span class="sig-paren">(</span><em>fp</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.funcs.read_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read only the OpenITI header of a file without opening the entire file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fp</strong> (<em>str</em>) – path to the text file</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of all metadata lines in the header</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">header (list)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-openiti.helper.templates">
+<span id="openiti-helper-templates"></span><h4>openiti.helper.templates<a class="headerlink" href="#module-openiti.helper.templates" title="Permalink to this headline">¶</a></h4>
+<p>Templates for OpenITI yml files, readme files, etc.</p>
+<p>Templates:</p>
+<ul class="simple">
+<li>MAGIC_VALUE</li>
+<li>HEADER_SPLITTER</li>
+<li>HTML_HEADER</li>
+<li>HTML_FOOTER</li>
+<li>author_yml_template</li>
+<li>book_yml_template</li>
+<li>version_yml_template</li>
+<li>readme_template</li>
+<li>text_questionnaire_template</li>
+</ul>
+</div>
+<div class="section" id="module-openiti.helper.uri">
+<span id="openiti-helper-uri"></span><h4>openiti.helper.uri<a class="headerlink" href="#module-openiti.helper.uri" title="Permalink to this headline">¶</a></h4>
+<p>Classes and functions to work with OpenITI URIs</p>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<ul class="last simple">
+<li>make the print output look nicer</li>
+<li>reflow texts + insert milestones?</li>
+<li>compare with Maxim’s script: _add_new_text_from_folder.py
+in maintenance repo</li>
+</ul>
+</div>
+<p>The Module contains a URI class that represents an OpenITI URI as an object.
+The URI class’s methods allow</p>
+<p>test</p>
+<ul class="simple">
+<li>Checking whether all components of the URI are valid</li>
+<li>Accessing and changing components of the URI</li>
+<li>Getting the URI’s current uri_type (“author”, “book”, “version”, None)</li>
+<li>Building different versions of the URI (“author”, “book”, etc.)</li>
+<li>Building paths based on the URI</li>
+</ul>
+<p>In addition to the URI class, the module contains a number of functions for</p>
+<ul class="simple">
+<li>implementing URI changes in the OpenITI corpus</li>
+<li>initializing new texts in the OpenITI corpus (a single text,
+all texts in a folder, or using a csv file)</li>
+</ul>
+<p class="rubric">Examples</p>
+<p>The Module contains a URI class that represents an OpenITI URI as an object.
+By calling the URI class, you create an instance of the URI class</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">uri</span> <span class="k">import</span> <span class="n">URI</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">instance1</span> <span class="o">=</span> <span class="n">URI</span><span class="p">(</span><span class="s">&quot;0255Jahiz.Bayan&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">instance2</span> <span class="o">=</span> <span class="n">URI</span><span class="p">(</span><span class="s">&quot;0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The URI instance inherits all the URI class’s methods and properties:</p>
+<ul class="simple">
+<li>Making string representations of a URI instance: print() and repr():</li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">URI</span><span class="p">(</span><span class="s">&quot;0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+<span class="go">uri(date:0255, author:Jahiz, title:Hayawan, version:Sham19Y0023775, language:ara, edition_no:1, extension:completed)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="go">0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>Accessing components of the URI:</li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">author</span>
+<span class="go">&#39;Jahiz&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">date</span>
+<span class="go">&#39;0255&#39;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>Changing components of the URI by setting properties to a new value:</li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">u</span> <span class="o">=</span> <span class="n">URI</span><span class="p">(</span><span class="s">&quot;0255Jahiz.Hayawan&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">u</span><span class="o">.</span><span class="n">author</span> <span class="o">=</span> <span class="s">&quot;JahizBasri&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+<span class="go">0255JahizBasri.Hayawan</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>Validity tests: setting invalid values for part of a uri returns an error</li>
+</ul>
+<p>(implemented for instantiation of URI objects + setting URI components):</p>
+<p># &gt;&gt;&gt; URI(“255Jahiz”)
+Exception: Date Error: URI must start with a date of 4 digits (255 has 3!)
+# &gt;&gt;&gt; URI(“0255Jāḥiẓ”)
+Exception: Author name Error: Author name (Jāḥiẓ) should not contain
+digits or non-ASCII characters(culprits: [‘ā’, ‘ḥ’, ‘ẓ’])
+# &gt;&gt;&gt; t.author = “Jāḥiẓ”
+Exception: Author name Error: Author name (Jāḥiẓ) should not contain
+digits or non-ASCII characters(culprits: [‘ā’, ‘ḥ’, ‘ẓ’])
+# &gt;&gt;&gt; t.author = “0255Jahiz”
+Exception: Author name Error: Author name (0255Jahiz) should not contain
+digits or non-ASCII characters(culprits: [‘0’, ‘2’, ‘5’, ‘5’])
+# &gt;&gt;&gt; URI(“0255Jahiz.Al-Hayawan”)
+Exception: Book title Error: Book title (Al-Hayawan) should not contain
+non-ASCII characters(culprits: [‘-‘])
+# &gt;&gt;&gt; URI(“0255Jahiz.Hayawan.Shāmila00123545-ara1”)
+Exception: Version string Error: Version string (Shāmila00123545)
+should not contain non-ASCII characters(culprits: [‘ā’])
+# &gt;&gt;&gt; URI(“0255Jahiz.Hayawan.Shamela00123545-arab1”)
+Exception: Language code (arab) should be an ISO 639-2 language code,
+consisting of 3 characters
+# &gt;&gt;&gt; t.extension = “markdown”
+Exception: Extension (markdown) is not among the allowed extensions
+([‘inProgress’, ‘completed’, ‘mARkdown’, ‘yml’, ‘’])
+# &gt;&gt;&gt; URI(“0255Jahiz.Hayawan.Shamela00123545-ara1.markdown”)
+Exception: Extension (markdown) is not among the allowed extensions
+([‘inProgress’, ‘completed’, ‘mARkdown’, ‘yml’, ‘’])</p>
+<ul class="simple">
+<li>Getting the URI’s current uri_type (“author”, “book”, “version”, None),</li>
+</ul>
+<p>i.e., the longest URI that can be built from the object’s components:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">uri_type</span>
+<span class="go">&#39;version&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">language</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">uri_type</span>
+<span class="go">&#39;book&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">uri_type</span> <span class="o">==</span> <span class="k">None</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>Building different versions of the URI</li>
+</ul>
+<p>(uri_types: “author”, “author_yml”, “book”, “book_yml”,
+“version”, “version_yml”, “version_file”):</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">URI</span><span class="p">(</span><span class="s">&quot;0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_uri</span><span class="p">(</span><span class="n">uri_type</span><span class="o">=</span><span class="s">&quot;author&quot;</span><span class="p">)</span>
+<span class="go">&#39;0255Jahiz&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_uri</span><span class="p">(</span><span class="s">&quot;book&quot;</span><span class="p">)</span>
+<span class="go">&#39;0255Jahiz.Hayawan&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_uri</span><span class="p">(</span><span class="s">&quot;book_yml&quot;</span><span class="p">)</span>
+<span class="go">&#39;0255Jahiz.Hayawan.yml&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_uri</span><span class="p">(</span><span class="s">&quot;version&quot;</span><span class="p">)</span>
+<span class="go">&#39;0255Jahiz.Hayawan.Sham19Y0023775-ara1&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_uri</span><span class="p">(</span><span class="s">&quot;version_file&quot;</span><span class="p">)</span>
+<span class="go">&#39;0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed&#39;</span>
+</pre></div>
+</div>
+<p>Simply calling the URI object (i.e., writing parentheses after
+the variable name works as an alias for the build_uri function:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">URI</span><span class="p">(</span><span class="s">&quot;0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="p">(</span><span class="n">uri_type</span><span class="o">=</span><span class="s">&quot;author&quot;</span><span class="p">)</span>
+<span class="go">&#39;0255Jahiz&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="p">(</span><span class="s">&quot;book&quot;</span><span class="p">)</span>
+<span class="go">&#39;0255Jahiz.Hayawan&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="p">(</span><span class="s">&quot;book_yml&quot;</span><span class="p">)</span>
+<span class="go">&#39;0255Jahiz.Hayawan.yml&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="p">(</span><span class="s">&quot;version&quot;</span><span class="p">)</span>
+<span class="go">&#39;0255Jahiz.Hayawan.Sham19Y0023775-ara1&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="p">(</span><span class="s">&quot;version_file&quot;</span><span class="p">)</span>
+<span class="go">&#39;0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed&#39;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>Building paths based on the URI:</li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_pth</span><span class="p">(</span><span class="n">uri_type</span><span class="o">=</span><span class="s">&quot;version&quot;</span><span class="p">,</span> <span class="n">base_pth</span><span class="o">=</span><span class="s">&quot;D:</span><span class="se">\t</span><span class="s">est&quot;</span><span class="p">)</span>
+<span class="go">&#39;D:/test/0275AH/data/0255Jahiz/0255Jahiz.Hayawan&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_pth</span><span class="p">(</span><span class="n">uri_type</span><span class="o">=</span><span class="s">&quot;version_file&quot;</span><span class="p">,</span> <span class="n">base_pth</span><span class="o">=</span><span class="s">&quot;D:</span><span class="se">\t</span><span class="s">est&quot;</span><span class="p">)</span>
+<span class="go">&#39;D:/test/0275AH/data/0255Jahiz/0255Jahiz.Hayawan/0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_pth</span><span class="p">(</span><span class="s">&quot;version&quot;</span><span class="p">)</span>
+<span class="go">&#39;./0275AH/data/0255Jahiz/0255Jahiz.Hayawan&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_pth</span><span class="p">(</span><span class="n">uri_type</span><span class="o">=</span><span class="s">&quot;book_yml&quot;</span><span class="p">)</span>
+<span class="go">&#39;./0275AH/data/0255Jahiz/0255Jahiz.Hayawan/0255Jahiz.Hayawan.yml&#39;</span>
+</pre></div>
+</div>
+<p>Without uri_type argument, build_pth() builds the fullest path it can:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_pth</span><span class="p">()</span>
+<span class="go">&#39;./0275AH/data/0255Jahiz/0255Jahiz.Hayawan/0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">language</span><span class="o">=</span><span class="s">&quot;&quot;</span>  <span class="c"># (removing the language property makes it impossible to build a version uri)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_pth</span><span class="p">()</span>
+<span class="go">&#39;./0275AH/data/0255Jahiz/0255Jahiz.Hayawan&#39;</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<p>In addition to the URI class, the module contains a number of functions for
+* implementing URI changes in the OpenITI corpus
+* initializing new texts in the OpenITI corpus (a single text,</p>
+<blockquote>
+<div>all texts in a folder, or using a csv file)</div></blockquote>
+<p>All these functions have an <em>execute</em> flag. If set to False,
+the function will not immediately be executed but first show all changes
+it will make, and then ask the user whether to carry out the changes or not.</p>
+<ul class="simple">
+<li>Changing a URI and moving all files to the correct folders:</li>
+</ul>
+<p>(execute=False flag: script shows you which changes it will make,
+then gives you the option to carry out the changes or not)
+# &gt;&gt;&gt; old = “0255Jahiz”
+# &gt;&gt;&gt; new = “0255JahizBasri”
+# &gt;&gt;&gt; change_uri(old, new, execute=False)</p>
+<ul class="simple">
+<li>Moving new files to their OpenITI repo:</li>
+</ul>
+<p># &gt;&gt;&gt; folder = r”D:OpenITIarzakh”
+# &gt;&gt;&gt; target_base_pth = r”D:OpenITIYrepos”
+# &gt;&gt;&gt; initialize_new_texts_in_folder(folder,    #                                    target_base_pth, execute=False)</p>
+<ul class="simple">
+<li>Initializing new texts with a csv file</li>
+</ul>
+<p>(two columns, without headers: non-URI filepath, URI):
+# &gt;&gt;&gt; csv_fp = r”D:OpenITI</p>
+<p>ew
+ew_files.csv”</p>
+<blockquote>
+<div># &gt;&gt;&gt; new_base_path = r”D:OpenITIY_repos”
+# &gt;&gt;&gt; initialize_texts_from_CSV(csv_fp, base_path=new_base_path,    #                               execute=False)</div></blockquote>
+<dl class="class">
+<dt id="openiti.helper.uri.URI">
+<em class="property">class </em><code class="descclassname">openiti.helper.uri.</code><code class="descname">URI</code><span class="sig-paren">(</span><em>uri_string=None</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.URI" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class that represents the OpenITI URI as a Python object.</p>
+<p>OpenITI URIs consist of the following elements:
+0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1.mARkdown</p>
+<blockquote>
+<div><ul>
+<li><p class="first">VersionURI: consists of
+- EditionURI: consists of</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Work URI: consists of
+- AuthorID: consists of</p>
+<blockquote>
+<div><ul class="simple">
+<li>author’s death date (self.date): 0768</li>
+<li>shuhra of the author (self.author): IbnMuhammadTaqiDinBaclabakki</li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li>BookID (self.title): Hadith: short title of the book</li>
+</ul>
+</li>
+<li><p class="first">Version URI: consists of
+- VersionID (self.version): Shamela0009426: ID of the collection/contributor</p>
+<blockquote>
+<div><p>from which we got the book + number of the book in that collection</p>
+</div></blockquote>
+<ul>
+<li><p class="first">Lang:
+* self.language: ara: ISO 639-2 language code
+* self.edition_no: 1: edition version number</p>
+<blockquote>
+<div><p>(different digitizations of the same edition get the same edition_no)</p>
+</div></blockquote>
+</li>
+</ul>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">self.extension = mARkdown (can be inProgress, mARkdown, completed, “”)</p>
+</li>
+</ul>
+</div></blockquote>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">uri</span> <span class="k">import</span> <span class="n">URI</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">URI</span><span class="p">(</span><span class="s">&quot;0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Representations of a URI object: print() and repr():</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+<span class="go">uri(date:0255, author:Jahiz, title:Hayawan, version:Sham19Y0023775, language:ara, edition_no:1, extension:completed)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="go">0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed</span>
+</pre></div>
+</div>
+<p>Accessing components of the URI:
+&gt;&gt;&gt; t.author
+‘Jahiz’
+&gt;&gt;&gt; t.date
+‘0255’</p>
+<p>Getting URI’s current uri_type (“author”, “book”, “version”, None),
+i.e., the longest URI that can be built from the object’s components:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">uri_type</span>
+<span class="go">&#39;version&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">language</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">uri_type</span>
+<span class="go">&#39;book&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">uri_type</span> <span class="o">==</span> <span class="k">None</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>Building different versions of the URI
+(uri_types: “author”, “author_yml”, “book”, “book_yml”,
+“version”, “version_yml”, “version_file”):</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">URI</span><span class="p">(</span><span class="s">&quot;0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_uri</span><span class="p">(</span><span class="n">uri_type</span><span class="o">=</span><span class="s">&quot;author&quot;</span><span class="p">)</span>
+<span class="go">&#39;0255Jahiz&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_uri</span><span class="p">(</span><span class="s">&quot;book&quot;</span><span class="p">)</span>
+<span class="go">&#39;0255Jahiz.Hayawan&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_uri</span><span class="p">(</span><span class="s">&quot;book_yml&quot;</span><span class="p">)</span>
+<span class="go">&#39;0255Jahiz.Hayawan.yml&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_uri</span><span class="p">(</span><span class="s">&quot;version&quot;</span><span class="p">)</span>
+<span class="go">&#39;0255Jahiz.Hayawan.Sham19Y0023775-ara1&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_uri</span><span class="p">(</span><span class="s">&quot;version_file&quot;</span><span class="p">)</span>
+<span class="go">&#39;0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed&#39;</span>
+</pre></div>
+</div>
+<p>Building paths based on the URI:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_pth</span><span class="p">(</span><span class="n">uri_type</span><span class="o">=</span><span class="s">&quot;version&quot;</span><span class="p">,</span> <span class="n">base_pth</span><span class="o">=</span><span class="s">&quot;D:</span><span class="se">\t</span><span class="s">est&quot;</span><span class="p">)</span>
+<span class="go">&#39;D:/test/0275AH/data/0255Jahiz/0255Jahiz.Hayawan&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_pth</span><span class="p">(</span><span class="n">uri_type</span><span class="o">=</span><span class="s">&quot;version_file&quot;</span><span class="p">,</span> <span class="n">base_pth</span><span class="o">=</span><span class="s">&quot;D:</span><span class="se">\t</span><span class="s">est&quot;</span><span class="p">)</span>
+<span class="go">&#39;D:/test/0275AH/data/0255Jahiz/0255Jahiz.Hayawan/0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_pth</span><span class="p">(</span><span class="s">&quot;version&quot;</span><span class="p">)</span>
+<span class="go">&#39;./0275AH/data/0255Jahiz/0255Jahiz.Hayawan&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_pth</span><span class="p">(</span><span class="n">uri_type</span><span class="o">=</span><span class="s">&quot;book_yml&quot;</span><span class="p">)</span>
+<span class="go">&#39;./0275AH/data/0255Jahiz/0255Jahiz.Hayawan/0255Jahiz.Hayawan.yml&#39;</span>
+</pre></div>
+</div>
+<p>Without uri_type argument, build_pth() builds the fullest path it can:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_pth</span><span class="p">()</span>
+<span class="go">&#39;./0275AH/data/0255Jahiz/0255Jahiz.Hayawan/0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">language</span><span class="o">=</span><span class="s">&quot;&quot;</span>  <span class="c"># (removing the language property makes it impossible to build a version uri)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_pth</span><span class="p">()</span>
+<span class="go">&#39;./0275AH/data/0255Jahiz/0255Jahiz.Hayawan&#39;</span>
+</pre></div>
+</div>
+<p>Validity tests: setting invalid values for part of a uri returns an error:</p>
+<p># &gt;&gt;&gt; URI(“255Jahiz”)
+Exception: Date Error: URI must start with a date of 4 digits (255 has 3!)
+# &gt;&gt;&gt; URI(“0255Jāḥiẓ”)
+Exception: Author name Error: Author name (Jāḥiẓ) should not contain
+digits or non-ASCII characters(culprits: [‘ā’, ‘ḥ’, ‘ẓ’])
+# &gt;&gt;&gt; t.author = “Jāḥiẓ”
+Exception: Author name Error: Author name (Jāḥiẓ) should not contain
+digits or non-ASCII characters(culprits: [‘ā’, ‘ḥ’, ‘ẓ’])
+# &gt;&gt;&gt; t.author = “0255Jahiz”
+Exception: Author name Error: Author name (0255Jahiz) should not contain
+digits or non-ASCII characters(culprits: [‘0’, ‘2’, ‘5’, ‘5’])
+# &gt;&gt;&gt; URI(“0255Jahiz.Al-Hayawan”)
+Exception: Book title Error: Book title (Al-Hayawan) should not contain
+non-ASCII characters(culprits: [‘-‘])
+# &gt;&gt;&gt; URI(“0255Jahiz.Hayawan.Shāmila00123545-ara1”)
+Exception: Version string Error: Version string (Shāmila00123545)
+should not contain non-ASCII characters(culprits: [‘ā’])
+# &gt;&gt;&gt; URI(“0255Jahiz.Hayawan.Shamela00123545-arab1”)
+Exception: Language code (arab) should be an ISO 639-2 language code,
+consisting of 3 characters
+# &gt;&gt;&gt; t.extension = “markdown”
+Exception: Extension (markdown) is not among the allowed extensions
+([‘inProgress’, ‘completed’, ‘mARkdown’, ‘yml’, ‘’])
+# &gt;&gt;&gt; URI(“0255Jahiz.Hayawan.Shamela00123545-ara1.markdown”)
+Exception: Extension (markdown) is not among the allowed extensions
+([‘inProgress’, ‘completed’, ‘mARkdown’, ‘yml’, ‘’])</p>
+<dl class="method">
+<dt id="openiti.helper.uri.URI.__call__">
+<code class="descname">__call__</code><span class="sig-paren">(</span><em>uri_type=None</em>, <em>ext=None</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.URI.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call the self.build_uri() method of the URI instance.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span> <span class="o">=</span> <span class="n">URI</span><span class="p">(</span><span class="s">&quot;0768IbnMuhammadTaqiDinBaclabakki&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">&quot;Hadith&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="s">&quot;Shamela0009426&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">language</span> <span class="o">=</span> <span class="s">&quot;ara&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">edition_no</span> <span class="o">=</span> <span class="s">&quot;1&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="p">()</span>
+<span class="go">&#39;0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="p">(</span><span class="s">&quot;date&quot;</span><span class="p">)</span>
+<span class="go">&#39;0768&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="p">(</span><span class="s">&quot;author&quot;</span><span class="p">)</span>
+<span class="go">&#39;0768IbnMuhammadTaqiDinBaclabakki&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="p">(</span><span class="s">&quot;author_yml&quot;</span><span class="p">)</span>
+<span class="go">&#39;0768IbnMuhammadTaqiDinBaclabakki.yml&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="p">(</span><span class="s">&quot;book&quot;</span><span class="p">)</span>
+<span class="go">&#39;0768IbnMuhammadTaqiDinBaclabakki.Hadith&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="p">(</span><span class="s">&quot;book_yml&quot;</span><span class="p">)</span>
+<span class="go">&#39;0768IbnMuhammadTaqiDinBaclabakki.Hadith.yml&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="p">(</span><span class="s">&quot;version&quot;</span><span class="p">)</span>
+<span class="go">&#39;0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="p">(</span><span class="s">&quot;version_yml&quot;</span><span class="p">)</span>
+<span class="go">&#39;0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1.yml&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="p">(</span><span class="s">&quot;version_file&quot;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="s">&quot;completed&quot;</span><span class="p">)</span>
+<span class="go">&#39;0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1.completed&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.helper.uri.URI.__iter__">
+<code class="descname">__iter__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.URI.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable iteration over a URI object.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span> <span class="o">=</span> <span class="n">URI</span><span class="p">(</span><span class="s">&quot;0255Jahiz.Hayawan.Sham19Y0023775-ara1.inProgress&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">my_uri</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
+<span class="go">0255</span>
+<span class="go">Jahiz</span>
+<span class="go">Hayawan</span>
+<span class="go">Sham19Y0023775</span>
+<span class="go">ara</span>
+<span class="go">1</span>
+<span class="go">inProgress</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span> <span class="o">=</span> <span class="n">URI</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">my_uri</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.helper.uri.URI.__repr__">
+<code class="descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.URI.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a representation of the components of the URI.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span> <span class="o">=</span> <span class="n">URI</span><span class="p">(</span><span class="s">&quot;0255Jahiz.Hayawan.Sham19Y0023775-ara1&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">repr</span><span class="p">(</span><span class="n">my_uri</span><span class="p">)</span>
+<span class="go">&#39;uri(date:0255, author:Jahiz, title:Hayawan, version:Sham19Y0023775, language:ara, edition_no:1, extension:)&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span> <span class="o">=</span> <span class="n">URI</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">repr</span><span class="p">(</span><span class="n">my_uri</span><span class="p">)</span>
+<span class="go">&#39;uri(date:, author:, title:, version:, language:, edition_no:, extension:)&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.helper.uri.URI.__str__">
+<code class="descname">__str__</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.URI.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the reassembled URI.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span> <span class="o">=</span> <span class="n">URI</span><span class="p">(</span><span class="s">&quot;0255Jahiz.Hayawan.Sham19Y0023775-ara1.inProgress&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">extension</span> <span class="o">=</span> <span class="s">&quot;completed&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">my_uri</span><span class="p">)</span>
+<span class="go">0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="openiti.helper.uri.URI.author">
+<code class="descname">author</code><a class="headerlink" href="#openiti.helper.uri.URI.author" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the URI’s author property</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="openiti.helper.uri.URI.base_pth">
+<code class="descname">base_pth</code><a class="headerlink" href="#openiti.helper.uri.URI.base_pth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the URI’s base_pth property (the path to be prepended to the URIs)
+(usually the folder in which the OpenITI 25-years repos reside)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.helper.uri.URI.build_uri">
+<code class="descname">build_uri</code><span class="sig-paren">(</span><em>uri_type=None</em>, <em>ext=None</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.URI.build_uri" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build an OpenITI URI string from its components.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>uri_type</strong> (<em>str</em>) – <p>the uri type to be returned (defaults to None):
+- “date” : only the date (format: 0000)
+- “author” : authorUri (format: 0255Jahiz)
+- “author_yml” : filename of the author yml file</p>
+<blockquote>
+<div>(format: 0255Jahiz.yml)</div></blockquote>
+<ul>
+<li>”book”: BookUri (format: 0255Jahiz.Hayawan)</li>
+<li><dl class="first docutils">
+<dt>”book_yml”: filename of the book yml file</dt>
+<dd>(format: 0255Jahiz.Hayawan.yml)</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>”version”: versionURI</dt>
+<dd>(format: 0255Jahiz.Hayawan.Shamela000245-ara1)</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>”version_yml”: filename of the version yml file</dt>
+<dd>(format: 0255Jahiz.Hayawan.Shamela000245-ara1.yml)</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>”version_file”: filename of the version text file</dt>
+<dd>(format: 0255Jahiz.Hayawan.Shamela000245-ara1.completed)</dd>
+</dl>
+</li>
+</ul>
+</li>
+<li><strong>ext</strong> (<em>str</em>) – extension for the version_file uri string
+(can be “completed”, “inProgress”, “mARkdown”, “” or None).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
+<dt>OpenITI URI, e.g.,</dt>
+<dd><p class="first last">0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1</p>
+</dd>
+</dl>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">uri_string (str)</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span> <span class="o">=</span> <span class="n">URI</span><span class="p">(</span><span class="s">&quot;0768IbnMuhammadTaqiDinBaclabakki&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">&quot;Hadith&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="s">&quot;Shamela0009426&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">language</span> <span class="o">=</span> <span class="s">&quot;ara&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">edition_no</span> <span class="o">=</span> <span class="s">&quot;1&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">build_uri</span><span class="p">()</span>
+<span class="go">&#39;0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">build_uri</span><span class="p">(</span><span class="s">&quot;date&quot;</span><span class="p">)</span>
+<span class="go">&#39;0768&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">build_uri</span><span class="p">(</span><span class="s">&quot;author&quot;</span><span class="p">)</span>
+<span class="go">&#39;0768IbnMuhammadTaqiDinBaclabakki&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">build_uri</span><span class="p">(</span><span class="s">&quot;author_yml&quot;</span><span class="p">)</span>
+<span class="go">&#39;0768IbnMuhammadTaqiDinBaclabakki.yml&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">build_uri</span><span class="p">(</span><span class="s">&quot;book&quot;</span><span class="p">)</span>
+<span class="go">&#39;0768IbnMuhammadTaqiDinBaclabakki.Hadith&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">build_uri</span><span class="p">(</span><span class="s">&quot;book_yml&quot;</span><span class="p">)</span>
+<span class="go">&#39;0768IbnMuhammadTaqiDinBaclabakki.Hadith.yml&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">build_uri</span><span class="p">(</span><span class="s">&quot;version&quot;</span><span class="p">)</span>
+<span class="go">&#39;0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">build_uri</span><span class="p">(</span><span class="s">&quot;version_yml&quot;</span><span class="p">)</span>
+<span class="go">&#39;0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1.yml&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">build_uri</span><span class="p">(</span><span class="s">&quot;version_file&quot;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="s">&quot;completed&quot;</span><span class="p">)</span>
+<span class="go">&#39;0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1.completed&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.helper.uri.URI.check_ASCII">
+<code class="descname">check_ASCII</code><span class="sig-paren">(</span><em>test_string</em>, <em>string_type</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.URI.check_ASCII" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether the test_string only contains ASCII letters and digits.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.helper.uri.URI.check_ASCII_letters">
+<code class="descname">check_ASCII_letters</code><span class="sig-paren">(</span><em>test_string</em>, <em>string_type</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.URI.check_ASCII_letters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether the test_string only contains ASCII letters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.helper.uri.URI.check_date">
+<code class="descname">check_date</code><span class="sig-paren">(</span><em>date</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.URI.check_date" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if date is valid (i.e., 4-digit number or empty string)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.helper.uri.URI.check_extension">
+<code class="descname">check_extension</code><span class="sig-paren">(</span><em>extension</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.URI.check_extension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether the proposed extension is allowed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.helper.uri.URI.check_language_code">
+<code class="descname">check_language_code</code><span class="sig-paren">(</span><em>language</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.URI.check_language_code" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether language is a valid ISO 639-2 language code.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="openiti.helper.uri.URI.date">
+<code class="descname">date</code><a class="headerlink" href="#openiti.helper.uri.URI.date" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the URI’s date property</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="openiti.helper.uri.URI.edition_no">
+<code class="descname">edition_no</code><a class="headerlink" href="#openiti.helper.uri.URI.edition_no" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the URI’s edition_no property (i.e., the last digit of the URI)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="openiti.helper.uri.URI.extension">
+<code class="descname">extension</code><a class="headerlink" href="#openiti.helper.uri.URI.extension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the URI’s extension property.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.helper.uri.URI.from_folder">
+<code class="descname">from_folder</code><span class="sig-paren">(</span><em>folder</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.URI.from_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a URI from a folder path without a file name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.helper.uri.URI.get_author_uri">
+<code class="descname">get_author_uri</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.URI.get_author_uri" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the author uri.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>OpenITI URI, e.g.,</dt>
+<dd>0768IbnMuhammadTaqiDinBaclabakki</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">uri_string (str)</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span> <span class="o">=</span> <span class="n">URI</span><span class="p">(</span><span class="s">&#39;0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">get_author_uri</span><span class="p">()</span>
+<span class="go">&#39;0768IbnMuhammadTaqiDinBaclabakki&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.helper.uri.URI.get_book_uri">
+<code class="descname">get_book_uri</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.URI.get_book_uri" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the book uri.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>OpenITI URI, e.g.,</dt>
+<dd>0768IbnMuhammadTaqiDinBaclabakki.Hadith</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">uri_string (str)</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span> <span class="o">=</span> <span class="n">URI</span><span class="p">(</span><span class="s">&#39;0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">get_book_uri</span><span class="p">()</span>
+<span class="go">&#39;0768IbnMuhammadTaqiDinBaclabakki.Hadith&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.helper.uri.URI.get_version_uri">
+<code class="descname">get_version_uri</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.URI.get_version_uri" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the version uri.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>OpenITI URI, e.g.,</dt>
+<dd>0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">uri_string (str)</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span> <span class="o">=</span> <span class="n">URI</span><span class="p">(</span><span class="s">&#39;0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">extension</span> <span class="o">=</span> <span class="s">&quot;completed&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">get_version_uri</span><span class="p">()</span>
+<span class="go">&#39;0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="openiti.helper.uri.URI.language">
+<code class="descname">language</code><a class="headerlink" href="#openiti.helper.uri.URI.language" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the URI’s language property (an ISO 639-2 language code).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.helper.uri.URI.normpath">
+<code class="descname">normpath</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.URI.normpath" title="Permalink to this definition">¶</a></dt>
+<dd><p>replace backslashes by forward slashes also on Windows
+This is necessary to make the doctests behave the same way
+on Windows, Mac and Unix systems</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.helper.uri.URI.split_uri">
+<code class="descname">split_uri</code><span class="sig-paren">(</span><em>uri_string=None</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.URI.split_uri" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split an OpenITI URI string into its components and check if components are valid.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>uri_string</strong> (<em>str</em>) – OpenITI URI, e.g.,
+0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list of uri components</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">split_components (list)</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span> <span class="o">=</span> <span class="n">URI</span><span class="p">(</span><span class="s">&quot;0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">split_uri</span><span class="p">()</span>
+<span class="go">[&#39;0255&#39;, &#39;Jahiz&#39;, &#39;Hayawan&#39;, &#39;Sham19Y0023775&#39;, &#39;ara&#39;, &#39;1&#39;, &#39;completed&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">extension</span><span class="o">=</span><span class="s">&quot;&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">language</span><span class="o">=</span><span class="s">&quot;&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">split_uri</span><span class="p">()</span>
+<span class="go">[&#39;0255&#39;, &#39;Jahiz&#39;, &#39;Hayawan&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="openiti.helper.uri.URI.title">
+<code class="descname">title</code><a class="headerlink" href="#openiti.helper.uri.URI.title" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the URI’s title property.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="openiti.helper.uri.URI.uri_type">
+<code class="descname">uri_type</code><a class="headerlink" href="#openiti.helper.uri.URI.uri_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the URI object’s current uri_type
+(“author”, “book”, “version”, None) based on its defined components.</p>
+<p>NB: uri_type does not have a setter method, making it read-only!</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span> <span class="o">=</span> <span class="n">URI</span><span class="p">(</span><span class="s">&quot;0255Jahiz.Hayawan.Sham19Y0023775-ara1.inProgress&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">uri_type</span>
+<span class="go">&#39;version&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">language</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">uri_type</span>
+<span class="go">&#39;book&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span> <span class="o">=</span> <span class="n">URI</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">uri_type</span> <span class="ow">is</span> <span class="k">None</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="openiti.helper.uri.URI.version">
+<code class="descname">version</code><a class="headerlink" href="#openiti.helper.uri.URI.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the URI’s version property.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.uri.add_character_count">
+<code class="descclassname">openiti.helper.uri.</code><code class="descname">add_character_count</code><span class="sig-paren">(</span><em>tok_count</em>, <em>tar_uri</em>, <em>execute=False</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.add_character_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the character count to the new version yml file</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.uri.change_uri">
+<code class="descclassname">openiti.helper.uri.</code><code class="descname">change_uri</code><span class="sig-paren">(</span><em>old</em>, <em>new</em>, <em>old_base_pth=None</em>, <em>new_base_pth=None</em>, <em>execute=False</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.change_uri" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change a uri and put all files in the correct folder.</p>
+<dl class="docutils">
+<dt>If a version URI changes:</dt>
+<dd><ul class="first last simple">
+<li>all text files of that version should be moved</li>
+<li>the yml file of that version should be updated and moved</li>
+</ul>
+</dd>
+<dt>If a book uri changes:</dt>
+<dd><ul class="first last simple">
+<li>the yml file of that book should be updated and moved</li>
+<li>all annotation text files of all versions of the book should be moved</li>
+<li>all yml files of versions of that book should be updated and moved</li>
+<li>the original book folder itself should be (re)moved</li>
+</ul>
+</dd>
+<dt>if an author uri changes:</dt>
+<dd><ul class="first last simple">
+<li>the yml file of that author should be updated and moved</li>
+<li>all book yml files of that should be updated and moved</li>
+<li>all annotation text files of all versions of all books should be moved</li>
+<li>all yml files of versions of all books should be updated and moved</li>
+<li>the original book folders should be (re)moved</li>
+<li>the original author folder itself should be (re)moved</li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>change_uri(“0255Jahiz”, “0256Jahiz”)
+change_uri(“0255Jahiz”, “0255JahizBasri”)
+change_uri(“0255Jahiz.Hayawan”, “0255Jahiz.KitabHayawan”)
+change_uri(“0255Jahiz.Hayawan.Shamela002526-ara1”,</p>
+<blockquote>
+<div>“0255Jahiz.Hayawan.Shamela002526-ara2”)</div></blockquote>
+<dl class="docutils">
+<dt>change_uri(“0255Jahiz.Hayawan.Shamela002526-ara1.completed”,</dt>
+<dd>“0255Jahiz.Hayawan.Shamela002526-ara1.mARkdown”)</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>old</strong> (<em>str</em>) – URI string to be changed</li>
+<li><strong>new</strong> (<em>str</em>) – URI string to which the new URI should be changed.</li>
+<li><strong>old_base_pth</strong> (<em>str</em>) – path to the folder containing the
+OpenITI 25-year repos, related to the old uri</li>
+<li><strong>new_base_pth</strong> (<em>str</em>) – path to the folder containing the
+OpenITI 25-year repos, related to the new uri</li>
+<li><strong>execute</strong> (<em>bool</em>) – if False, the proposed changes will only be printed
+(the user will still be given the option to execute
+all proposed changes at the end);
+if True, all changes will be executed immediately.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.uri.check_token_count">
+<code class="descclassname">openiti.helper.uri.</code><code class="descname">check_token_count</code><span class="sig-paren">(</span><em>version_uri</em>, <em>ymlD</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.check_token_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether the token count in the version yml file agrees with the    actual token count of the text file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.uri.check_yml_files">
+<code class="descclassname">openiti.helper.uri.</code><code class="descname">check_yml_files</code><span class="sig-paren">(</span><em>start_folder</em>, <em>exclude=[]</em>, <em>execute=False</em>, <em>check_token_counts=True</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.check_yml_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether yml files are missing or have faulty data in them.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>start_folder</strong> (<em>str</em>) – path to the parent folder of the folders
+that need to be checked.</li>
+<li><strong>exclude</strong> (<em>list</em>) – a list of directory names that should be excluded.</li>
+<li><strong>execute</strong> (<em>bool</em>) – if execute is set to False, the script will only show
+which changes it would undertake if set to True.
+After it has looped through all files and folders, it will give
+the user the option to execute the proposed changes.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.uri.initialize_new_text">
+<code class="descclassname">openiti.helper.uri.</code><code class="descname">initialize_new_text</code><span class="sig-paren">(</span><em>origin_fp</em>, <em>target_base_pth</em>, <em>execute=False</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.initialize_new_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move a new text file to its OpenITI repo, creating yml files    if necessary (or copying them from the same folder if present).</p>
+<p>The function also checks whether the new text adheres to OpenITI text format.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>origin_fp</strong> (<em>str</em>) – filepath of the text file (filename must be
+in OpenITI uri format)</li>
+<li><strong>target_base_pth</strong> (<em>str</em>) – path to the folder
+that contains the 25-years-repos</li>
+<li><strong>execute</strong> (<em>bool</em>) – if False, the proposed changes will only be printed
+(the user will still be given the option to execute
+all proposed changes at the end);
+if True, all changes will be executed immediately.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<p># &gt;&gt;&gt; origin_folder = r”D:OpenITIarzakh”
+# &gt;&gt;&gt; fn = “0375IkhwanSafa.Rasail.Hindawi95926405Vols-ara1.completed”
+# &gt;&gt;&gt; origin_fp = os.path.join(origin_folder, fn)
+# &gt;&gt;&gt; target_base_pth = r”D:OpenITIYrepos”
+# &gt;&gt;&gt; initialize_new_text(origin_fp, target_base_pth, execute=False)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.uri.initialize_new_texts_in_folder">
+<code class="descclassname">openiti.helper.uri.</code><code class="descname">initialize_new_texts_in_folder</code><span class="sig-paren">(</span><em>folder</em>, <em>target_base_pth</em>, <em>execute=False</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.initialize_new_texts_in_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move all new texts in folder to their OpenITI repo, creating yml files    if necessary (or copying them from the same folder if present).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>folder</strong> (<em>str</em>) – path to the folder that contains new text files
+(with OpenITI uri filenames) and perhaps yml files</li>
+<li><strong>target_base_pth</strong> (<em>str</em>) – path to the folder containing the 25-years repos</li>
+<li><strong>execute</strong> (<em>bool</em>) – if False, the proposed changes will only be printed
+(the user will still be given the option to execute
+all proposed changes at the end);
+if True, all changes will be executed immediately.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p># &gt;&gt;&gt; folder = r”D:OpenITIarzakh”
+# &gt;&gt;&gt; target_base_pth = r”D:OpenITIYrepos”
+# &gt;&gt;&gt; initialize_new_texts_in_folder(folder,        #                                    target_base_pth, execute=False)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.uri.initialize_texts_from_CSV">
+<code class="descclassname">openiti.helper.uri.</code><code class="descname">initialize_texts_from_CSV</code><span class="sig-paren">(</span><em>csv_fp</em>, <em>old_base_pth=''</em>, <em>new_base_pth=''</em>, <em>execute=False</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.initialize_texts_from_CSV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use a CSV file (filename, URI) to move a list of texts to the relevant     OpenITI folder.</p>
+<p>The CSV file (which should not contain a heading) can contain
+full filepaths to the original files, or only filenames;
+in the latter case, the path to the folder where these files are located
+should be passed to the function as the old_base_pth argument.
+Similarly, the URI column can contain full OpenITI URI filepaths
+or only the URIs; in the latter case, the path to the folder
+containing the OpenITI 25-years folders should be passed to the function
+as the new_base_pth argument.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>csv_fp</strong> (<em>str</em>) – path to a csv file that contains the following columns:
+0. filepath to (or filename of) the text file
+1. full version uri of the text file
+(no headings!)</li>
+<li><strong>old_base_path</strong> (<em>str</em>) – path to the folder containing
+the files that need to be initialized</li>
+<li><strong>new_base_pth</strong> (<em>str</em>) – path to the folder containing
+the OpenITI 25-years repos</li>
+<li><strong>execute</strong> (<em>bool</em>) – if False, the proposed changes will only be printed
+(the user will still be given the option to execute
+all proposed changes at the end);
+if True, all changes will be executed immediately.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.uri.make_folder">
+<code class="descclassname">openiti.helper.uri.</code><code class="descname">make_folder</code><span class="sig-paren">(</span><em>new_folder</em>, <em>new_uri</em>, <em>execute=False</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.make_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if folder exists; if not, make folder (and, if needed, parents)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>new_folder</strong> (<em>str</em>) – path to new folder</li>
+<li><strong>new_uri</strong> (<em>OpenITI uri object</em>) – uri of the text</li>
+<li><strong>execute</strong> (<em>bool</em>) – if False, the proposed changes will only be printed
+(the user will still be given the option to execute
+all proposed changes at the end);
+if True, all changes will be executed immediately.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.uri.move_to_new_uri_pth">
+<code class="descclassname">openiti.helper.uri.</code><code class="descname">move_to_new_uri_pth</code><span class="sig-paren">(</span><em>old_fp</em>, <em>new_uri</em>, <em>execute=False</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.move_to_new_uri_pth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move file to its new location.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>old_fp</strong> (<em>filepath</em>) – path to the old file</li>
+<li><strong>new_uri</strong> (<em>URI object</em>) – URI of the new file</li>
+<li><strong>execute</strong> (<em>bool</em>) – if False, the proposed changes will only be printed
+(the user will still be given the option to execute
+all proposed changes at the end);
+if True, all changes will be executed immediately.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.uri.move_yml">
+<code class="descclassname">openiti.helper.uri.</code><code class="descname">move_yml</code><span class="sig-paren">(</span><em>yml_fp</em>, <em>new_uri</em>, <em>uri_type</em>, <em>execute=False</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.move_yml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace the URI in the yml file
+and save the yml file in its new location.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>yml_fp</strong> (<em>str</em>) – path to the original yml file</li>
+<li><strong>new_uri</strong> (<em>URI object</em>) – the new uri</li>
+<li><strong>uri_type</strong> (<em>str</em>) – uri type (author, book, version)</li>
+<li><strong>execute</strong> (<em>bool</em>) – if False, the proposed changes will only be printed
+(the user will still be given the option to execute
+all proposed changes at the end);
+if True, all changes will be executed immediately.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.uri.new_yml">
+<code class="descclassname">openiti.helper.uri.</code><code class="descname">new_yml</code><span class="sig-paren">(</span><em>tar_yfp</em>, <em>yml_type</em>, <em>execute=False</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.new_yml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new yml file from template.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>tar_yfp</strong> (<em>str</em>) – filepath to the new yml file</li>
+<li><strong>yml_type</strong> (<em>str</em>) – type of yml file
+(either “version_yml”, “book_yml”, or “author_yml”)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.uri.replace_tok_counts">
+<code class="descclassname">openiti.helper.uri.</code><code class="descname">replace_tok_counts</code><span class="sig-paren">(</span><em>missing_tok_count</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.replace_tok_counts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace the token counts in the relevant yml files.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>missing_tok_count</strong> (<em>list</em>) – a list of tuples (uri, token_count):
+uri (OpenITI URI object)
+token_count (int): the number of Arabic tokens in the text file</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-openiti.helper.yml">
+<span id="openiti-helper-yml"></span><h4>openiti.helper.yml<a class="headerlink" href="#module-openiti.helper.yml" title="Permalink to this headline">¶</a></h4>
+<p>Functions to read and write yaml files.</p>
+<p>OpenITI metadata is stored in yaml files.
+(yaml stands for “yet another markup language”)</p>
+<dl class="docutils">
+<dt>NB: In correctly formatted OpenITI yml files,</dt>
+<dd><ul class="first last simple">
+<li><dl class="first docutils">
+<dt>keys (lemmata) should always:</dt>
+<dd><ul class="first last">
+<li>contain at least one hash (#)</li>
+<li>end with a colon (:)</li>
+<li>be free of any other non-letter/numeric characters</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Values:</dt>
+<dd><ul class="first last">
+<li>may contain any character, including colons
+and new line characters
+(only something that looks like a yml key
+(i.e., a combination of letters and hashes ending with a colon)
+should be avoided at the beginning of a line)</li>
+<li>mutiline values should be indented with 4 spaces</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<dl class="function">
+<dt id="openiti.helper.yml.dicToYML">
+<code class="descclassname">openiti.helper.yml.</code><code class="descname">dicToYML</code><span class="sig-paren">(</span><em>dic</em>, <em>max_length=72</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.yml.dicToYML" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a dictionary into a yml string.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>dic</strong> (<em>dict</em>) – a dictionary of key-value pairs.</li>
+<li><strong>max_length</strong> (<em>int</em>) – the maximum number of characters a line should contain.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">yml_dic</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;00#BOOK#URI######:&#39;</span><span class="p">:</span> <span class="s">&#39;0845Maqrizi.Muqaffa&#39;</span><span class="p">,</span>                       <span class="s">&#39;90#BOOK#COMMENT##:&#39;</span><span class="p">:</span> <span class="s">&#39;multiline value; missing-indentation: (and presence of colons): not a problem&#39;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">yml_str</span> <span class="o">=</span> <span class="s">&#39;        00#BOOK#URI######: 0845Maqrizi.Muqaffa</span><span class="se">\n</span><span class="s">        90#BOOK#COMMENT##: multiline</span><span class="se">\n</span><span class="s">            value; missing-indentation:</span><span class="se">\n</span><span class="s">            (and presence of colons): not</span><span class="se">\n</span><span class="s">            a problem        &#39;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;        &quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="c"># remove Python indentation for doctest</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dicToYML</span><span class="p">(</span><span class="n">yml_dic</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span> <span class="o">==</span> <span class="n">yml_str</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.yml.readYML">
+<code class="descclassname">openiti.helper.yml.</code><code class="descname">readYML</code><span class="sig-paren">(</span><em>fp</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.yml.readYML" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a yml file and convert it into a dictionary.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fp</strong> (<em>str</em>) – path to the yml file.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">fp</span> <span class="o">=</span> <span class="s">&quot;D:/London/OpenITI/25Y_repos/0450AH/data/0429AbuMansurThacalibi/0429AbuMansurThacalibi.AhsanMaSamictu/0429AbuMansurThacalibi.AhsanMaSamictu.Shamela0025011-ara1.yml&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">readYML</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+<span class="go">{}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.yml.ymlToDic">
+<code class="descclassname">openiti.helper.yml.</code><code class="descname">ymlToDic</code><span class="sig-paren">(</span><em>yml_str</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.yml.ymlToDic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a yml string into a dictionary.</p>
+<dl class="docutils">
+<dt>NB: in order to be read correctly, OpenITI yml keys (lemmata) should always:</dt>
+<dd><ul class="first simple">
+<li>contain at least one hash (#)</li>
+<li>end with a colon (:)</li>
+<li>be free of any other non-letter/numeric characters</li>
+</ul>
+<p>Values may contain any character, including colons
+and new line characters
+(only something that looks like a yml key
+(i.e., a combination of letters and hashes ending with a colon)
+should be avoided at the beginning of a line)</p>
+<p class="last">In principle, mutiline values should be indented with 4 spaces,
+but unindented multiline values will be parsed without a problem.</p>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>yml_str</strong> (<em>str</em>) – a yml string.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">yml</span> <span class="k">import</span> <span class="n">ymlToDic</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">yml_str</span> <span class="o">=</span> <span class="s">&quot;        00#BOOK#URI######: 0845Maqrizi.Muqaffa</span><span class="se">\n</span><span class="s">        90#BOOK#COMMENT##: multiline value; missing-</span><span class="se">\n</span><span class="s">        indentation: (and presence</span><span class="se">\n</span><span class="s">        of colons): not a problem</span><span class="se">\n\n\n</span><span class="s">        &quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;        &quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="c"># remove Python indentation for doctest</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">yml_dic</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;00#BOOK#URI######:&#39;</span><span class="p">:</span> <span class="s">&#39;0845Maqrizi.Muqaffa&#39;</span><span class="p">,</span>                       <span class="s">&#39;90#BOOK#COMMENT##:&#39;</span><span class="p">:</span> <span class="s">&#39;multiline value; missing-indentation: (and presence of colons): not a problem&#39;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ymlToDic</span><span class="p">(</span><span class="n">yml_str</span><span class="p">)</span> <span class="o">==</span> <span class="n">yml_dic</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="openiti-git">
+<h3>openiti.git<a class="headerlink" href="#openiti-git" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="module-openiti.git.clone_OpenITI">
+<span id="openiti-git-clone-openiti"></span><h4>openiti.git.clone_OpenITI<a class="headerlink" href="#module-openiti.git.clone_OpenITI" title="Permalink to this headline">¶</a></h4>
+<p>Clone github repositories to your local machine.</p>
+<p class="rubric">Examples</p>
+<p>Clone all OpenITI 25-year repos:
+# &gt;&gt;&gt; repo_list = get_total_repos(group=”orgs”, name=”OpenITI”,                                       path_pattern=”d{4}AH$”)
+# &gt;&gt;&gt; clone_repos(repo_list, r”D:OpenITI”)</p>
+<p>Clone specific repos:
+# &gt;&gt;&gt; base = “”<a class="reference external" href="https://github.com/OpenITI/">https://github.com/OpenITI/</a>”
+# &gt;&gt;&gt; repo_list = [base+”mARkdown_scheme”, base+”RELEASE”]
+# &gt;&gt;&gt; clone_repos(repo_list, r”D:OpenITI”)</p>
+<dl class="docutils">
+<dt>Command line usage:</dt>
+<dd><dl class="first docutils">
+<dt>To clone all the OpenITI organization’s 25-years repos:</dt>
+<dd><code class="docutils literal"><span class="pre">python</span> <span class="pre">clone_OpenITI.py</span> <span class="pre">[&quot;orgs&quot;</span> <span class="pre">or</span> <span class="pre">&quot;users&quot;]</span> <span class="pre">[user</span> <span class="pre">or</span> <span class="pre">org</span> <span class="pre">name]</span> <span class="pre">[path_pattern]</span> <span class="pre">[[dest_folder]]</span></code></dd>
+</dl>
+<p><code class="docutils literal"><span class="pre">dest_folder$</span> <span class="pre">python</span> <span class="pre">pth/to/clone_OpenITI.py</span> <span class="pre">orgs</span> <span class="pre">OpenITI</span> <span class="pre">\d+AH$</span></code>
+<code class="docutils literal"><span class="pre">other_folder$</span> <span class="pre">python</span> <span class="pre">pth/to/clone_OpenITI.py</span> <span class="pre">orgs</span> <span class="pre">OpenITI</span> <span class="pre">\d+AH$</span> <span class="pre">path/to/dest_folder</span></code></p>
+<p class="last">If fewer than 3 arguments are given, the program will prompt you for the arguments:
+<code class="docutils literal"><span class="pre">$</span> <span class="pre">python</span> <span class="pre">clone_OpenITI.py</span></code>
+Enter the organization/user name:
+Organization or User? (orgs/users):
+Enter the regex pattern to match desired repo URLs:
+Enter the destination folder for the clone:</p>
+</dd>
+</dl>
+<dl class="function">
+<dt id="openiti.git.clone_OpenITI.clone_repos">
+<code class="descclassname">openiti.git.clone_OpenITI.</code><code class="descname">clone_repos</code><span class="sig-paren">(</span><em>all_repos</em>, <em>clone_dir='.'</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.git.clone_OpenITI.clone_repos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clone the list of repo urls <cite>all_repos</cite> to the <cite>clone_dir</cite></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>all_repos</strong> (<em>list</em>) – a list of repo urls.</li>
+<li><strong>clone_dir</strong> (<em>str</em>) – path to the local folder where the repos are to be cloned.
+Defaults to the current active directory.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.git.clone_OpenITI.get_total_repos">
+<code class="descclassname">openiti.git.clone_OpenITI.</code><code class="descname">get_total_repos</code><span class="sig-paren">(</span><em>group='orgs'</em>, <em>name='OpenITI'</em>, <em>path_pattern='\\d{4}AH$'</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.git.clone_OpenITI.get_total_repos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of all repos owned by organisation/user <cite>name</cite>
+that match the regex <cite>path_pattern</cite></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>group</strong> (<em>str</em>) – either “users” or “orgs”. Defaults to “orgs”</li>
+<li><strong>name</strong> (<em>str</em>) – GitHub name of the user/organization. Defaults to “OpenITI”</li>
+<li><strong>path_pattern</strong> (<em>str</em>) – regex pattern that matches the desired repository names.
+If none is defined, all repos will be cloned. Defaults to r”d{4}AH$”.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a list of repo urls that matches the <cite>path_pattern</cite> regex.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">repo_urls (list)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-openiti.git.collect_txt_files">
+<span id="openiti-git-collect-txt-files"></span><h4>openiti.git.collect_txt_files<a class="headerlink" href="#module-openiti.git.collect_txt_files" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="module-openiti.git.get_issues">
+<span id="openiti-git-get-issues"></span><h4>openiti.git.get_issues<a class="headerlink" href="#module-openiti.git.get_issues" title="Permalink to this headline">¶</a></h4>
+<p>Get selected annotation issues from GitHub;
+optionally, print them or save them as a tsv file.</p>
+<dl class="docutils">
+<dt>Usage example:</dt>
+<dd><dl class="first docutils">
+<dt>issues = get_issues(“OpenITI/Annotation”,</dt>
+<dd>issue_labels=[“in progress”],
+state=”all”
+)</dd>
+</dl>
+<p class="last">issues = define_text_uris(issues)
+uri_dict = sort_issues_by_uri(issues)
+print_issues_by_uri(uri_dict, “test.tsv”)</p>
+</dd>
+</dl>
+<dl class="function">
+<dt id="openiti.git.get_issues.define_text_uris">
+<code class="descclassname">openiti.git.get_issues.</code><code class="descname">define_text_uris</code><span class="sig-paren">(</span><em>issues</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.git.get_issues.define_text_uris" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define which text uri the issue pertains to.
+Store the uri in the issue object (issue.uri).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>issues</strong> (<em>list</em>) – a list of github issue objects.</li>
+<li><strong>verbose</strong> (<em>bool</em>) – if verbose, print issues for which no uris were found.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the list of updated github issue objects</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">issues (list)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.git.get_issues.get_issues">
+<code class="descclassname">openiti.git.get_issues.</code><code class="descname">get_issues</code><span class="sig-paren">(</span><em>repo_name</em>, <em>user=None</em>, <em>password=None</em>, <em>issue_labels=None</em>, <em>state='open'</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.git.get_issues.get_issues" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all issues connected to a specific github repository.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>repo_name</strong> (<em>str</em>) – the name of the Github repository</li>
+<li><strong>user</strong> (<em>str</em>) – username</li>
+<li><strong>password</strong> (<em>str</em>) – password</li>
+<li><strong>(</strong><strong>list; default</strong> (<em>issue_labels</em>) – None): a list of github issue label names;
+only the issues with an issue label name in this
+list will be downloaded;
+if set to None, all issues will be downloaded</li>
+<li><strong>(</strong><strong>str; default</strong> (<em>state</em>) – “open”): only the issues with this state
+(open/closed/all) will be downloaded.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a list of github issues.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">issues (list)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.git.get_issues.print_issues_by_uri">
+<code class="descclassname">openiti.git.get_issues.</code><code class="descname">print_issues_by_uri</code><span class="sig-paren">(</span><em>uri_dict</em>, <em>save_fp=''</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.git.get_issues.print_issues_by_uri" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print a tab-delimited list of uris with the issues connected to them.
+URI     Issue number    Issue label</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>uri_dict</strong> (<em>dict</em>) – key: uri,
+value: list of github issues related to this uri</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.git.get_issues.sort_issues_by_uri">
+<code class="descclassname">openiti.git.get_issues.</code><code class="descname">sort_issues_by_uri</code><span class="sig-paren">(</span><em>issues</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.git.get_issues.sort_issues_by_uri" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a dictionary with the uris as keys.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>issues</strong> (<em>list</em>) – a list of github issue objects</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>a dictionary:</dt>
+<dd>key: uri;
+value: list of github issue objects related to this uri</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">uri_dict (dict)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="openiti-instantiations">
+<h3>openiti.instantiations<a class="headerlink" href="#openiti-instantiations" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="openiti-instantiations-generate-imech-instantiation">
+<h4>openiti.instantiations.generate_imech_instantiation<a class="headerlink" href="#openiti-instantiations-generate-imech-instantiation" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="openiti-instantiations-generate-istylo-instantiation">
+<h4>openiti.instantiations.generate_istylo_instantiation<a class="headerlink" href="#openiti-instantiations-generate-istylo-instantiation" title="Permalink to this headline">¶</a></h4>
+</div>
+</div>
+<div class="section" id="openiti-new-books">
+<h3>openiti.new_books<a class="headerlink" href="#openiti-new-books" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="module-openiti.new_books.add">
+<span id="openiti-new-books-add"></span><h4>openiti.new_books.add<a class="headerlink" href="#module-openiti.new_books.add" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="module-openiti.new_books.convert.yml2json">
+<span id="openiti-new-books-convert-yml2json"></span><h4>openiti.new_books.convert.yml2json<a class="headerlink" href="#module-openiti.new_books.convert.yml2json" title="Permalink to this headline">¶</a></h4>
+<p>Convert a YML file to json.</p>
+<p>The yml2json function can be used to convert a yml metadata file to
+* a list of dictionaries: useful for</p>
+<blockquote>
+<div><ul class="simple">
+<li>conserving the order</li>
+<li>conserving comments between the records</li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li>a dictionary of dictionaries (key: record id, val: metadata dictionary),
+useful for easy lookup by record id</li>
+</ul>
+<dl class="function">
+<dt id="openiti.new_books.convert.yml2json.yml2json">
+<code class="descclassname">openiti.new_books.convert.yml2json.</code><code class="descname">yml2json</code><span class="sig-paren">(</span><em>yml_fp</em>, <em>container=[]</em>, <em>rec_start='##RECORD'</em>, <em>id_key='01#BookID###'</em>, <em>key_val_splitter=':::: '</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.yml2json.yml2json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a YML file to json.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>yml_fp</strong> (<em>str</em>) – the filepath to the YML file.</li>
+<li><strong>container</strong> (<em>obj</em>) – an empty list or dict into which the
+metadata dictionaries will be stored.
+If the container is a list, the order of the records will be stored
+as well as comment lines between the records.</li>
+<li><strong>rec_start</strong> (<em>str</em>) – the starting characters of a record;</li>
+<li><strong>id_key</strong> (<em>str</em>) – the yml key that indicates the id of a record</li>
+<li><strong>key_val_splitter</strong> (<em>str</em>) – the separator used to separate keys and values.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the container filled with the metadata dictionaries.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">container (obj)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-openiti.new_books.convert.md2html">
+<span id="openiti-new-books-convert-md2html"></span><h4>openiti.new_books.convert.md2html<a class="headerlink" href="#module-openiti.new_books.convert.md2html" title="Permalink to this headline">¶</a></h4>
+<p>Replace markdown tags by html tags.</p>
+<p>TO DO:
+* replace ### |+ headers not by &lt;hx&gt; but by &lt;div&gt;&lt;hx&gt;title&lt;/hx&gt;content&lt;/div&gt;?</p>
+<dl class="function">
+<dt id="openiti.new_books.convert.md2html.dict_units">
+<code class="descclassname">openiti.new_books.convert.md2html.</code><code class="descname">dict_units</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.md2html.dict_units" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace dictionary units mARkdown tags with html tags.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">md2html</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">md2html</span><span class="o">.</span><span class="n">dict_units</span><span class="p">(</span><span class="s">&quot;### $DIC_NIS$ Name of the entry&quot;</span><span class="p">)</span>
+<span class="go">&#39;&lt;div class=&quot;entry descr-name&quot;&gt;&lt;span class=&quot;entry-title&quot;&gt;Name of the entry&lt;/span&gt;\n&lt;/div&gt;\n&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">md2html</span><span class="o">.</span><span class="n">dict_units</span><span class="p">(</span><span class="s">&quot;### $DIC_TOP$ Name of the place&quot;</span><span class="p">)</span>
+<span class="go">&#39;&lt;div class=&quot;entry toponym&quot;&gt;&lt;span class=&quot;entry-title&quot;&gt;Name of the place&lt;/span&gt;\n&lt;/div&gt;\n&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">md2html</span><span class="o">.</span><span class="n">dict_units</span><span class="p">(</span><span class="s">&quot;### $DIC_LEX$ Word&quot;</span><span class="p">)</span>
+<span class="go">&#39;&lt;div class=&quot;entry lexical&quot;&gt;&lt;span class=&quot;entry-title&quot;&gt;Word&lt;/span&gt;\n&lt;/div&gt;\n&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">md2html</span><span class="o">.</span><span class="n">dict_units</span><span class="p">(</span><span class="s">&quot;### $DIC_BIB$ Book title&quot;</span><span class="p">)</span>
+<span class="go">&#39;&lt;div class=&quot;entry book&quot;&gt;&lt;span class=&quot;entry-title&quot;&gt;Book title&lt;/span&gt;\n&lt;/div&gt;\n&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">md2html</span><span class="o">.</span><span class="n">dict_units</span><span class="p">(</span><span class="s">&quot;### $BIO_MAN$ Name of the man&quot;</span><span class="p">)</span>
+<span class="go">&#39;&lt;div class=&quot;entry man&quot;&gt;&lt;span class=&quot;entry-title&quot;&gt;Name of the man&lt;/span&gt;\n&lt;/div&gt;\n&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">md2html</span><span class="o">.</span><span class="n">dict_units</span><span class="p">(</span><span class="s">&quot;### $BIO_WOM$ Name of the woman&quot;</span><span class="p">)</span>
+<span class="go">&#39;&lt;div class=&quot;entry woman&quot;&gt;&lt;span class=&quot;entry-title&quot;&gt;Name of the woman&lt;/span&gt;\n&lt;/div&gt;\n&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">md2html</span><span class="o">.</span><span class="n">dict_units</span><span class="p">(</span><span class="s">&quot;### $BIO_REF$ Cross-reference to a person&quot;</span><span class="p">)</span>
+<span class="go">&#39;&lt;div class=&quot;entry cross-ref&quot;&gt;&lt;span class=&quot;entry-title&quot;&gt;Cross-reference to a person&lt;/span&gt;\n&lt;/div&gt;\n&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">md2html</span><span class="o">.</span><span class="n">dict_units</span><span class="p">(</span><span class="s">&quot;### $BIO_NLI$ List of names&quot;</span><span class="p">)</span>
+<span class="go">&#39;&lt;div class=&quot;entry name-list&quot;&gt;&lt;span class=&quot;entry-title&quot;&gt;List of names&lt;/span&gt;\n&lt;/div&gt;\n&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">md2html</span><span class="o">.</span><span class="n">dict_units</span><span class="p">(</span><span class="s">&quot;### $CHR_EVE$ Event description&quot;</span><span class="p">)</span>
+<span class="go">&#39;&lt;div class=&quot;entry event&quot;&gt;&lt;span class=&quot;entry-title&quot;&gt;Event description&lt;/span&gt;\n&lt;/div&gt;\n&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">md2html</span><span class="o">.</span><span class="n">dict_units</span><span class="p">(</span><span class="s">&quot;### $CHR_RAW$ Events description&quot;</span><span class="p">)</span>
+<span class="go">&#39;&lt;div class=&quot;entry events-batch&quot;&gt;&lt;span class=&quot;entry-title&quot;&gt;Events description&lt;/span&gt;\n&lt;/div&gt;\n&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">md2html</span><span class="o">.</span><span class="n">dict_units</span><span class="p">(</span><span class="s">&quot;### $ Name of the man&quot;</span><span class="p">)</span>
+<span class="go">&#39;&lt;div class=&quot;entry man&quot;&gt;&lt;span class=&quot;entry-title&quot;&gt;Name of the man&lt;/span&gt;\n&lt;/div&gt;\n&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">md2html</span><span class="o">.</span><span class="n">dict_units</span><span class="p">(</span><span class="s">&quot;### $$ Name of the woman&quot;</span><span class="p">)</span>
+<span class="go">&#39;&lt;div class=&quot;entry woman&quot;&gt;&lt;span class=&quot;entry-title&quot;&gt;Name of the woman&lt;/span&gt;\n&lt;/div&gt;\n&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">md2html</span><span class="o">.</span><span class="n">dict_units</span><span class="p">(</span><span class="s">&quot;### $$$ Cross-reference to a person&quot;</span><span class="p">)</span>
+<span class="go">&#39;&lt;div class=&quot;entry cross-ref&quot;&gt;&lt;span class=&quot;entry-title&quot;&gt;Cross-reference to a person&lt;/span&gt;\n&lt;/div&gt;\n&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">md2html</span><span class="o">.</span><span class="n">dict_units</span><span class="p">(</span><span class="s">&quot;### $$$$ List of names&quot;</span><span class="p">)</span>
+<span class="go">&#39;&lt;div class=&quot;entry name-list&quot;&gt;&lt;span class=&quot;entry-title&quot;&gt;List of names&lt;/span&gt;\n&lt;/div&gt;\n&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.new_books.convert.md2html.tables">
+<code class="descclassname">openiti.new_books.convert.md2html.</code><code class="descname">tables</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.md2html.tables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace markdown table tags with html table tags.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">text</span> <span class="o">=</span> <span class="s">&quot;# first paragraph</span><span class="se">\n</span><span class="s">| table header 1 | header 2 |</span><span class="se">\n</span><span class="s">|:---------------|----------|</span><span class="se">\n</span><span class="s">| table row 1 col 1 | table row 1 col 2|</span><span class="se">\n</span><span class="s">| table row 2 col 1 | table row 2 col 2|&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">md2html</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">md2html</span><span class="o">.</span><span class="n">tables</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="go">&#39;# first paragraph\n&lt;table&gt;\n&lt;tr&gt;\n&lt;th&gt;table header 1&lt;/th&gt;&lt;th&gt;header 2&lt;/th&gt;\n&lt;/tr&gt;\n&lt;tr&gt;\n&lt;td&gt;table row 1 col 1&lt;/td&gt;&lt;td&gt;table row 1 col 2&lt;/td&gt;\n&lt;/tr&gt;\n&lt;tr&gt;\n&lt;td&gt;table row 2 col 1&lt;/td&gt;&lt;td&gt;table row 2 col 2&lt;/td&gt;\n&lt;/tr&gt;\n&lt;/table&gt;\n&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-openiti.new_books.convert.html2md">
+<span id="openiti-new-books-convert-html2md"></span><h4>openiti.new_books.convert.html2md<a class="headerlink" href="#module-openiti.new_books.convert.html2md" title="Permalink to this headline">¶</a></h4>
+<p>Convert html to Markdown.</p>
+<p>This program is an adaptation of python-markdownify
+(<a class="reference external" href="https://github.com/matthewwithanm/python-markdownify">https://github.com/matthewwithanm/python-markdownify</a>)
+to output OpenITI mARkdown.
+It also adds methods for tables and images,
+and a post-processing method.</p>
+<p>You can use this class as a base class and subclass it
+to add methods, adapt the post-processing method etc.</p>
+<dl class="docutils">
+<dt>E.g.:</dt>
+<dd><dl class="first last docutils">
+<dt>def Class Hindawi_converter(html2md.MarkdownConverter):</dt>
+<dd><dl class="first last docutils">
+<dt>def post_process_md(self, text):</dt>
+<dd>text = super().post_process_md(text)
+# remove blank lines marked with “DELETE_PREVIOUS_BLANKLINES” tag
+text = re.sub(r”</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>+DELETE_PREVIOUS_BLANKLINES”, “”, text)</dt>
+<dd># replace placeholders for spaces in tables:
+text = re.sub(“ç”, ” “, text)
+return text</dd>
+</dl>
+<p>Examples (doctests):</p>
+<blockquote>
+<div><p>Headings: h1</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;h1&gt;abc&lt;/h1&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n\n### | abc\n\n&#39;</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>NB: heading style is OpenITI mARkdown style by default,</dt>
+<dd>but can be set to other styles as well:</dd>
+</dl>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;h1&gt;abc&lt;/h1&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">md_style</span><span class="o">=</span><span class="n">UNDERLINED</span><span class="p">)</span>
+<span class="go">&#39;\n\nabc\n===\n\n&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;h1&gt;abc&lt;/h1&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">md_style</span><span class="o">=</span><span class="n">ATX</span><span class="p">)</span>
+<span class="go">&#39;\n\n# abc\n\n&#39;</span>
+</pre></div>
+</div>
+<p>Paragraphs (&lt;p&gt;):</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&quot;&lt;p&gt;abc&lt;/p&gt;&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n\n# abc\n\n&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&quot;&lt;p&gt;abc&lt;/p&gt;&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">md_style</span><span class="o">=</span><span class="n">ATX</span><span class="p">)</span>
+<span class="go">&#39;\n\nabc\n\n&#39;</span>
+</pre></div>
+</div>
+<p>Divs without class or with an unsupported class are stripped:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc             &lt;div&gt;def&lt;/div&gt;             ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc def ghi&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc             &lt;div class=&quot;unknown_div_class&quot;&gt;def&lt;/div&gt;             ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc def ghi&#39;</span>
+</pre></div>
+</div>
+<p>Spans without class or with an unsupported class are stripped:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;span&gt;def&lt;/span&gt; ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc def ghi&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;span class=&quot;unknown_span_class&quot;&gt;def&lt;/span&gt; ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc def ghi&#39;</span>
+</pre></div>
+</div>
+<p>Links:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;a href=&quot;a/b/c&quot;&gt;abc&lt;/a&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;[abc](a/b/c)&#39;</span>
+</pre></div>
+</div>
+<p>Unordered lists:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;ul&gt;&lt;li&gt;item1&lt;/li&gt;&lt;li&gt;item2&lt;/li&gt;&lt;/ul&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n* item1\n* item2\n\n&#39;</span>
+</pre></div>
+</div>
+<p>Ordered lists:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;ol&gt;&lt;li&gt;item1&lt;/li&gt;&lt;li&gt;item2&lt;/li&gt;&lt;/ol&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n1. item1\n2. item2\n\n&#39;</span>
+</pre></div>
+</div>
+<p>Nested lists:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;ol&gt;&lt;li&gt;item1&lt;/li&gt;&lt;li&gt;item2:&lt;ul&gt;&lt;li&gt;item3&lt;/li&gt;&lt;li&gt;item4&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;/ol&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n1. item1\n2. item2:\n\n\t* item3\n\t* item4\n\t\n\n&#39;</span>
+</pre></div>
+</div>
+<p>Italics (&lt;i&gt; and &lt;em&gt; tags):</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;em&gt;def&lt;/em&gt; ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc *def* ghi&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;i&gt;def&lt;/i&gt; ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc *def* ghi&#39;</span>
+</pre></div>
+</div>
+<p>Bold (&lt;b&gt; and &lt;strong&gt; tags):</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;b&gt;def&lt;/b&gt; ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc **def** ghi&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;strong&gt;def&lt;/strong&gt; ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc **def** ghi&#39;</span>
+</pre></div>
+</div>
+<p>Tables:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;    &lt;table&gt;      &lt;tr&gt;        &lt;th&gt;th1aaa&lt;/th&gt;&lt;th&gt;th2&lt;/th&gt;      &lt;/tr&gt;      &lt;tr&gt;        &lt;td&gt;td1&lt;/td&gt;&lt;td&gt;td2&lt;/td&gt;      &lt;/tr&gt;    &lt;/table&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n\n| th1aaa | th2 |\n| ------ | --- |\n| td1    | td2 |\n\n&#39;</span>
+</pre></div>
+</div>
+<p># i.e.,
+# | th1aaa | th2 |
+# | td1    | td2 |</p>
+</div></blockquote>
+</div>
+<div class="section" id="openiti-new-books-convert-html2md-hindawi">
+<h4>openiti.new_books.convert.html2md_hindawi<a class="headerlink" href="#openiti-new-books-convert-html2md-hindawi" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="module-openiti.new_books.convert.generic_converter">
+<span id="openiti-new-books-convert-generic-converter"></span><h4>openiti.new_books.convert.generic_converter<a class="headerlink" href="#module-openiti.new_books.convert.generic_converter" title="Permalink to this headline">¶</a></h4>
+<p>A generic converter for text into OpenITI format.</p>
+<p>Subclass the GenericConverter to make a converter for a new
+source of scraped books.</p>
+</div>
+<div class="section" id="openiti-new-books-convert-epub-converter-generic">
+<h4>openiti.new_books.convert.epub_converter_generic<a class="headerlink" href="#openiti-new-books-convert-epub-converter-generic" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="openiti-new-books-convert-epub-converter-hindawi">
+<h4>openiti.new_books.convert.epub_converter_hindawi<a class="headerlink" href="#openiti-new-books-convert-epub-converter-hindawi" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="module-openiti.new_books.scrape">
+<span id="openiti-new-books-scrape"></span><h4>openiti.new_books.scrape<a class="headerlink" href="#module-openiti.new_books.scrape" title="Permalink to this headline">¶</a></h4>
+</div>
+</div>
+<div class="section" id="openiti-release">
+<h3>openiti.release<a class="headerlink" href="#openiti-release" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="module-openiti.release.collect_openITI_version">
+<span id="openiti-release-collect-openiti-version"></span><h4>openiti.release.collect_openITI_version<a class="headerlink" href="#module-openiti.release.collect_openITI_version" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="module-openiti.release.collect_release_stats">
+<span id="openiti-release-collect-release-stats"></span><h4>openiti.release.collect_release_stats<a class="headerlink" href="#module-openiti.release.collect_release_stats" title="Permalink to this headline">¶</a></h4>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="quickstart.html" title="previous chapter">Quick start</a></li>
+      <li>Next: <a href="forcontributors.html" title="next chapter">Contributor Manual</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick start</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">User manual</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#modules">Modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#openiti-helper">openiti.helper</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-openiti.helper.ara">openiti.helper.ara</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-openiti.helper.funcs">openiti.helper.funcs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-openiti.helper.templates">openiti.helper.templates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-openiti.helper.uri">openiti.helper.uri</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-openiti.helper.yml">openiti.helper.yml</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#openiti-git">openiti.git</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-openiti.git.clone_OpenITI">openiti.git.clone_OpenITI</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-openiti.git.collect_txt_files">openiti.git.collect_txt_files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-openiti.git.get_issues">openiti.git.get_issues</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#openiti-instantiations">openiti.instantiations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#openiti-instantiations-generate-imech-instantiation">openiti.instantiations.generate_imech_instantiation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#openiti-instantiations-generate-istylo-instantiation">openiti.instantiations.generate_istylo_instantiation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#openiti-new-books">openiti.new_books</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-openiti.new_books.add">openiti.new_books.add</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-openiti.new_books.convert.yml2json">openiti.new_books.convert.yml2json</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-openiti.new_books.convert.md2html">openiti.new_books.convert.md2html</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-openiti.new_books.convert.html2md">openiti.new_books.convert.html2md</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#openiti-new-books-convert-html2md-hindawi">openiti.new_books.convert.html2md_hindawi</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-openiti.new_books.convert.generic_converter">openiti.new_books.convert.generic_converter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#openiti-new-books-convert-epub-converter-generic">openiti.new_books.convert.epub_converter_generic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#openiti-new-books-convert-epub-converter-hindawi">openiti.new_books.convert.epub_converter_hindawi</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-openiti.new_books.scrape">openiti.new_books.scrape</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#openiti-release">openiti.release</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-openiti.release.collect_openITI_version">openiti.release.collect_openITI_version</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-openiti.release.collect_release_stats">openiti.release.collect_release_stats</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="forcontributors.html">Contributor Manual</a></li>
+</ul>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Soheil Merchant, Maxim Romanov, Masoumeh Seidi, Peter Verkinderen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/source/usermanual.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

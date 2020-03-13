@@ -9,7 +9,7 @@ Welcome to openiti's documentation!
 Test
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 4
 
    source/quickstart
    source/usermanual

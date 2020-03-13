@@ -6,10 +6,14 @@
 Welcome to openiti's documentation!
 ===================================
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+Test
 
+.. toctree::
+   :maxdepth: 4
+
+   source/quickstart
+   source/usermanual
+   source/forcontributors
 
 
 Indices and tables
