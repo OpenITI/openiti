@@ -4,6 +4,12 @@ This is a first attempt to create a Python library that combines all often-used 
 
 ## Change log: 
 
+### v.0.0.6: 
+
+* openiti.helper.uri: fix bugs
+* add Sphinx documentation
+
+
 ### v.0.0.5:
 
 * openiti.helper.funcs: added Arabic token count function
