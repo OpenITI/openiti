@@ -76,7 +76,8 @@ book_yml_template = """\
     into the above given categories."""
 
 version_yml_template = """\
-00#VERS#LENGTH###: 
+00#VERS#LENGTH###:
+00#VERS#CLENGTH##:
 00#VERS#URI######: 
 80#VERS#BASED####: permalink, permalink, permalink
 80#VERS#COLLATED#: permalink, permalink, permalink
