@@ -158,6 +158,25 @@ Examples:
     >>> t.build_pth()
     './0275AH/data/0255Jahiz/0255Jahiz.Hayawan'
 
+    NB: by default, build_pth() takes the OpenITI folder structure into account,
+    in which authors are grouped in 25-year batches by their death date.
+    If you do not want to use this feature, set the URI class's
+    data_in_25_year_repos attribute to False:
+
+    >>> t.build_pth()
+    './0275AH/data/0255Jahiz/0255Jahiz.Hayawan'
+    >>> t.data_in_25_year_repos = False
+    >>> t.build_pth()
+    './0255Jahiz/0255Jahiz.Hayawan'
+    >>> t.data_in_25_year_repos = True
+    
+    >>> URI.data_in_25_year_repos = False
+    >>> u = URI("0255Jahiz.Hayawan")
+    >>> u.build_pth()
+    './0255Jahiz/0255Jahiz.Hayawan'
+    >>> URI.data_in_25_year_repos = True
+    >>> u.build_pth()
+    './0275AH/data/0255Jahiz/0255Jahiz.Hayawan'
 
     ---------------------------------------------------------------------------
 
@@ -334,6 +353,27 @@ class URI:
         >>> t.build_pth()
         './0275AH/data/0255Jahiz/0255Jahiz.Hayawan'
 
+        NB: by default, build_pth() takes the OpenITI folder structure
+        into account, in which authors are grouped in 25-year batches
+        by their death date.
+        If you do not want to use this feature, set the URI class's
+        data_in_25_year_repos attribute to False:
+
+        >>> t.build_pth()
+        './0275AH/data/0255Jahiz/0255Jahiz.Hayawan'
+        >>> t.data_in_25_year_repos = False
+        >>> t.build_pth()
+        './0255Jahiz/0255Jahiz.Hayawan'
+        >>> t.data_in_25_year_repos = True
+        
+        >>> URI.data_in_25_year_repos = False
+        >>> u = URI("0255Jahiz.Hayawan")
+        >>> u.build_pth()
+        './0255Jahiz/0255Jahiz.Hayawan'
+        >>> URI.data_in_25_year_repos = True
+        >>> u.build_pth()
+        './0275AH/data/0255Jahiz/0255Jahiz.Hayawan'
+
         Validity tests: setting invalid values for part of a uri returns an error:
 
         # >>> URI("255Jahiz")
@@ -386,6 +426,11 @@ class URI:
             >>> print(uri4.base_pth)
             D:/OpenITI/25Yrepos/data
         """
+        try:
+            self.data_in_25_year_repos
+        except:
+            self.data_in_25_year_repos = True
+        #print("init: self.data_in_25_year_repos", self.data_in_25_year_repos)
         self.date = ""
         self.author = ""
         self.title = ""
@@ -396,23 +441,37 @@ class URI:
         if uri_string:
             if len(re.split(r"[\\/]", uri_string)) > 1: # deal with paths:
                 self.base_pth, self.uri_string = os.path.split(uri_string)
-                # set self.base_pth to the parent of the 25Y folder:
-                if re.search("\d{4}AH", self.base_pth):
-                    while not re.search("\d{4}AH", os.path.split(self.base_pth)[1]):
+                if self.data_in_25_year_repos:
+                    # set self.base_pth to the parent of the 25Y folder:
+                    if re.search("\d{4}AH", self.base_pth):
+                        while not re.search("\d{4}AH",
+                                            os.path.split(self.base_pth)[1]):
+                            self.base_pth = os.path.split(self.base_pth)[0]
                         self.base_pth = os.path.split(self.base_pth)[0]
-                    self.base_pth = os.path.split(self.base_pth)[0]
-                else: # if there is no 25Y folder:
+                    else: # if there is no 25Y folder:
+                        self.base_pth, self.uri_string = os.path.split(uri_string)
+                else:
                     self.base_pth, self.uri_string = os.path.split(uri_string)
+                    #print("init: establishing self.base_pth")
+                    #print("  ", self.base_pth)
+                    #print("  split:", os.path.split(self.base_pth))
+                    while re.search("\d{4}[A-Za-z]",
+                                    os.path.split(self.base_pth)[1]):
+                        self.base_pth = os.path.split(self.base_pth)[0]
+                        #print("   >", self.base_pth)
             else:
                 self.uri_string = uri_string
             self.split_uri(self.uri_string)
         else:
             self.uri_string = ""
-        # make it possible to set the base_pth for every instance of the class:
+        # make it possible to set these values for every instance of the class:
         try:
             self.base_pth
         except: # if the base_pth has not been set before instantiating the class:
             self.base_pth = "."
+        #print("init: self.base_pth", self.base_pth)
+
+
 
     ############################################################################
     # Setter and getter methods: intercept mistakes when setting URI properties:
@@ -980,6 +1039,7 @@ Did you put a dot between date and author name?"
        """
         if base_pth is None:
             base_pth = self.base_pth
+        #print("base_pth:", base_pth)
 
         if not uri_type:
             if self.version and self.language:
@@ -1008,8 +1068,11 @@ Did you put a dot between date and author name?"
             else:
                 raise Exception("Error: the date component of the URI was not defined")
         elif "author" in uri_type:
-            pth = os.sep.join((self.build_pth("date", base_pth), "data",
-                                self.build_uri("author")))
+            if self.data_in_25_year_repos: 
+                pth = os.sep.join((self.build_pth("date", base_pth), "data",
+                                   self.build_uri("author")))
+            else:
+                pth = os.sep.join((base_pth, self.build_uri("author")))
         elif "book" in uri_type:
             pth = os.sep.join((self.build_pth("author", base_pth),
                                 self.build_uri("book")))
@@ -1108,6 +1171,7 @@ def initialize_new_text(origin_fp, target_base_pth, execute=False):
 
     #tok_count = ar_ch_len(origin_fp)
     tok_count = ar_cnt_file(origin_fp, mode="token")
+    char_count = ar_cnt_file(origin_fp, mode="char")
 
     # Move the text file:
 
@@ -1135,7 +1199,7 @@ def initialize_new_text(origin_fp, target_base_pth, execute=False):
 
     # Add the character count to the new yml file:
 
-    add_character_count(tok_count, tar_uri, execute)
+    add_character_count(tok_count, char_count, tar_uri, execute)
 
     # Give the option to execute the changes:
 
@@ -1214,13 +1278,14 @@ def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False):
         # only move yml and text file(s) of this specific version:
         for file in os.listdir(old_folder):
             fp = os.path.join(old_folder, file)
-            if URI(file).build_uri(ext="") == old_uri.build_uri(ext=""):
-                if file.endswith(".yml"):
-                    move_yml(fp, new_uri, "version", execute)
-                else:
-                    old_file_uri = URI(fp)
-                    new_uri.extension = old_file_uri.extension
-                    move_to_new_uri_pth(fp, new_uri, execute)
+            if not file.endswith(".md"):
+                if URI(file).build_uri(ext="") == old_uri.build_uri(ext=""):
+                    if file.endswith(".yml"):
+                        move_yml(fp, new_uri, "version", execute)
+                    else:
+                        old_file_uri = URI(fp)
+                        new_uri.extension = old_file_uri.extension
+                        move_to_new_uri_pth(fp, new_uri, execute)
 
         # add readme and text_questionnaire files:
 
@@ -1336,10 +1401,11 @@ def initialize_texts_from_CSV(csv_fp, old_base_pth="", new_base_pth="",
             new_uri.base_pth = new_base_pth
         #char_count = ar_ch_len(old_fp)
         tok_count = ar_cnt_file(old_fp, mode="token")
+        char_count = ar_cnt_file(old_fp, mode="char")
 
         move_to_new_uri_pth(old_fp, new_uri, execute)
 
-        add_character_count(tok_count, new_uri, execute)
+        add_character_count(tok_count, char_count, new_uri, execute)
 
     if not execute:
         resp = input("To carry out these changes: press OK+Enter; \
@@ -1411,12 +1477,13 @@ def download_texts_from_CSV(csv_fp, old_base_pth="", new_base_pth=""):
 
             if not temp_fp.endswith("pdf") and not temp_fp.endswith("zip"):
                 tok_count = ar_cnt_file(temp_fp, mode="token")
-                add_character_count(tok_count, new_uri, execute=True)
+                char_count = ar_cnt_file(temp_fp, mode="char")
+                add_character_count(tok_count, char_count, new_uri, execute=True)
 
     shutil.rmtree(temp_folder)
 
 
-def add_character_count(tok_count, tar_uri, execute=False):
+def add_character_count(tok_count, char_count, tar_uri, execute=False):
     """Add the character count to the new version yml file"""
 
     tar_yfp = tar_uri.build_pth("version_yml")
@@ -1424,6 +1491,7 @@ def add_character_count(tok_count, tar_uri, execute=False):
         with open(tar_yfp, mode="r", encoding="utf-8") as file:
             yml_dic = yml.ymlToDic(file.read().strip())
             yml_dic["00#VERS#LENGTH###:"] = tok_count
+            yml_dic["00#VERS#CLENGTH##:"] = char_count
         with open(tar_yfp, mode="w", encoding="utf-8") as file:
             file.write(yml.dicToYML(yml_dic))
     else:
@@ -1567,23 +1635,31 @@ def check_token_count(version_uri, ymlD):
         if os.path.exists(fp):
             break
     tok_count = ar_cnt_file(fp, mode="token")
+    char_count = ar_cnt_file(fp, mode="char")
     len_key = "00#VERS#LENGTH###:"
+    char_len_key = "00#VERS#CLENGTH##:"
     yml_tok_count = ymlD[len_key].strip()
+    try:
+        yml_char_count = ymlD[char_len_key].strip()
+    except:
+        yml_char_count = ""
     replace_tok_count = False
-    if yml_tok_count == "":
-        print("NO TOKEN COUNT", uri)
-        replace_tok_count = True
-    else:
-        try:
-            if int(yml_tok_count) != tok_count:
-                replace_tok_count = True
-                #print("TOKEN COUNT CHANGED", uri)
-                #print(yml_tok_count, "!=", tok_count)
-        except:
-            print("TOKEN COUNT {} IS NOT A NUMBER".format(yml_tok_count), uri)
+    for cnt, yml_cnt in [(tok_count, yml_tok_count),
+                         (char_count, yml_char_count)]:
+        if yml_cnt == "":
+            print("NO TOKEN COUNT", version_uri)
             replace_tok_count = True
+        else:
+            try:
+                if int(yml_cnt) != cnt:
+                    replace_tok_count = True
+                    #print("TOKEN COUNT CHANGED", uri)
+                    #print(yml_tok_count, "!=", tok_count)
+            except:
+                print("TOKEN COUNT {} IS NOT A NUMBER".format(yml_cnt), uri)
+                replace_tok_count = True
     if replace_tok_count:
-        return tok_count
+        return tok_count, char_count
 
 def replace_tok_counts(missing_tok_count):
     """Replace the token counts in the relevant yml files.
@@ -1596,11 +1672,13 @@ def replace_tok_counts(missing_tok_count):
         None
     """
     print("replacing token count in {} files".format(len(missing_tok_count)))
-    for uri, tok_count in missing_tok_count:
+    for uri, tok_count, char_count in missing_tok_count:
         yml_fp = uri.build_pth("version_yml")
         ymlD = yml.readYML(yml_fp)
         len_key = "00#VERS#LENGTH###:"
         ymlD[len_key] = str(tok_count)
+        char_len_key = "00#VERS#CLENGTH##:"
+        ymlD[char_len_key] = str(char_count)
         ymlS = yml.dicToYML(ymlD)
         with open(yml_fp, mode="w", encoding="utf-8") as outf:
             outf.write(ymlS)
@@ -1624,7 +1702,7 @@ def check_yml_files(start_folder, exclude=[],
     non_uri_files = []
     erratic_ymls = []
     for root, dirs, files in os.walk(start_folder):
-        dirs[:] = [d for d in dirs if d not in exclude]
+        dirs[:] = [d for d in sorted(dirs) if d not in exclude]
 
         for file in files:
             if file not in ["README.md", ".DS_Store",
@@ -1634,6 +1712,8 @@ def check_yml_files(start_folder, exclude=[],
                 # Check whether a filename has the uri format:
                 try:
                     uri = URI(fp)
+                    #print("uri:", uri)
+                    #print("uri.base_pth:", uri.base_pth)
                 except:
                     non_uri_files.append(file)
                     uri = None
@@ -1645,6 +1725,7 @@ def check_yml_files(start_folder, exclude=[],
                     if uri.uri_type == "version" and not file.endswith(".yml"):
                         for yml_type in ["version_yml", "book_yml", "author_yml"]:
                             yml_fp = uri.build_pth(uri_type=yml_type)
+                            #print(yml_type, yml_fp)
 
                             # make new yml file if yml file does not exist:
 
@@ -1698,9 +1779,13 @@ def check_yml_files(start_folder, exclude=[],
 
                                 if yml_type == "version_yml":
                                     if check_token_counts:
-                                        tok_count = check_token_count(uri, ymlD)
+                                        res = check_token_count(uri, ymlD)
+                                        try:
+                                            tok_count, char_count = res
+                                        except:
+                                            tok_count = None
                                         if tok_count:
-                                            missing_tok_count.append((uri, tok_count))
+                                            missing_tok_count.append((uri, tok_count, char_count))
     if  erratic_ymls:
         print()
         print("The following yml files were found to contain errors.")
@@ -1741,11 +1826,33 @@ if __name__ == "__main__":
     import doctest
     doctest.testmod()
     print("passed doctests")
+    print()
 
-    # tests:
+    # Additional tests:
 
 
-    URI.base_pth = r"D:\London\OpenITI\25Y_repos"
+##    URI.base_pth = r"."
+##    print("URI path in 25Y-repo format:")
+##    my_uri = URI("0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed")
+##    print(my_uri.build_pth())
+##    print("URI path in release format (without 25Y repos):")
+##    URI.data_in_25_year_repos = False
+##    my_uri = URI("0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed")
+##    print(my_uri.build_pth())
+##    print("URI path in 25Y-repo format:")
+##    URI.data_in_25_year_repos = True
+##    print(my_uri.build_pth())
+##    my_uri.data_in_25_year_repos = False
+##    print("URI path in release format (without 25Y repos):")
+##    print(my_uri.build_pth())
+##
+##    # Reset:
+##    URI.data_in_25_year_repos = True
+##    URI.base_pth = r"D:\London\OpenITI\25Y_repos"
+##
+##    input("Press Enter to continue")
+##    print()
+    
 ##    exclude = (["OpenITI.github.io", "Annotation", "maintenance", "i.mech00",
 ##                "i.mech01", "i.mech02", "i.mech03", "i.mech04", "i.mech05",
 ##                "i.mech06", "i.mech07", "i.mech08", "i.mech09", "i.logic",
@@ -1756,16 +1863,20 @@ if __name__ == "__main__":
 ##    #print(non_uri_files)
 ##    input("continue?")
 ##
-##    base_pth = r"D:\London\OpenITI\python_library\openiti\test"
-##
+    base_pth = r"D:\London\OpenITI\python_library\openiti\openiti\test"
+
 ##    # test initialize_new_texts_in_folder function:
-##    barzakh = r"D:\London\OpenITI\python_library\openiti\test\barzakh"
+##    barzakh = os.path.join(base_pth, "barzakh")
 ##    initialize_new_texts_in_folder(barzakh, base_pth, execute=True)
-##
-####    # test initialize_texts_from_CSV function:
-##    csv_fp = r"D:\London\OpenITI\python_library\openiti\test\initialize.csv"
+##    print("Texts in test/barzakh initialized; check if initialization was successful!")
+##    input("Press Enter to continue")
+
+##    # test initialize_texts_from_CSV function:
+##    csv_fp = os.path.join(base_pth, "initialize.csv")
 ##    initialize_texts_from_CSV(csv_fp, old_base_pth="", new_base_pth=base_pth,
 ##                              execute=False)
+##    print("Texts in test/barzakh initialized; check if initialization was successful!")
+##    input("Press Enter to continue")
 
 ##    # test change_uri function for author uri change:
 ##    old = "0001KitabAllah"
@@ -1773,17 +1884,15 @@ if __name__ == "__main__":
 ##    change_uri(old, new,
 ##               old_base_pth=base_pth, new_base_pth=base_pth,
 ##               execute=False)
+##    input("Press Enter to continue")
 
-    # test change_uri function for book uri change:
+##    # test change_uri function for book uri change:
 ##    old = "0375IkhwanSafa.RisalatJamicaJamica"
 ##    new = "0375IkhwanSafa.RisalatJamica"
-    base_pth = r"D:\London\OpenITI\25Y_repos"
-    old = "0204HishamKalbi"
-    new = "0204IbnKalbi"
-    change_uri(old, new,
-               old_base_pth=base_pth, new_base_pth=base_pth,
-               execute=False)
-    input()
+##    change_uri(old, new,
+##               old_base_pth=base_pth, new_base_pth=base_pth,
+##               execute=False)
+##    input("Press Enter to continue")
 
 ##    # test change_uri function for version uri change:
 ##    old = "0001Allah.KitabMuqaddas.BibleCorpus002-per1"
@@ -1791,8 +1900,8 @@ if __name__ == "__main__":
 ##    change_uri(old, new,
 ##               old_base_pth=base_pth, new_base_pth=base_pth,
 ##               execute=False)
-##
-##    input("URI changed??")
+##    print("Check if the URI really changed??")
+##    input("Press Enter to continue")
 
     my_uri = "0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed"
 
@@ -1803,32 +1912,39 @@ if __name__ == "__main__":
     print(repr(t))
     print("print(t):")
     print(t)
-    print(t.author)
-    print(t.date)
+    print("t.author:", t.author)
+    print("t.date:", t.date)
     print("URI type:", t.uri_type)
+    print('t.build_uri("author"):')
     print(t.build_uri("author"))
-    print(t.build_pth("version"))
-    print(t.build_pth("version", ""))
-    print("print(t):", t)
+    print('t.build_pth("version_file"):')
+    print(t.build_pth("version_file"))
+    print('t.build_pth("version_file", ""):')
+    print(t.build_pth("version_file", ""))
 
     print("*"*30)
 
     u = URI()
     u.author="IbnCarabi"
     u.date="0681"
+    print('u.build_uri("author"):')
     print(u.build_uri("author"))
+    print('u:')
     print(u)
 
     print("*"*30)
 
     my_uri = URI("0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed")
+    print('my_uri.split_uri():')
     print(my_uri.split_uri())
 #    my_uri.extension=""
     my_uri.language=""
+    print('my_uri.split_uri(): (language="")')
     print(my_uri.split_uri())
     my_uri.extension=""
+    print("try to build a path from an incomplete version URI (language=''):")
     print("AN ERROR WARNING SHOULD FOLLOW: ")
-    print(my_uri.build_pth(base_pth="./master", uri_type="version"))
+    print(my_uri.build_pth(base_pth="./master", uri_type="version_file"))
 
 
 
