@@ -75,8 +75,8 @@ ar_chars = """\
 ‍	ZERO WIDTH JOINER"""
 ar_chars = [x.split("\t")[0] for x in ar_chars.splitlines()]
 #ar_chars = "ذ١٢٣٤٥٦٧٨٩٠ّـضصثقفغعهخحجدًٌَُلإإشسيبلاتنمكطٍِلأأـئءؤرلاىةوزظْلآآ"
-ar_char = re.compile("[{}]".format(ar_chars)) # regex for one Arabic character
-ar_tok = re.compile("[{}]+".format(ar_chars)) # regex for one Arabic token
+ar_char = re.compile("[{}]".format("".join(ar_chars))) # regex for one Arabic character
+ar_tok = re.compile("[{}]+".format("".join(ar_chars))) # regex for one Arabic token
 noise = re.compile(""" ّ    | # Tashdīd / Shadda
                        َ    | # Fatḥa
                        ً    | # Tanwīn Fatḥ / Fatḥatān
@@ -94,8 +94,7 @@ noise = re.compile(""" ّ    | # Tashdīd / Shadda
                    """, re.VERBOSE)
 splitter = "#META#Header#End#"
 
-
-def deNoise(text):
+def denoise(text):
     """Remove non-consonantal characters from Arabic text.
 
     Examples:
@@ -106,6 +105,7 @@ def deNoise(text):
     """
     return re.sub(noise, "", text)
 
+deNoise = denoise
 
 def normalize(text, replacement_tuples=[]):
     """Normalize Arabic text by replacing complex characters by simple ones.
@@ -230,8 +230,9 @@ def ar_cnt_file(fp, mode="token"):
         else:
             return ar_tok_cnt(text)
     else:
-        print("{} is missing the splitter!".format(fp))
-        return 0
+        msg = "This text is missing the splitter!\n{}".format(fp)
+        raise Exception(msg)
+
 
 
 def ar_ch_cnt(text):
