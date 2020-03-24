@@ -131,6 +131,19 @@ or “token” for count of Arabic tokens</li>
 </dd></dl>
 
 <dl class="function">
+<dt id="openiti.helper.ara.denoise">
+<code class="descclassname">openiti.helper.ara.</code><code class="descname">denoise</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.ara.denoise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove non-consonantal characters from Arabic text.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">denoise</span><span class="p">(</span><span class="s">&quot;وَالَّذِينَ يُؤْمِنُونَ بِمَا أُنْزِلَ إِلَيْكَ وَمَا أُنْزِلَ مِنْ قَبْلِكَ وَبِالْآخِرَةِ هُمْ يُوقِنُونَ&quot;</span><span class="p">)</span>
+<span class="go">&#39;والذين يؤمنون بما أنزل إليك وما أنزل من قبلك وبالآخرة هم يوقنون&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">denoise</span><span class="p">(</span><span class="s">&quot; ْ ً ٌ ٍ َ ُ ِ ّ ۡ ࣰ ࣱ ࣲ ٰ &quot;</span><span class="p">)</span>
+<span class="go">&#39;              &#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
 <dt id="openiti.helper.ara.denormalize">
 <code class="descclassname">openiti.helper.ara.</code><code class="descname">denormalize</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.ara.denormalize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Replace complex characters with a regex covering all variants.</p>
@@ -340,7 +353,6 @@ in maintenance repo</li>
 </div>
 <p>The Module contains a URI class that represents an OpenITI URI as an object.
 The URI class’s methods allow</p>
-<p>test</p>
 <ul class="simple">
 <li>Checking whether all components of the URI are valid</li>
 <li>Accessing and changing components of the URI</li>
@@ -392,39 +404,37 @@ By calling the URI class, you create an instance of the URI class</p>
 </pre></div>
 </div>
 <ul class="simple">
-<li>Validity tests: setting invalid values for part of a uri returns an error</li>
+<li>Validity tests: setting invalid values for part of a uri returns an error    (implemented for instantiation of URI objects + setting URI components):</li>
 </ul>
-<p>(implemented for instantiation of URI objects + setting URI components):</p>
 <p># &gt;&gt;&gt; URI(“255Jahiz”)
-Exception: Date Error: URI must start with a date of 4 digits (255 has 3!)
-# &gt;&gt;&gt; URI(“0255Jāḥiẓ”)
+Exception: Date Error: URI must start with a date of 4 digits (255 has 3!)</p>
+<p># &gt;&gt;&gt; URI(“0255Jāḥiẓ”)
 Exception: Author name Error: Author name (Jāḥiẓ) should not contain
-digits or non-ASCII characters(culprits: [‘ā’, ‘ḥ’, ‘ẓ’])
-# &gt;&gt;&gt; t.author = “Jāḥiẓ”
+digits or non-ASCII characters(culprits: [‘ā’, ‘ḥ’, ‘ẓ’])</p>
+<p># &gt;&gt;&gt; t.author = “Jāḥiẓ”
 Exception: Author name Error: Author name (Jāḥiẓ) should not contain
-digits or non-ASCII characters(culprits: [‘ā’, ‘ḥ’, ‘ẓ’])
-# &gt;&gt;&gt; t.author = “0255Jahiz”
+digits or non-ASCII characters(culprits: [‘ā’, ‘ḥ’, ‘ẓ’])</p>
+<p># &gt;&gt;&gt; t.author = “0255Jahiz”
 Exception: Author name Error: Author name (0255Jahiz) should not contain
-digits or non-ASCII characters(culprits: [‘0’, ‘2’, ‘5’, ‘5’])
-# &gt;&gt;&gt; URI(“0255Jahiz.Al-Hayawan”)
+digits or non-ASCII characters(culprits: [‘0’, ‘2’, ‘5’, ‘5’])</p>
+<p># &gt;&gt;&gt; URI(“0255Jahiz.Al-Hayawan”)
 Exception: Book title Error: Book title (Al-Hayawan) should not contain
-non-ASCII characters(culprits: [‘-‘])
-# &gt;&gt;&gt; URI(“0255Jahiz.Hayawan.Shāmila00123545-ara1”)
+non-ASCII characters(culprits: [‘-‘])</p>
+<p># &gt;&gt;&gt; URI(“0255Jahiz.Hayawan.Shāmila00123545-ara1”)
 Exception: Version string Error: Version string (Shāmila00123545)
-should not contain non-ASCII characters(culprits: [‘ā’])
-# &gt;&gt;&gt; URI(“0255Jahiz.Hayawan.Shamela00123545-arab1”)
+should not contain non-ASCII characters(culprits: [‘ā’])</p>
+<p># &gt;&gt;&gt; URI(“0255Jahiz.Hayawan.Shamela00123545-arab1”)
 Exception: Language code (arab) should be an ISO 639-2 language code,
-consisting of 3 characters
-# &gt;&gt;&gt; t.extension = “markdown”
+consisting of 3 characters</p>
+<p># &gt;&gt;&gt; t.extension = “markdown”
 Exception: Extension (markdown) is not among the allowed extensions
-([‘inProgress’, ‘completed’, ‘mARkdown’, ‘yml’, ‘’])
-# &gt;&gt;&gt; URI(“0255Jahiz.Hayawan.Shamela00123545-ara1.markdown”)
+([‘inProgress’, ‘completed’, ‘mARkdown’, ‘yml’, ‘’])</p>
+<p># &gt;&gt;&gt; URI(“0255Jahiz.Hayawan.Shamela00123545-ara1.markdown”)
 Exception: Extension (markdown) is not among the allowed extensions
 ([‘inProgress’, ‘completed’, ‘mARkdown’, ‘yml’, ‘’])</p>
 <ul class="simple">
-<li>Getting the URI’s current uri_type (“author”, “book”, “version”, None),</li>
+<li>Getting the URI’s current uri_type (“author”, “book”, “version”, None),    i.e., the longest URI that can be built from the object’s components:</li>
 </ul>
-<p>i.e., the longest URI that can be built from the object’s components:</p>
 <div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">uri_type</span>
 <span class="go">&#39;version&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">language</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
@@ -436,10 +446,8 @@ Exception: Extension (markdown) is not among the allowed extensions
 </pre></div>
 </div>
 <ul class="simple">
-<li>Building different versions of the URI</li>
+<li>Building different versions of the URI    (uri_types: “author”, “author_yml”, “book”, “book_yml”,    “version”, “version_yml”, “version_file”):</li>
 </ul>
-<p>(uri_types: “author”, “author_yml”, “book”, “book_yml”,
-“version”, “version_yml”, “version_file”):</p>
 <div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">URI</span><span class="p">(</span><span class="s">&quot;0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_uri</span><span class="p">(</span><span class="n">uri_type</span><span class="o">=</span><span class="s">&quot;author&quot;</span><span class="p">)</span>
 <span class="go">&#39;0255Jahiz&#39;</span>
@@ -489,21 +497,38 @@ the variable name works as an alias for the build_uri function:</p>
 <span class="go">&#39;./0275AH/data/0255Jahiz/0255Jahiz.Hayawan&#39;</span>
 </pre></div>
 </div>
+<p>NB: by default, build_pth() takes the OpenITI folder structure into account,
+in which authors are grouped in 25-year batches by their death date.
+If you do not want to use this feature, set the URI class’s
+data_in_25_year_repos attribute to False:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_pth</span><span class="p">()</span>
+<span class="go">&#39;./0275AH/data/0255Jahiz/0255Jahiz.Hayawan&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">data_in_25_year_repos</span> <span class="o">=</span> <span class="k">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_pth</span><span class="p">()</span>
+<span class="go">&#39;./0255Jahiz/0255Jahiz.Hayawan&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">data_in_25_year_repos</span> <span class="o">=</span> <span class="k">True</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">URI</span><span class="o">.</span><span class="n">data_in_25_year_repos</span> <span class="o">=</span> <span class="k">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">u</span> <span class="o">=</span> <span class="n">URI</span><span class="p">(</span><span class="s">&quot;0255Jahiz.Hayawan&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">u</span><span class="o">.</span><span class="n">build_pth</span><span class="p">()</span>
+<span class="go">&#39;./0255Jahiz/0255Jahiz.Hayawan&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">URI</span><span class="o">.</span><span class="n">data_in_25_year_repos</span> <span class="o">=</span> <span class="k">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">u</span><span class="o">.</span><span class="n">build_pth</span><span class="p">()</span>
+<span class="go">&#39;./0275AH/data/0255Jahiz/0255Jahiz.Hayawan&#39;</span>
+</pre></div>
+</div>
 <hr class="docutils" />
-<p>In addition to the URI class, the module contains a number of functions for
-* implementing URI changes in the OpenITI corpus
-* initializing new texts in the OpenITI corpus (a single text,</p>
-<blockquote>
-<div>all texts in a folder, or using a csv file)</div></blockquote>
-<p>All these functions have an <em>execute</em> flag. If set to False,
-the function will not immediately be executed but first show all changes
-it will make, and then ask the user whether to carry out the changes or not.</p>
+<p>In addition to the URI class, the module contains a number of functions for:</p>
 <ul class="simple">
-<li>Changing a URI and moving all files to the correct folders:</li>
+<li>implementing URI changes in the OpenITI corpus</li>
+<li>initializing new texts in the OpenITI corpus (a single text,      all texts in a folder, or using a csv file)</li>
 </ul>
-<p>(execute=False flag: script shows you which changes it will make,
-then gives you the option to carry out the changes or not)
-# &gt;&gt;&gt; old = “0255Jahiz”
+<p>All these functions have an <em>execute</em> flag. If set to False,    the function will not immediately be executed but first show all changes    it will make, and then ask the user whether to carry out the changes or not.</p>
+<ul class="simple">
+<li>Changing a URI and moving all files to the correct folders:      (execute=False flag: script shows you which changes it will make,      then gives you the option to carry out the changes or not)</li>
+</ul>
+<p># &gt;&gt;&gt; old = “0255Jahiz”
 # &gt;&gt;&gt; new = “0255JahizBasri”
 # &gt;&gt;&gt; change_uri(old, new, execute=False)</p>
 <ul class="simple">
@@ -513,10 +538,9 @@ then gives you the option to carry out the changes or not)
 # &gt;&gt;&gt; target_base_pth = r”D:OpenITIYrepos”
 # &gt;&gt;&gt; initialize_new_texts_in_folder(folder,    #                                    target_base_pth, execute=False)</p>
 <ul class="simple">
-<li>Initializing new texts with a csv file</li>
+<li>Initializing new texts with a csv file    (two columns, without headers: non-URI filepath, URI):</li>
 </ul>
-<p>(two columns, without headers: non-URI filepath, URI):
-# &gt;&gt;&gt; csv_fp = r”D:OpenITI</p>
+<p># &gt;&gt;&gt; csv_fp = r”D:OpenITI</p>
 <p>ew
 ew_files.csv”</p>
 <blockquote>
@@ -529,43 +553,34 @@ ew_files.csv”</p>
 <p>OpenITI URIs consist of the following elements:
 0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1.mARkdown</p>
 <blockquote>
-<div><ul>
-<li><p class="first">VersionURI: consists of
-- EditionURI: consists of</p>
-<blockquote>
-<div><ul>
-<li><p class="first">Work URI: consists of
-- AuthorID: consists of</p>
-<blockquote>
 <div><ul class="simple">
+<li>VersionURI: consists of<ul>
+<li>EditionURI: consists of<ul>
+<li>Work URI: consists of<ul>
+<li>AuthorID: consists of<ul>
 <li>author’s death date (self.date): 0768</li>
 <li>shuhra of the author (self.author): IbnMuhammadTaqiDinBaclabakki</li>
 </ul>
-</div></blockquote>
-<ul class="simple">
+</li>
 <li>BookID (self.title): Hadith: short title of the book</li>
 </ul>
 </li>
-<li><p class="first">Version URI: consists of
-- VersionID (self.version): Shamela0009426: ID of the collection/contributor</p>
-<blockquote>
-<div><p>from which we got the book + number of the book in that collection</p>
-</div></blockquote>
-<ul>
-<li><p class="first">Lang:
-* self.language: ara: ISO 639-2 language code
-* self.edition_no: 1: edition version number</p>
-<blockquote>
-<div><p>(different digitizations of the same edition get the same edition_no)</p>
-</div></blockquote>
+<li>Version URI: consists of<ul>
+<li>VersionID (self.version): Shamela0009426: ID of the collection/contributor
+from which we got the book + number of the book in that collection</li>
+<li>Lang:<ul>
+<li>self.language: ara: ISO 639-2 language code</li>
+<li>self.edition_no: 1: edition version number
+(different digitizations of the same edition get the same edition_no)</li>
+</ul>
+</li>
+</ul>
 </li>
 </ul>
 </li>
 </ul>
-</div></blockquote>
 </li>
-<li><p class="first">self.extension = mARkdown (can be inProgress, mARkdown, completed, “”)</p>
-</li>
+<li>self.extension = mARkdown (can be inProgress, mARkdown, completed, “”)</li>
 </ul>
 </div></blockquote>
 <p class="rubric">Examples</p>
@@ -629,6 +644,28 @@ i.e., the longest URI that can be built from the object’s components:</p>
 <span class="go">&#39;./0275AH/data/0255Jahiz/0255Jahiz.Hayawan/0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">language</span><span class="o">=</span><span class="s">&quot;&quot;</span>  <span class="c"># (removing the language property makes it impossible to build a version uri)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_pth</span><span class="p">()</span>
+<span class="go">&#39;./0275AH/data/0255Jahiz/0255Jahiz.Hayawan&#39;</span>
+</pre></div>
+</div>
+<p>NB: by default, build_pth() takes the OpenITI folder structure
+into account, in which authors are grouped in 25-year batches
+by their death date.
+If you do not want to use this feature, set the URI class’s
+data_in_25_year_repos attribute to False:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_pth</span><span class="p">()</span>
+<span class="go">&#39;./0275AH/data/0255Jahiz/0255Jahiz.Hayawan&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">data_in_25_year_repos</span> <span class="o">=</span> <span class="k">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">build_pth</span><span class="p">()</span>
+<span class="go">&#39;./0255Jahiz/0255Jahiz.Hayawan&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">data_in_25_year_repos</span> <span class="o">=</span> <span class="k">True</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">URI</span><span class="o">.</span><span class="n">data_in_25_year_repos</span> <span class="o">=</span> <span class="k">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">u</span> <span class="o">=</span> <span class="n">URI</span><span class="p">(</span><span class="s">&quot;0255Jahiz.Hayawan&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">u</span><span class="o">.</span><span class="n">build_pth</span><span class="p">()</span>
+<span class="go">&#39;./0255Jahiz/0255Jahiz.Hayawan&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">URI</span><span class="o">.</span><span class="n">data_in_25_year_repos</span> <span class="o">=</span> <span class="k">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">u</span><span class="o">.</span><span class="n">build_pth</span><span class="p">()</span>
 <span class="go">&#39;./0275AH/data/0255Jahiz/0255Jahiz.Hayawan&#39;</span>
 </pre></div>
 </div>
@@ -761,36 +798,15 @@ Exception: Extension (markdown) is not among the allowed extensions
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>uri_type</strong> (<em>str</em>) – <p>the uri type to be returned (defaults to None):
+<li><strong>uri_type</strong> (<em>str</em>) – the uri type to be returned (defaults to None):
 - “date” : only the date (format: 0000)
 - “author” : authorUri (format: 0255Jahiz)
-- “author_yml” : filename of the author yml file</p>
-<blockquote>
-<div>(format: 0255Jahiz.yml)</div></blockquote>
-<ul>
-<li>”book”: BookUri (format: 0255Jahiz.Hayawan)</li>
-<li><dl class="first docutils">
-<dt>”book_yml”: filename of the book yml file</dt>
-<dd>(format: 0255Jahiz.Hayawan.yml)</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt>”version”: versionURI</dt>
-<dd>(format: 0255Jahiz.Hayawan.Shamela000245-ara1)</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt>”version_yml”: filename of the version yml file</dt>
-<dd>(format: 0255Jahiz.Hayawan.Shamela000245-ara1.yml)</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt>”version_file”: filename of the version text file</dt>
-<dd>(format: 0255Jahiz.Hayawan.Shamela000245-ara1.completed)</dd>
-</dl>
-</li>
-</ul>
-</li>
+- “author_yml” : filename of the author yml file                  (format: 0255Jahiz.yml)
+- “book”: BookUri (format: 0255Jahiz.Hayawan)
+- “book_yml”: filename of the book yml file                  (format: 0255Jahiz.Hayawan.yml)
+- “version”: versionURI                  (format: 0255Jahiz.Hayawan.Shamela000245-ara1)
+- “version_yml”: filename of the version yml file                  (format: 0255Jahiz.Hayawan.Shamela000245-ara1.yml)
+- “version_file”: filename of the version text file                  (format: 0255Jahiz.Hayawan.Shamela000245-ara1.completed)</li>
 <li><strong>ext</strong> (<em>str</em>) – extension for the version_file uri string
 (can be “completed”, “inProgress”, “mARkdown”, “” or None).</li>
 </ul>
@@ -1049,7 +1065,7 @@ on Windows, Mac and Unix systems</p>
 
 <dl class="function">
 <dt id="openiti.helper.uri.add_character_count">
-<code class="descclassname">openiti.helper.uri.</code><code class="descname">add_character_count</code><span class="sig-paren">(</span><em>tok_count</em>, <em>tar_uri</em>, <em>execute=False</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.add_character_count" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">openiti.helper.uri.</code><code class="descname">add_character_count</code><span class="sig-paren">(</span><em>tok_count</em>, <em>char_count</em>, <em>tar_uri</em>, <em>execute=False</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.add_character_count" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add the character count to the new version yml file</p>
 </dd></dl>
 
@@ -1057,23 +1073,25 @@ on Windows, Mac and Unix systems</p>
 <dt id="openiti.helper.uri.change_uri">
 <code class="descclassname">openiti.helper.uri.</code><code class="descname">change_uri</code><span class="sig-paren">(</span><em>old</em>, <em>new</em>, <em>old_base_pth=None</em>, <em>new_base_pth=None</em>, <em>execute=False</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.change_uri" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change a uri and put all files in the correct folder.</p>
-<dl class="docutils">
-<dt>If a version URI changes:</dt>
-<dd><ul class="first last simple">
+<p>If a version URI changes:</p>
+<blockquote>
+<div><ul class="simple">
 <li>all text files of that version should be moved</li>
 <li>the yml file of that version should be updated and moved</li>
 </ul>
-</dd>
-<dt>If a book uri changes:</dt>
-<dd><ul class="first last simple">
+</div></blockquote>
+<p>If a book uri changes:</p>
+<blockquote>
+<div><ul class="simple">
 <li>the yml file of that book should be updated and moved</li>
 <li>all annotation text files of all versions of the book should be moved</li>
 <li>all yml files of versions of that book should be updated and moved</li>
 <li>the original book folder itself should be (re)moved</li>
 </ul>
-</dd>
-<dt>if an author uri changes:</dt>
-<dd><ul class="first last simple">
+</div></blockquote>
+<p>if an author uri changes:</p>
+<blockquote>
+<div><ul class="simple">
 <li>the yml file of that author should be updated and moved</li>
 <li>all book yml files of that should be updated and moved</li>
 <li>all annotation text files of all versions of all books should be moved</li>
@@ -1081,19 +1099,13 @@ on Windows, Mac and Unix systems</p>
 <li>the original book folders should be (re)moved</li>
 <li>the original author folder itself should be (re)moved</li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 <p class="rubric">Examples</p>
 <p>change_uri(“0255Jahiz”, “0256Jahiz”)
 change_uri(“0255Jahiz”, “0255JahizBasri”)
 change_uri(“0255Jahiz.Hayawan”, “0255Jahiz.KitabHayawan”)
-change_uri(“0255Jahiz.Hayawan.Shamela002526-ara1”,</p>
-<blockquote>
-<div>“0255Jahiz.Hayawan.Shamela002526-ara2”)</div></blockquote>
-<dl class="docutils">
-<dt>change_uri(“0255Jahiz.Hayawan.Shamela002526-ara1.completed”,</dt>
-<dd>“0255Jahiz.Hayawan.Shamela002526-ara1.mARkdown”)</dd>
-</dl>
+change_uri(“0255Jahiz.Hayawan.Shamela002526-ara1”,                   “0255Jahiz.Hayawan.Shamela002526-ara2”)
+change_uri(“0255Jahiz.Hayawan.Shamela002526-ara1.completed”,                   “0255Jahiz.Hayawan.Shamela002526-ara1.mARkdown”)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1138,6 +1150,38 @@ that need to be checked.</li>
 which changes it would undertake if set to True.
 After it has looped through all files and folders, it will give
 the user the option to execute the proposed changes.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.uri.download_texts_from_CSV">
+<code class="descclassname">openiti.helper.uri.</code><code class="descname">download_texts_from_CSV</code><span class="sig-paren">(</span><em>csv_fp</em>, <em>old_base_pth=''</em>, <em>new_base_pth=''</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.download_texts_from_CSV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use a CSV file (filename, URI) to download a list of texts to the relevant     OpenITI folder.</p>
+<p>The CSV file (which should not contain a heading) can contain
+full urls to the original files, or only filenames;
+in the latter case, the path to the website where these files are located
+should be passed to the function as the old_base_pth argument.
+Similarly, the URI column can contain full OpenITI URI filepaths
+or only the URIs; in the latter case, the path to the folder
+containing the OpenITI 25-years folders should be passed to the function
+as the new_base_pth argument.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>csv_fp</strong> (<em>str</em>) – path to a csv file that contains the following columns:
+0. filepath to (or filename of) the text file
+1. full version uri of the text file
+(no headings!)</li>
+<li><strong>old_base_path</strong> (<em>str</em>) – path to the folder containing
+the files that need to be initialized. Defaults to “”.</li>
+<li><strong>new_base_pth</strong> (<em>str</em>) – path to the folder containing
+the OpenITI 25-years repos. Defaults to “”.</li>
 </ul>
 </td>
 </tr>
@@ -1548,6 +1592,69 @@ If none is defined, all repos will be cloned. Defaults to r”d{4}AH$”.</li>
 </div>
 <div class="section" id="module-openiti.git.collect_txt_files">
 <span id="openiti-git-collect-txt-files"></span><h4>openiti.git.collect_txt_files<a class="headerlink" href="#module-openiti.git.collect_txt_files" title="Permalink to this headline">¶</a></h4>
+<p>Moves all text files from all subdirectories into a single directory.</p>
+<div class="admonition-todo admonition" id="index-1">
+<p class="first admonition-title">Todo</p>
+<dl class="last docutils">
+<dt>if more than one version of the text file is in the folder,</dt>
+<dd>the script will not automatically copy the best version!</dd>
+</dl>
+</div>
+<dl class="docutils">
+<dt>Command line usage:</dt>
+<dd><a href="#id1"><span class="problematic" id="id2">``</span></a>$ collect_txt_files D:OpenITIY_folders D:OpenITI</dd>
+</dl>
+<p>elease  exts``</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>If the source and target directories were not given,</dt>
+<dd>the user will be prompted for them:</dd>
+</dl>
+<p><code class="docutils literal"><span class="pre">$</span> <span class="pre">collect_txt_files</span>
+<span class="pre">Enter</span> <span class="pre">the</span> <span class="pre">source</span> <span class="pre">directory:</span>
+<span class="pre">Enter</span> <span class="pre">the</span> <span class="pre">target</span> <span class="pre">directory:</span></code></p>
+</div></blockquote>
+<dl class="function">
+<dt id="openiti.git.collect_txt_files.collect_text_files">
+<code class="descclassname">openiti.git.collect_txt_files.</code><code class="descname">collect_text_files</code><span class="sig-paren">(</span><em>source_dir, dest_dir, exclude_folders=[], extensions=['mARkdown', 'inProgress', 'completed', ''], version_id_only=True</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.git.collect_txt_files.collect_text_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy all text files in <cite>source_dir</cite> (+ its subfolders) to <cite>dest_dir</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>source_dir</strong> (<em>str</em>) – path to the directory that contains
+(subfolders containing) the text files</li>
+<li><strong>dest_dir</strong> (<em>str</em>) – path to a directory to which text files will be copied.</li>
+<li><strong>exclude_folders</strong> (<em>list</em>) – directories to be excluded
+from the collection process</li>
+<li><strong>extensions</strong> (<em>list</em>) – list of extensions; only text files with these
+extensions will be copied.
+Defaults to [“mARkdown”, “inProgress”, “completed”, “”]</li>
+<li><strong>version_id_only</strong> (<em>bool</em>) – if True, the filename will be shortened
+to the last part of the URI, i.e., the version id + language id
+(e.g., Shamela001185-ara1). Defaults to True.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">number of files copied</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">cnt (int)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.git.collect_txt_files.move_ara_files">
+<code class="descclassname">openiti.git.collect_txt_files.</code><code class="descname">move_ara_files</code><span class="sig-paren">(</span><em>source_dir</em>, <em>dest_dir</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.git.collect_txt_files.move_ara_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>old name of the collect_text_files function;
+renamed because the name does not reflect what function does;
+old name kept for backward compatibility</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-openiti.git.get_issues">
 <span id="openiti-git-get-issues"></span><h4>openiti.git.get_issues<a class="headerlink" href="#module-openiti.git.get_issues" title="Permalink to this headline">¶</a></h4>
@@ -1682,15 +1789,17 @@ value: list of github issue objects related to this uri</dd>
 <div class="section" id="module-openiti.new_books.convert.yml2json">
 <span id="openiti-new-books-convert-yml2json"></span><h4>openiti.new_books.convert.yml2json<a class="headerlink" href="#module-openiti.new_books.convert.yml2json" title="Permalink to this headline">¶</a></h4>
 <p>Convert a YML file to json.</p>
-<p>The yml2json function can be used to convert a yml metadata file to
-* a list of dictionaries: useful for</p>
-<blockquote>
-<div><ul class="simple">
+<p>The yml2json function can be used to convert a yml metadata file to</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>a list of dictionaries: useful for</dt>
+<dd><ul class="first last">
 <li>conserving the order</li>
 <li>conserving comments between the records</li>
 </ul>
-</div></blockquote>
-<ul class="simple">
+</dd>
+</dl>
+</li>
 <li>a dictionary of dictionaries (key: record id, val: metadata dictionary),
 useful for easy lookup by record id</li>
 </ul>
@@ -1923,8 +2032,386 @@ return text</dd>
 # | td1    | td2 |</p>
 </div></blockquote>
 </div>
-<div class="section" id="openiti-new-books-convert-html2md-hindawi">
-<h4>openiti.new_books.convert.html2md_hindawi<a class="headerlink" href="#openiti-new-books-convert-html2md-hindawi" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="module-openiti.new_books.convert.html2md_hindawi">
+<span id="openiti-new-books-convert-html2md-hindawi"></span><h4>openiti.new_books.convert.html2md_hindawi<a class="headerlink" href="#module-openiti.new_books.convert.html2md_hindawi" title="Permalink to this headline">¶</a></h4>
+<p>Convert Hindawi library html to OpenITI mARkdown.</p>
+<p>This script subclasses the generic MarkdownConverter class
+from the html2md module (based on python-markdownify,
+<a class="reference external" href="https://github.com/matthewwithanm/python-markdownify">https://github.com/matthewwithanm/python-markdownify</a>),
+which uses BeautifulSoup to create a flexible converter.
+The subclass in this module, HindawiConverter,
+adds methods specifically for the conversion of books from
+the Hindawi library to OpenITI mARkdown:
+* special treatment of &lt;h4&gt; heading tags
+* div classes “poetry_container”, “section”, “footnote” and “subtitle”
+* span class “quran”</p>
+<p>The easiest way to use this is to simply feed the html (as string)
+to the markdownify() function, which will create an instance
+of the HindawiConverter class and return the converted string.</p>
+<p>Examples (doctests):</p>
+<blockquote>
+<div><p>Headings: h1 (from superclass html2md.MarkdownConverter)</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md_hindawi</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;h1&gt;abc&lt;/h1&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n\n### | abc\n\n&#39;</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>NB: heading style is OpenITI mARkdown style by default,</dt>
+<dd>but can be set to other styles as well:</dd>
+</dl>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;h1&gt;abc&lt;/h1&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">md_style</span><span class="o">=</span><span class="n">UNDERLINED</span><span class="p">)</span>
+<span class="go">&#39;\n\nabc\n===\n\n&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;h1&gt;abc&lt;/h1&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">md_style</span><span class="o">=</span><span class="n">ATX</span><span class="p">)</span>
+<span class="go">&#39;\n\n# abc\n\n&#39;</span>
+</pre></div>
+</div>
+<p>Headings: &lt;h4&gt;</p>
+<dl class="docutils">
+<dt>NB: in the Hindawi library, &lt;h4&gt; tag is used for section headings</dt>
+<dd>on all levels but the highest one.
+The section level must be derived from the id of the parent div.</dd>
+</dl>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;div class=&quot;section&quot; id=&quot;sect2_4&quot;&gt;&lt;h4&gt;abc&lt;/h4&gt;&lt;/div&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n\n### ||| abc\n\n&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;div class=&quot;section&quot; id=&quot;sect5_2&quot;&gt;&lt;h4&gt;abc&lt;/h4&gt;&lt;/div&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n\n### |||||| abc\n\n&#39;</span>
+</pre></div>
+</div>
+<p>Poetry div, single-line:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;    &lt;div class=&quot;poetry_container line&quot;&gt;      &lt;div&gt;        &lt;div&gt;hemistich1&lt;/div&gt;        &lt;div&gt;hemistich2&lt;/div&gt;      &lt;/div&gt;    &lt;/div&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n# hemistich1 %~% hemistich2\n&#39;</span>
+</pre></div>
+</div>
+<p>Poetry div, multiple line:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;    abc    &lt;div class=&quot;poetry_container&quot;&gt;      &lt;div&gt;        &lt;div&gt;hemistich1&lt;/div&gt;        &lt;div&gt;hemistich2&lt;/div&gt;      &lt;/div&gt;      &lt;div&gt;        &lt;div&gt;hemistich3&lt;/div&gt;        &lt;div&gt;hemistich4&lt;/div&gt;      &lt;/div&gt;    &lt;/div&gt;    def&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39; abc\n# hemistich1 %~% hemistich2\n# hemistich3 %~% hemistich4\ndef&#39;</span>
+</pre></div>
+</div>
+<p>Section div without heading:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc             &lt;div class=&quot;section&quot; id=&quot;sect2_9&quot;&gt;def&lt;/div&gt;             ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc\n\n### |||\ndef\n\nghi&#39;</span>
+</pre></div>
+</div>
+<p>Section div with heading (handled by h4):</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc             &lt;div class=&quot;section&quot; id=&quot;sect2_9&quot;&gt;               &lt;h4&gt;title&lt;/h4&gt;               &lt;p&gt;def&lt;/p&gt;             &lt;/div&gt;             ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc\n\n### ||| title\n\n# def\n\nghi&#39;</span>
+</pre></div>
+</div>
+<p>Footnote divs:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;div class=&quot;footnote&quot;&gt;&lt;sup&gt;1 &lt;/sup&gt;footnotetext&lt;/div&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n\nFOOTNOTE1 footnotetext\n\n&#39;</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>NB: FOOTNOTE is a tag that will be used to extract all footnotes</dt>
+<dd>in a next step.</dd>
+</dl>
+<p>Subtitle divs:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;h1&gt;Title text&lt;/h1&gt;&lt;div class=&quot;subtitle&quot;&gt;Subtitle text&lt;/div&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n\n### | Title text Subtitle text\n\n&#39;</span>
+</pre></div>
+</div>
+<p>Divs without class or with an unsupported class are simply stripped:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc             &lt;div&gt;def&lt;/div&gt;             ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc def ghi&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc             &lt;div class=&quot;unknown_div_class&quot;&gt;def&lt;/div&gt;             ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc def ghi&#39;</span>
+</pre></div>
+</div>
+<p>Spans with class “quran”:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;span class=&quot;quran&quot;&gt;def ghi&lt;/span&gt; jkl&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc @QUR02 def ghi jkl&#39;</span>
+</pre></div>
+</div>
+<p># the latter is a result of post-processing;
+# the function itself will produce:
+# ‘abc &#64;QUR&#64; def ghinjkl’</p>
+<p>Spans without class or with an unsupported class are stripped:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;span&gt;def&lt;/span&gt; ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc def ghi&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;span class=&quot;unknown_span_class&quot;&gt;def&lt;/span&gt; ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc def ghi&#39;</span>
+</pre></div>
+</div>
+<p>Links:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;a href=&quot;a/b/c&quot;&gt;abc&lt;/a&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;[abc](a/b/c)&#39;</span>
+</pre></div>
+</div>
+<p>Unordered lists:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;ul&gt;&lt;li&gt;item1&lt;/li&gt;&lt;li&gt;item2&lt;/li&gt;&lt;/ul&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n* item1\n* item2\n\n&#39;</span>
+</pre></div>
+</div>
+<p>Ordered lists:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;ol&gt;&lt;li&gt;item1&lt;/li&gt;&lt;li&gt;item2&lt;/li&gt;&lt;/ol&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n1. item1\n2. item2\n\n&#39;</span>
+</pre></div>
+</div>
+<p>Nested lists:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;ol&gt;&lt;li&gt;item1&lt;/li&gt;&lt;li&gt;item2:&lt;ul&gt;&lt;li&gt;item3&lt;/li&gt;&lt;li&gt;item4&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;/ol&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n1. item1\n2. item2:\n\n\t* item3\n\t* item4\n\t\n\n&#39;</span>
+</pre></div>
+</div>
+<p>Italics (&lt;i&gt; and &lt;em&gt; tags):</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;em&gt;def&lt;/em&gt; ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc *def* ghi&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;i&gt;def&lt;/i&gt; ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc *def* ghi&#39;</span>
+</pre></div>
+</div>
+<p>Bold (&lt;b&gt; and &lt;strong&gt; tags):</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;b&gt;def&lt;/b&gt; ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc **def** ghi&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;strong&gt;def&lt;/strong&gt; ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc **def** ghi&#39;</span>
+</pre></div>
+</div>
+<p>Tables:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;    &lt;table&gt;      &lt;tr&gt;        &lt;th&gt;th1aaa&lt;/th&gt;&lt;th&gt;th2&lt;/th&gt;      &lt;/tr&gt;      &lt;tr&gt;        &lt;td&gt;td1&lt;/td&gt;&lt;td&gt;td2&lt;/td&gt;      &lt;/tr&gt;    &lt;/table&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n\n| th1aaa | th2 |\n| ------ | --- |\n| td1    | td2 |\n\n&#39;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<dl class="class">
+<dt id="openiti.new_books.convert.html2md_hindawi.HindawiConverter">
+<em class="property">class </em><code class="descclassname">openiti.new_books.convert.html2md_hindawi.</code><code class="descname">HindawiConverter</code><span class="sig-paren">(</span><em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.html2md_hindawi.HindawiConverter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert Hindawi library html to OpenITI mARkdown.</p>
+<dl class="method">
+<dt id="openiti.new_books.convert.html2md_hindawi.HindawiConverter.convert_a">
+<code class="descname">convert_a</code><span class="sig-paren">(</span><em>el</em>, <em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.html2md_hindawi.HindawiConverter.convert_a" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts html links.</p>
+<p>Overwrites the MarkdownConverter.post_process_md() method.
+Introduces an exception for links between footnote markers
+and footnootes.</p>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md_hindawi</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;a href=&quot;a/b/c&quot;&gt;abc&lt;/a&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;[abc](a/b/c)&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md_hindawi</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;a href=&quot;ftn1&quot;&gt;1&lt;/a&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc [1]&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.html2md_hindawi.HindawiConverter.convert_div">
+<code class="descname">convert_div</code><span class="sig-paren">(</span><em>el</em>, <em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.html2md_hindawi.HindawiConverter.convert_div" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts html &lt;div&gt; tags, depending on their class.</p>
+<p>In the MarkdownConverter class, div tags are simply stripped away.</p>
+<p class="rubric">Examples</p>
+<p># no div class: tags are stripped off</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md_hindawi</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc                     &lt;div&gt;def&lt;/div&gt;                     ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc def ghi&#39;</span>
+</pre></div>
+</div>
+<p># unknown div class: tags are stripped off</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md_hindawi</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc                     &lt;div class=&quot;unknown_div_class&quot;&gt;def&lt;/div&gt;                     ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc def ghi&#39;</span>
+</pre></div>
+</div>
+<p># poetry single-line:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;            &lt;div class=&quot;poetry_container line&quot;&gt;              &lt;div&gt;                &lt;div&gt;hemistich1&lt;/div&gt;                &lt;div&gt;hemistich2&lt;/div&gt;              &lt;/div&gt;            &lt;/div&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n# hemistich1 %~% hemistich2\n&#39;</span>
+</pre></div>
+</div>
+<p># poetry multiple line:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;            abc            &lt;div class=&quot;poetry_container&quot;&gt;              &lt;div&gt;                &lt;div&gt;hemistich1&lt;/div&gt;                &lt;div&gt;hemistich2&lt;/div&gt;              &lt;/div&gt;              &lt;div&gt;                &lt;div&gt;hemistich3&lt;/div&gt;                &lt;div&gt;hemistich4&lt;/div&gt;              &lt;/div&gt;            &lt;/div&gt;            def&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39; abc\n# hemistich1 %~% hemistich2\n# hemistich3 %~% hemistich4\ndef&#39;</span>
+</pre></div>
+</div>
+<p># section without heading:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc                     &lt;div class=&quot;section&quot; id=&quot;sect2_9&quot;&gt;def&lt;/div&gt;                     ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc\n\n### |||\ndef\n\nghi&#39;</span>
+</pre></div>
+</div>
+<p># section with heading (handled by h4):</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc                     &lt;div class=&quot;section&quot; id=&quot;sect2_9&quot;&gt;                       &lt;h4&gt;title&lt;/h4&gt;                       &lt;p&gt;def&lt;/p&gt;                     &lt;/div&gt;                     ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc\n\n### ||| title\n\n# def\n\nghi&#39;</span>
+</pre></div>
+</div>
+<p># footnote:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;div class=&quot;footnote&quot;&gt;&lt;sup&gt;1 &lt;/sup&gt;footnotetext&lt;/div&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n\nFOOTNOTE1 footnotetext\n\n&#39;</span>
+</pre></div>
+</div>
+<p>Paragraph block (similar to &lt;p&gt;):</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;div class=&quot;paragraph-block&quot;&gt;abc def ghi&lt;/div&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n\n# abc def ghi\n\n&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;div class=&quot;paragraph-block&quot;&gt;&lt;p&gt;abc def ghi&lt;/p&gt;&lt;/div&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n\n# abc def ghi\n\n&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;div class=&quot;paragraph-block&quot;&gt;&lt;/div&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;div class=&quot;paragraph-block&quot;&gt;&lt;div class=&quot;paragraph-block&quot;&gt;abc&lt;/div&gt;&lt;/div&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n\n# abc\n\n&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.html2md_hindawi.HindawiConverter.convert_h4">
+<code class="descname">convert_h4</code><span class="sig-paren">(</span><em>el</em>, <em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.html2md_hindawi.HindawiConverter.convert_h4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts &lt;h4&gt; header tags.</p>
+<p>In the Hindawi library, &lt;h4&gt; tags are used
+for subsections on any level.
+The section level must be taken from the id of the parent div.
+NB: the ### | level in Hindawi is 0.</p>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md_hindawi</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;div class=&quot;section&quot; id=&quot;sect2_4&quot;&gt;&lt;h4&gt;abc&lt;/h4&gt;&lt;/div&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n\n### ||| abc\n\n&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;div class=&quot;section&quot; id=&quot;sect5_2&quot;&gt;&lt;h4&gt;abc&lt;/h4&gt;&lt;/div&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n\n### |||||| abc\n\n&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.html2md_hindawi.HindawiConverter.convert_hn">
+<code class="descname">convert_hn</code><span class="sig-paren">(</span><em>n</em>, <em>el</em>, <em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.html2md_hindawi.HindawiConverter.convert_hn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts headings in the usual way except h4 headings.</p>
+<p>In the Hindawi library, &lt;h4&gt; tags
+are used for subsections on any level.
+The section level must be derived from the id of the parent div.</p>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md_hindawi</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;h1&gt;abc&lt;/h1&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n\n### | abc\n\n&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;h3&gt;abc&lt;/h3&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n\n### ||| abc\n\n&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;div class=&quot;section&quot; id=&quot;sect5_2&quot;&gt;&lt;h4&gt;abc&lt;/h4&gt;&lt;/div&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n\n### |||||| abc\n\n&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.html2md_hindawi.HindawiConverter.convert_span">
+<code class="descname">convert_span</code><span class="sig-paren">(</span><em>el</em>, <em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.html2md_hindawi.HindawiConverter.convert_span" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts html &lt;span&gt; tags, depending on their class attribute.</p>
+<p>Supported span classes should be stored in self.span_dict
+(key: span class (str); value: formatting string)</p>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md_hindawi</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;span&gt;def&lt;/span&gt; ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc def ghi&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;span class=&quot;unknown_span_class&quot;&gt;def&lt;/span&gt; ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc def ghi&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;span class=&quot;quran&quot;&gt;def  ghi&lt;/span&gt; jkl&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_hindawi</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc @QUR02 def ghi jkl&#39;</span>
+</pre></div>
+</div>
+<p># the latter is a result of post-processing;
+# the function itself will produce:
+# ‘abc &#64;QUR&#64; def ghinjkl’</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.html2md_hindawi.HindawiConverter.get_section_level">
+<code class="descname">get_section_level</code><span class="sig-paren">(</span><em>el</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.html2md_hindawi.HindawiConverter.get_section_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the level of the current section (or its parent).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.html2md_hindawi.HindawiConverter.post_process_md">
+<code class="descname">post_process_md</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.html2md_hindawi.HindawiConverter.post_process_md" title="Permalink to this definition">¶</a></dt>
+<dd><p>Appends to the MarkdownConverter.post_process_md() method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.html2md_hindawi.HindawiConverter.process_Quran">
+<code class="descname">process_Quran</code><span class="sig-paren">(</span><em>match</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.html2md_hindawi.HindawiConverter.process_Quran" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reformat Quran quote matches to mARkdown named entity standard.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.new_books.convert.html2md_hindawi.markdownify">
+<code class="descclassname">openiti.new_books.convert.html2md_hindawi.</code><code class="descname">markdownify</code><span class="sig-paren">(</span><em>html</em>, <em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.html2md_hindawi.markdownify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shortcut to the convert method of the HindawiConverter class.</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-openiti.new_books.convert.generic_converter">
 <span id="openiti-new-books-convert-generic-converter"></span><h4>openiti.new_books.convert.generic_converter<a class="headerlink" href="#module-openiti.new_books.convert.generic_converter" title="Permalink to this headline">¶</a></h4>
@@ -1932,11 +2419,255 @@ return text</dd>
 <p>Subclass the GenericConverter to make a converter for a new
 source of scraped books.</p>
 </div>
-<div class="section" id="openiti-new-books-convert-epub-converter-generic">
-<h4>openiti.new_books.convert.epub_converter_generic<a class="headerlink" href="#openiti-new-books-convert-epub-converter-generic" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="module-openiti.new_books.convert.epub_converter_generic">
+<span id="openiti-new-books-convert-epub-converter-generic"></span><h4>openiti.new_books.convert.epub_converter_generic<a class="headerlink" href="#module-openiti.new_books.convert.epub_converter_generic" title="Permalink to this headline">¶</a></h4>
+<p>Generic converter that converts an Epub to OpenITI mARkdown.</p>
+<p class="rubric">Examples</p>
+<p>Generic epub conversion:
+&gt;&gt;&gt; from epub_converter_generic import GenericEpubConverter
+&gt;&gt;&gt; gen_converter = GenericEpubConverter(dest_folder=”test/converted”)
+&gt;&gt;&gt; gen_converter.VERBOSE = False
+&gt;&gt;&gt; folder = r”test”
+&gt;&gt;&gt; fn = r”Houellebecq 2019 - serotonine.epub”
+&gt;&gt;&gt; gen_converter.convert_file(os.path.join(folder, fn))
+&gt;&gt;&gt; gen_converter.convert_files_in_folder(folder, [“epub”,])</p>
+<p>Sub-class to create a converter specific to epubs from the Hindawi library:
+&gt;&gt;&gt; HindawiConverter = GenericEpubConverter(“test/converted”)
+&gt;&gt;&gt; HindawiConverter.VERBOSE = False
+&gt;&gt;&gt; import html2md_hindawi
+&gt;&gt;&gt; HindawiConverter.convert_html2md = html2md_hindawi.markdownify  # (1)
+&gt;&gt;&gt; HindawiConverter.toc_fn = “nav.xhtml”  # (2)
+&gt;&gt;&gt; folder = r”test”
+&gt;&gt;&gt; fn = r”26362727.epub”
+&gt;&gt;&gt; HindawiConverter.convert_file(os.path.join(folder, fn))</p>
+<p># (1) overwrite the convert_html2md function
+# (2) specify the filename of the table of contents in Hindawi epub files</p>
+<p>An Epub file is in fact a zipped archive.
+The most important element of the archive for conversion purposes
+are the folders that contain the html files with the text.
+Some Epubs have a table of contents that defines the order
+in which these html files should be read.</p>
+<p>The GenericEpubConverter is a subclass of the GenericConverter
+from the generic_converter module:</p>
+<dl class="docutils">
+<dt>GenericConverter</dt>
+<dd>_ GenericEpubConverter</dd>
+</dl>
+<p>GenericEpubConverter’s main methods are inherited from the GenericConverter:</p>
+<ul class="simple">
+<li>convert_file(source_fp): basic procedure for converting an epub file.</li>
+<li><dl class="first docutils">
+<dt>convert_files_in_folder(source_folder): convert all epub files in the folder</dt>
+<dd>(calls convert_file)</dd>
+</dl>
+</li>
+</ul>
+<p>Methods of both classes:
+(methods of GenericConverter are inherited by GenericEpubConverter;
+methods of GenericConverter with the same name
+in GenericEpubConverter are overwritten by the latter)</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="53%" />
+<col width="47%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">GenericConverter</th>
+<th class="head">GenericEpubConverter</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>__init__</td>
+<td>__init__</td>
+</tr>
+<tr class="row-odd"><td>convert_files_in_folder</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-even"><td>convert file</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-odd"><td>make_dest_fp</td>
+<td>(inherited - generic!)</td>
+</tr>
+<tr class="row-even"><td>get_metadata</td>
+<td>(inherited - generic!)</td>
+</tr>
+<tr class="row-odd"><td>get_data</td>
+<td>get_data</td>
+</tr>
+<tr class="row-even"><td>pre_process</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-odd"><td>add_page_numbers</td>
+<td>(inherited - generic!)</td>
+</tr>
+<tr class="row-even"><td>add_structural_annotations</td>
+<td>(inherited - generic!)</td>
+</tr>
+<tr class="row-odd"><td>remove_notes</td>
+<td>remove_notes</td>
+</tr>
+<tr class="row-even"><td>reflow</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-odd"><td>add_milestones</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-even"><td>post_process</td>
+<td>(inherited - generic!)</td>
+</tr>
+<tr class="row-odd"><td>compose</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-even"><td>save_file</td>
+<td>(inherited)
+inspect_epub
+sort_html_files_by_toc
+add_unique_tags</td>
+</tr>
+</tbody>
+</table>
+<p>To create a converter for a specific type of epubs,
+subclass the GenericEpubConverter and overwrite
+some of its methods:</p>
+<dl class="docutils">
+<dt>GenericConverter</dt>
+<dd><dl class="first last docutils">
+<dt>_ GenericEpubConverter</dt>
+<dd>_ HindawiEpubConverter
+_ ShamelaEpubConverter
+_ …</dd>
+</dl>
+</dd>
+</dl>
 </div>
-<div class="section" id="openiti-new-books-convert-epub-converter-hindawi">
-<h4>openiti.new_books.convert.epub_converter_hindawi<a class="headerlink" href="#openiti-new-books-convert-epub-converter-hindawi" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="module-openiti.new_books.convert.epub_converter_hindawi">
+<span id="openiti-new-books-convert-epub-converter-hindawi"></span><h4>openiti.new_books.convert.epub_converter_hindawi<a class="headerlink" href="#module-openiti.new_books.convert.epub_converter_hindawi" title="Permalink to this headline">¶</a></h4>
+<p>Convert Epubs from the Hindawi library to OpenITI mARkdown.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">epub_converter_hindawi</span> <span class="k">import</span> <span class="n">HindawiEpubConverter</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">yml2json</span> <span class="k">import</span> <span class="n">yml2json</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">folder</span> <span class="o">=</span> <span class="s">&quot;test&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fn</span> <span class="o">=</span> <span class="s">&quot;26362727.epub&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hc</span> <span class="o">=</span> <span class="n">HindawiEpubConverter</span><span class="p">(</span><span class="n">dest_folder</span><span class="o">=</span><span class="s">&quot;test/converted&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">meta_fp</span> <span class="o">=</span> <span class="s">&quot;test/hindawi_metadata_man.yml&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hc</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">yml2json</span><span class="p">(</span><span class="n">meta_fp</span><span class="p">,</span> <span class="n">container</span> <span class="o">=</span> <span class="p">{})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hc</span><span class="o">.</span><span class="n">convert_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">fn</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hc</span><span class="o">.</span><span class="n">convert_files_from_folder</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>An Epub file is in fact a zipped archive.
+The most important element of the archive for conversion purposes
+are the folders that contain the html files with the text.
+Some Epubs have a table of contents that defines the order
+in which these html files should be read.</p>
+<p>The HindawiEpubConverter is a subclass of the GenericEpubConverter,
+which in turn is a subclass of the GenericConverter
+from the generic_converter module:</p>
+<dl class="docutils">
+<dt>GenericConverter</dt>
+<dd><dl class="first last docutils">
+<dt>_ GenericEpubConverter</dt>
+<dd>_ HindawiEpubConverter</dd>
+</dl>
+</dd>
+</dl>
+<p>HindawiConverter’s main methods are inherited from the GenericConverter:</p>
+<ul class="simple">
+<li>convert_file(source_fp): basic procedure for converting an epub file.</li>
+<li><dl class="first docutils">
+<dt>convert_files_in_folder(source_folder): convert all epub files in the folder</dt>
+<dd>(calls convert_file)</dd>
+</dl>
+</li>
+</ul>
+<p>Methods of both classes:</p>
+<p>(methods of GenericConverter are inherited by GenericEpubConverter;
+methods of GenericConverter with the same name
+in GenericEpubConverter are overwritten by the latter)</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="36%" />
+<col width="33%" />
+<col width="31%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">generic_converter</th>
+<th class="head">epub_converter_hindawi</th>
+<th class="head">epub_converter_hindawi</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>__init__</td>
+<td>__init__</td>
+<td>__init__</td>
+</tr>
+<tr class="row-odd"><td>convert_files_in_folder</td>
+<td>(inherited)</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-even"><td>convert file</td>
+<td>(inherited)</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-odd"><td>make_dest_fp</td>
+<td>(inherited - generic!)</td>
+<td>(inherited - generic!)</td>
+</tr>
+<tr class="row-even"><td>get_metadata</td>
+<td>(inherited - generic!)</td>
+<td>get_metadata</td>
+</tr>
+<tr class="row-odd"><td>get_data</td>
+<td>get_data</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-even"><td>pre_process</td>
+<td>(inherited)</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-odd"><td>add_page_numbers</td>
+<td>(inherited - generic!)</td>
+<td>(inherited - generic!)</td>
+</tr>
+<tr class="row-even"><td>add_structural_annotations</td>
+<td>(inherited - generic!)</td>
+<td>(inherited - generic!)</td>
+</tr>
+<tr class="row-odd"><td>remove_notes</td>
+<td>remove_notes</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-even"><td>reflow</td>
+<td>(inherited)</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-odd"><td>add_milestones</td>
+<td>(inherited)</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-even"><td>post_process</td>
+<td>(inherited - generic!)</td>
+<td>(inherited - generic!)</td>
+</tr>
+<tr class="row-odd"><td>compose</td>
+<td>(inherited)</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-even"><td>save_file</td>
+<td>(inherited)
+convert_html2md
+inspect_epub
+sort_html_files_by_toc
+add_unique_tags</td>
+<td>(inherited)
+convert_html2md
+(inherited)
+(inherited)
+(inherited)</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="module-openiti.new_books.scrape">
 <span id="openiti-new-books-scrape"></span><h4>openiti.new_books.scrape<a class="headerlink" href="#module-openiti.new_books.scrape" title="Permalink to this headline">¶</a></h4>
@@ -2006,10 +2737,10 @@ source of scraped books.</p>
 <li class="toctree-l4"><a class="reference internal" href="#module-openiti.new_books.convert.yml2json">openiti.new_books.convert.yml2json</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-openiti.new_books.convert.md2html">openiti.new_books.convert.md2html</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-openiti.new_books.convert.html2md">openiti.new_books.convert.html2md</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#openiti-new-books-convert-html2md-hindawi">openiti.new_books.convert.html2md_hindawi</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-openiti.new_books.convert.html2md_hindawi">openiti.new_books.convert.html2md_hindawi</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-openiti.new_books.convert.generic_converter">openiti.new_books.convert.generic_converter</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#openiti-new-books-convert-epub-converter-generic">openiti.new_books.convert.epub_converter_generic</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#openiti-new-books-convert-epub-converter-hindawi">openiti.new_books.convert.epub_converter_hindawi</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-openiti.new_books.convert.epub_converter_generic">openiti.new_books.convert.epub_converter_generic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-openiti.new_books.convert.epub_converter_hindawi">openiti.new_books.convert.epub_converter_hindawi</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-openiti.new_books.scrape">openiti.new_books.scrape</a></li>
 </ul>
 </li>
