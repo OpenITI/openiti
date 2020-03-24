@@ -36,6 +36,7 @@ Examples (doctests):
     '\\n\\n# abc\\n\\n'
 
     Headings: <h4>
+    
     NB: in the Hindawi library, <h4> tag is used for section headings
         on all levels but the highest one.
         The section level must be derived from the id of the parent div. 
