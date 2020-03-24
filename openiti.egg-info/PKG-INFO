@@ -1,9 +1,9 @@
 Metadata-Version: 2.1
 Name: openiti
-Version: 0.0.5
+Version: 0.0.6
 Summary: A package for dealing with the openITI corpus
-Home-page: https://https://github.com/OpenITI
-Author: Soheil Merchant, Maxim Romanov, Masoumeh Seydi, Peter Verkinderen
+Home-page: https://github.com/OpenITI
+Author: Sohail Merchant, Maxim Romanov, Masoumeh Seydi, Peter Verkinderen
 Author-email: peter.verkinderen@gmail.com
 License: UNKNOWN
 Description: # openiti
@@ -11,6 +11,13 @@ Description: # openiti
         This is a first attempt to create a Python library that combines all often-used code in the OpenITI project. 
         
         ## Change log: 
+        
+        ### v.0.0.6: 
+        
+        * openiti.helper.uri: use both Arabic character and token count in yml files
+        * openiti.helper.uri: add support for paths to files that are not in 25-years repos (e.g., for release)
+        * openiti.helper.uri: fix bugs
+        * add Sphinx documentation
         
         ### v.0.0.5:
         

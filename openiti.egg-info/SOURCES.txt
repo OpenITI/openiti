@@ -37,3 +37,6 @@ openiti/release/collect_release_stats.py
 openiti/test/__init__.py
 openiti/test/test_compile_speed.py
 openiti/test/test_deNoise_speed2.py
+openiti/test/reset/__init__.py
+openiti/test/reset/test_compile_speed.py
+openiti/test/reset/test_deNoise_speed2.py
