@@ -213,8 +213,15 @@ Examples (doctests):
 """
 import re
 
-import html2md
-from html2md import *
+
+if __name__ == '__main__':
+    from os import sys, path
+    root_folder = path.dirname(path.dirname(path.abspath(__file__)))
+    root_folder = path.dirname(path.dirname(root_folder))
+    sys.path.append(root_folder)
+
+from openiti.new_books.convert import html2md
+from openiti.new_books.convert.html2md import *
 
 class HindawiConverter(html2md.MarkdownConverter):
     """Convert Hindawi library html to OpenITI mARkdown."""

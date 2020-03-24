@@ -85,8 +85,16 @@ import time
 
 from bs4 import BeautifulSoup
 
-from generic_converter import GenericConverter
-import html2md
+
+if __name__ == '__main__':
+    from os import sys, path
+    root_folder = path.dirname(path.dirname(path.abspath(__file__)))
+    root_folder = path.dirname(path.dirname(root_folder))
+    sys.path.append(root_folder)
+
+from openiti.new_books.convert.generic_converter import GenericConverter
+from openiti.new_books.convert import html2md
+
 
 
 class GenericEpubConverter(GenericConverter):

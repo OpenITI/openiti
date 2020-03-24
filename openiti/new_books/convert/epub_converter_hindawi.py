@@ -62,9 +62,20 @@ in GenericEpubConverter are overwritten by the latter)
 
 import os
 
-from epub_converter_generic import GenericEpubConverter
-import html2md_hindawi
-from yml2json import yml2json
+if __name__ == '__main__':
+    from os import sys, path
+    root_folder = path.dirname(path.dirname(path.abspath(__file__)))
+    root_folder = path.dirname(path.dirname(root_folder))
+    print(root_folder)
+    sys.path.append(root_folder)
+
+from openiti.new_books.convert.epub_converter_generic import GenericEpubConverter
+from openiti.new_books.convert import html2md_hindawi
+from openiti.new_books.convert.yml2json import yml2json
+
+##from epub_converter_generic import GenericEpubConverter
+##import html2md_hindawi
+##from yml2json import yml2json
 
 
 
