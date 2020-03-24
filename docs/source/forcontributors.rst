@@ -26,7 +26,7 @@ Generate the version:
     2. run the following code to build the version files:: 
         $ python setup.py sdist bdist_wheel
     3. run the following command to upload the new version to PyPi ::
-        $ python twine upload dist/openiti-<version_number>*
+        $ python -m twine upload dist/openiti-<version_number>*
     4. When prompted to enter your username: write ``__token__``
     5. When prompted to enter your password: paste the PyPi token
 
