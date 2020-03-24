@@ -57,7 +57,7 @@ Examples:
     >>> print(u)
     0255JahizBasri.Hayawan
 
-    - Validity tests: setting invalid values for part of a uri returns an error
+    - Validity tests: setting invalid values for part of a uri returns an error\
     (implemented for instantiation of URI objects + setting URI components):
 
     # >>> URI("255Jahiz")
@@ -95,7 +95,7 @@ Examples:
     Exception: Extension (markdown) is not among the allowed extensions
     (['inProgress', 'completed', 'mARkdown', 'yml', ''])
 
-    - Getting the URI's current uri_type ("author", "book", "version", None),
+    - Getting the URI's current uri_type ("author", "book", "version", None),\
     i.e., the longest URI that can be built from the object's components:
 
     >>> t.uri_type
@@ -107,8 +107,8 @@ Examples:
     >>> t.uri_type == None
     True
 
-    - Building different versions of the URI
-    (uri_types: "author", "author_yml", "book", "book_yml",
+    - Building different versions of the URI\
+    (uri_types: "author", "author_yml", "book", "book_yml",\
     "version", "version_yml", "version_file"):
 
     >>> t = URI("0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed")
@@ -181,30 +181,34 @@ Examples:
     ---------------------------------------------------------------------------
 
 
-    In addition to the URI class, the module contains a number of functions for
+    In addition to the URI class, the module contains a number of functions for:
+    
     * implementing URI changes in the OpenITI corpus
-    * initializing new texts in the OpenITI corpus (a single text,
+    * initializing new texts in the OpenITI corpus (a single text,\
       all texts in a folder, or using a csv file)
 
-    All these functions have an *execute* flag. If set to False,
-    the function will not immediately be executed but first show all changes
+    All these functions have an *execute* flag. If set to False,\
+    the function will not immediately be executed but first show all changes\
     it will make, and then ask the user whether to carry out the changes or not.
 
-    - Changing a URI and moving all files to the correct folders:
-    (execute=False flag: script shows you which changes it will make,
-    then gives you the option to carry out the changes or not)
+    - Changing a URI and moving all files to the correct folders:\
+      (execute=False flag: script shows you which changes it will make,\
+      then gives you the option to carry out the changes or not)
+    
     # >>> old = "0255Jahiz"
     # >>> new = "0255JahizBasri"
     # >>> change_uri(old, new, execute=False)
 
     - Moving new files to their OpenITI repo:
+    
     # >>> folder = r"D:\OpenITI\barzakh"
     # >>> target_base_pth = r"D:\OpenITI\25Yrepos"
     # >>> initialize_new_texts_in_folder(folder,\
     #                                    target_base_pth, execute=False)
 
-    - Initializing new texts with a csv file
+    - Initializing new texts with a csv file\
     (two columns, without headers: non-URI filepath, URI):
+    
     # >>> csv_fp = r"D:\OpenITI\new\new_files.csv"
     # >>> new_base_path = r"D:\OpenITI\25Y_repos"
     # >>> initialize_texts_from_CSV(csv_fp, base_path=new_base_path,\
@@ -273,20 +277,31 @@ class URI:
 
     OpenITI URIs consist of the following elements:
     0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1.mARkdown
+    
         * VersionURI: consists of
+        
           - EditionURI: consists of
+          
             * Work URI: consists of
+            
               - AuthorID: consists of
+              
                 * author's death date (self.date): 0768
                 * shuhra of the author (self.author): IbnMuhammadTaqiDinBaclabakki
+                
               - BookID (self.title): Hadith: short title of the book
+              
             * Version URI: consists of
+            
               - VersionID (self.version): Shamela0009426: ID of the collection/contributor
                 from which we got the book + number of the book in that collection
+                
               - Lang:
+              
                 * self.language: ara: ISO 639-2 language code
                 * self.edition_no: 1: edition version number
                   (different digitizations of the same edition get the same edition_no)
+                  
         * self.extension = mARkdown (can be inProgress, mARkdown, completed, "")
 
     Examples:
@@ -846,17 +861,17 @@ Did you put a dot between date and author name?"
             uri_type (str): the uri type to be returned (defaults to None):
                 - "date" : only the date (format: 0000)
                 - "author" : authorUri (format: 0255Jahiz)
-                - "author_yml" : filename of the author yml file
-                    (format: 0255Jahiz.yml)
+                - "author_yml" : filename of the author yml file\
+                  (format: 0255Jahiz.yml)
                 - "book": BookUri (format: 0255Jahiz.Hayawan)
-                - "book_yml": filename of the book yml file
-                    (format: 0255Jahiz.Hayawan.yml)
-                - "version": versionURI
-                    (format: 0255Jahiz.Hayawan.Shamela000245-ara1)
-                - "version_yml": filename of the version yml file
-                    (format: 0255Jahiz.Hayawan.Shamela000245-ara1.yml)
-                - "version_file": filename of the version text file
-                    (format: 0255Jahiz.Hayawan.Shamela000245-ara1.completed)
+                - "book_yml": filename of the book yml file\
+                  (format: 0255Jahiz.Hayawan.yml)
+                - "version": versionURI\
+                  (format: 0255Jahiz.Hayawan.Shamela000245-ara1)
+                - "version_yml": filename of the version yml file\
+                  (format: 0255Jahiz.Hayawan.Shamela000245-ara1.yml)
+                - "version_file": filename of the version text file\
+                  (format: 0255Jahiz.Hayawan.Shamela000245-ara1.completed)
             ext (str): extension for the version_file uri string
                 (can be "completed", "inProgress", "mARkdown", "" or None).
 
@@ -1227,14 +1242,19 @@ def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False):
     """Change a uri and put all files in the correct folder.
 
     If a version URI changes:
+    
         * all text files of that version should be moved
         * the yml file of that version should be updated and moved
+        
     If a book uri changes:
+    
         * the yml file of that book should be updated and moved
         * all annotation text files of all versions of the book should be moved
         * all yml files of versions of that book should be updated and moved
         * the original book folder itself should be (re)moved
+        
     if an author uri changes:
+
         * the yml file of that author should be updated and moved
         * all book yml files of that should be updated and moved
         * all annotation text files of all versions of all books should be moved
@@ -1246,9 +1266,9 @@ def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False):
         change_uri("0255Jahiz", "0256Jahiz")
         change_uri("0255Jahiz", "0255JahizBasri")
         change_uri("0255Jahiz.Hayawan", "0255Jahiz.KitabHayawan")
-        change_uri("0255Jahiz.Hayawan.Shamela002526-ara1",
+        change_uri("0255Jahiz.Hayawan.Shamela002526-ara1",\
                    "0255Jahiz.Hayawan.Shamela002526-ara2")
-        change_uri("0255Jahiz.Hayawan.Shamela002526-ara1.completed",
+        change_uri("0255Jahiz.Hayawan.Shamela002526-ara1.completed",\
                    "0255Jahiz.Hayawan.Shamela002526-ara1.mARkdown")
 
     Args:
