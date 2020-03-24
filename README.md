@@ -6,9 +6,10 @@ This is a first attempt to create a Python library that combines all often-used 
 
 ### v.0.0.6: 
 
+* openiti.helper.uri: use both Arabic character and token count in yml files
+* openiti.helper.uri: add support for paths to files that are not in 25-years repos (e.g., for release)
 * openiti.helper.uri: fix bugs
 * add Sphinx documentation
-
 
 ### v.0.0.5:
 
