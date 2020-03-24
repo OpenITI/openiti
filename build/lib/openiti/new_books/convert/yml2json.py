@@ -1,6 +1,7 @@
 """Convert a YML file to json.
 
 The yml2json function can be used to convert a yml metadata file to
+
 * a list of dictionaries: useful for
     - conserving the order
     - conserving comments between the records

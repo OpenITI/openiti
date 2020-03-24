@@ -22,49 +22,63 @@ which in turn is a subclass of the GenericConverter
 from the generic_converter module:
 
 GenericConverter
-    |_ GenericEpubConverter
-            |_ HindawiEpubConverter
+    \_ GenericEpubConverter
+            \_ HindawiEpubConverter
 
 HindawiConverter's main methods are inherited from the GenericConverter:
+
 * convert_file(source_fp): basic procedure for converting an epub file.
 * convert_files_in_folder(source_folder): convert all epub files in the folder
     (calls convert_file)
 
 Methods of both classes:
+
 (methods of GenericConverter are inherited by GenericEpubConverter;
 methods of GenericConverter with the same name
 in GenericEpubConverter are overwritten by the latter)
 
-| *generic_converter*        | *epub_converter_hindawi* | *epub_converter_hindawi*
-|----------------------------|--------------------------|-------------------------
-| __init__                   | __init__                 | __init__ 
-| convert_files_in_folder    | (inherited)              | (inherited)
-| convert file               | (inherited)              | (inherited)
-| make_dest_fp               | (inherited - generic!)   | (inherited - generic!)
-| get_metadata               | (inherited - generic!)   | get_metadata
-| get_data                   | get_data                 | (inherited)
-| pre_process                | (inherited)              | (inherited)
-| add_page_numbers           | (inherited - generic!)   | (inherited - generic!)
-| add_structural_annotations | (inherited - generic!)   | (inherited - generic!) 
-| remove_notes               | remove_notes             | (inherited)
-| reflow                     | (inherited)              | (inherited)
-| add_milestones             | (inherited)              | (inherited)
-| post_process               | (inherited - generic!)   | (inherited - generic!) 
-| compose                    | (inherited)              | (inherited)
-| save_file                  | (inherited)              | (inherited)
-|                            | convert_html2md          | convert_html2md
-|                            | inspect_epub             | (inherited)
-|                            | sort_html_files_by_toc   | (inherited)
-|                            | add_unique_tags          | (inherited)
-
+=========================== ========================= =======================
+generic_converter           epub_converter_hindawi    epub_converter_hindawi 
+=========================== ========================= =======================
+__init__                    __init__                  __init__ 
+convert_files_in_folder     (inherited)               (inherited)
+convert file                (inherited)               (inherited)
+make_dest_fp                (inherited - generic!)    (inherited - generic!)
+get_metadata                (inherited - generic!)    get_metadata
+get_data                    get_data                  (inherited)
+pre_process                 (inherited)               (inherited)
+add_page_numbers            (inherited - generic!)    (inherited - generic!)
+add_structural_annotations  (inherited - generic!)    (inherited - generic!) 
+remove_notes                remove_notes              (inherited)
+reflow                      (inherited)               (inherited)
+add_milestones              (inherited)               (inherited)
+post_process                (inherited - generic!)    (inherited - generic!) 
+compose                     (inherited)               (inherited)
+save_file                   (inherited)               (inherited)
+                            convert_html2md           convert_html2md
+                            inspect_epub              (inherited)
+                            sort_html_files_by_toc    (inherited)
+                            add_unique_tags           (inherited)
+=========================== ========================= =======================
 
 """
 
 import os
 
-from epub_converter_generic import GenericEpubConverter
-import html2md_hindawi
-from yml2json import yml2json
+if __name__ == '__main__':
+    from os import sys, path
+    root_folder = path.dirname(path.dirname(path.abspath(__file__)))
+    root_folder = path.dirname(path.dirname(root_folder))
+    print(root_folder)
+    sys.path.append(root_folder)
+
+from openiti.new_books.convert.epub_converter_generic import GenericEpubConverter
+from openiti.new_books.convert import html2md_hindawi
+from openiti.new_books.convert.yml2json import yml2json
+
+##from epub_converter_generic import GenericEpubConverter
+##import html2md_hindawi
+##from yml2json import yml2json
 
 
 

@@ -33,9 +33,10 @@ The GenericEpubConverter is a subclass of the GenericConverter
 from the generic_converter module:
 
 GenericConverter
-    |_ GenericEpubConverter
+    \_ GenericEpubConverter
 
 GenericEpubConverter's main methods are inherited from the GenericConverter:
+
 * convert_file(source_fp): basic procedure for converting an epub file.
 * convert_files_in_folder(source_folder): convert all epub files in the folder
     (calls convert_file)
@@ -45,36 +46,38 @@ Methods of both classes:
 methods of GenericConverter with the same name
 in GenericEpubConverter are overwritten by the latter)
 
-| *GenericConverter*          | *GenericEpubConverter*
-|-----------------------------|-----------------------
-| __init__                    | __init__
-| convert_files_in_folder     | (inherited)
-| convert file                | (inherited)
-| make_dest_fp                | (inherited - generic!)
-| get_metadata                | (inherited - generic!)
-| get_data                    | get_data
-| pre_process                 | (inherited)
-| add_page_numbers            | (inherited - generic!)
-| add_structural_annotations  | (inherited - generic!)
-| remove_notes                | remove_notes
-| reflow                      | (inherited)
-| add_milestones              | (inherited)
-| post_process                | (inherited - generic!)
-| compose                     | (inherited)
-| save_file                   | (inherited)
-|                             | inspect_epub
-|                             | sort_html_files_by_toc
-|                             | add_unique_tags
+=========================== ========================
+GenericConverter            GenericEpubConverter
+=========================== ========================
+__init__                    __init__
+convert_files_in_folder     (inherited)
+convert file                (inherited)
+make_dest_fp                (inherited - generic!)
+get_metadata                (inherited - generic!)
+get_data                    get_data
+pre_process                 (inherited)
+add_page_numbers            (inherited - generic!)
+add_structural_annotations  (inherited - generic!)
+remove_notes                remove_notes
+reflow                      (inherited)
+add_milestones              (inherited)
+post_process                (inherited - generic!)
+compose                     (inherited)
+save_file                   (inherited)
+                            inspect_epub
+                            sort_html_files_by_toc
+                            add_unique_tags
+=========================== ========================
 
 To create a converter for a specific type of epubs,
 subclass the GenericEpubConverter and overwrite
 some of its methods:
 
 GenericConverter
-    |_ GenericEpubConverter
-            |_ HindawiEpubConverter
-            |_ ShamelaEpubConverter
-            |_ ...
+    \_ GenericEpubConverter
+            \_ HindawiEpubConverter
+            \_ ShamelaEpubConverter
+            \_ ...
 """
 
 import codecs
@@ -85,8 +88,16 @@ import time
 
 from bs4 import BeautifulSoup
 
-from generic_converter import GenericConverter
-import html2md
+
+if __name__ == '__main__':
+    from os import sys, path
+    root_folder = path.dirname(path.dirname(path.abspath(__file__)))
+    root_folder = path.dirname(path.dirname(root_folder))
+    sys.path.append(root_folder)
+
+from openiti.new_books.convert.generic_converter import GenericConverter
+from openiti.new_books.convert import html2md
+
 
 
 class GenericEpubConverter(GenericConverter):

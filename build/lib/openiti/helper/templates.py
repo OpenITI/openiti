@@ -1,4 +1,17 @@
-"""Templates for yml files, readme files, etc."""
+"""Templates for OpenITI yml files, readme files, etc.
+
+Templates:
+
+* MAGIC_VALUE
+* HEADER_SPLITTER
+* HTML_HEADER
+* HTML_FOOTER
+* author_yml_template
+* book_yml_template
+* version_yml_template
+* readme_template
+* text_questionnaire_template
+"""
 
 MAGIC_VALUE = "######OpenITI#"
 HEADER_SPLITTER = "#META#Header#End#"
@@ -63,7 +76,8 @@ book_yml_template = """\
     into the above given categories."""
 
 version_yml_template = """\
-00#VERS#LENGTH###: 
+00#VERS#LENGTH###:
+00#VERS#CLENGTH##:
 00#VERS#URI######: 
 80#VERS#BASED####: permalink, permalink, permalink
 80#VERS#COLLATED#: permalink, permalink, permalink

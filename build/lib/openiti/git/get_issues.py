@@ -1,10 +1,9 @@
-"""Get selected annotation issues from GitHub and print them
-or save them as a tsv file.
-
+"""Get selected annotation issues from GitHub;
+optionally, print them or save them as a tsv file.
 
 Usage example:
     issues = get_issues("OpenITI/Annotation",
-                        #issue_labels=["in progress"],
+                        issue_labels=["in progress"],
                         state="all"
                         )
     issues = define_text_uris(issues)
@@ -63,7 +62,7 @@ def sort_issues_by_uri(issues):
 
     Returns:
         uri_dict (dict): a dictionary:
-            key: uri
+            key: uri;
             value: list of github issue objects related to this uri
     """
     uri_dict = dict()

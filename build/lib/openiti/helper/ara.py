@@ -1,8 +1,82 @@
 import re
 
-ar_chars = "ذ١٢٣٤٥٦٧٨٩٠ّـضصثقفغعهخحجدًٌَُلإإشسيبلاتنمكطٍِلأأـئءؤرلاىةوزظْلآآ"
-ar_char = re.compile("[{}]".format(ar_chars)) # regex for one Arabic character
-ar_tok = re.compile("[{}]+".format(ar_chars)) # regex for one Arabic token
+ar_chars = """\
+ء	ARABIC LETTER HAMZA
+آ	ARABIC LETTER ALEF WITH MADDA ABOVE
+أ	ARABIC LETTER ALEF WITH HAMZA ABOVE
+ؤ	ARABIC LETTER WAW WITH HAMZA ABOVE
+إ	ARABIC LETTER ALEF WITH HAMZA BELOW
+ئ	ARABIC LETTER YEH WITH HAMZA ABOVE
+ا	ARABIC LETTER ALEF
+ب	ARABIC LETTER BEH
+ة	ARABIC LETTER TEH MARBUTA
+ت	ARABIC LETTER TEH
+ث	ARABIC LETTER THEH
+ج	ARABIC LETTER JEEM
+ح	ARABIC LETTER HAH
+خ	ARABIC LETTER KHAH
+د	ARABIC LETTER DAL
+ذ	ARABIC LETTER THAL
+ر	ARABIC LETTER REH
+ز	ARABIC LETTER ZAIN
+س	ARABIC LETTER SEEN
+ش	ARABIC LETTER SHEEN
+ص	ARABIC LETTER SAD
+ض	ARABIC LETTER DAD
+ط	ARABIC LETTER TAH
+ظ	ARABIC LETTER ZAH
+ع	ARABIC LETTER AIN
+غ	ARABIC LETTER GHAIN
+ـ	ARABIC TATWEEL
+ف	ARABIC LETTER FEH
+ق	ARABIC LETTER QAF
+ك	ARABIC LETTER KAF
+ل	ARABIC LETTER LAM
+م	ARABIC LETTER MEEM
+ن	ARABIC LETTER NOON
+ه	ARABIC LETTER HEH
+و	ARABIC LETTER WAW
+ى	ARABIC LETTER ALEF MAKSURA
+ي	ARABIC LETTER YEH
+ً	ARABIC FATHATAN
+ٌ	ARABIC DAMMATAN
+ٍ	ARABIC KASRATAN
+َ	ARABIC FATHA
+ُ	ARABIC DAMMA
+ِ	ARABIC KASRA
+ّ	ARABIC SHADDA
+ْ	ARABIC SUKUN
+٠	ARABIC-INDIC DIGIT ZERO
+١	ARABIC-INDIC DIGIT ONE
+٢	ARABIC-INDIC DIGIT TWO
+٣	ARABIC-INDIC DIGIT THREE
+٤	ARABIC-INDIC DIGIT FOUR
+٥	ARABIC-INDIC DIGIT FIVE
+٦	ARABIC-INDIC DIGIT SIX
+٧	ARABIC-INDIC DIGIT SEVEN
+٨	ARABIC-INDIC DIGIT EIGHT
+٩	ARABIC-INDIC DIGIT NINE
+ٮ	ARABIC LETTER DOTLESS BEH
+ٰ	ARABIC LETTER SUPERSCRIPT ALEF
+ٹ	ARABIC LETTER TTEH
+پ	ARABIC LETTER PEH
+چ	ARABIC LETTER TCHEH
+ژ	ARABIC LETTER JEH
+ک	ARABIC LETTER KEHEH
+گ	ARABIC LETTER GAF
+ی	ARABIC LETTER FARSI YEH
+ے	ARABIC LETTER YEH BARREE
+۱	EXTENDED ARABIC-INDIC DIGIT ONE
+۲	EXTENDED ARABIC-INDIC DIGIT TWO
+۳	EXTENDED ARABIC-INDIC DIGIT THREE
+۴	EXTENDED ARABIC-INDIC DIGIT FOUR
+۵	EXTENDED ARABIC-INDIC DIGIT FIVE
+‌	ZERO WIDTH NON-JOINER
+‍	ZERO WIDTH JOINER"""
+ar_chars = [x.split("\t")[0] for x in ar_chars.splitlines()]
+#ar_chars = "ذ١٢٣٤٥٦٧٨٩٠ّـضصثقفغعهخحجدًٌَُلإإشسيبلاتنمكطٍِلأأـئءؤرلاىةوزظْلآآ"
+ar_char = re.compile("[{}]".format("".join(ar_chars))) # regex for one Arabic character
+ar_tok = re.compile("[{}]+".format("".join(ar_chars))) # regex for one Arabic token
 noise = re.compile(""" ّ    | # Tashdīd / Shadda
                        َ    | # Fatḥa
                        ً    | # Tanwīn Fatḥ / Fatḥatān
@@ -20,7 +94,6 @@ noise = re.compile(""" ّ    | # Tashdīd / Shadda
                    """, re.VERBOSE)
 splitter = "#META#Header#End#"
 
-
 def denoise(text):
     """Remove non-consonantal characters from Arabic text.
 
@@ -32,6 +105,7 @@ def denoise(text):
     """
     return re.sub(noise, "", text)
 
+deNoise = denoise
 
 def normalize(text, replacement_tuples=[]):
     """Normalize Arabic text by replacing complex characters by simple ones.
@@ -133,8 +207,9 @@ def ar_cnt_file(fp, mode="token"):
     Returns:
         length (int): Arabic character/token count 
     """
+    import urllib
     try:
-        with url.urlopen(fp) as f:
+        with urllib.request.urlopen(fp) as f:
             book = f.read().decode('utf-8')
     except:
         with open(fp, mode="r", encoding="utf-8") as f:
@@ -155,8 +230,9 @@ def ar_cnt_file(fp, mode="token"):
         else:
             return ar_tok_cnt(text)
     else:
-        print("{} is missing the splitter!".format(fp))
-        return 0
+        msg = "This text is missing the splitter!\n{}".format(fp)
+        raise Exception(msg)
+
 
 
 def ar_ch_cnt(text):
