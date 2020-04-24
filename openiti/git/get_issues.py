@@ -27,7 +27,7 @@ def define_text_uris(issues, verbose=False):
         verbose (bool): if verbose, print issues for which no uris were found.
 
     Returns:
-        issues (list): the list of updated github issue objects
+        (list): the list of updated github issue objects
     """
     for issue in issues:
         if re.findall(URI_REGEX, issue.title):
@@ -62,7 +62,7 @@ def sort_issues_by_uri(issues):
         issues (list): a list of github issue objects
 
     Returns:
-        uri_dict (dict): a dictionary:
+        (dict): a dictionary with following key-value pairs:
             key: uri;
             value: list of github issue objects related to this uri
     """
@@ -119,7 +119,7 @@ def get_issues(repo_name, access_token=None,
             (open/closed/all) will be downloaded.
 
     Returns:
-        issues (list): a list of github issues. 
+        (list): a list of github issues. 
     """
     if access_token == None:
         access_token = input("Insert your GitHub Access token: ")

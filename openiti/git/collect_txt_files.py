@@ -57,7 +57,7 @@ def collect_text_files(source_dir, dest_dir,
             (e.g., Shamela001185-ara1). Defaults to True.
         
     Returns:
-        cnt (int): number of files copied
+        (int): number of files copied
     """
     cnt = 0
     if not os.path.exists(dest_dir):

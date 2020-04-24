@@ -43,7 +43,7 @@ def get_repo_urls(group="orgs", name="OpenITI", path_pattern=r"\d{4}AH$"):
             If none is defined, all repos will be cloned. Defaults to r"\d{4}AH$".
 
     Returns:
-        repo_urls (list): a list of repo urls that matches the `path_pattern` regex.
+        (list): a list of repo urls that matches the `path_pattern` regex.
     """
     repo_urls = []
     page = 1
