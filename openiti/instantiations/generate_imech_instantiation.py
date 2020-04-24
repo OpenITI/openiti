@@ -1,6 +1,9 @@
 import re, os
-import zfunc
-import helper as hlp
+
+
+#import zfunc
+#import helper as hlp
+from openiti.helper import funcs
 
 
 def mechanical_chunking(path_full, target_folder):
@@ -19,14 +22,16 @@ def mechanical_chunking(path_full, target_folder):
     else:
         with open(path_full, "r", encoding="utf8") as f1:
             data = f1.read()
-            data = data.split(hlp.funcs.splitter)[1]
+            #data = data.split(hlp.funcs.splitter)[1]
+            data = data.split(funcs.splitter)[1]
 
             data = data.replace("\n~~", " ")
             data = data.replace("#", "(@@)")
             data = data.replace("\n", "(@)")
             data = re.sub(" +", " ", data)
 
-            data = data.split(hlp.funcs.milestone)
+            #data = data.split(hlp.funcs.milestone)
+            data = data.split(funcs.milestone)
 
             print("\t%d items will be created..." % len(data))
 
@@ -37,18 +42,21 @@ def mechanical_chunking(path_full, target_folder):
                 print("d: ", d)
                 counter += 1
                 id = file_id + ".ms%d" % counter
-                text = hlp.text_cleaner(d)
+                #text = hlp.text_cleaner(d)
+                text = funcs.text_cleaner(d)
 
                 rec_t = rec % (id, file_id, text)
 
                 cex.append(rec_t)
 
-                if counter % hlp.funcs.thresh == 0:
+                #if counter % hlp.funcs.thresh == 0:
+                if counter % funcs.thresh == 0:
                     with open(target_path + "-%05d" % counter, "w", encoding="utf8") as ft:
                         ft.write("\n".join(cex))
                     cex = []
 
-            counter_final = hlp.roundup(counter, hlp.funcs.thresh)
+            #counter_final = hlp.roundup(counter, hlp.funcs.thresh)
+            counter_final = funcs.roundup(counter, funcs.thresh)
             with open(target_path + "-%05d" % counter_final, "w", encoding="utf8") as ft:
                 ft.write("\n".join(cex))
 
@@ -67,7 +75,8 @@ def process_all(folder, target_path):
     count = 1
 
     for root, dirs, files in os.walk(folder):
-        dirs[:] = [d for d in dirs if d not in zfunc.exclude]
+        #dirs[:] = [d for d in dirs if d not in zfunc.exclude]
+        dirs[:] = [d for d in dirs if d not in funcs.exclude_folders]
 
         for file in files:
             if re.search("^\d{4}\w+\.\w+\.\w+-\w{4}(\.(mARkdown|inProgress|completed))?$", file):
