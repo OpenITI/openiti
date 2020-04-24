@@ -2,7 +2,7 @@
 
 Examples:
     Clone all OpenITI 25-year repos: 
-    # >>> repo_list = get_total_repos(group="orgs", name="OpenITI", \
+    # >>> repo_list = get_repo_urls(group="orgs", name="OpenITI", \
                                       path_pattern="\d{4}AH$")
     # >>> clone_repos(repo_list, r"D:\OpenITI")
 
@@ -32,7 +32,7 @@ import re
 import subprocess
 
 
-def get_total_repos(group="orgs", name="OpenITI", path_pattern=r"\d{4}AH$"):
+def get_repo_urls(group="orgs", name="OpenITI", path_pattern=r"\d{4}AH$"):
     """Get a list of all repos owned by organisation/user `name`
     that match the regex `path_pattern`
 
@@ -113,7 +113,7 @@ if __name__ == '__main__':
 
     # print("arg: " ,sys.argv)
     if len(sys.argv) > 0:
-        total = get_total_repos(group, name, path_pattern)
+        total = get_repo_urls(group, name, path_pattern)
         if total:
             clone_repos(total, clone_dir)
         else:
