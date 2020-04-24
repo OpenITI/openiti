@@ -13,21 +13,42 @@ Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip in
 
 ## Change log: 
 
+### v.0.0.7: 
+* `openiti.git.get_issues`: change authentication from username/password to GitHub token
+* `openiti.helper.ara`: add function to normalize composite Arabic characters
+* `openiti.helper.uri`: move functions for adding texts to the corpus to a new module, `openiti.new_books.add.add_books` 
+* `openiti.helper.uri`: fix bug in the character count function (did not work if execute==True)
+* `openiti.new_books.convert`: restructured folder and moved helper functions into a new subfolder called `helper`
+* `openiti.new_books.convert.generic_converter`: 
+    - reordered the main `convert_file` function and added inline documentation
+    - made `convert_files_in_folder` function more flexible
+* `openiti.new_books.convert`: added generic converters for shamela libraries, html and tei xml files, and custom converters for eShia and GRAR libraries
+    - `openiti.new_books.convert.shamela_converter`
+    - `openiti.new_books.convert.html_converter_generic`
+    - `openiti.new_books.convert.html_converter_eShia`
+    - `openiti.new_books.convert.tei_converter_generic`
+    - `openiti.new_books.convert.tei_converter_GRAR`
+* `openiti.new_books.convert.helper`: added helper functions for the new converters:
+    - `openiti.new_books.convert.helper.html2md_eShia`
+    - `openiti.new_books.convert.helper.html2md_GRAR`
+    - `openiti.new_books.convert.helper.tei2md`
+    - `openiti.new_books.convert.helper.bok`
+ 
 ### v.0.0.6: 
 
-* openiti.helper.uri: use both Arabic character and token count in yml files
-* openiti.helper.uri: add support for paths to files that are not in 25-years repos (e.g., for release)
-* openiti.helper.uri: fix bugs
-* add Sphinx documentation
+* `openiti.helper.uri`: use both Arabic character and token count in yml files
+* `openiti.helper.uri`: add support for paths to files that are not in 25-years repos (e.g., for release)
+* `openiti.helper.uri`: fix bugs
+* added Sphinx documentation
 
 ### v.0.0.5:
 
-* openiti.helper.funcs: added Arabic token count function
-* openiti.helper.uri: use Arabic token count instead of Arabic character count for yml file revision. Also, revise token count for every version yml file instead of only for version yml files that do not contain a count.
+* `openiti.helper.funcs`: added Arabic token count function
+* `openiti.helper.uri`: use Arabic token count instead of Arabic character count for yml file revision. Also, revise token count for every version yml file instead of only for version yml files that do not contain a count.
 
 ### v.0.0.4: 
 
-* openiti.helper.uri: removed the restriction on the use of digits in book titles
-* openiti.helper.uri: added a check for empty yml files
-* openiti.helper.yml: added documentation and doctests
-* openiti.helper.yml: added check for empty yml files + changed splitting of yml files so that even unindented multi-line values can be correctly parsed.
+* `openiti.helper.uri`: removed the restriction on the use of digits in book titles
+* `openiti.helper.uri`: added a check for empty yml files
+* `openiti.helper.yml`: added documentation and doctests
+* `openiti.helper.yml`: added check for empty yml files + changed splitting of yml files so that even unindented multi-line values can be correctly parsed.
