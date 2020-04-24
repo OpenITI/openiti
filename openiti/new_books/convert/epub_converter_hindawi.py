@@ -2,14 +2,17 @@
 
 Examples:
     >>> from epub_converter_hindawi import HindawiEpubConverter
-    >>> from yml2json import yml2json
-    >>> folder = "test"
+    >>> from helper.yml2json import yml2json
+    >>> folder = "test/"
     >>> fn = "26362727.epub"
     >>> hc = HindawiEpubConverter(dest_folder="test/converted")
+    >>> hc.VERBOSE = False
     >>> meta_fp = "test/hindawi_metadata_man.yml"
-    >>> hc.metadata = yml2json(meta_fp, container = {})
-    >>> hc.convert_file(os.path.join(folder, fn))
-    >>> hc.convert_files_from_folder(folder)
+    >>> hc.metadata_dic = yml2json(meta_fp, container = {})
+    >>> hc.metadata_file = meta_fp
+    >>> hc.convert_file(folder+fn)
+
+    #>>> hc.convert_files_in_folder(folder)
 
 An Epub file is in fact a zipped archive.
 The most important element of the archive for conversion purposes
@@ -38,7 +41,7 @@ methods of GenericConverter with the same name
 in GenericEpubConverter are overwritten by the latter)
 
 =========================== ========================= =======================
-generic_converter           epub_converter_hindawi    epub_converter_hindawi 
+generic_converter           epub_converter_generic    epub_converter_hindawi 
 =========================== ========================= =======================
 __init__                    __init__                  __init__ 
 convert_files_in_folder     (inherited)               (inherited)
@@ -69,12 +72,11 @@ if __name__ == '__main__':
     from os import sys, path
     root_folder = path.dirname(path.dirname(path.abspath(__file__)))
     root_folder = path.dirname(path.dirname(root_folder))
-    print(root_folder)
     sys.path.append(root_folder)
 
 from openiti.new_books.convert.epub_converter_generic import GenericEpubConverter
-from openiti.new_books.convert import html2md_hindawi
-from openiti.new_books.convert.yml2json import yml2json
+from openiti.new_books.convert.helper import html2md_hindawi
+from openiti.new_books.convert.helper.yml2json import yml2json
 
 ##from epub_converter_generic import GenericEpubConverter
 ##import html2md_hindawi
@@ -86,22 +88,28 @@ class HindawiEpubConverter(GenericEpubConverter):
     def __init__(self, dest_folder=None):
         super().__init__(dest_folder)
         self.toc_fn = "nav.xhtml"
+        self.metadata_file = None
 
     def convert_html2md(self, html):
         """Use custom html to mARKdown function for Hindawi epubs."""
         text = html2md_hindawi.markdownify(html)
         return text
 
-    def get_metadata(self, source_fp):
+    def get_metadata(self, metadata_fp):
         """Custom method to get the metadata of the Hindawi epub file."""
+        source_fp = self.source_fp
         bookID = os.path.split(source_fp)[1]
         bookID = os.path.splitext(bookID)[0]
-        meta_dic = self.metadata[bookID]
+        meta_dic = self.metadata_dic[bookID]
         meta = ["#META# {}: {}".format(k,v) for k,v in sorted(meta_dic.items())]
         return self.magic_value + "\n".join(meta) + self.header_splitter
 
 
 if __name__== "__main__":
+    import doctest
+    doctest.testmod()
+    input("Testing finished. Continue?")
+
     hc = HindawiEpubConverter(dest_folder="test/converted")
 
     # identify the location of the yml file containing the metadata:

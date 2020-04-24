@@ -10,15 +10,15 @@ Examples:
     >>> gen_converter.convert_file(os.path.join(folder, fn))
     >>> gen_converter.convert_files_in_folder(folder, ["epub",])
 
-    Sub-class to create a converter specific to epubs from the Hindawi library:
-    >>> HindawiConverter = GenericEpubConverter("test/converted")
-    >>> HindawiConverter.VERBOSE = False
-    >>> import html2md_hindawi
-    >>> HindawiConverter.convert_html2md = html2md_hindawi.markdownify  # (1)
-    >>> HindawiConverter.toc_fn = "nav.xhtml"  # (2)
-    >>> folder = r"test"
-    >>> fn = r"26362727.epub"
-    >>> HindawiConverter.convert_file(os.path.join(folder, fn))
+##    Sub-class to create a converter specific to epubs from the Hindawi library:
+##    >>> HindawiConverter = GenericEpubConverter("test/converted")
+##    >>> HindawiConverter.VERBOSE = False
+##    >>> from helper import html2md_hindawi
+##    >>> HindawiConverter.convert_html2md = html2md_hindawi.markdownify  # (1)
+##    >>> HindawiConverter.toc_fn = "nav.xhtml"  # (2)
+##    >>> folder = r"test"
+##    >>> fn = r"26362727.epub"
+##    >>> HindawiConverter.convert_file(os.path.join(folder, fn))
     
     # (1) overwrite the convert_html2md function
     # (2) specify the filename of the table of contents in Hindawi epub files
@@ -51,7 +51,7 @@ GenericConverter            GenericEpubConverter
 =========================== ========================
 __init__                    __init__
 convert_files_in_folder     (inherited)
-convert file                (inherited)
+convert_file                (inherited)
 make_dest_fp                (inherited - generic!)
 get_metadata                (inherited - generic!)
 get_data                    get_data
@@ -96,7 +96,7 @@ if __name__ == '__main__':
     sys.path.append(root_folder)
 
 from openiti.new_books.convert.generic_converter import GenericConverter
-from openiti.new_books.convert import html2md
+from openiti.new_books.convert.helper import html2md
 
 
 
@@ -346,7 +346,7 @@ Write the filename (with extension) of the table of contents
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
-    print("Testing finished.")
+    input("Testing finished. Continue?")
     
 ##    c = GenericEpubConverter()
 ##    c.make_dest_fp("a/b/c.epub")
