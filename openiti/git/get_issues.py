@@ -1,7 +1,8 @@
 """Get selected annotation issues from GitHub;
 optionally, print them or save them as a tsv file.
 
-Usage example:
+Example::
+
     issues = get_issues("OpenITI/Annotation",
                         issue_labels=["in progress"],
                         state="all"
