@@ -76,34 +76,10 @@ openiti.instantiations.generate_istylo_instantiation
 openiti.new_books
 ~~~~~~~~~~~~~~~~~
 
-openiti.new_books.add
-+++++++++++++++++++++
+openiti.new_books.add.add_books
++++++++++++++++++++++++++++++++
 
-.. automodule:: openiti.new_books.add
-  :members:
-
-openiti.new_books.convert.yml2json
-++++++++++++++++++++++++++++++++++
-
-.. automodule:: openiti.new_books.convert.yml2json
-  :members:
-
-openiti.new_books.convert.md2html
-+++++++++++++++++++++++++++++++++
-
-.. automodule:: openiti.new_books.convert.md2html
-  :members:
-
-openiti.new_books.convert.html2md
-+++++++++++++++++++++++++++++++++
-
-.. automodule:: openiti.new_books.convert.html2md
-  :members:
-
-openiti.new_books.convert.html2md_hindawi
-+++++++++++++++++++++++++++++++++++++++++
-
-.. automodule:: openiti.new_books.convert.html2md_hindawi
+.. automodule:: openiti.new_books.add.add_books
   :members:
 
 openiti.new_books.convert.generic_converter
@@ -122,6 +98,87 @@ openiti.new_books.convert.epub_converter_hindawi
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. automodule:: openiti.new_books.convert.epub_converter_hindawi
+  :members:
+
+openiti.new_books.convert.html_converter_generic
+++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. automodule:: openiti.new_books.convert.html_converter_generic
+  :members:
+
+openiti.new_books.convert.html_converter_eShia
+++++++++++++++++++++++++++++++++++++++++++++++
+
+.. automodule:: openiti.new_books.convert.html_converter_eShia
+  :members:
+
+openiti.new_books.convert.shamela_converter
++++++++++++++++++++++++++++++++++++++++++++
+
+.. automodule:: openiti.new_books.convert.shamela_converter
+  :members:
+
+openiti.new_books.convert.tei_converter_generic
+++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. automodule:: openiti.new_books.convert.tei_converter_generic
+  :members:
+
+openiti.new_books.convert.html_converter_GRAR
++++++++++++++++++++++++++++++++++++++++++++++
+
+.. automodule:: openiti.new_books.convert.tei_converter_GRAR
+  :members:
+
+openiti.new_books.convert.helper
+++++++++++++++++++++++++++++++++
+
+openiti.new_books.convert.helper.bok
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: openiti.new_books.convert.helper.bok
+  :members:
+
+openiti.new_books.convert.helper.html2md
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: openiti.new_books.convert.helper.html2md
+  :members:
+
+openiti.new_books.convert.helper.html2md_eShia
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: openiti.new_books.convert.helper.html2md_eShia
+  :members:
+
+openiti.new_books.convert.helper.html2md_GRAR
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: openiti.new_books.convert.helper.html2md
+  :members:
+
+openiti.new_books.convert.helper.html2md_hindawi
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: openiti.new_books.convert.helper.html2md_hindawi
+  :members:
+
+openiti.new_books.convert.helper.md2html
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: openiti.new_books.convert.helper.md2html
+  :members:
+
+openiti.new_books.convert.helper.tei2md
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: openiti.new_books.convert.helper.tei2md
+  :members:
+
+openiti.new_books.convert.helper.yml2json
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: openiti.new_books.convert.helper.yml2json
   :members:
 
 openiti.new_books.scrape

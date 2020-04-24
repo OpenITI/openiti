@@ -37,3 +37,4 @@ You can check the installed version with::
     >>> openiti.__version__
     '0.0.4'
 
+After creating the new version, add and commit the .whl and .tar.gz files for the new version. 
