@@ -4,18 +4,18 @@ This program is an adaptation of python-markdownify
 (https://github.com/matthewwithanm/python-markdownify)
 to output OpenITI mARkdown.
 It also adds methods for tables and images,
-and a post-processing method. 
+and a post-processing method.
 
 You can use this class as a base class and subclass it
 to add methods, adapt the post-processing method etc.
 
 E.g.:
-    def Class Hindawi_converter(html2md.MarkdownConverter):   
+    class Hindawi_converter(html2md.MarkdownConverter):
         def post_process_md(self, text):
             text = super().post_process_md(text)
             # remove blank lines marked with "DELETE_PREVIOUS_BLANKLINES" tag
             text = re.sub(r"\n+DELETE_PREVIOUS_BLANKLINES", "", text)
-            # replace placeholders for spaces in tables: 
+            # replace placeholders for spaces in tables:
             text = re.sub("ç", " ", text)
             return text
 
@@ -41,7 +41,7 @@ Examples (doctests):
     '\\n\\n# abc\\n\\n'
 
     Paragraphs (<p>):
-    
+
     >>> h = "<p>abc</p>"
     >>> html2md.markdownify(h)
     '\\n\\n# abc\\n\\n'
@@ -52,13 +52,13 @@ Examples (doctests):
 
 
     Divs without class or with an unsupported class are stripped:
-    
+
     >>> h = 'abc\
              <div>def</div>\
              ghi'
     >>> html2md.markdownify(h)
     'abc def ghi'
-        
+
     >>> h = 'abc\
              <div class="unknown_div_class">def</div>\
              ghi'
@@ -67,29 +67,29 @@ Examples (doctests):
 
 
     Spans without class or with an unsupported class are stripped:
-    
+
     >>> h = 'abc <span>def</span> ghi'
     >>> html2md.markdownify(h)
     'abc def ghi'
-    
+
     >>> h = 'abc <span class="unknown_span_class">def</span> ghi'
     >>> html2md.markdownify(h)
     'abc def ghi'
 
 
-    Links: 
+    Links:
 
     >>> h = '<a href="a/b/c">abc</a>'
     >>> html2md.markdownify(h)
     '[abc](a/b/c)'
 
-    
-    Unordered lists: 
+
+    Unordered lists:
 
     >>> h = '<ul><li>item1</li><li>item2</li></ul>'
     >>> html2md.markdownify(h)
     '\\n* item1\\n* item2\\n\\n'
-    
+
     Ordered lists:
 
     >>> h = '<ol><li>item1</li><li>item2</li></ol>'
@@ -97,7 +97,7 @@ Examples (doctests):
     '\\n1. item1\\n2. item2\\n\\n'
 
     Nested lists:
-    
+
     >>> h = '<ol><li>item1</li><li>item2:<ul><li>item3</li><li>item4</li></ul></li></ol>'
     >>> html2md.markdownify(h)
     '\\n1. item1\\n2. item2:\\n\\n\\t* item3\\n\\t* item4\\n\\t\\n\\n'
@@ -124,7 +124,7 @@ Examples (doctests):
     'abc **def** ghi'
 
     Tables:
-    
+
     >>> h = '\
     <table>\
       <tr>\
@@ -136,7 +136,7 @@ Examples (doctests):
     </table>'
     >>> html2md.markdownify(h)
     '\\n\\n| th1aaa | th2 |\\n| ------ | --- |\\n| td1    | td2 |\\n\\n'
-            
+
     # i.e.,
     # | th1aaa | th2 |
     # | td1    | td2 |
@@ -181,6 +181,8 @@ class MarkdownConverter(object):
         autolinks = True
         md_style = OPENITI
         bullets = '*+-'  # An iterable of bullet types.
+        image_link_regex = ""  # e.g., "images/books"
+        image_folder = "img"
 
     class Options(DefaultOptions):
         pass
@@ -195,6 +197,7 @@ class MarkdownConverter(object):
             raise ValueError('You may specify either tags to strip or tags to'
                              ' convert, but not both.')
 
+
     def convert(self, html):
         """Convert html to markdown.
 
@@ -202,13 +205,13 @@ class MarkdownConverter(object):
         # want a full document. Therefore, we'll mark our fragment with an id,
         # create the document, and extract the element with the id.
         """
-        
+
         html = wrapped % html
         soup = BeautifulSoup(html, 'html.parser')
         text = self.process_tag(soup.find(id=FRAGMENT_ID), children_only=True)
 
 ##        # post-processing: remove unneeded blank lines and spaces:
-##        
+##
 ##        # remove leading and trailing spaces in lines:
 ##        text = re.sub(r" *(\n+) *", r"\1", text)
 ##        # remove unwanted additional spaces and lines:
@@ -216,7 +219,7 @@ class MarkdownConverter(object):
 ##        text = re.sub(r" +", r" ", text)
 ##        # remove blank lines marked with "DELETE_PREVIOUS_BLANKLINES" tag
 ##        text = re.sub(r"\n+DELETE_PREVIOUS_BLANKLINES", "", text)
-##        # replace placeholders for spaces in tables: 
+##        # replace placeholders for spaces in tables:
 ##        text = re.sub("ç", " ", text)
 ##        return text
         return self.post_process_md(text)
@@ -229,7 +232,7 @@ class MarkdownConverter(object):
 
         # Convert the children first
         for el in node.children:
-            
+
             if isinstance(el, NavigableString):
                 if not isinstance(el, Comment):  # remove html comments
                     text += self.process_text(six.text_type(el))
@@ -255,7 +258,7 @@ class MarkdownConverter(object):
         """Find the longest cell in a column; add spaces to shorter columns."""
 
         # split the table into a list of lists:
-        
+
         table = match.group(1)
         #print(table)
         if "|--" in table:
@@ -268,7 +271,7 @@ class MarkdownConverter(object):
         table = [(row.split("|"))[1:] for row in table]  # remove empty string
 
         # get length of longest cell per column:
-        
+
         column_length = dict()
         for row in table:
             for i, cell in enumerate(row):
@@ -279,7 +282,7 @@ class MarkdownConverter(object):
                     column_length[i] = len(cell)
 
         # fill out shorter cells:
-        
+
         new_table = []
         for row in table:
             new_row = []
@@ -292,20 +295,56 @@ class MarkdownConverter(object):
             new_table.append(new_row)
 
         # re-build the table:
-        
+
         new_table = [" | ".join(row).strip() for row in new_table]
         if header:
             lines = " | ".join(["-" * v for k,v in column_length.items()])
             new_table = [new_table[0], lines.strip()]+new_table[1:]
         new_table = "\n| ".join(new_table)
         new_table = "\n\n| {}\n\n".format(new_table)
-        
+
         #print("new_table: ")
         #print(new_table)
         return new_table
-        
+
+
+    def post_process_named_entities(self, match):
+        """Reformat named entity matches to mARkdown named entity standard.
+
+        Named entities should be marked with @TAG@ tags in the converter
+        (3 capital letters between ampersands), and end with a new line.
+        This post-processing step then converts these temporary tags
+        into OpenITI mARkdown format @TAG\d\d+:
+        * The first number after the @QUR tag refers to the number of letters
+          following the tag that do not belong to the named entity
+          (in this automatic step, this number will always be set to 0);
+        * the following number(s) refer(s) to the length of the entity in tokens
+
+        Examples:
+            >>> import html2md
+            >>> conv = html2md.MarkdownConverter()
+            >>> conv.post_process_md("abc @QUR@ def ghi\\njkl")
+            'abc @QUR02 def ghi jkl'
+            >>> conv.post_process_md("abc @QUR@ def ghi\\n~~jkl\\nmno")
+            'abc @QUR03 def ghi\\n~~jkl mno'
+        """
+
+        foll_char = match.group(3)
+        entity = match.group(2)
+        ent_words = len(re.findall("[\n\r ]+", entity)) + 1
+        code = match.group(1)
+        return "@{}0{} {} {}".format(code, ent_words, entity, foll_char)
+
 
     def post_process_md(self, text):
+
+        # post-process named entity tags:
+        text = re.sub("@([A-Z]+)@ +(.+?)\n([^~]|Z)",
+                      self.post_process_named_entities, text,
+                      flags=re.DOTALL)
+        # remove blank lines marked with "DELETE_PREVIOUS_BLANKLINES" tag
+        text = re.sub(r"\n+DELETE_PREVIOUS_BLANKLINES", "", text)
+
         # remove leading and trailing spaces in lines:
         text = re.sub(r" *(\n+) *", r"\1", text)
         # remove unwanted additional spaces and lines:
@@ -349,7 +388,7 @@ class MarkdownConverter(object):
     def create_underline_line(self, text, pad_char):
         """Create a sequence of pad_char characters the same lenght as text."""
         return pad_char * len(text) if text else ''
-        
+
     def underline(self, text, pad_char):
         """Underline text with pad_char characters (-, =, or +).
 
@@ -374,7 +413,7 @@ class MarkdownConverter(object):
 
     #-----------------------------------------------------------
 
-    # Conversion functions for specific tags (in alphabetic order): 
+    # Conversion functions for specific tags (in alphabetic order):
 
     def convert_a(self, el, text):
         """Convert html links.
@@ -404,7 +443,7 @@ class MarkdownConverter(object):
 
     def convert_em(self, el, text):
         return '*%s*' % text if text else ''
-    
+
     def convert_hn(self, n, el, text):
         style = self.options['md_style']
         text = text.rstrip()
@@ -428,24 +467,33 @@ class MarkdownConverter(object):
             >>> h = '<div><img class="figure" src="../Images/figure1.png" /></div>'
             >>> html2md.markdownify(h)
             '![](../Images/figure1.png)'
+            
+            >>> html2md.markdownify(h, image_link_regex="../Images", image_folder="img")
+            '![](img/figure1.png)'
         """
-        
+
         alt = el.attrs.get('alt', None) or ''
         src = el.attrs.get('src', None) or ''
         title = el.attrs.get('title', None) or ''
         title_part = ' "%s"' % title.replace('"', r'\"') if title else ''
+
+        # replace the online address with the local path to the image:
+        if self.options['image_link_regex']:
+            src = re.sub(self.options['image_link_regex'],
+                         self.options['image_folder'], src)
+
         return '![%s](%s%s)' % (alt, src, title_part)
 
     def convert_list(self, el, text):
         """Convert ordered and unordered html lists (<ul> and <ol> tags).
 
         Examples:
-            # unordered lists: 
+            # unordered lists:
             >>> import html2md
             >>> h = '<ul><li>item1</li><li>item2</li></ul>'
             >>> html2md.markdownify(h)
             '\\n* item1\\n* item2\\n\\n'
-            
+
             # ordered lists:
             >>> import html2md
             >>> h = '<ol><li>item1</li><li>item2</li></ol>'
@@ -457,7 +505,7 @@ class MarkdownConverter(object):
             ##>>> import html2md
             ##>>> h = '<ol><li>item1</li><li>item2:<ul><li>item3</li><li>item4</li></ul></li></ol>'
             ##>>> html2md.markdownify(h)
-            ##'\\n1. item1\\n2. item2:\\n\\n\\t* item3\\n\\t* item4\\n\\t\\n\\n'           
+            ##'\\n1. item1\\n2. item2:\\n\\n\\t* item3\\n\\t* item4\\n\\t\\n\\n'
         """
         nested = False
         while el:
@@ -520,7 +568,7 @@ class MarkdownConverter(object):
 
     def convert_tr(self, el, text):
         """Convert table rows.
-        
+
         NB: rows are processed before the table tag is.
         Spaces to fill out columns are added in post-processing!
 
@@ -537,7 +585,7 @@ class MarkdownConverter(object):
             </table>'
             >>> html2md.markdownify(h)
             '\\n\\n| th1aaa | th2 |\\n| ------ | --- |\\n| td1    | td2 |\\n\\n'
-            
+
             # i.e.,
             # | th1aaa | th2 |
             # | td1    | td2 |
@@ -559,9 +607,9 @@ class MarkdownConverter(object):
 ##            if max_len>30:
 ##                max_len = 30
 ##            self.max_len = max_len
-                
+
         t = []
-        if el.find('th'): # headers: 
+        if el.find('th'): # headers:
             for th in el.find_all('th'):
                 #t.append(wrap_cell_text(th.text))
                 t.append(th.text)
@@ -571,10 +619,10 @@ class MarkdownConverter(object):
             for td in el.find_all('td'):
                 #t.append(wrap_cell_text(td.text))
                 t.append(td.text)
-            return '|{}|\n'.format("|".join(t))      
+            return '|{}|\n'.format("|".join(t))
 
     convert_ul = convert_list
-        
+
     def convert_strong(self, el, text):
         """Convert <b> and <strong> tags.
 
@@ -624,12 +672,12 @@ if __name__ == "__main__":
       <div dir="rtl" class="section" id="sect1_35">
         <h4 dir="rtl" class="title">H4 SECTION TITLE</h4>
         <p>P1
-                                    
+
         </p>
         <p>
                             P2
                         P2b
-                                    
+
         </p>
         <div dir="rtl" class="section" id="sect2_3">
           <h4 dir="rtl" class="title">H4 SUBSECTION2_3 TITLE</h4>
@@ -650,7 +698,7 @@ if __name__ == "__main__":
     #text=markdownify(text_div, md_style=ATX)
     #print("*"*40)
     #print(text)
-    
-    
+
+
 
 

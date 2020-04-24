@@ -39,7 +39,7 @@ def yml2json(yml_fp, container=[], rec_start="##RECORD",
     with open(yml_fp, mode="r", encoding="utf-8") as file:
         yml_str = file.read()
     blocks = re.split("\n{2,}", yml_str)
-    print("The file contains {} blocks".format(len(blocks)))    
+    #print("The file contains {} blocks".format(len(blocks)))    
     for b in blocks:
 
         # if the block is a record: build a record dictionary

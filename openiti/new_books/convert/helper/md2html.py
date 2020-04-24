@@ -10,12 +10,13 @@ from bs4 import BeautifulSoup
 if __name__ == '__main__':
     from os import sys, path
     root_folder = path.dirname(path.dirname(path.abspath(__file__)))
-    root_folder = path.dirname(path.dirname(root_folder))
+    root_folder = path.dirname(path.dirname(path.dirname(root_folder)))
     sys.path.append(root_folder)
 
-from openiti.new_books.convert.generic_converter import GenericConverter
-from openiti.helper.templates import HTML_HEADER, HTML_FOOTER
+from openiti.new_books.convert.helper import html2md
+from openiti.new_books.convert.helper.html2md import *  # import all constants!
 
+from openiti.helper.templates import HTML_HEADER, HTML_FOOTER
 
 ##HTML_HEADER = """<html>
 ##<head>

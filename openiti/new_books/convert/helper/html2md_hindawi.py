@@ -218,11 +218,12 @@ import re
 if __name__ == '__main__':
     from os import sys, path
     root_folder = path.dirname(path.dirname(path.abspath(__file__)))
-    root_folder = path.dirname(path.dirname(root_folder))
+    root_folder = path.dirname(path.dirname(path.dirname(root_folder)))
     sys.path.append(root_folder)
 
-from openiti.new_books.convert import html2md
-from openiti.new_books.convert.html2md import *
+from openiti.new_books.convert.helper import html2md
+from openiti.new_books.convert.helper.html2md import *  # import all constants!
+
 
 class HindawiConverter(html2md.MarkdownConverter):
     """Convert Hindawi library html to OpenITI mARkdown."""
@@ -234,28 +235,28 @@ class HindawiConverter(html2md.MarkdownConverter):
         self.class_dict["subtitle"] = 'DELETE_PREVIOUS_BLANKLINES {text}\n\n'
         self.class_dict["footnote"] = '\n\nFOOTNOTE{text}\n\n'
 
-    def process_Quran(self, match):
-        """Reformat Quran quote matches to mARkdown named entity standard."""
-        
-        prec_char = match.group(0)[0]
-        if prec_char == "\n":
-            prec_char = "\n\n# "
-        foll_char = match.group(0)[-1]
-        quote = match.group(0)[7:-2]
-        quote_words = len(re.findall(" +|\n", quote)) + 1
-        #print(match.group(0))
-        #print(quote)
-        return "{}@QUR0{} {}{}".format(prec_char, quote_words, quote, foll_char)
-
-
-    def post_process_md(self, text):
-        """Appends to the MarkdownConverter.post_process_md() method."""
-        # remove blank lines marked with "DELETE_PREVIOUS_BLANKLINES" tag
-        text = re.sub(r"\n+DELETE_PREVIOUS_BLANKLINES", "", text)
-        text = re.sub(".@QUR@ .+?\n[^~]", self.process_Quran, text,
-                      flags=re.DOTALL)
-        text = super().post_process_md(text)
-        return text
+##    def process_Quran(self, match):
+##        """Reformat Quran quote matches to mARkdown named entity standard."""
+##        
+##        prec_char = match.group(0)[0]
+##        if prec_char == "\n":
+##            prec_char = "\n\n# "
+##        foll_char = match.group(0)[-1]
+##        quote = match.group(0)[7:-2]
+##        quote_words = len(re.findall(" +|\n", quote)) + 1
+##        #print(match.group(0))
+##        #print(quote)
+##        return "{}@QUR0{} {}{}".format(prec_char, quote_words, quote, foll_char)
+##
+##
+##    def post_process_md(self, text):
+##        """Appends to the MarkdownConverter.post_process_md() method."""
+##        # remove blank lines marked with "DELETE_PREVIOUS_BLANKLINES" tag
+##        text = re.sub(r"\n+DELETE_PREVIOUS_BLANKLINES", "", text)
+##        text = re.sub(".@QUR@ .+?\n[^~]", self.process_Quran, text,
+##                      flags=re.DOTALL)
+##        text = super().post_process_md(text)
+##        return text
 
     def get_section_level(self, el):
         """Gets the level of the current section (or its parent)."""
