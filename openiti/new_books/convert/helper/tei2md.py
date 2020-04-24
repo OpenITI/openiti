@@ -40,7 +40,7 @@ convert                     convert
 process_tag                 (inherited)
 process_text                (inherited)
 fill_out_columns            (inherited)
-post_process_               (inherited)
+post_process_md             (inherited)
 __getattr__                 (inherited)
 should_convert_tag          (inherited)
 indent                      (inherited)
