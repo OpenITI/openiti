@@ -14,7 +14,7 @@ the GRAR library to OpenITI mARkdown:
 * div and p conversion
 
 Span, div and p classes needed to be converted are defined in self.class_dict.
-    
+
 
 Inheritance schema of the GRARHtmlConverter:
 
@@ -106,7 +106,7 @@ class EShiaHtmlConverter(html2md.MarkdownConverter):
 
         Supported span classes should be stored in self.class_dict
         (key: span class (str); value: formatting string)
-        E.g., {"quran": "@QUR@ {}\n"}
+        E.g., {"quran": "@QUR@ {}\\n"}
 
         Example:
             >>> import html2md_eShia
@@ -176,7 +176,7 @@ class EShiaHtmlConverter(html2md.MarkdownConverter):
 
         Supported p classes should be stored in self.class_dict
         (key: span class (str); value: formatting string)
-        E.g., {"quran": "@QUR@ {}\n"}
+        E.g., {"quran": "@QUR@ {}\\n"}
 
         <p> tags without class attribute, or unsupported class,
         will be converted according to the markdown style
