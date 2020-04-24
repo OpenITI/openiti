@@ -101,7 +101,8 @@ def print_issues_by_uri(uri_dict, save_fp=""):
         print(s)
 
 
-def get_issues(repo_name, user=None, password=None,
+def get_issues(repo_name, access_token=None,
+               #user=None, password=None,
                issue_labels=None, state="open"):
     """Get all issues connected to a specific github repository.
 
@@ -119,12 +120,9 @@ def get_issues(repo_name, user=None, password=None,
     Returns:
         issues (list): a list of github issues. 
     """
-    if user == None:
-        user = input("User: ")
-    if password == None:
-        password = input("Password: ")
-
-    g = Github(user, password)
+    if access_token == None:
+        access_token = input("Insert your GitHub Access token: ")
+    g = Github(access_token)
     print("logged in")
     repo = g.get_repo(repo_name)
     print("issue labels in this repo:")
@@ -148,10 +146,16 @@ def get_issues(repo_name, user=None, password=None,
 
 
 if __name__ == "__main__":
+    tok_fp = r"D:\London\OpenITI\metadata\automation\kitab-metadata-automation\kitab-metadata-automation\GitHub personalAccessTokenReadOnly.txt"
+    with open(tok_fp, mode="r") as file:
+        tok = file.read()
     issues = get_issues("OpenITI/Annotation",
-                        #issue_labels=["in progress"],
-                        state="all"
+                        issue_labels=["URI change suggestion"],
+                        state="open", access_token=tok
                         )
+    for issue in issues:
+        print(issue)
+    #input("Continue?")
     issues = define_text_uris(issues)
     uri_dict = sort_issues_by_uri(issues)
     print_issues_by_uri(uri_dict, "test.tsv")
