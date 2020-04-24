@@ -1332,8 +1332,15 @@ the user the option to execute the proposed changes.</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Tuple containing:</p>
 <blockquote>
 <div><p>missing_ymls (list): list of paths to missing yml files
-missing_tok_count (list): list of tuples with three elements:                (uri, tok_count, char_count)
-non_uri_files (list): list of paths to files whose filename                is not a valid OpenITI URI
+missing_tok_count (list): list of tuples with three elements:</p>
+<blockquote>
+<div><ul class="simple">
+<li>uri (URI object): uri of the target text</li>
+<li>tok_count (int): number of Arabic tokens in the target text</li>
+<li>char_count (int): number of Arabic characters in the target text</li>
+</ul>
+</div></blockquote>
+<p>non_uri_files (list): list of paths to files whose filename                is not a valid OpenITI URI
 erratic_ymls (list): list of paths to malformed yml files.</p>
 </div></blockquote>
 </p>
@@ -1459,9 +1466,10 @@ if True, all changes will be executed immediately.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>missing_tok_count</strong> (<em>list</em>) – a list of tuples (uri, token_count):
-uri (OpenITI URI object)
-token_count (int): the number of Arabic tokens in the text file</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>missing_tok_count</strong> (<em>list</em>) – <p>a list of tuples (uri, token_count):</p>
+<p>uri (OpenITI URI object)
+token_count (int): the number of Arabic tokens in the text file</p>
+</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1910,7 +1918,7 @@ as the new_base_pth argument.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>csv_fp</strong> (<em>str</em>) – path to a csv file that contains the following columns:
 0. filepath to (or filename of) the text file
 1. full version uri of the text file
@@ -1920,6 +1928,9 @@ the files that need to be initialized. Defaults to “”.</li>
 <li><strong>new_base_pth</strong> (<em>str</em>) – path to the folder containing
 the OpenITI 25-years repos. Defaults to “”.</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
 </td>
 </tr>
 </tbody>
@@ -1968,7 +1979,7 @@ if True, all changes will be executed immediately.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>folder</strong> (<em>str</em>) – path to the folder that contains new text files
 (with OpenITI uri filenames) and perhaps yml files</li>
 <li><strong>target_base_pth</strong> (<em>str</em>) – path to the folder containing the 25-years repos</li>
@@ -1977,6 +1988,9 @@ if True, all changes will be executed immediately.</li>
 all proposed changes at the end);
 if True, all changes will be executed immediately.</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
 </td>
 </tr>
 </tbody>
@@ -2005,7 +2019,7 @@ as the new_base_pth argument.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>csv_fp</strong> (<em>str</em>) – path to a csv file that contains the following columns:
 0. filepath to (or filename of) the text file
 1. full version uri of the text file
@@ -2019,6 +2033,9 @@ the OpenITI 25-years repos</li>
 all proposed changes at the end);
 if True, all changes will be executed immediately.</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
 </td>
 </tr>
 </tbody>
@@ -2043,42 +2060,30 @@ converting texts into OpenITI format.</p>
 <p>The procedure can be used as a template for other converters.
 Subclass the GenericConverter to make a converter for a new
 source of scraped books:</p>
-<dl class="docutils">
-<dt>class GenericHtmlConverter(GenericConverter):</dt>
-<dd><dl class="first last docutils">
-<dt>def new_function(self, text):</dt>
-<dd>“This function adds functionality to GenericConverter”</dd>
-</dl>
-</dd>
-</dl>
+<div class="highlight-default"><div class="highlight"><pre><span class="k">class</span> <span class="nc">GenericHtmlConverter</span><span class="p">(</span><span class="n">GenericConverter</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">new_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+        <span class="s">&quot;This function adds functionality to GenericConverter&quot;</span>
+</pre></div>
+</div>
 <p>Usually, it suffices to overwrite a small number of methods
 of the GenericConverter class in the sub-class, and/or add
 a number of methods needed for the conversion of a specific
-group of documents: e.g.,</p>
-<dl class="docutils">
-<dt>class GenericHtmlConverter(GenericConverter):</dt>
-<dd><dl class="first last docutils">
-<dt>def get_data(self, source_fp):</dt>
-<dd># code written here overwrites the GenericConverter’s get_data method</dd>
-<dt>def post_process(self, text):</dt>
-<dd># append new actions by appending them to
-# the superclass’s post_process method:
-text = super().post_process(text)
-text = re.sub(“</dd>
-</dl>
-</dd>
-</dl>
-<p>+”, “</p>
-<dl class="docutils">
-<dt>“, text)</dt>
-<dd><blockquote class="first">
-<div>return text</div></blockquote>
-<dl class="last docutils">
-<dt>def new_function(self, text):</dt>
-<dd>“This function adds functionality to GenericConverter”</dd>
-</dl>
-</dd>
-</dl>
+group of documents: e.g.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="k">class</span> <span class="nc">GenericHtmlConverter</span><span class="p">(</span><span class="n">GenericConverter</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_fp</span><span class="p">):</span>
+        <span class="c"># code written here overwrites the GenericConverter&#39;s get_data method</span>
+
+    <span class="k">def</span> <span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+        <span class="c"># append new actions by appending them to</span>
+        <span class="c"># the superclass&#39;s post_process method:</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">post_process</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">+&quot;</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">text</span>
+
+    <span class="k">def</span> <span class="nf">new_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+        <span class="s">&quot;This function adds functionality to GenericConverter&quot;</span>
+</pre></div>
+</div>
 <p>The GenericConverter contains a number of dummy (placeholder) functions
 that must be overwritten in the subclass because they are dependent on
 the data format.</p>
