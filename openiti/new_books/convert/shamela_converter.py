@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
 from openiti.new_books.convert import generic_converter
 from openiti.helper.ara import deNoise
-from openiti.new_books.convert import bok
+from openiti.new_books.convert.helper import bok
 
 VERBOSE = False
 
