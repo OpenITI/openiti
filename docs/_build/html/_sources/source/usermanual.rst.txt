@@ -154,7 +154,7 @@ openiti.new_books.convert.helper.html2md_eShia
 openiti.new_books.convert.helper.html2md_GRAR
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. automodule:: openiti.new_books.convert.helper.html2md
+.. automodule:: openiti.new_books.convert.helper.html2md_GRAR
   :members:
 
 openiti.new_books.convert.helper.html2md_hindawi

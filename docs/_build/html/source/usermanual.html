@@ -1699,11 +1699,11 @@ value: list of github issue objects related to this uri</dd>
 </div>
 <div class="section" id="openiti-instantiations">
 <h3>openiti.instantiations<a class="headerlink" href="#openiti-instantiations" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="openiti-instantiations-generate-imech-instantiation">
-<h4>openiti.instantiations.generate_imech_instantiation<a class="headerlink" href="#openiti-instantiations-generate-imech-instantiation" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="module-openiti.instantiations.generate_imech_instantiation">
+<span id="openiti-instantiations-generate-imech-instantiation"></span><h4>openiti.instantiations.generate_imech_instantiation<a class="headerlink" href="#module-openiti.instantiations.generate_imech_instantiation" title="Permalink to this headline">¶</a></h4>
 </div>
-<div class="section" id="openiti-instantiations-generate-istylo-instantiation">
-<h4>openiti.instantiations.generate_istylo_instantiation<a class="headerlink" href="#openiti-instantiations-generate-istylo-instantiation" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="module-openiti.instantiations.generate_istylo_instantiation">
+<span id="openiti-instantiations-generate-istylo-instantiation"></span><h4>openiti.instantiations.generate_istylo_instantiation<a class="headerlink" href="#module-openiti.instantiations.generate_istylo_instantiation" title="Permalink to this headline">¶</a></h4>
 </div>
 </div>
 <div class="section" id="openiti-new-books">
@@ -2524,8 +2524,352 @@ to convert the html tags to OpenITI annotations.</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="openiti-new-books-convert-shamela-converter">
-<h4>openiti.new_books.convert.shamela_converter<a class="headerlink" href="#openiti-new-books-convert-shamela-converter" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="module-openiti.new_books.convert.shamela_converter">
+<span id="openiti-new-books-convert-shamela-converter"></span><h4>openiti.new_books.convert.shamela_converter<a class="headerlink" href="#module-openiti.new_books.convert.shamela_converter" title="Permalink to this headline">¶</a></h4>
+<p>A Converter for al-Maktaba al-Shamela databases to OpenITI mARkdown format.</p>
+<p>Al-Maktaba al-Shamela is a digital text collection, but it also
+developed its own reader, which is based on an internal database.</p>
+<p>A large number of texts are available on its website (www.shamela.ws),
+and can be downloaded in EPUB or .bok format (the latter is a zipped .mdb file).
+These files must be converted with another script.
+See <a class="reference external" href="https://github.com/OpenITI/raw_SHAM19Y/wiki">https://github.com/OpenITI/raw_SHAM19Y/wiki</a> for that conversion process.</p>
+<p>However, the program also allows users to add texts from other sources
+(incl. their own transcriptions) to the program’s database.
+The database can be zipped, together with an executable for the reader,
+and disseminated. Some users have used this ability
+of the program to create their own collections that include many
+texts not available in the original program
+(for ideological or other reasons), e.g.,</p>
+<ul class="simple">
+<li>al-maktaba al-shamela al-dhahabiyya</li>
+<li>al-maktaba al-shamela al-ibadiyya</li>
+<li>al-maktaba al-shamela al-zaydiyya</li>
+<li>etc.</li>
+</ul>
+<p>Database structure</p>
+<p>The database consists of a large number of folders and files:</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">./Files/Main.mdb</span></code>: contains the metadata for every book in the program,</dt>
+<dd>in a table called “0bok”</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">./Files/special.mdb</span></code>: contains more metadata + data that could be</dt>
+<dd>marked up in the text (like Qur’anic passages)</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">./Books</span></code>: contains 10 folders, named “0” to “9”, that each contain</dt>
+<dd>a large number of .mdb files (one .mdb file per text; filename = id number)</dd>
+</dl>
+</li>
+</ul>
+<p>NB: in some versions of the database, the books are actually in
+in large multi-book .mdb files in another folder (<code class="docutils literal"><span class="pre">./Books/Archive</span></code>),
+which contains large .mdb files, each ca. 600 MB;
+each of these contain the bxxxx and txxxx tables for a couple
+of thousand books (xxxx being the Shamela id of the book):</p>
+<ul class="simple">
+<li>bxxxx contains the text</li>
+<li>txxxx contains the section titles</li>
+</ul>
+<p>Module description</p>
+<p>This module contains two major components:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">extract_metadata</span></code>: extracts the metadata from the shamela database</li>
+<li><code class="docutils literal"><span class="pre">BokJsonConverter</span></code> class: extracts the text and book structure
+from the books’ .mdb files into json format,
+fuses this with the book’s metadata,
+and converts it into OpenITI mARkdown format</li>
+</ul>
+<p>The main component of the module, the BokJsonConverter class,
+is a subclass of the GenericConverter from the generic_converter module:</p>
+<dl class="docutils">
+<dt>GenericConverter</dt>
+<dd>_ GenericEpubConverter
+_ BokJsonConverter</dd>
+</dl>
+<p>Methods of both classes:
+(methods of GenericConverter are inherited by GenericHtmlConverter;
+methods of GenericConverter with the same name
+in GenericHtmlConverter are overwritten by the latter)</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="49%" />
+<col width="51%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">GenericConverter</th>
+<th class="head">BokJsonConverter</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>__init__</td>
+<td>__init__ (appended)</td>
+</tr>
+<tr class="row-odd"><td>convert_files_in_folder</td>
+<td>convert_files_in_folder</td>
+</tr>
+<tr class="row-even"><td>convert file</td>
+<td>convert file</td>
+</tr>
+<tr class="row-odd"><td>make_dest_fp</td>
+<td>(inherited - generic!)</td>
+</tr>
+<tr class="row-even"><td>get_metadata (dummy)</td>
+<td>(metadata collected in get_data step)</td>
+</tr>
+<tr class="row-odd"><td>get_data</td>
+<td>get_data</td>
+</tr>
+<tr class="row-even"><td>pre_process</td>
+<td>pre_process</td>
+</tr>
+<tr class="row-odd"><td>add_page_numbers (dummy)</td>
+<td>(pages added in get_data step)</td>
+</tr>
+<tr class="row-even"><td>add_structural_annotations (dummy)</td>
+<td>add_structural_annotations</td>
+</tr>
+<tr class="row-odd"><td>remove_notes (dummy)</td>
+<td>remove_notes</td>
+</tr>
+<tr class="row-even"><td>reflow</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-odd"><td>add_milestones (dummy)</td>
+<td>(inherited - dummy!)</td>
+</tr>
+<tr class="row-even"><td>post_process</td>
+<td>post_process</td>
+</tr>
+<tr class="row-odd"><td>compose</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-even"><td>save_file</td>
+<td>(inherited)
+mdb2json
+format_text
+format_metadata</td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt id="openiti.new_books.convert.shamela_converter.BokJsonConverter">
+<em class="property">class </em><code class="descclassname">openiti.new_books.convert.shamela_converter.</code><code class="descname">BokJsonConverter</code><span class="sig-paren">(</span><em>all_meta=None</em>, <em>additional_meta=None</em>, <em>dest_folder=None</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.shamela_converter.BokJsonConverter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract book data from .mdb files into json, and convert into mARkdown.</p>
+<dl class="method">
+<dt id="openiti.new_books.convert.shamela_converter.BokJsonConverter.add_structural_annotations">
+<code class="descname">add_structural_annotations</code><span class="sig-paren">(</span><em>passage_text</em>, <em>passage_id</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.shamela_converter.BokJsonConverter.add_structural_annotations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add structural tags to titles in passage_text.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.shamela_converter.BokJsonConverter.convert_file">
+<code class="descname">convert_file</code><span class="sig-paren">(</span><em>source_fp</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.shamela_converter.BokJsonConverter.convert_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert one file to OpenITI format.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>source_fp</strong> (<em>str</em>) – path to the file that must be converted.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.shamela_converter.BokJsonConverter.format_metadata">
+<code class="descname">format_metadata</code><span class="sig-paren">(</span><em>metadata</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.shamela_converter.BokJsonConverter.format_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the metadata in the metadata dict to a string.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.shamela_converter.BokJsonConverter.format_text">
+<code class="descname">format_text</code><span class="sig-paren">(</span><em>book</em>, <em>toc</em>, <em>book_id</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.shamela_converter.BokJsonConverter.format_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract text from json, add page numbers and headings.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>book</strong> (<em>list</em>) – a list of  dictionaries
+(keys: id, nass, page, part, [seal])</li>
+<li><strong>toc</strong> (<em>list</em>) – a list of dictionaries
+(keys: id, tit, lvl, [sub])</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the formatted text</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">text (str)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.shamela_converter.BokJsonConverter.get_data">
+<code class="descname">get_data</code><span class="sig-paren">(</span><em>source_fp</em>, <em>shamid</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.shamela_converter.BokJsonConverter.get_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the data from the source_fp and format it in OpenITI format.</p>
+<p>### Overwrite this method in subclass ###</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>source_fp</strong> (<em>str</em>) – path to the original file</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the text in its initial state</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">text (str)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.shamela_converter.BokJsonConverter.mdb2json">
+<code class="descname">mdb2json</code><span class="sig-paren">(</span><em>source_folder</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.shamela_converter.BokJsonConverter.mdb2json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert mdb files to json files.</p>
+<p>The .mdb files are usually in the Books folder,
+in subfolders numbered “0” to “9”.
+The converted files will be saved in &lt;self.dest_folder&gt;/json/</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.shamela_converter.BokJsonConverter.post_process">
+<code class="descname">post_process</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.shamela_converter.BokJsonConverter.post_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Carry out post-processing operations on the text.</p>
+<p>### Overwrite this method in subclass ###</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>text</strong> (<em>str</em>) – the text in its current conversion state</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the text after post-processing operations.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">texgt (str)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.shamela_converter.BokJsonConverter.remove_notes">
+<code class="descname">remove_notes</code><span class="sig-paren">(</span><em>passage_text</em>, <em>notes</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.shamela_converter.BokJsonConverter.remove_notes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove footnotes from the passage_text and add them to notes list.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.new_books.convert.shamela_converter.extract_metadata">
+<code class="descclassname">openiti.new_books.convert.shamela_converter.</code><code class="descname">extract_metadata</code><span class="sig-paren">(</span><em>files_folder</em>, <em>outfolder</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.shamela_converter.extract_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the book metadata from the Files folder of the Shamela program.</p>
+<p>The metadata is located in two separate mdb files:</p>
+<ul class="simple">
+<li>Files/main.mdb</li>
+<li>Files/special.mdb</li>
+</ul>
+<p>The metadata is extracted into json files in the outfolder:</p>
+<ul class="simple">
+<li>[outfolder]/main_metadata.json: full metadata from Files/main.mdb
+in json format (dictionary). Under key “0bok” it contains a
+list of metadata dictionaries, one for each book in the collection</li>
+<li>[outfolder]/special_metadata.json: full metadata from Files/special.mdb
+in json format</li>
+<li>[outfolder]/genres.json: a dictionary of genres and their ids
+extracted from main.mdb</li>
+<li>[outfolder]/Authors_metadata.json: a dictionary of authors and their ids
+extracted from special.mdb</li>
+<li>[outfolder]/main_metadata_reform.json: a reformatted version of
+main_metadata.json (dictionary of dictionaries, one for each book:
+key = bookID, value = book metadata in dictionary format)</li>
+</ul>
+<p>Only main_metadata_reform.json is necessary for the conversion
+of Shamela mdb files to txt.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.new_books.convert.shamela_converter.main">
+<code class="descclassname">openiti.new_books.convert.shamela_converter.</code><code class="descname">main</code><span class="sig-paren">(</span><em>meta_folder=None</em>, <em>files_folder=None</em>, <em>books_folder=None</em>, <em>conv_folder=None</em>, <em>download_date=''</em>, <em>download_source=''</em>, <em>config_fp=None</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.shamela_converter.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collect the variables and carry out the conversion.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>meta_folder</strong> (<em>str</em>) – path to the folder containing metadata extracted
+from the database</li>
+<li><strong>files_folder</strong> (<em>str</em>) – path to the <cite>Files</cite> folder of the database
+(containing the main metadata database files)</li>
+<li><strong>books_folder</strong> (<em>str</em>) – path to the <cite>Bookss</cite> folder of the database
+(containing the .mdb files containing the text of the books)</li>
+<li><strong>conv_folder</strong> (<em>str</em>) – path to the folder where the converted files should
+be stored</li>
+<li><strong>download_date</strong> (<em>str</em>) – (approximate) date when the database was downloaded</li>
+<li><strong>download_source</strong> (<em>str</em>) – name and/or dowload url of the database</li>
+<li><strong>config_fp</strong> (<em>str</em>) – path to a config.py file containing
+the above-mentioned parameters
+NB: to print an empty config file: print_default_config_file()</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.new_books.convert.shamela_converter.reformat_betaka">
+<code class="descclassname">openiti.new_books.convert.shamela_converter.</code><code class="descname">reformat_betaka</code><span class="sig-paren">(</span><em>meta</em>, <em>i</em>, <em>row</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.shamela_converter.reformat_betaka" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reformats the Shamela Betaka</p>
+<p>The Shamela metadata table contains a field called ‘betaka’,
+i.e., a kind of human-readable index card of the main metadata
+of the book (author, title, etc.).
+The betaka field is a string, with key: value pairs split by
+new lines. This function splits the metadata in the
+betaka string and adds it to the meta dictionary.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.new_books.convert.shamela_converter.reformat_metadata">
+<code class="descclassname">openiti.new_books.convert.shamela_converter.</code><code class="descname">reformat_metadata</code><span class="sig-paren">(</span><em>d</em>, <em>authors_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.shamela_converter.reformat_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reformats the Shamela Betaka</p>
+<p>The Shamela metadata table contains a field called ‘betaka’,
+i.e., a kind of human-readable index card of the main metadata
+of the book (author, title, etc.).
+The betaka field is a string, with key: value pairs split by
+new lines. This function splits the metadata in the
+betaka string and adds it to the meta dictionary.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>d</strong> (<em>dict</em>) – a dictionary containing two items:
+d[“0bok”]: a list of dictionary representations of the
+metadata of each book in the Shamela metadata table ‘Main’.
+d[“0cat”]: a list of dictionary representations of the
+genre metadata in the Shamela metadata table
+(keys: id, name, catord, lvl)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>the same list of dictionaries, but with the metadata</dt>
+<dd>in the betaka field split out into keys and values</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">meta (list)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="module-openiti.new_books.convert.tei_converter_generic">
 <span id="openiti-new-books-convert-tei-converter-generic"></span><h4>openiti.new_books.convert.tei_converter_generic<a class="headerlink" href="#module-openiti.new_books.convert.tei_converter_generic" title="Permalink to this headline">¶</a></h4>
@@ -2633,6 +2977,88 @@ It uses the generic TeiConverter’s tei2md.TeiConverter for the xml files,
 and for the html files the html2md_GRAR.GRARHtmlConverter
 (which is a modified version (sub-class) of the html2md.MarkdownConverter).</p>
 <p>Schema representing the method inheritance in the GRARConverter:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="35%" />
+<col width="33%" />
+<col width="32%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">GenericConverter</th>
+<th class="head">TeiConverter</th>
+<th class="head">GRARConverter</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>__init__</td>
+<td>__init__ (appended)</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-odd"><td>convert_files_in_folder</td>
+<td>(inherited)</td>
+<td>convert_files_in_folder</td>
+</tr>
+<tr class="row-even"><td>convert file</td>
+<td>convert_file</td>
+<td>convert_file</td>
+</tr>
+<tr class="row-odd"><td>make_dest_fp</td>
+<td>(inherited)</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-even"><td>get_metadata (dummy)</td>
+<td>get_metadata</td>
+<td>(inherited - for tei xml)</td>
+</tr>
+<tr class="row-odd"><td>get_data</td>
+<td>(inherited)</td>
+<td>(inherited - for tei xml)</td>
+</tr>
+<tr class="row-even"><td>pre_process</td>
+<td>pre_process</td>
+<td>pre-process (appended)</td>
+</tr>
+<tr class="row-odd"><td>add_page_numbers (dummy)</td>
+<td>(inherited - not used)</td>
+<td>(inherited - not used)</td>
+</tr>
+<tr class="row-even"><td>add_structural_annotations</td>
+<td>add_structural_annotations</td>
+<td>(inherited - for tei xml)</td>
+</tr>
+<tr class="row-odd"><td>remove_notes (dummy)</td>
+<td>(inherited - generic!)</td>
+<td>(inherited - generic!)</td>
+</tr>
+<tr class="row-even"><td>reflow</td>
+<td>(inherited)</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-odd"><td>add_milestones (dummy)</td>
+<td>(inherited - dummy)</td>
+<td>(inherited - not used)</td>
+</tr>
+<tr class="row-even"><td>post_process</td>
+<td>post_process</td>
+<td>post-process (appended)</td>
+</tr>
+<tr class="row-odd"><td>compose</td>
+<td>(inherited)</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-even"><td>save_file</td>
+<td>(inherited)
+preprocess_page_numbers
+preprocess_wrapped_lines</td>
+<td>(inherited)
+(inherited)
+(inherited)
+get_html_data
+get_html_metadata
+format_html_metadata</td>
+</tr>
+</tbody>
+</table>
 <p class="rubric">Examples</p>
 <div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tei_converter_GRAR</span> <span class="k">import</span> <span class="n">GRARConverter</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">conv</span> <span class="o">=</span> <span class="n">GRARConverter</span><span class="p">(</span><span class="n">dest_folder</span><span class="o">=</span><span class="s">&quot;test/converted&quot;</span><span class="p">)</span>
@@ -2726,148 +3152,436 @@ save the text as a temp file, open it with Windows-1256 encoding
 Saving to JSON also seems to do the job.</p>
 <p>In order to interact with the database,
 use the cursor object cur returned by the connect_to_db function.</p>
-<p>Most important functions with the cursor object:
-* cur.tables() : get a list of all tables in the database
-* cur.execute() : execute an sql string
-* cur.description: get the headings of the columns in the current cur object</p>
-<p>The bok file contains a number of tables, of which the most important are:
-* Main: contains the metadata of the book
-* bxxxx (in which xxxx is the Shamela id of the book): contains the text,</p>
-<blockquote>
-<div>one page per row.</div></blockquote>
+<p>Most important functions with the cursor object:</p>
 <ul class="simple">
+<li>cur.tables() : get a list of all tables in the database</li>
+<li>cur.execute() : execute an sql string</li>
+<li>cur.description: get the headings of the columns in the current cur object</li>
+</ul>
+<p>The bok file contains a number of tables, of which the most important are:</p>
+<ul class="simple">
+<li>Main: contains the metadata of the book</li>
+<li>bxxxx (in which xxxx is the Shamela id of the book): contains the text,
+one page per row.</li>
 <li>txxxx (in which xxxx is the Shamela id of the book): contains the headings,
 with reference to the page numbers</li>
 </ul>
 <p>List of tables in all bok files in the official Shamela corpus (October 2019):</p>
-<p><a href="#id757"><span class="problematic" id="id758">|table name|column name    |present in number of files|data in number of files|</span></a>
-<a href="#id759"><span class="problematic" id="id760">|----------|</span></a>—————<a href="#id761"><span class="problematic" id="id762">|--------------------------|</span></a>———————–|
-<a href="#id1"><span class="problematic" id="id2">|</span></a>bxxxx     |               <a href="#id3"><span class="problematic" id="id4">|</span></a>7509                      <a href="#id5"><span class="problematic" id="id6">|</span></a>7509                   |
-|          <a href="#id7"><span class="problematic" id="id8">|</span></a>nass           <a href="#id9"><span class="problematic" id="id10">|</span></a>7509                      <a href="#id11"><span class="problematic" id="id12">|</span></a>7509                   |
-|          <a href="#id13"><span class="problematic" id="id14">|</span></a>seal           <a href="#id15"><span class="problematic" id="id16">|</span></a>7509                      <a href="#id17"><span class="problematic" id="id18">|</span></a>7509                   |
-|          <a href="#id19"><span class="problematic" id="id20">|</span></a>id             <a href="#id21"><span class="problematic" id="id22">|</span></a>7509                      <a href="#id23"><span class="problematic" id="id24">|</span></a>7509                   |
-|          <a href="#id25"><span class="problematic" id="id26">|</span></a>page           <a href="#id27"><span class="problematic" id="id28">|</span></a>7509                      <a href="#id29"><span class="problematic" id="id30">|</span></a>7451                   |
-|          <a href="#id31"><span class="problematic" id="id32">|</span></a>part           <a href="#id33"><span class="problematic" id="id34">|</span></a>7509                      <a href="#id35"><span class="problematic" id="id36">|</span></a>7449                   |
-|          <a href="#id37"><span class="problematic" id="id38">|</span></a>hno            <a href="#id39"><span class="problematic" id="id40">|</span></a>1748                      <a href="#id41"><span class="problematic" id="id42">|</span></a>1744                   |
-|          <a href="#id43"><span class="problematic" id="id44">|</span></a>na             <a href="#id45"><span class="problematic" id="id46">|</span></a>1027                      <a href="#id47"><span class="problematic" id="id48">|</span></a>100                    |
-|          <a href="#id49"><span class="problematic" id="id50">|</span></a>sora           <a href="#id51"><span class="problematic" id="id52">|</span></a>1027                      <a href="#id53"><span class="problematic" id="id54">|</span></a>100                    |
-|          <a href="#id55"><span class="problematic" id="id56">|</span></a>aya            <a href="#id57"><span class="problematic" id="id58">|</span></a>1027                      <a href="#id59"><span class="problematic" id="id60">|</span></a>100                    |
-|          <a href="#id61"><span class="problematic" id="id62">|</span></a>b1             <a href="#id63"><span class="problematic" id="id64">|</span></a>17                        <a href="#id65"><span class="problematic" id="id66">|</span></a>17                     |
-|          <a href="#id67"><span class="problematic" id="id68">|</span></a>b2             <a href="#id69"><span class="problematic" id="id70">|</span></a>1                         <a href="#id71"><span class="problematic" id="id72">|</span></a>1                      |
-|          <a href="#id73"><span class="problematic" id="id74">|</span></a>b3             <a href="#id75"><span class="problematic" id="id76">|</span></a>1                         <a href="#id77"><span class="problematic" id="id78">|</span></a>1                      |
-|          <a href="#id79"><span class="problematic" id="id80">|</span></a>b4             <a href="#id81"><span class="problematic" id="id82">|</span></a>1                         <a href="#id83"><span class="problematic" id="id84">|</span></a>1                      |
-|          <a href="#id85"><span class="problematic" id="id86">|</span></a>blnk           <a href="#id87"><span class="problematic" id="id88">|</span></a>16                        <a href="#id89"><span class="problematic" id="id90">|</span></a>16                     |
-|          <a href="#id91"><span class="problematic" id="id92">|</span></a>ppart1         <a href="#id93"><span class="problematic" id="id94">|</span></a>40                        <a href="#id95"><span class="problematic" id="id96">|</span></a>40                     |
-|          <a href="#id97"><span class="problematic" id="id98">|</span></a>ppage1         <a href="#id99"><span class="problematic" id="id100">|</span></a>40                        <a href="#id101"><span class="problematic" id="id102">|</span></a>40                     |
-|          <a href="#id103"><span class="problematic" id="id104">|</span></a>ppart2         <a href="#id105"><span class="problematic" id="id106">|</span></a>7                         <a href="#id107"><span class="problematic" id="id108">|</span></a>7                      |
-|          <a href="#id109"><span class="problematic" id="id110">|</span></a>ppage2         <a href="#id111"><span class="problematic" id="id112">|</span></a>7                         <a href="#id113"><span class="problematic" id="id114">|</span></a>7                      |
-|          <a href="#id115"><span class="problematic" id="id116">|</span></a>ppart3         <a href="#id117"><span class="problematic" id="id118">|</span></a>7                         <a href="#id119"><span class="problematic" id="id120">|</span></a>7                      |
-|          <a href="#id121"><span class="problematic" id="id122">|</span></a>ppage3         <a href="#id123"><span class="problematic" id="id124">|</span></a>7                         <a href="#id125"><span class="problematic" id="id126">|</span></a>7                      |
-|          <a href="#id127"><span class="problematic" id="id128">|</span></a>ppart4         <a href="#id129"><span class="problematic" id="id130">|</span></a>2                         <a href="#id131"><span class="problematic" id="id132">|</span></a>2                      |
-|          <a href="#id133"><span class="problematic" id="id134">|</span></a>ppage4         <a href="#id135"><span class="problematic" id="id136">|</span></a>2                         <a href="#id137"><span class="problematic" id="id138">|</span></a>2                      |
-|          <a href="#id139"><span class="problematic" id="id140">|</span></a>done           <a href="#id141"><span class="problematic" id="id142">|</span></a>3                         <a href="#id143"><span class="problematic" id="id144">|</span></a>3                      |
-|          <a href="#id145"><span class="problematic" id="id146">|</span></a>bhno           <a href="#id147"><span class="problematic" id="id148">|</span></a>1                         <a href="#id149"><span class="problematic" id="id150">|</span></a>1                      |
-<a href="#id151"><span class="problematic" id="id152">|</span></a>Main      |               <a href="#id153"><span class="problematic" id="id154">|</span></a>7509                      <a href="#id155"><span class="problematic" id="id156">|</span></a>7509                   |
-|          <a href="#id157"><span class="problematic" id="id158">|</span></a>oauth          <a href="#id159"><span class="problematic" id="id160">|</span></a>7509                      <a href="#id161"><span class="problematic" id="id162">|</span></a>7509                   |
-|          <a href="#id163"><span class="problematic" id="id164">|</span></a>auth           <a href="#id165"><span class="problematic" id="id166">|</span></a>7509                      <a href="#id167"><span class="problematic" id="id168">|</span></a>7509                   |
-|          <a href="#id169"><span class="problematic" id="id170">|</span></a>bver           <a href="#id171"><span class="problematic" id="id172">|</span></a>7509                      <a href="#id173"><span class="problematic" id="id174">|</span></a>7509                   |
-|          <a href="#id175"><span class="problematic" id="id176">|</span></a>oauthver       <a href="#id177"><span class="problematic" id="id178">|</span></a>7509                      <a href="#id179"><span class="problematic" id="id180">|</span></a>7509                   |
-|          <a href="#id181"><span class="problematic" id="id182">|</span></a>over           <a href="#id183"><span class="problematic" id="id184">|</span></a>7509                      <a href="#id185"><span class="problematic" id="id186">|</span></a>7509                   |
-|          <a href="#id187"><span class="problematic" id="id188">|</span></a>lng            <a href="#id189"><span class="problematic" id="id190">|</span></a>7509                      <a href="#id191"><span class="problematic" id="id192">|</span></a>7509                   |
-|          <a href="#id193"><span class="problematic" id="id194">|</span></a>betaka         <a href="#id195"><span class="problematic" id="id196">|</span></a>7509                      <a href="#id197"><span class="problematic" id="id198">|</span></a>7509                   |
-|          <a href="#id199"><span class="problematic" id="id200">|</span></a>aseal          <a href="#id201"><span class="problematic" id="id202">|</span></a>7509                      <a href="#id203"><span class="problematic" id="id204">|</span></a>7509                   |
-|          <a href="#id205"><span class="problematic" id="id206">|</span></a>seal           <a href="#id207"><span class="problematic" id="id208">|</span></a>7509                      <a href="#id209"><span class="problematic" id="id210">|</span></a>7509                   |
-|          <a href="#id211"><span class="problematic" id="id212">|</span></a>bk             <a href="#id213"><span class="problematic" id="id214">|</span></a>7509                      <a href="#id215"><span class="problematic" id="id216">|</span></a>7509                   |
-|          <a href="#id217"><span class="problematic" id="id218">|</span></a>onum           <a href="#id219"><span class="problematic" id="id220">|</span></a>7509                      <a href="#id221"><span class="problematic" id="id222">|</span></a>7509                   |
-|          <a href="#id223"><span class="problematic" id="id224">|</span></a>bkid           <a href="#id225"><span class="problematic" id="id226">|</span></a>7509                      <a href="#id227"><span class="problematic" id="id228">|</span></a>7509                   |
-|          <a href="#id229"><span class="problematic" id="id230">|</span></a>ad             <a href="#id231"><span class="problematic" id="id232">|</span></a>7509                      <a href="#id233"><span class="problematic" id="id234">|</span></a>7509                   |
-|          <a href="#id235"><span class="problematic" id="id236">|</span></a>cat            <a href="#id237"><span class="problematic" id="id238">|</span></a>7509                      <a href="#id239"><span class="problematic" id="id240">|</span></a>7509                   |
-|          <a href="#id241"><span class="problematic" id="id242">|</span></a>islamshort     <a href="#id243"><span class="problematic" id="id244">|</span></a>7509                      <a href="#id245"><span class="problematic" id="id246">|</span></a>7508                   |
-|          <a href="#id247"><span class="problematic" id="id248">|</span></a>authinf        <a href="#id249"><span class="problematic" id="id250">|</span></a>7509                      <a href="#id251"><span class="problematic" id="id252">|</span></a>7265                   |
-|          <a href="#id253"><span class="problematic" id="id254">|</span></a>higrid         <a href="#id255"><span class="problematic" id="id256">|</span></a>7509                      <a href="#id257"><span class="problematic" id="id258">|</span></a>7265                   |
-|          <a href="#id259"><span class="problematic" id="id260">|</span></a>pdfcs          <a href="#id261"><span class="problematic" id="id262">|</span></a>7509                      <a href="#id263"><span class="problematic" id="id264">|</span></a>6711                   |
-|          <a href="#id265"><span class="problematic" id="id266">|</span></a>pdf            <a href="#id267"><span class="problematic" id="id268">|</span></a>7509                      <a href="#id269"><span class="problematic" id="id270">|</span></a>6480                   |
-|          <a href="#id271"><span class="problematic" id="id272">|</span></a>inf            <a href="#id273"><span class="problematic" id="id274">|</span></a>7509                      <a href="#id275"><span class="problematic" id="id276">|</span></a>5617                   |
-|          <a href="#id277"><span class="problematic" id="id278">|</span></a>shrtcs         <a href="#id279"><span class="problematic" id="id280">|</span></a>2664                      <a href="#id281"><span class="problematic" id="id282">|</span></a>2124                   |
-|          <a href="#id283"><span class="problematic" id="id284">|</span></a>tafseernam     <a href="#id285"><span class="problematic" id="id286">|</span></a>7509                      <a href="#id287"><span class="problematic" id="id288">|</span></a>183                    |
-|          <a href="#id289"><span class="problematic" id="id290">|</span></a>vername        <a href="#id291"><span class="problematic" id="id292">|</span></a>7509                      <a href="#id293"><span class="problematic" id="id294">|</span></a>16                     |
-|          <a href="#id295"><span class="problematic" id="id296">|</span></a>blnk           <a href="#id297"><span class="problematic" id="id298">|</span></a>7509                      <a href="#id299"><span class="problematic" id="id300">|</span></a>16                     |
-<a href="#id301"><span class="problematic" id="id302">|</span></a>txxxx     |               <a href="#id303"><span class="problematic" id="id304">|</span></a>7509                      <a href="#id305"><span class="problematic" id="id306">|</span></a>7507                   |
-|          <a href="#id307"><span class="problematic" id="id308">|</span></a>sub            <a href="#id309"><span class="problematic" id="id310">|</span></a>7509                      <a href="#id311"><span class="problematic" id="id312">|</span></a>7507                   |
-|          <a href="#id313"><span class="problematic" id="id314">|</span></a>id             <a href="#id315"><span class="problematic" id="id316">|</span></a>7509                      <a href="#id317"><span class="problematic" id="id318">|</span></a>7507                   |
-|          <a href="#id319"><span class="problematic" id="id320">|</span></a>tit            <a href="#id321"><span class="problematic" id="id322">|</span></a>7509                      <a href="#id323"><span class="problematic" id="id324">|</span></a>7507                   |
-|          <a href="#id325"><span class="problematic" id="id326">|</span></a>lvl            <a href="#id327"><span class="problematic" id="id328">|</span></a>7509                      <a href="#id329"><span class="problematic" id="id330">|</span></a>7507                   |
-<a href="#id331"><span class="problematic" id="id332">|</span></a>abc       |               <a href="#id333"><span class="problematic" id="id334">|</span></a>7509                      <a href="#id335"><span class="problematic" id="id336">|</span></a>397                    |
-|          <a href="#id337"><span class="problematic" id="id338">|</span></a>a              <a href="#id339"><span class="problematic" id="id340">|</span></a>7509                      <a href="#id341"><span class="problematic" id="id342">|</span></a>397                    |
-|          <a href="#id343"><span class="problematic" id="id344">|</span></a>b              <a href="#id345"><span class="problematic" id="id346">|</span></a>7509                      <a href="#id347"><span class="problematic" id="id348">|</span></a>397                    |
-|          <a href="#id349"><span class="problematic" id="id350">|</span></a>c              <a href="#id351"><span class="problematic" id="id352">|</span></a>7509                      <a href="#id353"><span class="problematic" id="id354">|</span></a>397                    |
-<a href="#id355"><span class="problematic" id="id356">|</span></a>Shorts    |               <a href="#id357"><span class="problematic" id="id358">|</span></a>7509                      <a href="#id359"><span class="problematic" id="id360">|</span></a>341                    |
-|          <a href="#id361"><span class="problematic" id="id362">|</span></a>nass           <a href="#id363"><span class="problematic" id="id364">|</span></a>7509                      <a href="#id365"><span class="problematic" id="id366">|</span></a>341                    |
-|          <a href="#id367"><span class="problematic" id="id368">|</span></a>ramz           <a href="#id369"><span class="problematic" id="id370">|</span></a>7509                      <a href="#id371"><span class="problematic" id="id372">|</span></a>341                    |
-|          <a href="#id373"><span class="problematic" id="id374">|</span></a>bk             <a href="#id375"><span class="problematic" id="id376">|</span></a>7509                      <a href="#id377"><span class="problematic" id="id378">|</span></a>341                    |
-<a href="#id379"><span class="problematic" id="id380">|</span></a>sPdf      |               <a href="#id381"><span class="problematic" id="id382">|</span></a>7509                      <a href="#id383"><span class="problematic" id="id384">|</span></a>236                    |
-|          <a href="#id385"><span class="problematic" id="id386">|</span></a>part           <a href="#id387"><span class="problematic" id="id388">|</span></a>7509                      <a href="#id389"><span class="problematic" id="id390">|</span></a>236                    |
-|          <a href="#id391"><span class="problematic" id="id392">|</span></a>sfilename      <a href="#id393"><span class="problematic" id="id394">|</span></a>7509                      <a href="#id395"><span class="problematic" id="id396">|</span></a>236                    |
-|          <a href="#id397"><span class="problematic" id="id398">|</span></a>onum           <a href="#id399"><span class="problematic" id="id400">|</span></a>7509                      <a href="#id401"><span class="problematic" id="id402">|</span></a>236                    |
-<a href="#id403"><span class="problematic" id="id404">|</span></a>men_u     |               <a href="#id405"><span class="problematic" id="id406">|</span></a>7509                      <a href="#id407"><span class="problematic" id="id408">|</span></a>148                    |
-|          <a href="#id409"><span class="problematic" id="id410">|</span></a>id             <a href="#id411"><span class="problematic" id="id412">|</span></a>7509                      <a href="#id413"><span class="problematic" id="id414">|</span></a>148                    |
-|          <a href="#id415"><span class="problematic" id="id416">|</span></a>name           <a href="#id417"><span class="problematic" id="id418">|</span></a>7509                      <a href="#id419"><span class="problematic" id="id420">|</span></a>148                    |
-|          <a href="#id421"><span class="problematic" id="id422">|</span></a>bk             <a href="#id423"><span class="problematic" id="id424">|</span></a>7509                      <a href="#id425"><span class="problematic" id="id426">|</span></a>148                    |
-<a href="#id427"><span class="problematic" id="id428">|</span></a>avPdf     |               <a href="#id429"><span class="problematic" id="id430">|</span></a>7509                      <a href="#id431"><span class="problematic" id="id432">|</span></a>28                     |
-|          <a href="#id433"><span class="problematic" id="id434">|</span></a>cs             <a href="#id435"><span class="problematic" id="id436">|</span></a>7509                      <a href="#id437"><span class="problematic" id="id438">|</span></a>28                     |
-|          <a href="#id439"><span class="problematic" id="id440">|</span></a>def            <a href="#id441"><span class="problematic" id="id442">|</span></a>7509                      <a href="#id443"><span class="problematic" id="id444">|</span></a>28                     |
-|          <a href="#id445"><span class="problematic" id="id446">|</span></a>onum           <a href="#id447"><span class="problematic" id="id448">|</span></a>7509                      <a href="#id449"><span class="problematic" id="id450">|</span></a>28                     |
-|          <a href="#id451"><span class="problematic" id="id452">|</span></a>vername        <a href="#id453"><span class="problematic" id="id454">|</span></a>7509                      <a href="#id455"><span class="problematic" id="id456">|</span></a>28                     |
-|          <a href="#id457"><span class="problematic" id="id458">|</span></a>pdfver         <a href="#id459"><span class="problematic" id="id460">|</span></a>7509                      <a href="#id461"><span class="problematic" id="id462">|</span></a>28                     |
-<a href="#id463"><span class="problematic" id="id464">|</span></a>men_b     |               <a href="#id465"><span class="problematic" id="id466">|</span></a>7509                      <a href="#id467"><span class="problematic" id="id468">|</span></a>17                     |
-|          <a href="#id469"><span class="problematic" id="id470">|</span></a>id             <a href="#id471"><span class="problematic" id="id472">|</span></a>7509                      <a href="#id473"><span class="problematic" id="id474">|</span></a>17                     |
-|          <a href="#id475"><span class="problematic" id="id476">|</span></a>manid          <a href="#id477"><span class="problematic" id="id478">|</span></a>7509                      <a href="#id479"><span class="problematic" id="id480">|</span></a>17                     |
-|          <a href="#id481"><span class="problematic" id="id482">|</span></a>name           <a href="#id483"><span class="problematic" id="id484">|</span></a>7509                      <a href="#id485"><span class="problematic" id="id486">|</span></a>17                     |
-|          <a href="#id487"><span class="problematic" id="id488">|</span></a>bk             <a href="#id489"><span class="problematic" id="id490">|</span></a>7509                      <a href="#id491"><span class="problematic" id="id492">|</span></a>17                     |
-<a href="#id493"><span class="problematic" id="id494">|</span></a>nBound    |               <a href="#id495"><span class="problematic" id="id496">|</span></a>7509                      <a href="#id497"><span class="problematic" id="id498">|</span></a>13                     |
-|          <a href="#id499"><span class="problematic" id="id500">|</span></a>d              <a href="#id501"><span class="problematic" id="id502">|</span></a>7509                      <a href="#id503"><span class="problematic" id="id504">|</span></a>13                     |
-|          <a href="#id505"><span class="problematic" id="id506">|</span></a>b              <a href="#id507"><span class="problematic" id="id508">|</span></a>7509                      <a href="#id509"><span class="problematic" id="id510">|</span></a>13                     |
-|          <a href="#id511"><span class="problematic" id="id512">|</span></a>dver           <a href="#id513"><span class="problematic" id="id514">|</span></a>7509                      <a href="#id515"><span class="problematic" id="id516">|</span></a>13                     |
-|          <a href="#id517"><span class="problematic" id="id518">|</span></a>bver           <a href="#id519"><span class="problematic" id="id520">|</span></a>7509                      <a href="#id521"><span class="problematic" id="id522">|</span></a>13                     |
-|          <a href="#id523"><span class="problematic" id="id524">|</span></a>bcode          <a href="#id525"><span class="problematic" id="id526">|</span></a>7509                      <a href="#id527"><span class="problematic" id="id528">|</span></a>13                     |
-<a href="#id529"><span class="problematic" id="id530">|</span></a>oShr      |               <a href="#id531"><span class="problematic" id="id532">|</span></a>7509                      <a href="#id533"><span class="problematic" id="id534">|</span></a>9                      |
-|          <a href="#id535"><span class="problematic" id="id536">|</span></a>matn           <a href="#id537"><span class="problematic" id="id538">|</span></a>7509                      <a href="#id539"><span class="problematic" id="id540">|</span></a>9                      |
-|          <a href="#id541"><span class="problematic" id="id542">|</span></a>sharhid        <a href="#id543"><span class="problematic" id="id544">|</span></a>7509                      <a href="#id545"><span class="problematic" id="id546">|</span></a>9                      |
-|          <a href="#id547"><span class="problematic" id="id548">|</span></a>matnid         <a href="#id549"><span class="problematic" id="id550">|</span></a>7509                      <a href="#id551"><span class="problematic" id="id552">|</span></a>9                      |
-|          <a href="#id553"><span class="problematic" id="id554">|</span></a>sharh          <a href="#id555"><span class="problematic" id="id556">|</span></a>7509                      <a href="#id557"><span class="problematic" id="id558">|</span></a>9                      |
-<a href="#id559"><span class="problematic" id="id560">|</span></a>oShrooh   |               <a href="#id561"><span class="problematic" id="id562">|</span></a>7509                      <a href="#id563"><span class="problematic" id="id564">|</span></a>9                      |
-|          <a href="#id565"><span class="problematic" id="id566">|</span></a>matn           <a href="#id567"><span class="problematic" id="id568">|</span></a>7509                      <a href="#id569"><span class="problematic" id="id570">|</span></a>9                      |
-|          <a href="#id571"><span class="problematic" id="id572">|</span></a>matnver        <a href="#id573"><span class="problematic" id="id574">|</span></a>7509                      <a href="#id575"><span class="problematic" id="id576">|</span></a>9                      |
-|          <a href="#id577"><span class="problematic" id="id578">|</span></a>sharhver       <a href="#id579"><span class="problematic" id="id580">|</span></a>7509                      <a href="#id581"><span class="problematic" id="id582">|</span></a>9                      |
-|          <a href="#id583"><span class="problematic" id="id584">|</span></a>sharh          <a href="#id585"><span class="problematic" id="id586">|</span></a>7509                      <a href="#id587"><span class="problematic" id="id588">|</span></a>9                      |
-<a href="#id589"><span class="problematic" id="id590">|</span></a>Shrooh    |               <a href="#id591"><span class="problematic" id="id592">|</span></a>7509                      <a href="#id593"><span class="problematic" id="id594">|</span></a>0                      |
-|          <a href="#id595"><span class="problematic" id="id596">|</span></a>matn           <a href="#id597"><span class="problematic" id="id598">|</span></a>7509                      <a href="#id599"><span class="problematic" id="id600">|</span></a>0                      |
-|          <a href="#id601"><span class="problematic" id="id602">|</span></a>sharhid        <a href="#id603"><span class="problematic" id="id604">|</span></a>7509                      <a href="#id605"><span class="problematic" id="id606">|</span></a>0                      |
-|          <a href="#id607"><span class="problematic" id="id608">|</span></a>matnid         <a href="#id609"><span class="problematic" id="id610">|</span></a>7509                      <a href="#id611"><span class="problematic" id="id612">|</span></a>0                      |
-|          <a href="#id613"><span class="problematic" id="id614">|</span></a>sharh          <a href="#id615"><span class="problematic" id="id616">|</span></a>7509                      <a href="#id617"><span class="problematic" id="id618">|</span></a>0                      |
-<a href="#id619"><span class="problematic" id="id620">|</span></a>com       |               <a href="#id621"><span class="problematic" id="id622">|</span></a>7509                      <a href="#id623"><span class="problematic" id="id624">|</span></a>0                      |
-|          <a href="#id625"><span class="problematic" id="id626">|</span></a>id             <a href="#id627"><span class="problematic" id="id628">|</span></a>7509                      <a href="#id629"><span class="problematic" id="id630">|</span></a>0                      |
-|          <a href="#id631"><span class="problematic" id="id632">|</span></a>com            <a href="#id633"><span class="problematic" id="id634">|</span></a>7509                      <a href="#id635"><span class="problematic" id="id636">|</span></a>0                      |
-|          <a href="#id637"><span class="problematic" id="id638">|</span></a>bk             <a href="#id639"><span class="problematic" id="id640">|</span></a>7509                      <a href="#id641"><span class="problematic" id="id642">|</span></a>0                      |
-<a href="#id643"><span class="problematic" id="id644">|</span></a>men_h     |               <a href="#id645"><span class="problematic" id="id646">|</span></a>7509                      <a href="#id647"><span class="problematic" id="id648">|</span></a>0                      |
-|          <a href="#id649"><span class="problematic" id="id650">|</span></a>id             <a href="#id651"><span class="problematic" id="id652">|</span></a>7509                      <a href="#id653"><span class="problematic" id="id654">|</span></a>0                      |
-|          <a href="#id655"><span class="problematic" id="id656">|</span></a>name           <a href="#id657"><span class="problematic" id="id658">|</span></a>7509                      <a href="#id659"><span class="problematic" id="id660">|</span></a>0                      |
-|          <a href="#id661"><span class="problematic" id="id662">|</span></a>upg            <a href="#id663"><span class="problematic" id="id664">|</span></a>7509                      <a href="#id665"><span class="problematic" id="id666">|</span></a>0                      |
-<a href="#id667"><span class="problematic" id="id668">|</span></a>10759     |               <a href="#id669"><span class="problematic" id="id670">|</span></a>1                         <a href="#id671"><span class="problematic" id="id672">|</span></a>1                      |
-|          <a href="#id673"><span class="problematic" id="id674">|</span></a>wrd            <a href="#id675"><span class="problematic" id="id676">|</span></a>1                         <a href="#id677"><span class="problematic" id="id678">|</span></a>1                      |
-|          <a href="#id679"><span class="problematic" id="id680">|</span></a>pos            <a href="#id681"><span class="problematic" id="id682">|</span></a>1                         <a href="#id683"><span class="problematic" id="id684">|</span></a>1                      |
-<a href="#id685"><span class="problematic" id="id686">|</span></a>10786     |               <a href="#id687"><span class="problematic" id="id688">|</span></a>1                         <a href="#id689"><span class="problematic" id="id690">|</span></a>1                      |
-|          <a href="#id691"><span class="problematic" id="id692">|</span></a>wrd            <a href="#id693"><span class="problematic" id="id694">|</span></a>1                         <a href="#id695"><span class="problematic" id="id696">|</span></a>1                      |
-|          <a href="#id697"><span class="problematic" id="id698">|</span></a>pos            <a href="#id699"><span class="problematic" id="id700">|</span></a>1                         <a href="#id701"><span class="problematic" id="id702">|</span></a>1                      |
-<a href="#id703"><span class="problematic" id="id704">|</span></a>10772     |               <a href="#id705"><span class="problematic" id="id706">|</span></a>1                         <a href="#id707"><span class="problematic" id="id708">|</span></a>1                      |
-|          <a href="#id709"><span class="problematic" id="id710">|</span></a>wrd            <a href="#id711"><span class="problematic" id="id712">|</span></a>1                         <a href="#id713"><span class="problematic" id="id714">|</span></a>1                      |
-|          <a href="#id715"><span class="problematic" id="id716">|</span></a>pos            <a href="#id717"><span class="problematic" id="id718">|</span></a>1                         <a href="#id719"><span class="problematic" id="id720">|</span></a>1                      |
-<a href="#id721"><span class="problematic" id="id722">|</span></a>10769     |               <a href="#id723"><span class="problematic" id="id724">|</span></a>1                         <a href="#id725"><span class="problematic" id="id726">|</span></a>1                      |
-|          <a href="#id727"><span class="problematic" id="id728">|</span></a>wrd            <a href="#id729"><span class="problematic" id="id730">|</span></a>1                         <a href="#id731"><span class="problematic" id="id732">|</span></a>1                      |
-|          <a href="#id733"><span class="problematic" id="id734">|</span></a>pos            <a href="#id735"><span class="problematic" id="id736">|</span></a>1                         <a href="#id737"><span class="problematic" id="id738">|</span></a>1                      |
-<a href="#id739"><span class="problematic" id="id740">|</span></a>10773     |               <a href="#id741"><span class="problematic" id="id742">|</span></a>1                         <a href="#id743"><span class="problematic" id="id744">|</span></a>1                      |
-|          <a href="#id745"><span class="problematic" id="id746">|</span></a>wrd            <a href="#id747"><span class="problematic" id="id748">|</span></a>1                         <a href="#id749"><span class="problematic" id="id750">|</span></a>1                      |
-|          <a href="#id751"><span class="problematic" id="id752">|</span></a>pos            <a href="#id753"><span class="problematic" id="id754">|</span></a>1                         <a href="#id755"><span class="problematic" id="id756">|</span></a>1                      |</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="20%" />
+<col width="35%" />
+<col width="31%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">table name</th>
+<th class="head">column name</th>
+<th class="head">present in number of files</th>
+<th class="head">data in number of files</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>bxxxx</td>
+<td>nass
+seal
+id
+page
+part
+hno
+na
+sora
+aya
+b1
+b2
+b3
+b4
+blnk
+ppart1
+ppage1
+ppart2
+ppage2
+ppart3
+ppage3
+ppart4
+ppage4
+done
+bhno</td>
+<td>7509
+7509
+7509
+7509
+7509
+7509
+1748
+1027
+1027
+1027
+17
+1
+1
+1
+16
+40
+40
+7
+7
+7
+7
+2
+2
+3
+1</td>
+<td>7509
+7509
+7509
+7509
+7451
+7449
+1744
+100
+100
+100
+17
+1
+1
+1
+16
+40
+40
+7
+7
+7
+7
+2
+2
+3
+1</td>
+</tr>
+<tr class="row-odd"><td>Main</td>
+<td>oauth
+auth
+bver
+oauthver
+over
+lng
+betaka
+aseal
+seal
+bk
+onum
+bkid
+ad
+cat
+islamshort
+authinf
+higrid
+pdfcs
+pdf
+inf
+shrtcs
+tafseernam
+vername
+blnk</td>
+<td>7509
+7509
+7509
+7509
+7509
+7509
+7509
+7509
+7509
+7509
+7509
+7509
+7509
+7509
+7509
+7509
+7509
+7509
+7509
+7509
+7509
+2664
+7509
+7509
+7509</td>
+<td>7509
+7509
+7509
+7509
+7509
+7509
+7509
+7509
+7509
+7509
+7509
+7509
+7509
+7509
+7509
+7508
+7265
+7265
+6711
+6480
+5617
+2124
+183
+16
+16</td>
+</tr>
+<tr class="row-even"><td>txxxx</td>
+<td>sub
+id
+tit
+lvl</td>
+<td>7509
+7509
+7509
+7509
+7509</td>
+<td>7507
+7507
+7507
+7507
+7507</td>
+</tr>
+<tr class="row-odd"><td>abc</td>
+<td>a
+b
+c</td>
+<td>7509
+7509
+7509
+7509</td>
+<td>397
+397
+397
+397</td>
+</tr>
+<tr class="row-even"><td>Shorts</td>
+<td>nass
+ramz
+bk</td>
+<td>7509
+7509
+7509
+7509</td>
+<td>341
+341
+341
+341</td>
+</tr>
+<tr class="row-odd"><td>sPdf</td>
+<td>part
+sfilename
+onum</td>
+<td>7509
+7509
+7509
+7509</td>
+<td>236
+236
+236
+236</td>
+</tr>
+<tr class="row-even"><td>men_u</td>
+<td>id
+name
+bk</td>
+<td>7509
+7509
+7509
+7509</td>
+<td>148
+148
+148
+148</td>
+</tr>
+<tr class="row-odd"><td>avPdf</td>
+<td>cs
+def
+onum
+vername
+pdfver</td>
+<td>7509
+7509
+7509
+7509
+7509
+7509</td>
+<td>28
+28
+28
+28
+28
+28</td>
+</tr>
+<tr class="row-even"><td>men_b</td>
+<td>id
+manid
+name
+bk</td>
+<td>7509
+7509
+7509
+7509
+7509</td>
+<td>17
+17
+17
+17
+17</td>
+</tr>
+<tr class="row-odd"><td>nBound</td>
+<td>d
+b
+dver
+bver
+bcode</td>
+<td>7509
+7509
+7509
+7509
+7509
+7509</td>
+<td>13
+13
+13
+13
+13
+13</td>
+</tr>
+<tr class="row-even"><td>oShr</td>
+<td>matn
+sharhid
+matnid
+sharh</td>
+<td>7509
+7509
+7509
+7509
+7509</td>
+<td>9
+9
+9
+9
+9</td>
+</tr>
+<tr class="row-odd"><td>oShrooh</td>
+<td>matn
+matnver
+sharhver
+sharh</td>
+<td>7509
+7509
+7509
+7509
+7509</td>
+<td>9
+9
+9
+9
+9</td>
+</tr>
+<tr class="row-even"><td>Shrooh</td>
+<td>matn
+sharhid
+matnid
+sharh</td>
+<td>7509
+7509
+7509
+7509
+7509</td>
+<td>0
+0
+0
+0
+0</td>
+</tr>
+<tr class="row-odd"><td>com</td>
+<td>id
+com
+bk</td>
+<td>7509
+7509
+7509
+7509</td>
+<td>0
+0
+0
+0</td>
+</tr>
+<tr class="row-even"><td>men_h</td>
+<td>id
+name
+upg</td>
+<td>7509
+7509
+7509
+7509</td>
+<td>0
+0
+0
+0</td>
+</tr>
+<tr class="row-odd"><td>10759</td>
+<td>wrd
+pos</td>
+<td>1
+1
+1</td>
+<td>1
+1
+1</td>
+</tr>
+<tr class="row-even"><td>10786</td>
+<td>wrd
+pos</td>
+<td>1
+1
+1</td>
+<td>1
+1
+1</td>
+</tr>
+<tr class="row-odd"><td>10772</td>
+<td>wrd
+pos</td>
+<td>1
+1
+1</td>
+<td>1
+1
+1</td>
+</tr>
+<tr class="row-even"><td>10769</td>
+<td>wrd
+pos</td>
+<td>1
+1
+1</td>
+<td>1
+1
+1</td>
+</tr>
+<tr class="row-odd"><td>10773</td>
+<td>wrd
+pos</td>
+<td>1
+1
+1</td>
+<td>1
+1
+1</td>
+</tr>
+</tbody>
+</table>
 <dl class="function">
 <dt id="openiti.new_books.convert.helper.bok.close_db">
 <code class="descclassname">openiti.new_books.convert.helper.bok.</code><code class="descname">close_db</code><span class="sig-paren">(</span><em>conn</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.bok.close_db" title="Permalink to this definition">¶</a></dt>
@@ -2887,20 +3601,16 @@ with reference to the page numbers</li>
 <dl class="function">
 <dt id="openiti.new_books.convert.helper.bok.connect_to_db">
 <code class="descclassname">openiti.new_books.convert.helper.bok.</code><code class="descname">connect_to_db</code><span class="sig-paren">(</span><em>fp</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.bok.connect_to_db" title="Permalink to this definition">¶</a></dt>
-<dd><p>Connect to the mdb database in the bok file.
-Uses pypyodbc (<a class="reference external" href="https://github.com/jiangwen365/pypyodbc">https://github.com/jiangwen365/pypyodbc</a>)</p>
+<dd><p>Connect to the mdb database in the bok file.</p>
+<p>Uses pypyodbc (<a class="reference external" href="https://github.com/jiangwen365/pypyodbc">https://github.com/jiangwen365/pypyodbc</a>)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fp</strong> (<em>str</em>) – path to the bok file</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
-<dt>a pypyodbc connection object. Needs to be closed (conn.close())</dt>
-<dd>at the end of the database session</dd>
-</dl>
-<p>cur: a pypyodbc cursor object, needed to execute SQL</p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a pypyodbc connection object. Needs to be closed (conn.close())          at the end of the database session
+cur: a pypyodbc cursor object, needed to execute SQL</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">conn</td>
 </tr>
@@ -3137,15 +3847,16 @@ return text</dd>
 <p>This script subclasses the generic MarkdownConverter class
 from the html2md module (based on python-markdownify,
 <a class="reference external" href="https://github.com/matthewwithanm/python-markdownify">https://github.com/matthewwithanm/python-markdownify</a>),
-which uses BeautifulSoup to create a flexible converter.
-The subclass in this module, GRARHtmlConverter,
+which uses BeautifulSoup to create a flexible converter.</p>
+<p>The subclass in this module, GRARHtmlConverter,
 adds methods specifically for the conversion of books from
-the GRAR library to OpenITI mARkdown:
-* span conversion: the GRAR html seems to be a conversion of tei xml;</p>
-<blockquote>
-<div>the tei data is often embedded inside the id of a span.</div></blockquote>
+the eShia library to OpenITI mARkdown:</p>
 <ul class="simple">
-<li></li>
+<li><dl class="first docutils">
+<dt>Span, div and p conversion: span, div and p classes needed to be converted</dt>
+<dd>are defined in self.class_dict.</dd>
+</dl>
+</li>
 </ul>
 <p>Inheritance schema of the GRARHtmlConverter:</p>
 <table border="1" class="docutils">
@@ -3296,19 +4007,15 @@ convert_div</td>
 <dt id="openiti.new_books.convert.helper.html2md_eShia.EShiaHtmlConverter.convert_p">
 <code class="descname">convert_p</code><span class="sig-paren">(</span><em>el</em>, <em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md_eShia.EShiaHtmlConverter.convert_p" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts &lt;p&gt; tags according to their class.</p>
-<blockquote>
-<div>Supported p classes should be stored in self.class_dict
+<p>Supported p classes should be stored in self.class_dict
 (key: span class (str); value: formatting string)
-E.g., {“quran”: “&#64;QUR&#64; {}</div></blockquote>
-<p>“}</p>
-<blockquote>
-<div><p>&lt;p&gt; tags without class attribute, or unsupported class,
+E.g., {“quran”: “&#64;QUR&#64; {}n”}</p>
+<p>&lt;p&gt; tags without class attribute, or unsupported class,
 will be converted according to the markdown style
 as defined in the self.options[“md_style”] value
 (from super().DefaultOptions)</p>
-<dl class="docutils">
-<dt>Examples:</dt>
-<dd><div class="first highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md_eShia</span>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md_eShia</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&quot;&lt;p&gt;abc&lt;/p&gt;&quot;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_eShia</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
 <span class="go">&#39;\n\n# abc\n\n&#39;</span>
@@ -3324,29 +4031,22 @@ as defined in the self.options[“md_style”] value
 <span class="go">&#39;&#39;</span>
 </pre></div>
 </div>
-<div class="last highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;p class=&quot;KalamateKhas&quot;&gt;abc&lt;/p&gt;&#39;</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;p class=&quot;KalamateKhas&quot;&gt;abc&lt;/p&gt;&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_eShia</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
 <span class="go">&#39;\n\n### ||| abc\n\n&#39;</span>
 </pre></div>
 </div>
-</dd>
-</dl>
-</div></blockquote>
 </dd></dl>
 
 <dl class="method">
 <dt id="openiti.new_books.convert.helper.html2md_eShia.EShiaHtmlConverter.convert_span">
 <code class="descname">convert_span</code><span class="sig-paren">(</span><em>el</em>, <em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md_eShia.EShiaHtmlConverter.convert_span" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts html &lt;span&gt; tags, depending on their class attribute.</p>
-<blockquote>
-<div>Supported span classes should be stored in self.class_dict
+<p>Supported span classes should be stored in self.class_dict
 (key: span class (str); value: formatting string)
-E.g., {“quran”: “&#64;QUR&#64; {}</div></blockquote>
-<p>“}</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>Example:</dt>
-<dd><div class="first highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md_eShia</span>
+E.g., {“quran”: “&#64;QUR&#64; {}n”}</p>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md_eShia</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;span&gt;def&lt;/span&gt; ghi&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_eShia</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
 <span class="go">&#39;abc def ghi&#39;</span>
@@ -3370,14 +4070,11 @@ E.g., {“quran”: “&#64;QUR&#64; {}</div></blockquote>
 <p># the &#64;QUR&#64; example outputs are a result of post-processing;
 # the function itself will produce:
 # ‘abc &#64;QUR&#64; def ghinjkl’</p>
-<div class="last highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;span class=&quot;Titr3&quot;&gt;def&lt;/span&gt; ghi&#39;</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;span class=&quot;Titr3&quot;&gt;def&lt;/span&gt; ghi&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_eShia</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
 <span class="go">&#39;abc\n\n### ||| def\n\nghi&#39;</span>
 </pre></div>
 </div>
-</dd>
-</dl>
-</div></blockquote>
 </dd></dl>
 
 </dd></dl>
@@ -3389,146 +4086,203 @@ E.g., {“quran”: “&#64;QUR&#64; {}</div></blockquote>
 </dd></dl>
 
 </div>
-<div class="section" id="module-openiti.new_books.convert.helper.html2md">
-<span id="openiti-new-books-convert-helper-html2md-grar"></span><h5>openiti.new_books.convert.helper.html2md_GRAR<a class="headerlink" href="#module-openiti.new_books.convert.helper.html2md" title="Permalink to this headline">¶</a></h5>
-<p>Convert html to Markdown.</p>
-<p>This program is an adaptation of python-markdownify
-(<a class="reference external" href="https://github.com/matthewwithanm/python-markdownify">https://github.com/matthewwithanm/python-markdownify</a>)
-to output OpenITI mARkdown.
-It also adds methods for tables and images,
-and a post-processing method.</p>
-<p>You can use this class as a base class and subclass it
-to add methods, adapt the post-processing method etc.</p>
-<dl class="docutils">
-<dt>E.g.:</dt>
-<dd><dl class="first last docutils">
-<dt>class Hindawi_converter(html2md.MarkdownConverter):</dt>
-<dd><dl class="first last docutils">
-<dt>def post_process_md(self, text):</dt>
-<dd>text = super().post_process_md(text)
-# remove blank lines marked with “DELETE_PREVIOUS_BLANKLINES” tag
-text = re.sub(r”</dd>
+<div class="section" id="module-openiti.new_books.convert.helper.html2md_GRAR">
+<span id="openiti-new-books-convert-helper-html2md-grar"></span><h5>openiti.new_books.convert.helper.html2md_GRAR<a class="headerlink" href="#module-openiti.new_books.convert.helper.html2md_GRAR" title="Permalink to this headline">¶</a></h5>
+<p>Convert GRAR library html to OpenITI mARkdown.</p>
+<p>This script subclasses the generic MarkdownConverter class
+from the html2md module (based on python-markdownify,
+<a class="reference external" href="https://github.com/matthewwithanm/python-markdownify">https://github.com/matthewwithanm/python-markdownify</a>),
+which uses BeautifulSoup to create a flexible converter.
+The subclass in this module, GRARHtmlConverter,
+adds methods specifically for the conversion of books from
+the GRAR library to OpenITI mARkdown:</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>span conversion: the GRAR html seems to be a conversion of tei xml;</dt>
+<dd>the tei data is often embedded inside the id of a span.</dd>
 </dl>
-</dd>
-</dl>
-</dd>
-<dt>+DELETE_PREVIOUS_BLANKLINES”, “”, text)</dt>
-<dd># replace placeholders for spaces in tables:
-text = re.sub(“ç”, ” “, text)
-return text</dd>
-</dl>
-<p>Examples (doctests):</p>
-<blockquote>
-<div><p>Headings: h1</p>
-<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;h1&gt;abc&lt;/h1&gt;&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
-<span class="go">&#39;\n\n### | abc\n\n&#39;</span>
-</pre></div>
-</div>
-<dl class="docutils">
-<dt>NB: heading style is OpenITI mARkdown style by default,</dt>
-<dd>but can be set to other styles as well:</dd>
-</dl>
-<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;h1&gt;abc&lt;/h1&gt;&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">md_style</span><span class="o">=</span><span class="n">UNDERLINED</span><span class="p">)</span>
-<span class="go">&#39;\n\nabc\n===\n\n&#39;</span>
-</pre></div>
-</div>
-<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;h1&gt;abc&lt;/h1&gt;&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">md_style</span><span class="o">=</span><span class="n">ATX</span><span class="p">)</span>
-<span class="go">&#39;\n\n# abc\n\n&#39;</span>
-</pre></div>
-</div>
-<p>Paragraphs (&lt;p&gt;):</p>
-<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&quot;&lt;p&gt;abc&lt;/p&gt;&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
-<span class="go">&#39;\n\n# abc\n\n&#39;</span>
-</pre></div>
-</div>
-<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&quot;&lt;p&gt;abc&lt;/p&gt;&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">md_style</span><span class="o">=</span><span class="n">ATX</span><span class="p">)</span>
-<span class="go">&#39;\n\nabc\n\n&#39;</span>
-</pre></div>
-</div>
-<p>Divs without class or with an unsupported class are stripped:</p>
-<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc             &lt;div&gt;def&lt;/div&gt;             ghi&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+</li>
+</ul>
+<p>Inheritance schema of the GRARHtmlConverter:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="48%" />
+<col width="52%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">MarkdownConverter</th>
+<th class="head">GRARHtmlConverter</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Options</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-odd"><td>DefaultOptions</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-even"><td>__init__</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-odd"><td>__getattr__</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-even"><td>convert</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-odd"><td>process_tag</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-even"><td>process_text</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-odd"><td>fill_out_columns</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-even"><td>post_process_md</td>
+<td>post_process_md (appended)</td>
+</tr>
+<tr class="row-odd"><td>should_convert_tag</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-even"><td>indent</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-odd"><td>underline</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-even"><td>create_underline_line</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-odd"><td>convert_a</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-even"><td>convert_b</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-odd"><td>convert_blockquote</td>
+<td>convert_blockquote</td>
+</tr>
+<tr class="row-even"><td>convert_br</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-odd"><td>convert_em</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-even"><td>convert_hn</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-odd"><td>convert_i</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-even"><td>convert_img</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-odd"><td>convert_list</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-even"><td>convert_li</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-odd"><td>convert_ol</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-even"><td>convert_p</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-odd"><td>convert_table</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-even"><td>convert_tr</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-odd"><td>convert_ul</td>
+<td>(inherited)</td>
+</tr>
+<tr class="row-even"><td>convert_strong</td>
+<td>(inherited)
+convert_span</td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt id="openiti.new_books.convert.helper.html2md_GRAR.GRARHtmlConverter">
+<em class="property">class </em><code class="descclassname">openiti.new_books.convert.helper.html2md_GRAR.</code><code class="descname">GRARHtmlConverter</code><span class="sig-paren">(</span><em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md_GRAR.GRARHtmlConverter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert GRAR library html to OpenITI mARkdown.</p>
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md_GRAR.GRARHtmlConverter.convert_blockquote">
+<code class="descname">convert_blockquote</code><span class="sig-paren">(</span><em>el</em>, <em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md_GRAR.GRARHtmlConverter.convert_blockquote" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert blockquote tags to mARkdown</p>
+<p>NB: the &#64;QUOTE&#64; tag is a temporary tag that will be removed
+in the post-processing step.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md_GRAR</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;blockquote&gt;def&lt;/blockquote&gt; ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_GRAR</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
 <span class="go">&#39;abc def ghi&#39;</span>
 </pre></div>
 </div>
-<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc             &lt;div class=&quot;unknown_div_class&quot;&gt;def&lt;/div&gt;             ghi&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
-<span class="go">&#39;abc def ghi&#39;</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;span id=&quot;pb-21&quot;/&gt;&lt;blockquote&gt;def&lt;/blockquote&gt; ghi jkl&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_GRAR</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc\n\nPageV00P020\n\n# def ghi jkl&#39;</span>
 </pre></div>
 </div>
-<p>Spans without class or with an unsupported class are stripped:</p>
-<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;span&gt;def&lt;/span&gt; ghi&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md_GRAR.GRARHtmlConverter.convert_span">
+<code class="descname">convert_span</code><span class="sig-paren">(</span><em>el</em>, <em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md_GRAR.GRARHtmlConverter.convert_span" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts html &lt;span&gt; tags, depending on their id attribute.</p>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md_GRAR</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;span&gt;def&lt;/span&gt; ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_GRAR</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
 <span class="go">&#39;abc def ghi&#39;</span>
 </pre></div>
 </div>
 <div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;span class=&quot;unknown_span_class&quot;&gt;def&lt;/span&gt; ghi&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_GRAR</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
 <span class="go">&#39;abc def ghi&#39;</span>
 </pre></div>
 </div>
-<p>Links:</p>
-<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;a href=&quot;a/b/c&quot;&gt;abc&lt;/a&gt;&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
-<span class="go">&#39;[abc](a/b/c)&#39;</span>
+<p>Page numbers (NB: mARkdown uses page end instead of page beginning)</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;span id=&quot;pb-21&quot;/&gt;def  ghi jkl&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_GRAR</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc PageV00P020 def ghi jkl&#39;</span>
 </pre></div>
 </div>
-<p>Unordered lists:</p>
-<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;ul&gt;&lt;li&gt;item1&lt;/li&gt;&lt;li&gt;item2&lt;/li&gt;&lt;/ul&gt;&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
-<span class="go">&#39;\n* item1\n* item2\n\n&#39;</span>
+<p>Sections:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;span class=&quot;book&quot; id=&quot;part-2 div1-2&quot;/&gt;def  ghi jkl&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_GRAR</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc\n\n### | [book 2]\n\ndef ghi jkl&#39;</span>
 </pre></div>
 </div>
-<p>Ordered lists:</p>
-<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;ol&gt;&lt;li&gt;item1&lt;/li&gt;&lt;li&gt;item2&lt;/li&gt;&lt;/ol&gt;&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
-<span class="go">&#39;\n1. item1\n2. item2\n\n&#39;</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;span class=&quot;chapter&quot; id=&quot;part-2 div2-1&quot;/&gt;def  ghi jkl&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_GRAR</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc\n\n### || [chapter 1]\n\ndef ghi jkl&#39;</span>
 </pre></div>
 </div>
-<p>Nested lists:</p>
-<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;ol&gt;&lt;li&gt;item1&lt;/li&gt;&lt;li&gt;item2:&lt;ul&gt;&lt;li&gt;item3&lt;/li&gt;&lt;li&gt;item4&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;/ol&gt;&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
-<span class="go">&#39;\n1. item1\n2. item2:\n\n\t* item3\n\t* item4\n\t\n\n&#39;</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;span class=&quot;chapter&quot; id=&quot;part-2 div2-1&quot; title=&quot;Intro&quot;/&gt;def  ghi jkl&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md_GRAR</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc\n\n### || [chapter 1: Intro]\n\ndef ghi jkl&#39;</span>
 </pre></div>
 </div>
-<p>Italics (&lt;i&gt; and &lt;em&gt; tags):</p>
-<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;em&gt;def&lt;/em&gt; ghi&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
-<span class="go">&#39;abc *def* ghi&#39;</span>
-</pre></div>
-</div>
-<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;i&gt;def&lt;/i&gt; ghi&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
-<span class="go">&#39;abc *def* ghi&#39;</span>
-</pre></div>
-</div>
-<p>Bold (&lt;b&gt; and &lt;strong&gt; tags):</p>
-<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;b&gt;def&lt;/b&gt; ghi&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
-<span class="go">&#39;abc **def** ghi&#39;</span>
-</pre></div>
-</div>
-<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;strong&gt;def&lt;/strong&gt; ghi&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
-<span class="go">&#39;abc **def** ghi&#39;</span>
-</pre></div>
-</div>
-<p>Tables:</p>
-<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;    &lt;table&gt;      &lt;tr&gt;        &lt;th&gt;th1aaa&lt;/th&gt;&lt;th&gt;th2&lt;/th&gt;      &lt;/tr&gt;      &lt;tr&gt;        &lt;td&gt;td1&lt;/td&gt;&lt;td&gt;td2&lt;/td&gt;      &lt;/tr&gt;    &lt;/table&gt;&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
-<span class="go">&#39;\n\n| th1aaa | th2 |\n| ------ | --- |\n| td1    | td2 |\n\n&#39;</span>
-</pre></div>
-</div>
-<p># i.e.,
-# | th1aaa | th2 |
-# | td1    | td2 |</p>
-</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md_GRAR.GRARHtmlConverter.post_process_md">
+<code class="descname">post_process_md</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md_GRAR.GRARHtmlConverter.post_process_md" title="Permalink to this definition">¶</a></dt>
+<dd><p>Appends to the MarkdownConverter.post_process_md() method.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.new_books.convert.helper.html2md_GRAR.markdownify">
+<code class="descclassname">openiti.new_books.convert.helper.html2md_GRAR.</code><code class="descname">markdownify</code><span class="sig-paren">(</span><em>html</em>, <em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md_GRAR.markdownify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shortcut to the convert method of the HindawiConverter class.</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-openiti.new_books.convert.helper.html2md_hindawi">
 <span id="openiti-new-books-convert-helper-html2md-hindawi"></span><h5>openiti.new_books.convert.helper.html2md_hindawi<a class="headerlink" href="#module-openiti.new_books.convert.helper.html2md_hindawi" title="Permalink to this headline">¶</a></h5>
@@ -4024,7 +4778,7 @@ and which methods it adds:</p>
 <tr class="row-even"><td>fill_out_columns</td>
 <td>(inherited)</td>
 </tr>
-<tr class="row-odd"><td><a href="#id763"><span class="problematic" id="id764">post_process_</span></a></td>
+<tr class="row-odd"><td>post_process_md</td>
 <td>(inherited)</td>
 </tr>
 <tr class="row-even"><td>__getattr__</td>
@@ -4358,8 +5112,8 @@ as well as comment lines between the records.</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#openiti-instantiations">openiti.instantiations</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#openiti-instantiations-generate-imech-instantiation">openiti.instantiations.generate_imech_instantiation</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#openiti-instantiations-generate-istylo-instantiation">openiti.instantiations.generate_istylo_instantiation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-openiti.instantiations.generate_imech_instantiation">openiti.instantiations.generate_imech_instantiation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-openiti.instantiations.generate_istylo_instantiation">openiti.instantiations.generate_istylo_instantiation</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#openiti-new-books">openiti.new_books</a><ul>
@@ -4369,14 +5123,14 @@ as well as comment lines between the records.</li>
 <li class="toctree-l4"><a class="reference internal" href="#module-openiti.new_books.convert.epub_converter_hindawi">openiti.new_books.convert.epub_converter_hindawi</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-openiti.new_books.convert.html_converter_generic">openiti.new_books.convert.html_converter_generic</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-openiti.new_books.convert.html_converter_eShia">openiti.new_books.convert.html_converter_eShia</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#openiti-new-books-convert-shamela-converter">openiti.new_books.convert.shamela_converter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-openiti.new_books.convert.shamela_converter">openiti.new_books.convert.shamela_converter</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-openiti.new_books.convert.tei_converter_generic">openiti.new_books.convert.tei_converter_generic</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-openiti.new_books.convert.tei_converter_GRAR">openiti.new_books.convert.html_converter_GRAR</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#openiti-new-books-convert-helper">openiti.new_books.convert.helper</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="#module-openiti.new_books.convert.helper.bok">openiti.new_books.convert.helper.bok</a></li>
 <li class="toctree-l5"><a class="reference internal" href="#module-openiti.new_books.convert.helper.html2md">openiti.new_books.convert.helper.html2md</a></li>
 <li class="toctree-l5"><a class="reference internal" href="#module-openiti.new_books.convert.helper.html2md_eShia">openiti.new_books.convert.helper.html2md_eShia</a></li>
-<li class="toctree-l5"><a class="reference internal" href="#module-openiti.new_books.convert.helper.html2md">openiti.new_books.convert.helper.html2md_GRAR</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#module-openiti.new_books.convert.helper.html2md_GRAR">openiti.new_books.convert.helper.html2md_GRAR</a></li>
 <li class="toctree-l5"><a class="reference internal" href="#module-openiti.new_books.convert.helper.html2md_hindawi">openiti.new_books.convert.helper.html2md_hindawi</a></li>
 <li class="toctree-l5"><a class="reference internal" href="#module-openiti.new_books.convert.helper.md2html">openiti.new_books.convert.helper.md2html</a></li>
 <li class="toctree-l5"><a class="reference internal" href="#module-openiti.new_books.convert.helper.tei2md">openiti.new_books.convert.helper.tei2md</a></li>
