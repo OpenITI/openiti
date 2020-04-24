@@ -1,6 +1,15 @@
 # openiti
 
 This is a first attempt to create a Python library that combines all often-used code in the OpenITI project. 
+Full documentation and deescription can be found here: <https://openiti.readthedocs.io/>
+
+# Installation
+
+```{python}
+pip install OpenITI
+```
+
+Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip install OpenITI`.
 
 ## Change log: 
 
