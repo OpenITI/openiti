@@ -1,4 +1,5 @@
 import re
+import unicodedata
 
 ar_chars = """\
 ء	ARABIC LETTER HAMZA
@@ -123,6 +124,7 @@ def normalize(text, replacement_tuples=[]):
     return text
 
 
+
 def normalize_ara_light(text):
     """Lighlty normalize Arabic strings:
     fixing only Alifs, Alif Maqsuras;
@@ -138,6 +140,7 @@ def normalize_ara_light(text):
         >>> normalize_ara_light("قهوة")
         'قهوة'
     """
+    text = normalize_composites(text)
     repl = [("أ", "ا"), ("ٱ", "ا"), ("آ", "ا"), ("إ", "ا"),    # alifs
             ("ى", "ي"),                                        # alif maqsura
             ("يء", "ء"), ("ىء", "ء"), ("ؤ", "ء"), ("ئ", "ء"),  # hamzas
@@ -159,12 +162,49 @@ def normalize_ara_heavy(text):
         >>> normalize_ara_heavy("قهوة")
         'قهوه'
     """
+    text = normalize_composites(text)
     repl = [("أ", "ا"), ("ٱ", "ا"), ("آ", "ا"), ("إ", "ا"),  # alifs
             ("ى", "ي"),                                      # alif maqsura
             ("ؤ", ""), ("ئ", ""), ("ء", ""),                 # hamzas
             ("ة", "ه")                                       # ta marbuta
             ]
     return normalize(text, repl)
+
+def normalize_composites(text, method="NFKC"):
+    """Normalize composite characters and ligatures
+
+    Ligatures like "Allah" will be broken into their components,
+    while combining characters like alif + hamza above will be joined
+    into one character. 
+
+    Args:
+        text (str): the string to be normalized
+        method (str): the unicode method to be used for normalization
+            (see https://docs.python.org/3.5/library/unicodedata.html).
+            Default: NFKC, which is most suited for Arabic. 
+
+    Examples:
+        >>> len("ﷲ") # U+FDF2: ARABIC LIGATURE ALLAH ISOLATED FORM
+        1
+        >>> len(normalize_composites("ﷲ"))
+        4
+        >>> [char for char in normalize_composites("ﷲ")]
+        ['ا', 'ل', 'ل', 'ه']
+        
+        >>> len("ﻹ") # UFEF9: ARABIC LIGATURE LAM WITH ALEF WITH HAMZA BELOW ISOLATED FORM
+        1
+        >>> len(normalize_composites("ﻹ"))
+        2
+
+        # alif+hamza written with 2 unicode characters:
+        # U+0627 (ARABIC LETTER ALEF) + U+0654 (ARABIC HAMZA ABOVE)
+        >>> a = "أ"
+        >>> len(a)
+        2
+        >>> len(normalize_composites(a))
+        1
+    """
+    return unicodedata.normalize(method, text)
 
 
 def denormalize(text):
