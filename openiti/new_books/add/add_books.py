@@ -61,6 +61,9 @@ def initialize_texts_from_CSV(csv_fp, old_base_pth="", new_base_pth="",
             (the user will still be given the option to execute
             all proposed changes at the end);
             if True, all changes will be executed immediately.
+
+    Returns:
+        None
     """
     with open(csv_fp, mode="r", encoding="utf-8") as file:
         csv = file.read().splitlines()
@@ -105,7 +108,11 @@ def initialize_new_texts_in_folder(folder, target_base_pth, execute=False):
             all proposed changes at the end);
             if True, all changes will be executed immediately.
 
-    Examples:
+    Returns:
+        None
+
+    Examples::
+    
         # >>> folder = r"D:\\OpenITI\\barzakh"
         # >>> target_base_pth = r"D:\\OpenITI\\25Yrepos"
         # >>> initialize_new_texts_in_folder(folder,\
@@ -231,6 +238,9 @@ def download_texts_from_CSV(csv_fp, base_url="", new_base_pth=""):
             the files that need to be initialized. Defaults to "".
         new_base_pth (str): path to the folder containing
             the OpenITI 25-years repos. Defaults to "".
+    
+    Returns:
+        None
     """
     with open(csv_fp, mode="r", encoding="utf-8") as file:
         csv = file.read().splitlines()
