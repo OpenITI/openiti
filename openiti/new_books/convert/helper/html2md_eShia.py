@@ -4,12 +4,17 @@ This script subclasses the generic MarkdownConverter class
 from the html2md module (based on python-markdownify,
 https://github.com/matthewwithanm/python-markdownify),
 which uses BeautifulSoup to create a flexible converter.
+
 The subclass in this module, GRARHtmlConverter,
 adds methods specifically for the conversion of books from
 the GRAR library to OpenITI mARkdown:
+
 * span conversion: the GRAR html seems to be a conversion of tei xml;
     the tei data is often embedded inside the id of a span.
-*
+* div and p conversion
+
+Span, div and p classes needed to be converted are defined in self.class_dict.
+    
 
 Inheritance schema of the GRARHtmlConverter:
 
