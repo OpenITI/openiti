@@ -1508,8 +1508,10 @@ def replace_tok_counts(missing_tok_count):
 
     Args:
         missing_tok_count (list): a list of tuples (uri, token_count):
+        
             uri (OpenITI URI object)
             token_count (int): the number of Arabic tokens in the text file
+
     Returns:
         None
     """
@@ -1543,8 +1545,12 @@ def check_yml_files(start_folder, exclude=[],
         (tuple): Tuple containing:
 
             missing_ymls (list): list of paths to missing yml files
-            missing_tok_count (list): list of tuples with three elements:\
-                (uri, tok_count, char_count)
+            missing_tok_count (list): list of tuples with three elements:
+
+                * uri (URI object): uri of the target text
+                * tok_count (int): number of Arabic tokens in the target text
+                * char_count (int): number of Arabic characters in the target text
+                
             non_uri_files (list): list of paths to files whose filename\
                 is not a valid OpenITI URI
             erratic_ymls (list): list of paths to malformed yml files.
