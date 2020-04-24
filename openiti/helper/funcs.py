@@ -31,7 +31,7 @@ def get_all_characters_in_text(fp):
         fp (str): path to a text file.
 
     Returns:
-        all_characters (set): a set of all characters used in the text.
+        (set): a set of all characters used in the text.
     """
     with open(fp, mode="r", encoding="utf-8") as file:
         text = file.read()
@@ -53,7 +53,7 @@ def get_all_characters_in_folder(start_folder, verbose=False,
         exclude_folders (list): list of file names to be excluded.
 
     Returns:
-        all_characters (set): a set of all characters used in the folder.
+        (set): a set of all characters used in the folder.
     """
     all_characters = set()
     for root, dirs, files in os.walk(start_folder):
@@ -79,7 +79,7 @@ def get_character_names(characters, verbose=False):
         verbose (bool): if set to True, the output will be printed
 
     Returns:
-        char_dict (dict): a dictionary of characters and their names.
+        (dict): a dictionary of characters and their names.
 
     Examples:
         >>> char_dict = {"١": "ARABIC-INDIC DIGIT ONE",\
@@ -104,6 +104,15 @@ def get_character_names(characters, verbose=False):
     return char_dict
 
 def text_cleaner(text):
+    """Clean text by normalizing Arabic characters \
+    and removing all non-Arabic characters
+
+    Args:
+        text (str): the string to be cleaned
+
+    Returns:
+        (str): the cleaned string
+    """
     text = ara.normalize_ara_extra_light(text)
     text = re.sub("\W|\d|[A-z]", " ", text)
     text = re.sub(" +", " ", text)
@@ -151,7 +160,7 @@ def read_header(fp):
         fp (str): path to the text file
 
     Returns:
-        header (list): A list of all metadata lines in the header
+        (list): A list of all metadata lines in the header
     """
     with open(fp, mode="r", encoding="utf-8") as file:
         header = []

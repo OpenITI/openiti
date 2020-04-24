@@ -51,6 +51,9 @@ def ymlToDic(yml_str):
     Args:
         yml_str (str): a yml string.
 
+    Returns:
+        (dict): dictionary representation of the yml key-value pairs
+
     Examples:
         >>> from yml import ymlToDic
         >>> yml_str = "\
@@ -91,6 +94,9 @@ def readYML(fp):
     Args:
         fp (str): path to the yml file.
 
+    Returns:
+        (dict): dictionary representation of the yml key-value pairs
+
     Examples:
         >>> fp = "D:/London/OpenITI/25Y_repos/0450AH/data/0429AbuMansurThacalibi/0429AbuMansurThacalibi.AhsanMaSamictu/0429AbuMansurThacalibi.AhsanMaSamictu.Shamela0025011-ara1.yml"
         >>> readYML(fp)
@@ -106,6 +112,10 @@ def dicToYML(dic, max_length=72):
     Args:
         dic (dict): a dictionary of key-value pairs.
         max_length(int): the maximum number of characters a line should contain.
+
+    Returns:
+        (str): yml strin representation of the dic's key-value pairs
+
     Examples:
         >>> yml_dic = {'00#BOOK#URI######:': '0845Maqrizi.Muqaffa',\
                        '90#BOOK#COMMENT##:': 'multiline value; missing-indentation: (and presence of colons): not a problem'}

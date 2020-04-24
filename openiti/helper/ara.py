@@ -245,7 +245,7 @@ def ar_cnt_file(fp, mode="token"):
                     or "token" for count of Arabic tokens
 
     Returns:
-        length (int): Arabic character/token count 
+        (int): Arabic character/token count 
     """
     import urllib
     try:
