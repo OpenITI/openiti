@@ -18,11 +18,8 @@ The URI class's methods allow
 * Building paths based on the URI
 
 In addition to the URI class, the module contains a number of functions for
+implementing URI changes in the OpenITI corpus
 
-* implementing URI changes in the OpenITI corpus
-
-* initializing new texts in the OpenITI corpus (a single text,
-  all texts in a folder, or using a csv file)
 
 
 Examples:
@@ -181,39 +178,46 @@ Examples:
     ---------------------------------------------------------------------------
 
 
-    In addition to the URI class, the module contains a number of functions for:
+    In addition to the URI class, the module contains a function for    
+    implementing URI changes in the OpenITI corpus: change_uri.
     
-    * implementing URI changes in the OpenITI corpus
-    * initializing new texts in the OpenITI corpus (a single text,\
-      all texts in a folder, or using a csv file)
-
-    All these functions have an *execute* flag. If set to False,\
+    The function has an *execute* flag. If set to False,\
     the function will not immediately be executed but first show all changes\
     it will make, and then ask the user whether to carry out the changes or not.
-
-    - Changing a URI and moving all files to the correct folders:\
-      (execute=False flag: script shows you which changes it will make,\
-      then gives you the option to carry out the changes or not)
     
-    # >>> old = "0255Jahiz"
-    # >>> new = "0255JahizBasri"
-    # >>> change_uri(old, new, execute=False)
-
-    - Moving new files to their OpenITI repo:
+    If a version URI changes:
     
-    # >>> folder = r"D:\OpenITI\barzakh"
-    # >>> target_base_pth = r"D:\OpenITI\25Yrepos"
-    # >>> initialize_new_texts_in_folder(folder,\
-    #                                    target_base_pth, execute=False)
-
-    - Initializing new texts with a csv file\
-    (two columns, without headers: non-URI filepath, URI):
+        * new author and book folders are made if necessary
+          (including the creation of new author and book yml files)
+        * all text files related that version should be moved
+        * the yml file of that version should be updated and moved
+        
+    If a book uri changes:
     
-    # >>> csv_fp = r"D:\OpenITI\new\new_files.csv"
-    # >>> new_base_path = r"D:\OpenITI\25Y_repos"
-    # >>> initialize_texts_from_CSV(csv_fp, base_path=new_base_path,\
-    #                               execute=False)
+        * new author and book folders are made if necessary
+        * the yml file of that book should be updated and moved
+        * all text files of all versions of the book should be moved
+        * all yml files of versions of that book should be updated and moved
+        * the original book folder itself should be (re)moved
+        
+    if an author uri changes:
 
+        * new author and book folders are made if necessary
+        * the yml file of that author should be updated and moved
+        * all book yml files of that should be updated and moved
+        * all annotation text files of all versions of all books should be moved
+        * all yml files of versions of all books should be updated and moved
+        * the original book folders should be (re)moved
+        * the original author folder itself should be (re)moved
+
+    Examples:
+        change_uri("0255Jahiz", "0256Jahiz")
+        change_uri("0255Jahiz", "0255JahizBasri")
+        change_uri("0255Jahiz.Hayawan", "0255Jahiz.KitabHayawan")
+        change_uri("0255Jahiz.Hayawan.Shamela002526-ara1",\
+                   "0255Jahiz.Hayawan.Shamela002526-ara2")
+        change_uri("0255Jahiz.Hayawan.Shamela002526-ara1.completed",\
+                   "0255Jahiz.Hayawan.Shamela002526-ara1.mARkdown")
 """
 
 import copy
@@ -1113,131 +1117,6 @@ Did you put a dot between date and author name?"
 # OpenITI corpus functions dependent on URIs:
 
 
-def initialize_new_texts_in_folder(folder, target_base_pth, execute=False):
-    """Move all new texts in folder to their OpenITI repo, creating yml files\
-    if necessary (or copying them from the same folder if present).
-
-    Args:
-        folder (str): path to the folder that contains new text files
-            (with OpenITI uri filenames) and perhaps yml files
-        target_base_pth (str): path to the folder containing the 25-years repos
-        execute (bool): if False, the proposed changes will only be printed
-            (the user will still be given the option to execute
-            all proposed changes at the end);
-            if True, all changes will be executed immediately.
-
-    Examples:
-        # >>> folder = r"D:\OpenITI\barzakh"
-        # >>> target_base_pth = r"D:\OpenITI\25Yrepos"
-        # >>> initialize_new_texts_in_folder(folder,\
-        #                                    target_base_pth, execute=False)
-    """
-    for fn in os.listdir(folder):
-        ext = os.path.splitext(fn)[1]
-        if ext not in (".yml", ".md"):
-            fp = os.path.join(folder, fn)
-            initialize_new_text(fp, target_base_pth, execute)
-
-
-def initialize_new_text(origin_fp, target_base_pth, execute=False):
-    """Move a new text file to its OpenITI repo, creating yml files\
-    if necessary (or copying them from the same folder if present).
-
-    The function also checks whether the new text adheres to OpenITI text format.
-
-    Args:
-        origin_fp (str): filepath of the text file (filename must be
-                         in OpenITI uri format)
-        target_base_pth (str): path to the folder
-                               that contains the 25-years-repos
-        execute (bool): if False, the proposed changes will only be printed
-            (the user will still be given the option to execute
-            all proposed changes at the end);
-            if True, all changes will be executed immediately.
-
-    Returns:
-        None
-
-    Example:
-        # >>> origin_folder = r"D:\OpenITI\barzakh"
-        # >>> fn = "0375IkhwanSafa.Rasail.Hindawi95926405Vols-ara1.completed"
-        # >>> origin_fp = os.path.join(origin_folder, fn)
-        # >>> target_base_pth = r"D:\OpenITI\25Yrepos"
-        # >>> initialize_new_text(origin_fp, target_base_pth, execute=False)
-    """
-    ori_uri = URI(origin_fp)
-    tar_uri = copy.deepcopy(ori_uri)
-    tar_uri.base_pth = target_base_pth
-    target_fp = tar_uri.build_pth("version_file")
-
-    # Check whether the text file has OpenITI format:
-
-    header = "\n".join(read_header(origin_fp))
-    if "#META#Header#End" not in header:
-        print("Initialization aborted: ")
-        print("{} does not contain OpenITI metadata header splitter!".format(origin_fp))
-        return
-    if "######OpenITI#" not in header:
-        print("Initialization aborted: ")
-        print("{} does not contain OpenITI magic value!".format(origin_fp))
-        return
-
-    # Count the Arabic characters in the text file:
-
-    #tok_count = ar_ch_len(origin_fp)
-    tok_count = ar_cnt_file(origin_fp, mode="token")
-    char_count = ar_cnt_file(origin_fp, mode="char")
-
-    # Move the text file:
-
-    target_folder = tar_uri.build_pth("version")
-    move_to_new_uri_pth(origin_fp, tar_uri, execute)
-
-    # Move or create the YML files:
-
-    for yf in ("version_yml", "book_yml", "author_yml"):
-        yfp = os.path.join(ori_uri.base_pth, ori_uri.build_uri(yf))
-        tar_yfp = tar_uri.build_pth(yf)
-        if os.path.exists(yfp):
-            if execute:
-                shutil.move(yfp, tar_yfp)
-            else:
-                print("  move", yfp, "to", tar_yfp)
-        else:
-            if not os.path.exists(tar_yfp):
-                new_yml(tar_yfp, yf, execute)
-            else:
-                if tar_yfp not in created_ymls:
-                    if not execute:
-                        print("  {} already exist; no yml file created".format(tar_yfp))
-
-
-    # Add the character count to the new yml file:
-
-    add_character_count(tok_count, char_count, tar_uri, execute)
-
-    # Give the option to execute the changes:
-
-    if execute:
-        print()
-    else:
-        print("Execute these changes?")
-        resp = input("Type OK + Enter to execute; press Enter to abort: ")
-        if resp == "OK":
-            initialize_new_text(origin_fp, target_base_pth, execute=True)
-        else:
-            print("User aborted the execution of the changes.")
-
-def add_readme(target_folder):
-    with open(os.path.join(target_folder, "README.md"),
-              mode="w", encoding="utf-8") as file:
-        file.write(readme_template)
-
-def add_text_questionnaire(target_folder):
-    with open(os.path.join(target_folder, "text_questionnaire.md"),
-              mode="w", encoding="utf-8") as file:
-        file.write(text_questionnaire_template)
-
 def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False):
     """Change a uri and put all files in the correct folder.
 
@@ -1310,10 +1189,13 @@ def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False):
         # add readme and text_questionnaire files:
 
         target_folder = new_uri.build_pth("version")
-        if "README.md" not in os.listdir(target_folder):
-            add_readme(target_folder)
-        if "text_questionnaire.md" not in os.listdir(target_folder):
-            add_text_questionnaire(target_folder)
+        if execute:
+            if "README.md" not in os.listdir(target_folder):
+                add_readme(target_folder)
+            if "text_questionnaire.md" not in os.listdir(target_folder):
+                add_text_questionnaire(target_folder)
+        else:
+            print("add/move readme and text questionnaire files")
 
     else: # move all impacted files and directories
         for root, dirs, files in os.walk(old_folder):
@@ -1379,129 +1261,15 @@ to abort: press Enter. ")
         else:
             print("User aborted carrying out these changes!")
 
+def add_readme(target_folder):
+    with open(os.path.join(target_folder, "README.md"),
+              mode="w", encoding="utf-8") as file:
+        file.write(readme_template)
 
-def initialize_texts_from_CSV(csv_fp, old_base_pth="", new_base_pth="",
-                              execute=False):
-    """
-    Use a CSV file (filename, URI) to move a list of texts to the relevant \
-    OpenITI folder.
-
-    The CSV file (which should not contain a heading) can contain
-    full filepaths to the original files, or only filenames;
-    in the latter case, the path to the folder where these files are located
-    should be passed to the function as the old_base_pth argument.
-    Similarly, the URI column can contain full OpenITI URI filepaths
-    or only the URIs; in the latter case, the path to the folder
-    containing the OpenITI 25-years folders should be passed to the function
-    as the new_base_pth argument.
-
-    Args:
-        csv_fp (str): path to a csv file that contains the following columns:
-            0. filepath to (or filename of) the text file
-            1. full version uri of the text file
-            (no headings!)
-        old_base_path (str): path to the folder containing
-            the files that need to be initialized
-        new_base_pth (str): path to the folder containing
-            the OpenITI 25-years repos
-        execute (bool): if False, the proposed changes will only be printed
-            (the user will still be given the option to execute
-            all proposed changes at the end);
-            if True, all changes will be executed immediately.
-    """
-    with open(csv_fp, mode="r", encoding="utf-8") as file:
-        csv = file.read().splitlines()
-        csv = [re.split("[,\t]", row) for row in csv]
-
-    for old_fp, new in csv:
-        if old_base_pth:
-            old_fp = os.path.join(old_base_pth, old_fp)
-        new_uri = URI(new)
-        if new_base_pth:
-            new_uri.base_pth = new_base_pth
-        #char_count = ar_ch_len(old_fp)
-        tok_count = ar_cnt_file(old_fp, mode="token")
-        char_count = ar_cnt_file(old_fp, mode="char")
-
-        move_to_new_uri_pth(old_fp, new_uri, execute)
-
-        add_character_count(tok_count, char_count, new_uri, execute)
-
-    if not execute:
-        resp = input("To carry out these changes: press OK+Enter; \
-to abort: press Enter. ")
-        if resp == "OK":
-            initialize_texts_from_CSV(csv_fp, old_base_pth, new_base_pth,
-                              execute=True)
-        else:
-            print()
-            print("User aborted carrying out these changes!")
-            print("*"*60)
-
-def download_texts_from_CSV(csv_fp, old_base_pth="", new_base_pth=""):
-    """
-    Use a CSV file (filename, URI) to download a list of texts to the relevant \
-    OpenITI folder.
-
-    The CSV file (which should not contain a heading) can contain
-    full urls to the original files, or only filenames;
-    in the latter case, the path to the website where these files are located
-    should be passed to the function as the old_base_pth argument.
-    Similarly, the URI column can contain full OpenITI URI filepaths
-    or only the URIs; in the latter case, the path to the folder
-    containing the OpenITI 25-years folders should be passed to the function
-    as the new_base_pth argument.
-
-    Args:
-        csv_fp (str): path to a csv file that contains the following columns:
-            0. filepath to (or filename of) the text file
-            1. full version uri of the text file
-            (no headings!)
-        old_base_path (str): path to the folder containing
-            the files that need to be initialized. Defaults to "".
-        new_base_pth (str): path to the folder containing
-            the OpenITI 25-years repos. Defaults to "".
-    """
-    with open(csv_fp, mode="r", encoding="utf-8") as file:
-        csv = file.read().splitlines()
-        csv = [re.split("[,\t]", row) for row in csv]
-
-    temp_folder = "temp"
-    if not os.path.exists(temp_folder):
-        os.makedirs(temp_folder)
-
-    import requests
-
-    for old_fp, new in csv:
-        print(old_fp)
-        if not os.path.exists(new):
-            if old_base_pth:
-                old_fp = os.path.join(old_base_pth, old_fp)
-            new_uri = URI(new)
-            if new_base_pth:
-                new_uri.base_pth = new_base_pth
-            #char_count = ar_ch_len(old_fp)
-
-            fn = os.path.split(old_fp)[1]
-            temp_fp = os.path.join(temp_folder, fn)
-
-            with requests.get(old_fp, stream=True) as r:
-                r.raise_for_status()
-                with open(temp_fp, mode="wb") as f:
-                    for chunk in r.iter_content(chunk_size=8192):
-                        if chunk:
-                            f.write(chunk)
-            
-
-            move_to_new_uri_pth(temp_fp, new_uri, execute=True)
-
-            if not temp_fp.endswith("pdf") and not temp_fp.endswith("zip"):
-                tok_count = ar_cnt_file(temp_fp, mode="token")
-                char_count = ar_cnt_file(temp_fp, mode="char")
-                add_character_count(tok_count, char_count, new_uri, execute=True)
-
-    shutil.rmtree(temp_folder)
-
+def add_text_questionnaire(target_folder):
+    with open(os.path.join(target_folder, "text_questionnaire.md"),
+              mode="w", encoding="utf-8") as file:
+        file.write(text_questionnaire_template)
 
 def add_character_count(tok_count, char_count, tar_uri, execute=False):
     """Add the character count to the new version yml file"""
@@ -1815,20 +1583,26 @@ def check_yml_files(start_folder, exclude=[],
             print("    ", file)
 
     cnt = len(missing_tok_count)
-    if not execute and (missing_ymls!=[] or missing_tok_count !=[]):
-        print()
+    if missing_ymls!=[] or missing_tok_count !=[]:
         print("Token count must be changed in {} files".format(cnt))
-        print("Execute these changes?")
-        resp = input("Press OK+Enter to execute; press Enter to abort: ")
-        if resp == "OK":
+        print()
+        if not execute:   
+            print("Execute these changes?")
+            resp = input("Press OK+Enter to execute; press Enter to abort: ")
+            if resp == "OK":
+                doit = True
+            else:
+                print("Changes aborted by user")
+                doit = False
+        else:
+            doit = True
+        if doit:
             replace_tok_counts(missing_tok_count)
             check_yml_files(start_folder, exclude=exclude,
                             execute=True, check_token_counts=False)
             print()
             print("Token count changed in {} files".format(cnt))
             print()
-        else:
-            print("Changes aborted by user")
     else:
         print("No missing yml files.")
 
