@@ -106,8 +106,8 @@ def initialize_new_texts_in_folder(folder, target_base_pth, execute=False):
             if True, all changes will be executed immediately.
 
     Examples:
-        # >>> folder = r"D:\OpenITI\barzakh"
-        # >>> target_base_pth = r"D:\OpenITI\25Yrepos"
+        # >>> folder = r"D:\\OpenITI\\barzakh"
+        # >>> target_base_pth = r"D:\\OpenITI\\25Yrepos"
         # >>> initialize_new_texts_in_folder(folder,\
         #                                    target_base_pth, execute=False)
     """
@@ -140,10 +140,10 @@ def initialize_new_text(origin_fp, target_base_pth, execute=False):
         None
 
     Example:
-        # >>> origin_folder = r"D:\OpenITI\barzakh"
+        # >>> origin_folder = r"D:\\OpenITI\\barzakh"
         # >>> fn = "0375IkhwanSafa.Rasail.Hindawi95926405Vols-ara1.completed"
         # >>> origin_fp = os.path.join(origin_folder, fn)
-        # >>> target_base_pth = r"D:\OpenITI\25Yrepos"
+        # >>> target_base_pth = r"D:\\OpenITI\\25Yrepos"
         # >>> initialize_new_text(origin_fp, target_base_pth, execute=False)
     """
     ori_uri = URI(origin_fp)

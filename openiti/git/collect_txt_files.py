@@ -7,7 +7,7 @@ Todo:
 Examples:
     Command line usage::
     
-        $ collect_txt_files D:\OpenITI\25Y_folders D:\OpenITI\release\texts
+        $ collect_txt_files D:\\OpenITI\\25Y_folders D:\\OpenITI\\release\\texts
 
     If the source and target directories were not given,
     the user will be prompted for them::

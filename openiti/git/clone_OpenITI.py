@@ -1,15 +1,16 @@
 """Clone github repositories to your local machine.
 
 Examples:
-    Clone all OpenITI 25-year repos: 
-    # >>> repo_list = get_repo_urls(group="orgs", name="OpenITI", \
-                                      path_pattern="\d{4}AH$")
-    # >>> clone_repos(repo_list, r"D:\OpenITI")
+    Clone all OpenITI 25-year repos::
+    
+        # >>> repo_list = get_repo_urls(group="orgs", name="OpenITI", \
+                                        path_pattern="\\d{4}AH$")
+        # >>> clone_repos(repo_list, r"D:\\OpenITI")
 
-    Clone specific repos:
-    # >>> base = ""https://github.com/OpenITI/"
-    # >>> repo_list = [base+"mARkdown_scheme", base+"RELEASE"]
-    # >>> clone_repos(repo_list, r"D:\OpenITI")
+    Clone specific repos::
+        # >>> base = ""https://github.com/OpenITI/"
+        # >>> repo_list = [base+"mARkdown_scheme", base+"RELEASE"]
+        # >>> clone_repos(repo_list, r"D:\\OpenITI")
 
 Command line usage:
     To clone all the OpenITI organization's 25-years repos:
