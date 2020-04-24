@@ -88,7 +88,7 @@ or “token” for count of Arabic tokens</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Arabic character/token count</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">length (int)</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(int)</p>
 </td>
 </tr>
 </tbody>
@@ -290,7 +290,7 @@ from the process.</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a set of all characters used in the folder.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">all_characters (set)</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(set)</p>
 </td>
 </tr>
 </tbody>
@@ -309,7 +309,7 @@ from the process.</li>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a set of all characters used in the text.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">all_characters (set)</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(set)</td>
 </tr>
 </tbody>
 </table>
@@ -332,7 +332,7 @@ from the process.</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a dictionary of characters and their names.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">char_dict (dict)</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(dict)</p>
 </td>
 </tr>
 </tbody>
@@ -361,7 +361,25 @@ from the process.</li>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of all metadata lines in the header</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">header (list)</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(list)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.funcs.text_cleaner">
+<code class="descclassname">openiti.helper.funcs.</code><code class="descname">text_cleaner</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.funcs.text_cleaner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clean text by normalizing Arabic characters     and removing all non-Arabic characters</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>text</strong> (<em>str</em>) – the string to be cleaned</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the cleaned string</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(str)</td>
 </tr>
 </tbody>
 </table>
@@ -788,6 +806,16 @@ Exception: Extension (markdown) is not among the allowed extensions
 <dt id="openiti.helper.uri.URI.__iter__">
 <code class="descname">__iter__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.URI.__iter__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable iteration over a URI object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">an iterator containing the components of the URI</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">(iterator)</td>
+</tr>
+</tbody>
+</table>
 <p class="rubric">Examples</p>
 <div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span> <span class="o">=</span> <span class="n">URI</span><span class="p">(</span><span class="s">&quot;0255Jahiz.Hayawan.Sham19Y0023775-ara1.inProgress&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">my_uri</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
@@ -808,6 +836,16 @@ Exception: Extension (markdown) is not among the allowed extensions
 <dt id="openiti.helper.uri.URI.__repr__">
 <code class="descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.URI.__repr__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a representation of the components of the URI.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a representation of the components of the URI.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">(str)</td>
+</tr>
+</tbody>
+</table>
 <p class="rubric">Examples</p>
 <div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span> <span class="o">=</span> <span class="n">URI</span><span class="p">(</span><span class="s">&quot;0255Jahiz.Hayawan.Sham19Y0023775-ara1&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">repr</span><span class="p">(</span><span class="n">my_uri</span><span class="p">)</span>
@@ -823,6 +861,16 @@ Exception: Extension (markdown) is not among the allowed extensions
 <dt id="openiti.helper.uri.URI.__str__">
 <code class="descname">__str__</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.URI.__str__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the reassembled URI.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the reassembled URI</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">(str)</td>
+</tr>
+</tbody>
+</table>
 <p class="rubric">Examples</p>
 <div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span> <span class="o">=</span> <span class="n">URI</span><span class="p">(</span><span class="s">&quot;0255Jahiz.Hayawan.Sham19Y0023775-ara1.inProgress&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_uri</span><span class="o">.</span><span class="n">extension</span> <span class="o">=</span> <span class="s">&quot;completed&quot;</span>
@@ -869,14 +917,14 @@ Exception: Extension (markdown) is not among the allowed extensions
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
-<dt>OpenITI URI, e.g.,</dt>
+<dt>OpenITI URI as a string, e.g.,</dt>
 <dd><p class="first last">0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1</p>
 </dd>
 </dl>
 </p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">uri_string (str)</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(str)</p>
 </td>
 </tr>
 </tbody>
@@ -972,7 +1020,7 @@ Exception: Extension (markdown) is not among the allowed extensions
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
-<dt>OpenITI URI, e.g.,</dt>
+<dt>OpenITI URI as a string, e.g.,</dt>
 <dd>0768IbnMuhammadTaqiDinBaclabakki</dd>
 </dl>
 </td>
@@ -998,7 +1046,7 @@ Exception: Extension (markdown) is not among the allowed extensions
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
-<dt>OpenITI URI, e.g.,</dt>
+<dt>OpenITI URI as a string, e.g.,</dt>
 <dd>0768IbnMuhammadTaqiDinBaclabakki.Hadith</dd>
 </dl>
 </td>
@@ -1024,12 +1072,12 @@ Exception: Extension (markdown) is not among the allowed extensions
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
-<dt>OpenITI URI, e.g.,</dt>
+<dt>OpenITI URI as a string, e.g.,</dt>
 <dd>0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1</dd>
 </dl>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">uri_string (str)</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">(str)</td>
 </tr>
 </tbody>
 </table>
@@ -1069,7 +1117,7 @@ on Windows, Mac and Unix systems</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list of uri components</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">split_components (list)</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(list)</td>
 </tr>
 </tbody>
 </table>
@@ -1122,7 +1170,53 @@ on Windows, Mac and Unix systems</p>
 <dl class="function">
 <dt id="openiti.helper.uri.add_character_count">
 <code class="descclassname">openiti.helper.uri.</code><code class="descname">add_character_count</code><span class="sig-paren">(</span><em>tok_count</em>, <em>char_count</em>, <em>tar_uri</em>, <em>execute=False</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.add_character_count" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add the character count to the new version yml file</p>
+<dd><p>Add the character and token counts to the new version yml file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>tok_count</strong> (<em>int</em>) – number of Arabic tokens in a text</li>
+<li><strong>char_count</strong> (<em>int</em>) – number of Arabic characters in a text</li>
+<li><strong>tar_uri</strong> (<em>URI object</em>) – uri of the target text</li>
+<li><strong>execute</strong> (<em>bool</em>) – if True, the function will do its work silently.
+If False, it will only print a description of the action.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.uri.add_readme">
+<code class="descclassname">openiti.helper.uri.</code><code class="descname">add_readme</code><span class="sig-paren">(</span><em>target_folder</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.add_readme" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add default README.md file to target_folder.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="openiti.helper.uri.add_text_questionnaire">
+<code class="descclassname">openiti.helper.uri.</code><code class="descname">add_text_questionnaire</code><span class="sig-paren">(</span><em>target_folder</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.add_text_questionnaire" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add default text_questionnaire.md file to target_folder.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -1166,7 +1260,7 @@ change_uri(“0255Jahiz.Hayawan.Shamela002526-ara1.completed”,                
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>old</strong> (<em>str</em>) – URI string to be changed</li>
 <li><strong>new</strong> (<em>str</em>) – URI string to which the new URI should be changed.</li>
 <li><strong>old_base_pth</strong> (<em>str</em>) – path to the folder containing the
@@ -1180,6 +1274,9 @@ if True, all changes will be executed immediately.</li>
 </ul>
 </td>
 </tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
 </tbody>
 </table>
 </dd></dl>
@@ -1188,6 +1285,29 @@ if True, all changes will be executed immediately.</li>
 <dt id="openiti.helper.uri.check_token_count">
 <code class="descclassname">openiti.helper.uri.</code><code class="descname">check_token_count</code><span class="sig-paren">(</span><em>version_uri</em>, <em>ymlD</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.check_token_count" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check whether the token count in the version yml file agrees with the    actual token count of the text file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>version_uri</strong> (<em>URI object</em>) – version uri of the target text</li>
+<li><strong>ymlD</strong> (<em>dict</em>) – dictionary containing the data from the relevant yml file</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Tuple containing 2 values (or None):</p>
+<blockquote>
+<div><p>tok_count (int): number of Arabic tokens in the target text
+char_count (int): number of Arabic characters in the target text</p>
+</div></blockquote>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(tuple)</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -1198,7 +1318,7 @@ if True, all changes will be executed immediately.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>start_folder</strong> (<em>str</em>) – path to the parent folder of the folders
 that need to be checked.</li>
 <li><strong>exclude</strong> (<em>list</em>) – a list of directory names that should be excluded.</li>
@@ -1207,6 +1327,19 @@ which changes it would undertake if set to True.
 After it has looped through all files and folders, it will give
 the user the option to execute the proposed changes.</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Tuple containing:</p>
+<blockquote>
+<div><p>missing_ymls (list): list of paths to missing yml files
+missing_tok_count (list): list of tuples with three elements:                (uri, tok_count, char_count)
+non_uri_files (list): list of paths to files whose filename                is not a valid OpenITI URI
+erratic_ymls (list): list of paths to malformed yml files.</p>
+</div></blockquote>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(tuple)</p>
 </td>
 </tr>
 </tbody>
@@ -1221,7 +1354,7 @@ the user the option to execute the proposed changes.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>new_folder</strong> (<em>str</em>) – path to new folder</li>
 <li><strong>new_uri</strong> (<em>OpenITI uri object</em>) – uri of the text</li>
 <li><strong>execute</strong> (<em>bool</em>) – if False, the proposed changes will only be printed
@@ -1229,6 +1362,9 @@ the user the option to execute the proposed changes.</li>
 all proposed changes at the end);
 if True, all changes will be executed immediately.</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
 </td>
 </tr>
 </tbody>
@@ -1243,7 +1379,7 @@ if True, all changes will be executed immediately.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>old_fp</strong> (<em>filepath</em>) – path to the old file</li>
 <li><strong>new_uri</strong> (<em>URI object</em>) – URI of the new file</li>
 <li><strong>execute</strong> (<em>bool</em>) – if False, the proposed changes will only be printed
@@ -1251,6 +1387,12 @@ if True, all changes will be executed immediately.</li>
 all proposed changes at the end);
 if True, all changes will be executed immediately.</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">path to the new file</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(str)</p>
 </td>
 </tr>
 </tbody>
@@ -1266,7 +1408,7 @@ and save the yml file in its new location.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>yml_fp</strong> (<em>str</em>) – path to the original yml file</li>
 <li><strong>new_uri</strong> (<em>URI object</em>) – the new uri</li>
 <li><strong>uri_type</strong> (<em>str</em>) – uri type (author, book, version)</li>
@@ -1275,6 +1417,12 @@ and save the yml file in its new location.</p>
 all proposed changes at the end);
 if True, all changes will be executed immediately.</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">filepath of the new yml file</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(str)</p>
 </td>
 </tr>
 </tbody>
@@ -1289,11 +1437,14 @@ if True, all changes will be executed immediately.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>tar_yfp</strong> (<em>str</em>) – filepath to the new yml file</li>
 <li><strong>yml_type</strong> (<em>str</em>) – type of yml file
 (either “version_yml”, “book_yml”, or “author_yml”)</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
 </td>
 </tr>
 </tbody>
@@ -1361,10 +1512,16 @@ should be avoided at the beginning of a line)</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>dic</strong> (<em>dict</em>) – a dictionary of key-value pairs.</li>
 <li><strong>max_length</strong> (<em>int</em>) – the maximum number of characters a line should contain.</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">yml strin representation of the dic’s key-value pairs</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(str)</p>
 </td>
 </tr>
 </tbody>
@@ -1387,6 +1544,10 @@ should be avoided at the beginning of a line)</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fp</strong> (<em>str</em>) – path to the yml file.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">dictionary representation of the yml key-value pairs</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(dict)</td>
 </tr>
 </tbody>
 </table>
@@ -1424,6 +1585,10 @@ but unindented multiline values will be parsed without a problem.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>yml_str</strong> (<em>str</em>) – a yml string.</td>
 </tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">dictionary representation of the yml key-value pairs</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(dict)</td>
+</tr>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
@@ -1444,14 +1609,16 @@ but unindented multiline values will be parsed without a problem.</p>
 <span id="openiti-git-clone-openiti"></span><h4>openiti.git.clone_OpenITI<a class="headerlink" href="#module-openiti.git.clone_OpenITI" title="Permalink to this headline">¶</a></h4>
 <p>Clone github repositories to your local machine.</p>
 <p class="rubric">Examples</p>
-<p>Clone all OpenITI 25-year repos:
-# &gt;&gt;&gt; repo_list = get_repo_urls(group=”orgs”, name=”OpenITI”,                                       path_pattern=”d{4}AH$”)
-# &gt;&gt;&gt; clone_repos(repo_list, r”D:OpenITI”)</p>
-<p>Clone specific repos:
-# &gt;&gt;&gt; base = “”<a class="reference external" href="https://github.com/OpenITI/">https://github.com/OpenITI/</a>”
-# &gt;&gt;&gt; repo_list = [base+”mARkdown_scheme”, base+”RELEASE”]
-# &gt;&gt;&gt; clone_repos(repo_list, r”D:OpenITI”)</p>
+<p>Clone all OpenITI 25-year repos:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="c"># &gt;&gt;&gt; repo_list = get_repo_urls(group=&quot;orgs&quot;, name=&quot;OpenITI&quot;,                                         path_pattern=&quot;\d{4}AH$&quot;)</span>
+<span class="c"># &gt;&gt;&gt; clone_repos(repo_list, r&quot;D:\OpenITI&quot;)</span>
+</pre></div>
+</div>
 <dl class="docutils">
+<dt>Clone specific repos::</dt>
+<dd># &gt;&gt;&gt; base = “”<a class="reference external" href="https://github.com/OpenITI/">https://github.com/OpenITI/</a>”
+# &gt;&gt;&gt; repo_list = [base+”mARkdown_scheme”, base+”RELEASE”]
+# &gt;&gt;&gt; clone_repos(repo_list, r”D:OpenITI”)</dd>
 <dt>Command line usage:</dt>
 <dd><dl class="first docutils">
 <dt>To clone all the OpenITI organization’s 25-years repos:</dt>
@@ -1509,7 +1676,7 @@ If none is defined, all repos will be cloned. Defaults to r”d{4}AH$”.</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a list of repo urls that matches the <cite>path_pattern</cite> regex.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">repo_urls (list)</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(list)</p>
 </td>
 </tr>
 </tbody>
@@ -1529,19 +1696,16 @@ If none is defined, all repos will be cloned. Defaults to r”d{4}AH$”.</li>
 </div>
 <p class="rubric">Examples</p>
 <p>Command line usage:</p>
-<div class="highlight-default"><div class="highlight"><pre>$ collect_txt_files D:\OpenITIY_folders D:\OpenITI
+<div class="highlight-default"><div class="highlight"><pre>$ collect_txt_files D:\OpenITI\25Y_folders D:\OpenITI\release\texts
 </pre></div>
 </div>
-<p>elease  exts</p>
-<blockquote>
-<div><p>If the source and target directories were not given,
+<p>If the source and target directories were not given,
 the user will be prompted for them:</p>
 <div class="highlight-default"><div class="highlight"><pre>$ collect_txt_files
 Enter the source directory:
 Enter the target directory:
 </pre></div>
 </div>
-</div></blockquote>
 <dl class="function">
 <dt id="openiti.git.collect_txt_files.collect_text_files">
 <code class="descclassname">openiti.git.collect_txt_files.</code><code class="descname">collect_text_files</code><span class="sig-paren">(</span><em>source_dir, dest_dir, exclude_folders=[], extensions=['mARkdown', 'inProgress', 'completed', ''], version_id_only=True</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.git.collect_txt_files.collect_text_files" title="Permalink to this definition">¶</a></dt>
@@ -1568,7 +1732,7 @@ to the last part of the URI, i.e., the version id + language id
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">number of files copied</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">cnt (int)</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(int)</p>
 </td>
 </tr>
 </tbody>
@@ -1616,7 +1780,7 @@ Store the uri in the issue object (issue.uri).</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the list of updated github issue objects</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">issues (list)</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(list)</p>
 </td>
 </tr>
 </tbody>
@@ -1647,7 +1811,7 @@ if set to None, all issues will be downloaded</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a list of github issues.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">issues (list)</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(list)</p>
 </td>
 </tr>
 </tbody>
@@ -1683,13 +1847,13 @@ value: list of github issues related to this uri</td>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>issues</strong> (<em>list</em>) – a list of github issue objects</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
-<dt>a dictionary:</dt>
+<dt>a dictionary with following key-value pairs:</dt>
 <dd>key: uri;
 value: list of github issue objects related to this uri</dd>
 </dl>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">uri_dict (dict)</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(dict)</td>
 </tr>
 </tbody>
 </table>
@@ -1789,10 +1953,10 @@ if True, all changes will be executed immediately.</li>
 </tbody>
 </table>
 <p class="rubric">Example</p>
-<p># &gt;&gt;&gt; origin_folder = r”D:OpenITIarzakh”
+<p># &gt;&gt;&gt; origin_folder = r”D:OpenITIbarzakh”
 # &gt;&gt;&gt; fn = “0375IkhwanSafa.Rasail.Hindawi95926405Vols-ara1.completed”
 # &gt;&gt;&gt; origin_fp = os.path.join(origin_folder, fn)
-# &gt;&gt;&gt; target_base_pth = r”D:OpenITIYrepos”
+# &gt;&gt;&gt; target_base_pth = r”D:OpenITI25Yrepos”
 # &gt;&gt;&gt; initialize_new_text(origin_fp, target_base_pth, execute=False)</p>
 </dd></dl>
 
@@ -1817,10 +1981,12 @@ if True, all changes will be executed immediately.</li>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Examples</p>
-<p># &gt;&gt;&gt; folder = r”D:OpenITIarzakh”
-# &gt;&gt;&gt; target_base_pth = r”D:OpenITIYrepos”
-# &gt;&gt;&gt; initialize_new_texts_in_folder(folder,        #                                    target_base_pth, execute=False)</p>
+<p>Examples:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="c"># &gt;&gt;&gt; folder = r&quot;D:\OpenITI\barzakh&quot;</span>
+<span class="c"># &gt;&gt;&gt; target_base_pth = r&quot;D:\OpenITI\25Yrepos&quot;</span>
+<span class="c"># &gt;&gt;&gt; initialize_new_texts_in_folder(folder,        #                                    target_base_pth, execute=False)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
