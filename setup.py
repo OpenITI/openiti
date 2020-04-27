@@ -32,7 +32,11 @@ setuptools.setup(
         "beautifulsoup4",
         "requests",
         "six",
-        "sphinx_rtd_theme"
+        "sphinx_rtd_theme",
+        # added the following three to solve Read The Docs import problem:
+        "pypyodbc",
+        "bs4",
+        "pygithub",
     ],
     python_requires='>=3.4',
 )
