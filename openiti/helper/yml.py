@@ -57,11 +57,11 @@ def ymlToDic(yml_str):
     Examples:
         >>> from yml import ymlToDic
         >>> yml_str = "\
-        00#BOOK#URI######: 0845Maqrizi.Muqaffa\\n\
-        90#BOOK#COMMENT##: multiline value; missing-\\n\
-        indentation: (and presence\\n\
-        of colons): not a problem\\n\\n\\n\
-        ".replace("        ", "") # remove Python indentation for doctest
+00#BOOK#URI######: 0845Maqrizi.Muqaffa\\n\
+90#BOOK#COMMENT##: multiline value; missing-\\n\
+indentation: (and presence\\n\
+of colons): not a problem\\n\\n\\n\
+".replace("        ", "") # remove Python indentation for doctest
         >>> yml_dic = {'00#BOOK#URI######:': '0845Maqrizi.Muqaffa',\
                        '90#BOOK#COMMENT##:': 'multiline value; missing-indentation: (and presence of colons): not a problem'}
         >>> ymlToDic(yml_str) == yml_dic

@@ -115,8 +115,8 @@ def initialize_new_texts_in_folder(folder, target_base_pth, execute=False):
     
         # >>> folder = r"D:\\OpenITI\\barzakh"
         # >>> target_base_pth = r"D:\\OpenITI\\25Yrepos"
-        # >>> initialize_new_texts_in_folder(folder,\
-        #                                    target_base_pth, execute=False)
+        # >>> initialize_new_texts_in_folder(folder, target_base_pth,
+        #                                    execute=False)
     """
     for fn in os.listdir(folder):
         ext = os.path.splitext(fn)[1]

@@ -196,8 +196,9 @@ def normalize_composites(text, method="NFKC"):
         >>> len(normalize_composites("ﻹ"))
         2
 
-        # alif+hamza written with 2 unicode characters:
-        # U+0627 (ARABIC LETTER ALEF) + U+0654 (ARABIC HAMZA ABOVE)
+        alif+hamza written with 2 unicode characters:
+        U+0627 (ARABIC LETTER ALEF) + U+0654 (ARABIC HAMZA ABOVE):
+        
         >>> a = "أ"
         >>> len(a)
         2

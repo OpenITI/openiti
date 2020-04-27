@@ -1,27 +1,29 @@
 """Generic converter that converts an Epub to OpenITI mARkdown.
 
 Examples:
-    Generic epub conversion:
-    >>> from epub_converter_generic import GenericEpubConverter
-    >>> gen_converter = GenericEpubConverter(dest_folder="test/converted")
-    >>> gen_converter.VERBOSE = False
-    >>> folder = r"test"
-    >>> fn = r"Houellebecq 2019 - serotonine.epub"
-    >>> gen_converter.convert_file(os.path.join(folder, fn))
-    >>> gen_converter.convert_files_in_folder(folder, ["epub",])
-
-##    Sub-class to create a converter specific to epubs from the Hindawi library:
-##    >>> HindawiConverter = GenericEpubConverter("test/converted")
-##    >>> HindawiConverter.VERBOSE = False
-##    >>> from helper import html2md_hindawi
-##    >>> HindawiConverter.convert_html2md = html2md_hindawi.markdownify  # (1)
-##    >>> HindawiConverter.toc_fn = "nav.xhtml"  # (2)
-##    >>> folder = r"test"
-##    >>> fn = r"26362727.epub"
-##    >>> HindawiConverter.convert_file(os.path.join(folder, fn))
+    Generic epub conversion::
     
-    # (1) overwrite the convert_html2md function
-    # (2) specify the filename of the table of contents in Hindawi epub files
+        >>> from epub_converter_generic import GenericEpubConverter
+        >>> gen_converter = GenericEpubConverter(dest_folder="test/converted")
+        >>> gen_converter.VERBOSE = False
+        >>> folder = r"test"
+        >>> fn = r"Houellebecq 2019 - serotonine.epub"
+        >>> gen_converter.convert_file(os.path.join(folder, fn))
+        >>> gen_converter.convert_files_in_folder(folder, ["epub",])
+
+    Sub-class to create a converter specific to epubs from the Hindawi library::
+    
+        # >>> HindawiConverter = GenericEpubConverter("test/converted")
+        # >>> HindawiConverter.VERBOSE = False
+        # >>> from helper import html2md_hindawi
+        # >>> HindawiConverter.convert_html2md = html2md_hindawi.markdownify  # (1)
+        # >>> HindawiConverter.toc_fn = "nav.xhtml"  # (2)
+        # >>> folder = r"test"
+        # >>> fn = r"26362727.epub"
+        # >>> HindawiConverter.convert_file(os.path.join(folder, fn))
+    
+        # (1) overwrite the convert_html2md function
+        # (2) specify the filename of the table of contents in Hindawi epub files
 
 An Epub file is in fact a zipped archive.
 The most important element of the archive for conversion purposes

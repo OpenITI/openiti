@@ -55,42 +55,42 @@ Examples:
     0255JahizBasri.Hayawan
 
     - Validity tests: setting invalid values for part of a uri returns an error\
-    (implemented for instantiation of URI objects + setting URI components):
+    (implemented for instantiation of URI objects + setting URI components)::
 
-    # >>> URI("255Jahiz")
-    Exception: Date Error: URI must start with a date of 4 digits (255 has 3!)
+        # >>> URI("255Jahiz")
+        Exception: Date Error: URI must start with a date of 4 digits (255 has 3!)
 
-    # >>> URI("0255Jāḥiẓ")
-    Exception: Author name Error: Author name (Jāḥiẓ) should not contain
-    digits or non-ASCII characters(culprits: ['ā', 'ḥ', 'ẓ'])
+        # >>> URI("0255Jāḥiẓ")
+        Exception: Author name Error: Author name (Jāḥiẓ) should not contain
+        digits or non-ASCII characters(culprits: ['ā', 'ḥ', 'ẓ'])
 
-    # >>> t.author = "Jāḥiẓ"
-    Exception: Author name Error: Author name (Jāḥiẓ) should not contain
-    digits or non-ASCII characters(culprits: ['ā', 'ḥ', 'ẓ'])
+        # >>> t.author = "Jāḥiẓ"
+        Exception: Author name Error: Author name (Jāḥiẓ) should not contain
+        digits or non-ASCII characters(culprits: ['ā', 'ḥ', 'ẓ'])
 
-    # >>> t.author = "0255Jahiz"
-    Exception: Author name Error: Author name (0255Jahiz) should not contain
-    digits or non-ASCII characters(culprits: ['0', '2', '5', '5'])
+        # >>> t.author = "0255Jahiz"
+        Exception: Author name Error: Author name (0255Jahiz) should not contain
+        digits or non-ASCII characters(culprits: ['0', '2', '5', '5'])
 
-    # >>> URI("0255Jahiz.Al-Hayawan")
-    Exception: Book title Error: Book title (Al-Hayawan) should not contain
-    non-ASCII characters(culprits: ['-'])
+        # >>> URI("0255Jahiz.Al-Hayawan")
+        Exception: Book title Error: Book title (Al-Hayawan) should not contain
+        non-ASCII characters(culprits: ['-'])
 
-    # >>> URI("0255Jahiz.Hayawan.Shāmila00123545-ara1")
-    Exception: Version string Error: Version string (Shāmila00123545)
-    should not contain non-ASCII characters(culprits: ['ā'])
+        # >>> URI("0255Jahiz.Hayawan.Shāmila00123545-ara1")
+        Exception: Version string Error: Version string (Shāmila00123545)
+        should not contain non-ASCII characters(culprits: ['ā'])
 
-    # >>> URI("0255Jahiz.Hayawan.Shamela00123545-arab1")
-    Exception: Language code (arab) should be an ISO 639-2 language code,
-    consisting of 3 characters
+        # >>> URI("0255Jahiz.Hayawan.Shamela00123545-arab1")
+        Exception: Language code (arab) should be an ISO 639-2 language code,
+        consisting of 3 characters
 
-    # >>> t.extension = "markdown"
-    Exception: Extension (markdown) is not among the allowed extensions
-    (['inProgress', 'completed', 'mARkdown', 'yml', ''])
+        # >>> t.extension = "markdown"
+        Exception: Extension (markdown) is not among the allowed extensions
+        (['inProgress', 'completed', 'mARkdown', 'yml', ''])
 
-    # >>> URI("0255Jahiz.Hayawan.Shamela00123545-ara1.markdown")
-    Exception: Extension (markdown) is not among the allowed extensions
-    (['inProgress', 'completed', 'mARkdown', 'yml', ''])
+        # >>> URI("0255Jahiz.Hayawan.Shamela00123545-ara1.markdown")
+        Exception: Extension (markdown) is not among the allowed extensions
+        (['inProgress', 'completed', 'mARkdown', 'yml', ''])
 
     - Getting the URI's current uri_type ("author", "book", "version", None),\
     i.e., the longest URI that can be built from the object's components:
@@ -210,13 +210,14 @@ Examples:
         * the original book folders should be (re)moved
         * the original author folder itself should be (re)moved
 
-    Examples:
+    Examples::
+    
         change_uri("0255Jahiz", "0256Jahiz")
         change_uri("0255Jahiz", "0255JahizBasri")
         change_uri("0255Jahiz.Hayawan", "0255Jahiz.KitabHayawan")
-        change_uri("0255Jahiz.Hayawan.Shamela002526-ara1",\
+        change_uri("0255Jahiz.Hayawan.Shamela002526-ara1",
                    "0255Jahiz.Hayawan.Shamela002526-ara2")
-        change_uri("0255Jahiz.Hayawan.Shamela002526-ara1.completed",\
+        change_uri("0255Jahiz.Hayawan.Shamela002526-ara1.completed",
                    "0255Jahiz.Hayawan.Shamela002526-ara1.mARkdown")
 """
 
@@ -320,6 +321,7 @@ class URI:
         0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed
 
         Accessing components of the URI:
+        
         >>> t.author
         'Jahiz'
         >>> t.date
@@ -393,34 +395,42 @@ class URI:
         >>> u.build_pth()
         './0275AH/data/0255Jahiz/0255Jahiz.Hayawan'
 
-        Validity tests: setting invalid values for part of a uri returns an error:
+        Validity tests: setting invalid values for part of a uri returns an error::
 
-        # >>> URI("255Jahiz")
-        Exception: Date Error: URI must start with a date of 4 digits (255 has 3!)
-        # >>> URI("0255Jāḥiẓ")
-        Exception: Author name Error: Author name (Jāḥiẓ) should not contain
-        digits or non-ASCII characters(culprits: ['ā', 'ḥ', 'ẓ'])
-        # >>> t.author = "Jāḥiẓ"
-        Exception: Author name Error: Author name (Jāḥiẓ) should not contain
-        digits or non-ASCII characters(culprits: ['ā', 'ḥ', 'ẓ'])
-        # >>> t.author = "0255Jahiz"
-        Exception: Author name Error: Author name (0255Jahiz) should not contain
-        digits or non-ASCII characters(culprits: ['0', '2', '5', '5'])
-        # >>> URI("0255Jahiz.Al-Hayawan")
-        Exception: Book title Error: Book title (Al-Hayawan) should not contain
-        non-ASCII characters(culprits: ['-'])
-        # >>> URI("0255Jahiz.Hayawan.Shāmila00123545-ara1")
-        Exception: Version string Error: Version string (Shāmila00123545)
-        should not contain non-ASCII characters(culprits: ['ā'])
-        # >>> URI("0255Jahiz.Hayawan.Shamela00123545-arab1")
-        Exception: Language code (arab) should be an ISO 639-2 language code,
-        consisting of 3 characters
-        # >>> t.extension = "markdown"
-        Exception: Extension (markdown) is not among the allowed extensions
-        (['inProgress', 'completed', 'mARkdown', 'yml', ''])
-        # >>> URI("0255Jahiz.Hayawan.Shamela00123545-ara1.markdown")
-        Exception: Extension (markdown) is not among the allowed extensions
-        (['inProgress', 'completed', 'mARkdown', 'yml', ''])
+            # >>> URI("255Jahiz")
+            Exception: Date Error: URI must start with a date of 4 digits (255 has 3!)
+            
+            # >>> URI("0255Jāḥiẓ")
+            Exception: Author name Error: Author name (Jāḥiẓ) should not contain
+            digits or non-ASCII characters(culprits: ['ā', 'ḥ', 'ẓ'])
+            
+            # >>> t.author = "Jāḥiẓ"
+            Exception: Author name Error: Author name (Jāḥiẓ) should not contain
+            digits or non-ASCII characters(culprits: ['ā', 'ḥ', 'ẓ'])
+            
+            # >>> t.author = "0255Jahiz"
+            Exception: Author name Error: Author name (0255Jahiz) should not contain
+            digits or non-ASCII characters(culprits: ['0', '2', '5', '5'])
+            
+            # >>> URI("0255Jahiz.Al-Hayawan")
+            Exception: Book title Error: Book title (Al-Hayawan) should not contain
+            non-ASCII characters(culprits: ['-'])
+            
+            # >>> URI("0255Jahiz.Hayawan.Shāmila00123545-ara1")
+            Exception: Version string Error: Version string (Shāmila00123545)
+            should not contain non-ASCII characters(culprits: ['ā'])
+
+            # >>> URI("0255Jahiz.Hayawan.Shamela00123545-arab1")
+            Exception: Language code (arab) should be an ISO 639-2 language code,
+            consisting of 3 characters
+
+            # >>> t.extension = "markdown"
+            Exception: Extension (markdown) is not among the allowed extensions
+            (['inProgress', 'completed', 'mARkdown', 'yml', ''])
+
+            # >>> URI("0255Jahiz.Hayawan.Shamela00123545-ara1.markdown")
+            Exception: Extension (markdown) is not among the allowed extensions
+            (['inProgress', 'completed', 'mARkdown', 'yml', ''])
     """
 
     def __init__(self, uri_string=None):
@@ -1150,7 +1160,8 @@ def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False):
         * the original book folders should be (re)moved
         * the original author folder itself should be (re)moved
 
-    Examples:
+    Examples::
+    
         change_uri("0255Jahiz", "0256Jahiz")
         change_uri("0255Jahiz", "0255JahizBasri")
         change_uri("0255Jahiz.Hayawan", "0255Jahiz.KitabHayawan")

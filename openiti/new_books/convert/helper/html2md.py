@@ -6,6 +6,16 @@ to output OpenITI mARkdown.
 It also adds methods for tables and images,
 and a post-processing method.
 
+The main componant of this script is the `MarkdownConverter` class,
+which contains a basic procedure for converting html, tag by tag,
+(`MarkdownConverter.convert`)
+and methods for converting specific html tags to mARkdown
+(`MarkdownConverter.convert_a`, `MarkdownConverter.convert_img`, ...).
+
+The easiest way to use the MarkdownConverter is to use the
+`markdownify` function, which calls the `convert` method of
+the `MarkdownConverter` class.
+
 You can use this class as a base class and subclass it
 to add methods, adapt the post-processing method etc.
 
@@ -316,6 +326,7 @@ class MarkdownConverter(object):
         (3 capital letters between ampersands), and end with a new line.
         This post-processing step then converts these temporary tags
         into OpenITI mARkdown format @TAG\d\d+:
+        
         * The first number after the @QUR tag refers to the number of letters
           following the tag that do not belong to the named entity
           (in this automatic step, this number will always be set to 0);
@@ -338,7 +349,7 @@ class MarkdownConverter(object):
 
 
     def post_process_md(self, text):
-
+        """Post-processing operation to improve formatting of converted text."""
         # post-process named entity tags:
         text = re.sub("@([A-Z]+)@ +(.+?)\n([^~]|Z)",
                       self.post_process_named_entities, text,
@@ -412,12 +423,11 @@ class MarkdownConverter(object):
         return "{}\n{}".format(text, line)
 
 
-    #-----------------------------------------------------------
 
     # Conversion functions for specific tags (in alphabetic order):
 
     def convert_a(self, el, text):
-        """Convert html links.
+        """Convert html links to markdown-style links.
 
         Example:
             >>> import html2md
@@ -434,18 +444,23 @@ class MarkdownConverter(object):
         return '[%s](%s%s)' % (text or '', href, title_part) if href else text or ''
 
     def convert_b(self, el, text):
+        """Convert <b> tags into markdown formatting"""
         return self.convert_strong(el, text)
 
     def convert_blockquote(self, el, text):
+        """Convert <blockquote> tags into markdown formatting"""
         return '\n' + line_beginning_re.sub('> ', text) if text else ''
 
     def convert_br(self, el, text):
+        """Convert <br/> tags into newline characters."""
         return '  \n'
 
     def convert_em(self, el, text):
+        """convert <em> (italics) tags into markdown formatting."""
         return '*%s*' % text if text else ''
 
     def convert_hn(self, n, el, text):
+        """Convert html headings (<h1>, <h2>, etc. into markdown formatting."""
         style = self.options['md_style']
         text = text.rstrip()
         if style == OPENITI:
@@ -459,10 +474,12 @@ class MarkdownConverter(object):
         return '\n\n%s %s\n\n' % (hashes, text)
 
     def convert_i(self, el, text):
+        """convert <i> (italics) tags into markdown formatting."""
         return self.convert_em(el, text)
 
     def convert_img(self, el, text):
-        """
+        """Convert <img> tags into markdown-style links to image files.
+        
         Examples:
             >>> import html2md
             >>> h = '<div><img class="figure" src="../Images/figure1.png" /></div>'
@@ -490,23 +507,26 @@ class MarkdownConverter(object):
 
         Examples:
             # unordered lists:
+            
             >>> import html2md
             >>> h = '<ul><li>item1</li><li>item2</li></ul>'
             >>> html2md.markdownify(h)
             '\\n* item1\\n* item2\\n\\n'
 
             # ordered lists:
+            
             >>> import html2md
             >>> h = '<ol><li>item1</li><li>item2</li></ol>'
             >>> html2md.markdownify(h)
             '\\n1. item1\\n2. item2\\n\\n'
 
-            # nested lists:
-            ###### TEST FAILS FOR UNKNOWN REASONS
-            ##>>> import html2md
-            ##>>> h = '<ol><li>item1</li><li>item2:<ul><li>item3</li><li>item4</li></ul></li></ol>'
-            ##>>> html2md.markdownify(h)
-            ##'\\n1. item1\\n2. item2:\\n\\n\\t* item3\\n\\t* item4\\n\\t\\n\\n'
+            # nested lists::
+            
+                ###### TEST FAILS FOR UNKNOWN REASONS
+                ##>>> import html2md
+                ##>>> h = '<ol><li>item1</li><li>item2:<ul><li>item3</li><li>item4</li></ul></li></ol>'
+                ##>>> html2md.markdownify(h)
+                ##'\\n1. item1\\n2. item2:\\n\\n\\t* item3\\n\\t* item4\\n\\t\\n\\n'
         """
         nested = False
         while el:
@@ -587,9 +607,9 @@ class MarkdownConverter(object):
             >>> html2md.markdownify(h)
             '\\n\\n| th1aaa | th2 |\\n| ------ | --- |\\n| td1    | td2 |\\n\\n'
 
-            # i.e.,
-            # | th1aaa | th2 |
-            # | td1    | td2 |
+            i.e.:
+                | th1aaa | th2 |
+                | td1    | td2 |
         """
 ##        def wrap_cell_text(cell_text):
 ##            while len(cell_text) < self.max_len:
@@ -646,6 +666,10 @@ class MarkdownConverter(object):
 
 
 def markdownify(html, **options):
+    """Convert html to markdown.
+
+    Calls the convert() method of the MarkdownConverter class.
+    """
     return MarkdownConverter(**options).convert(html)
 
 

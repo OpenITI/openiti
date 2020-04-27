@@ -15,13 +15,17 @@ The tei2md.preprocess_page_numbers function can be used for this.
 You can use the tei2md.TeiConverter class as a base class
 and subclass it to add methods, adapt the post-processing method etc.
 
-E.g.:
+E.g.::
     def Class GRAR_converter(tei2md.TeiConverter):   
         def post_process_md(self, text):
             text = super().post_process_md(text)
+
             # remove blank lines marked with "DELETE_PREVIOUS_BLANKLINES" tag
-            text = re.sub(r"\n+DELETE_PREVIOUS_BLANKLINES", "", text)
+
+            text = re.sub("\\\\n+DELETE_PREVIOUS_BLANKLINES", "", text)
+
             # replace placeholders for spaces in tables: 
+
             text = re.sub("ç", " ", text)
             return text
 
@@ -113,7 +117,7 @@ Examples (doctests):
              <lb/>def\
              <lb/>ghi'
     >>> tei2md.markdownify(h)
-    'abc\\ndef\\nghi'
+    'abc\\n~~def\\n~~ghi'
 
     >>> h = '\
     abc\
@@ -241,9 +245,9 @@ Examples (doctests):
     >>> tei2md.markdownify(h)
     '\\n\\n| th1aaa | th2 |\\n| ------ | --- |\\n| td1    | td2 |\\n\\n'
             
-    # i.e.,
-    # | th1aaa | th2 |
-    # | td1    | td2 |
+    i.e.:
+        | th1aaa | th2 |
+        | td1    | td2 |
 """
 
 from bs4 import BeautifulSoup
@@ -402,7 +406,7 @@ class TeiConverter(html2md.MarkdownConverter):
                      <lb/>def\
                      <lb/>ghi'
             >>> tei2md.markdownify(h)
-            'abc\\ndef\\nghi'
+            'abc\\n~~def\\n~~ghi'
         """
         return '\n~~'
 

@@ -4,29 +4,31 @@ Subclass the TeiConverter to make a converter for a new
 source of scraped books in TEI xml format.
 
 Examples:
-    Generic tei conversion:
-    >>> from tei_converter_generic import TeiConverter
-    >>> conv = TeiConverter(dest_folder="test/converted")
-    >>> conv.VERBOSE = False
-    >>> folder = r"test"
-    >>> fn = r"GRAR000070"
-    >>> conv.convert_file(os.path.join(folder, fn))
-    >>> conv.convert_files_in_folder(folder, extensions = [""])
+    Generic tei conversion::
+    
+        >>> from tei_converter_generic import TeiConverter
+        >>> conv = TeiConverter(dest_folder="test/converted")
+        >>> conv.VERBOSE = False
+        >>> folder = r"test"
+        >>> fn = r"GRAR000070"
+        >>> conv.convert_file(os.path.join(folder, fn))
+        >>> conv.convert_files_in_folder(folder, extensions = [""])
 
-    Sub-class to create a converter specific to GRAR collection tei files:
-    #>>> class GRARConverter(TeiConverter):
-    #        def post_process(self, text):
-    #            text = super().post_process(text)
-    #            vols = re.findall("#META#.+ vol. (\d+) pp", text)
-    #            if len(vols) == 1:
-    #                text = re.sub("PageV00", "PageV{:02d}".format(int(vols[0])), text)
-    #            elif len(vols) == 0:
-    #                text = re.sub("PageV00", "PageV01", text)
-    #            return text
-    #>>> conv = GRARConverter("test/converted")
-    #>>> conv.VERBOSE = False
-    #>>> folder = r"test"
-    #>>> conv.convert_files_in_folder(folder, exclude_ext = ["py", "yml", "txt", "epub"])
+    Sub-class to create a converter specific to GRAR collection tei files::
+    
+        #>>> class GRARConverter(TeiConverter):
+        #        def post_process(self, text):
+        #            text = super().post_process(text)
+        #            vols = re.findall("#META#.+ vol. (\d+) pp", text)
+        #            if len(vols) == 1:
+        #                text = re.sub("PageV00", "PageV{:02d}".format(int(vols[0])), text)
+        #            elif len(vols) == 0:
+        #                text = re.sub("PageV00", "PageV01", text)
+        #            return text
+        #>>> conv = GRARConverter("test/converted")
+        #>>> conv.VERBOSE = False
+        #>>> folder = r"test"
+        #>>> conv.convert_files_in_folder(folder, exclude_ext = ["py", "yml", "txt", "epub"])
 
 ================================== ==========================
 GenericConverter                   TeiConverter
