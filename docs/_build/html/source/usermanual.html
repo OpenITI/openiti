@@ -256,13 +256,15 @@ Default: NFKC, which is most suited for Arabic.</li>
 <span class="go">2</span>
 </pre></div>
 </div>
-<p># alif+hamza written with 2 unicode characters:
-# U+0627 (ARABIC LETTER ALEF) + U+0654 (ARABIC HAMZA ABOVE)
-&gt;&gt;&gt; a = “أ”
-&gt;&gt;&gt; len(a)
-2
-&gt;&gt;&gt; len(normalize_composites(a))
-1</p>
+<p>alif+hamza written with 2 unicode characters:
+U+0627 (ARABIC LETTER ALEF) + U+0654 (ARABIC HAMZA ABOVE):</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="s">&quot;أ&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">normalize_composites</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+<span class="go">1</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </div>
@@ -462,37 +464,47 @@ By calling the URI class, you create an instance of the URI class</p>
 <span class="go">0255JahizBasri.Hayawan</span>
 </pre></div>
 </div>
-<ul class="simple">
-<li>Validity tests: setting invalid values for part of a uri returns an error    (implemented for instantiation of URI objects + setting URI components):</li>
-</ul>
-<p># &gt;&gt;&gt; URI(“255Jahiz”)
-Exception: Date Error: URI must start with a date of 4 digits (255 has 3!)</p>
-<p># &gt;&gt;&gt; URI(“0255Jāḥiẓ”)
+<ul>
+<li><p class="first">Validity tests: setting invalid values for part of a uri returns an error    (implemented for instantiation of URI objects + setting URI components):</p>
+<div class="highlight-default"><div class="highlight"><pre># &gt;&gt;&gt; URI(&quot;255Jahiz&quot;)
+Exception: Date Error: URI must start with a date of 4 digits (255 has 3!)
+
+# &gt;&gt;&gt; URI(&quot;0255Jāḥiẓ&quot;)
 Exception: Author name Error: Author name (Jāḥiẓ) should not contain
-digits or non-ASCII characters(culprits: [‘ā’, ‘ḥ’, ‘ẓ’])</p>
-<p># &gt;&gt;&gt; t.author = “Jāḥiẓ”
+digits or non-ASCII characters(culprits: [&#39;ā&#39;, &#39;ḥ&#39;, &#39;ẓ&#39;])
+
+# &gt;&gt;&gt; t.author = &quot;Jāḥiẓ&quot;
 Exception: Author name Error: Author name (Jāḥiẓ) should not contain
-digits or non-ASCII characters(culprits: [‘ā’, ‘ḥ’, ‘ẓ’])</p>
-<p># &gt;&gt;&gt; t.author = “0255Jahiz”
+digits or non-ASCII characters(culprits: [&#39;ā&#39;, &#39;ḥ&#39;, &#39;ẓ&#39;])
+
+# &gt;&gt;&gt; t.author = &quot;0255Jahiz&quot;
 Exception: Author name Error: Author name (0255Jahiz) should not contain
-digits or non-ASCII characters(culprits: [‘0’, ‘2’, ‘5’, ‘5’])</p>
-<p># &gt;&gt;&gt; URI(“0255Jahiz.Al-Hayawan”)
+digits or non-ASCII characters(culprits: [&#39;0&#39;, &#39;2&#39;, &#39;5&#39;, &#39;5&#39;])
+
+# &gt;&gt;&gt; URI(&quot;0255Jahiz.Al-Hayawan&quot;)
 Exception: Book title Error: Book title (Al-Hayawan) should not contain
-non-ASCII characters(culprits: [‘-‘])</p>
-<p># &gt;&gt;&gt; URI(“0255Jahiz.Hayawan.Shāmila00123545-ara1”)
+non-ASCII characters(culprits: [&#39;-&#39;])
+
+# &gt;&gt;&gt; URI(&quot;0255Jahiz.Hayawan.Shāmila00123545-ara1&quot;)
 Exception: Version string Error: Version string (Shāmila00123545)
-should not contain non-ASCII characters(culprits: [‘ā’])</p>
-<p># &gt;&gt;&gt; URI(“0255Jahiz.Hayawan.Shamela00123545-arab1”)
+should not contain non-ASCII characters(culprits: [&#39;ā&#39;])
+
+# &gt;&gt;&gt; URI(&quot;0255Jahiz.Hayawan.Shamela00123545-arab1&quot;)
 Exception: Language code (arab) should be an ISO 639-2 language code,
-consisting of 3 characters</p>
-<p># &gt;&gt;&gt; t.extension = “markdown”
+consisting of 3 characters
+
+# &gt;&gt;&gt; t.extension = &quot;markdown&quot;
 Exception: Extension (markdown) is not among the allowed extensions
-([‘inProgress’, ‘completed’, ‘mARkdown’, ‘yml’, ‘’])</p>
-<p># &gt;&gt;&gt; URI(“0255Jahiz.Hayawan.Shamela00123545-ara1.markdown”)
+([&#39;inProgress&#39;, &#39;completed&#39;, &#39;mARkdown&#39;, &#39;yml&#39;, &#39;&#39;])
+
+# &gt;&gt;&gt; URI(&quot;0255Jahiz.Hayawan.Shamela00123545-ara1.markdown&quot;)
 Exception: Extension (markdown) is not among the allowed extensions
-([‘inProgress’, ‘completed’, ‘mARkdown’, ‘yml’, ‘’])</p>
-<ul class="simple">
-<li>Getting the URI’s current uri_type (“author”, “book”, “version”, None),    i.e., the longest URI that can be built from the object’s components:</li>
+([&#39;inProgress&#39;, &#39;completed&#39;, &#39;mARkdown&#39;, &#39;yml&#39;, &#39;&#39;])
+</pre></div>
+</div>
+</li>
+<li><p class="first">Getting the URI’s current uri_type (“author”, “book”, “version”, None),    i.e., the longest URI that can be built from the object’s components:</p>
+</li>
 </ul>
 <div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">uri_type</span>
 <span class="go">&#39;version&#39;</span>
@@ -612,14 +624,16 @@ implementing URI changes in the OpenITI corpus: change_uri.</p>
 <li>the original author folder itself should be (re)moved</li>
 </ul>
 </div></blockquote>
-<dl class="docutils">
-<dt>Examples:</dt>
-<dd>change_uri(“0255Jahiz”, “0256Jahiz”)
-change_uri(“0255Jahiz”, “0255JahizBasri”)
-change_uri(“0255Jahiz.Hayawan”, “0255Jahiz.KitabHayawan”)
-change_uri(“0255Jahiz.Hayawan.Shamela002526-ara1”,                   “0255Jahiz.Hayawan.Shamela002526-ara2”)
-change_uri(“0255Jahiz.Hayawan.Shamela002526-ara1.completed”,                   “0255Jahiz.Hayawan.Shamela002526-ara1.mARkdown”)</dd>
-</dl>
+<p>Examples:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">change_uri</span><span class="p">(</span><span class="s">&quot;0255Jahiz&quot;</span><span class="p">,</span> <span class="s">&quot;0256Jahiz&quot;</span><span class="p">)</span>
+<span class="n">change_uri</span><span class="p">(</span><span class="s">&quot;0255Jahiz&quot;</span><span class="p">,</span> <span class="s">&quot;0255JahizBasri&quot;</span><span class="p">)</span>
+<span class="n">change_uri</span><span class="p">(</span><span class="s">&quot;0255Jahiz.Hayawan&quot;</span><span class="p">,</span> <span class="s">&quot;0255Jahiz.KitabHayawan&quot;</span><span class="p">)</span>
+<span class="n">change_uri</span><span class="p">(</span><span class="s">&quot;0255Jahiz.Hayawan.Shamela002526-ara1&quot;</span><span class="p">,</span>
+           <span class="s">&quot;0255Jahiz.Hayawan.Shamela002526-ara2&quot;</span><span class="p">)</span>
+<span class="n">change_uri</span><span class="p">(</span><span class="s">&quot;0255Jahiz.Hayawan.Shamela002526-ara1.completed&quot;</span><span class="p">,</span>
+           <span class="s">&quot;0255Jahiz.Hayawan.Shamela002526-ara1.mARkdown&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="class">
 <dt id="openiti.helper.uri.URI">
 <em class="property">class </em><code class="descclassname">openiti.helper.uri.</code><code class="descname">URI</code><span class="sig-paren">(</span><em>uri_string=None</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.URI" title="Permalink to this definition">¶</a></dt>
@@ -669,11 +683,13 @@ from which we got the book + number of the book in that collection</li>
 <span class="go">0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed</span>
 </pre></div>
 </div>
-<p>Accessing components of the URI:
-&gt;&gt;&gt; t.author
-‘Jahiz’
-&gt;&gt;&gt; t.date
-‘0255’</p>
+<p>Accessing components of the URI:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">author</span>
+<span class="go">&#39;Jahiz&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">date</span>
+<span class="go">&#39;0255&#39;</span>
+</pre></div>
+</div>
 <p>Getting URI’s current uri_type (“author”, “book”, “version”, None),
 i.e., the longest URI that can be built from the object’s components:</p>
 <div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">uri_type</span>
@@ -744,32 +760,42 @@ data_in_25_year_repos attribute to False:</p>
 </pre></div>
 </div>
 <p>Validity tests: setting invalid values for part of a uri returns an error:</p>
-<p># &gt;&gt;&gt; URI(“255Jahiz”)
+<div class="highlight-default"><div class="highlight"><pre># &gt;&gt;&gt; URI(&quot;255Jahiz&quot;)
 Exception: Date Error: URI must start with a date of 4 digits (255 has 3!)
-# &gt;&gt;&gt; URI(“0255Jāḥiẓ”)
+
+# &gt;&gt;&gt; URI(&quot;0255Jāḥiẓ&quot;)
 Exception: Author name Error: Author name (Jāḥiẓ) should not contain
-digits or non-ASCII characters(culprits: [‘ā’, ‘ḥ’, ‘ẓ’])
-# &gt;&gt;&gt; t.author = “Jāḥiẓ”
+digits or non-ASCII characters(culprits: [&#39;ā&#39;, &#39;ḥ&#39;, &#39;ẓ&#39;])
+
+# &gt;&gt;&gt; t.author = &quot;Jāḥiẓ&quot;
 Exception: Author name Error: Author name (Jāḥiẓ) should not contain
-digits or non-ASCII characters(culprits: [‘ā’, ‘ḥ’, ‘ẓ’])
-# &gt;&gt;&gt; t.author = “0255Jahiz”
+digits or non-ASCII characters(culprits: [&#39;ā&#39;, &#39;ḥ&#39;, &#39;ẓ&#39;])
+
+# &gt;&gt;&gt; t.author = &quot;0255Jahiz&quot;
 Exception: Author name Error: Author name (0255Jahiz) should not contain
-digits or non-ASCII characters(culprits: [‘0’, ‘2’, ‘5’, ‘5’])
-# &gt;&gt;&gt; URI(“0255Jahiz.Al-Hayawan”)
+digits or non-ASCII characters(culprits: [&#39;0&#39;, &#39;2&#39;, &#39;5&#39;, &#39;5&#39;])
+
+# &gt;&gt;&gt; URI(&quot;0255Jahiz.Al-Hayawan&quot;)
 Exception: Book title Error: Book title (Al-Hayawan) should not contain
-non-ASCII characters(culprits: [‘-‘])
-# &gt;&gt;&gt; URI(“0255Jahiz.Hayawan.Shāmila00123545-ara1”)
+non-ASCII characters(culprits: [&#39;-&#39;])
+
+# &gt;&gt;&gt; URI(&quot;0255Jahiz.Hayawan.Shāmila00123545-ara1&quot;)
 Exception: Version string Error: Version string (Shāmila00123545)
-should not contain non-ASCII characters(culprits: [‘ā’])
-# &gt;&gt;&gt; URI(“0255Jahiz.Hayawan.Shamela00123545-arab1”)
+should not contain non-ASCII characters(culprits: [&#39;ā&#39;])
+
+# &gt;&gt;&gt; URI(&quot;0255Jahiz.Hayawan.Shamela00123545-arab1&quot;)
 Exception: Language code (arab) should be an ISO 639-2 language code,
 consisting of 3 characters
-# &gt;&gt;&gt; t.extension = “markdown”
+
+# &gt;&gt;&gt; t.extension = &quot;markdown&quot;
 Exception: Extension (markdown) is not among the allowed extensions
-([‘inProgress’, ‘completed’, ‘mARkdown’, ‘yml’, ‘’])
-# &gt;&gt;&gt; URI(“0255Jahiz.Hayawan.Shamela00123545-ara1.markdown”)
+([&#39;inProgress&#39;, &#39;completed&#39;, &#39;mARkdown&#39;, &#39;yml&#39;, &#39;&#39;])
+
+# &gt;&gt;&gt; URI(&quot;0255Jahiz.Hayawan.Shamela00123545-ara1.markdown&quot;)
 Exception: Extension (markdown) is not among the allowed extensions
-([‘inProgress’, ‘completed’, ‘mARkdown’, ‘yml’, ‘’])</p>
+([&#39;inProgress&#39;, &#39;completed&#39;, &#39;mARkdown&#39;, &#39;yml&#39;, &#39;&#39;])
+</pre></div>
+</div>
 <dl class="method">
 <dt id="openiti.helper.uri.URI.__call__">
 <code class="descname">__call__</code><span class="sig-paren">(</span><em>uri_type=None</em>, <em>ext=None</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.helper.uri.URI.__call__" title="Permalink to this definition">¶</a></dt>
@@ -1250,12 +1276,14 @@ If False, it will only print a description of the action.</li>
 <li>the original author folder itself should be (re)moved</li>
 </ul>
 </div></blockquote>
-<p class="rubric">Examples</p>
-<p>change_uri(“0255Jahiz”, “0256Jahiz”)
-change_uri(“0255Jahiz”, “0255JahizBasri”)
-change_uri(“0255Jahiz.Hayawan”, “0255Jahiz.KitabHayawan”)
-change_uri(“0255Jahiz.Hayawan.Shamela002526-ara1”,                   “0255Jahiz.Hayawan.Shamela002526-ara2”)
-change_uri(“0255Jahiz.Hayawan.Shamela002526-ara1.completed”,                   “0255Jahiz.Hayawan.Shamela002526-ara1.mARkdown”)</p>
+<p>Examples:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">change_uri</span><span class="p">(</span><span class="s">&quot;0255Jahiz&quot;</span><span class="p">,</span> <span class="s">&quot;0256Jahiz&quot;</span><span class="p">)</span>
+<span class="n">change_uri</span><span class="p">(</span><span class="s">&quot;0255Jahiz&quot;</span><span class="p">,</span> <span class="s">&quot;0255JahizBasri&quot;</span><span class="p">)</span>
+<span class="n">change_uri</span><span class="p">(</span><span class="s">&quot;0255Jahiz.Hayawan&quot;</span><span class="p">,</span> <span class="s">&quot;0255Jahiz.KitabHayawan&quot;</span><span class="p">)</span>
+<span class="n">change_uri</span><span class="p">(</span><span class="s">&quot;0255Jahiz.Hayawan.Shamela002526-ara1&quot;</span><span class="p">,</span>                   <span class="s">&quot;0255Jahiz.Hayawan.Shamela002526-ara2&quot;</span><span class="p">)</span>
+<span class="n">change_uri</span><span class="p">(</span><span class="s">&quot;0255Jahiz.Hayawan.Shamela002526-ara1.completed&quot;</span><span class="p">,</span>                   <span class="s">&quot;0255Jahiz.Hayawan.Shamela002526-ara1.mARkdown&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1601,7 +1629,7 @@ but unindented multiline values will be parsed without a problem.</p>
 </table>
 <p class="rubric">Examples</p>
 <div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">yml</span> <span class="k">import</span> <span class="n">ymlToDic</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">yml_str</span> <span class="o">=</span> <span class="s">&quot;        00#BOOK#URI######: 0845Maqrizi.Muqaffa</span><span class="se">\n</span><span class="s">        90#BOOK#COMMENT##: multiline value; missing-</span><span class="se">\n</span><span class="s">        indentation: (and presence</span><span class="se">\n</span><span class="s">        of colons): not a problem</span><span class="se">\n\n\n</span><span class="s">        &quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;        &quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="c"># remove Python indentation for doctest</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">yml_str</span> <span class="o">=</span> <span class="s">&quot;00#BOOK#URI######: 0845Maqrizi.Muqaffa</span><span class="se">\n</span><span class="s">90#BOOK#COMMENT##: multiline value; missing-</span><span class="se">\n</span><span class="s">indentation: (and presence</span><span class="se">\n</span><span class="s">of colons): not a problem</span><span class="se">\n\n\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;        &quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="c"># remove Python indentation for doctest</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">yml_dic</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;00#BOOK#URI######:&#39;</span><span class="p">:</span> <span class="s">&#39;0845Maqrizi.Muqaffa&#39;</span><span class="p">,</span>                       <span class="s">&#39;90#BOOK#COMMENT##:&#39;</span><span class="p">:</span> <span class="s">&#39;multiline value; missing-indentation: (and presence of colons): not a problem&#39;</span><span class="p">}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ymlToDic</span><span class="p">(</span><span class="n">yml_str</span><span class="p">)</span> <span class="o">==</span> <span class="n">yml_dic</span>
 <span class="go">True</span>
@@ -1618,28 +1646,33 @@ but unindented multiline values will be parsed without a problem.</p>
 <p>Clone github repositories to your local machine.</p>
 <p class="rubric">Examples</p>
 <p>Clone all OpenITI 25-year repos:</p>
-<div class="highlight-default"><div class="highlight"><pre><span class="c"># &gt;&gt;&gt; repo_list = get_repo_urls(group=&quot;orgs&quot;, name=&quot;OpenITI&quot;,                                         path_pattern=&quot;\d{4}AH$&quot;)</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="c"># &gt;&gt;&gt; repo_list = get_repo_urls(group=&quot;orgs&quot;, name=&quot;OpenITI&quot;,</span>
+<span class="c">#                                path_pattern=&quot;\d{4}AH$&quot;)</span>
+<span class="c"># &gt;&gt;&gt; clone_repos(repo_list, r&quot;D:\OpenITI&quot;)</span>
+</pre></div>
+</div>
+<p>Clone specific repos:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="c"># &gt;&gt;&gt; base = &quot;&quot;https://github.com/OpenITI/&quot;</span>
+<span class="c"># &gt;&gt;&gt; repo_list = [base+&quot;mARkdown_scheme&quot;, base+&quot;RELEASE&quot;]</span>
 <span class="c"># &gt;&gt;&gt; clone_repos(repo_list, r&quot;D:\OpenITI&quot;)</span>
 </pre></div>
 </div>
 <dl class="docutils">
-<dt>Clone specific repos::</dt>
-<dd># &gt;&gt;&gt; base = “”<a class="reference external" href="https://github.com/OpenITI/">https://github.com/OpenITI/</a>”
-# &gt;&gt;&gt; repo_list = [base+”mARkdown_scheme”, base+”RELEASE”]
-# &gt;&gt;&gt; clone_repos(repo_list, r”D:OpenITI”)</dd>
 <dt>Command line usage:</dt>
-<dd><dl class="first docutils">
-<dt>To clone all the OpenITI organization’s 25-years repos:</dt>
-<dd><code class="docutils literal"><span class="pre">python</span> <span class="pre">clone_OpenITI.py</span> <span class="pre">[&quot;orgs&quot;</span> <span class="pre">or</span> <span class="pre">&quot;users&quot;]</span> <span class="pre">[user</span> <span class="pre">or</span> <span class="pre">org</span> <span class="pre">name]</span> <span class="pre">[path_pattern]</span> <span class="pre">[[dest_folder]]</span></code></dd>
-</dl>
-<p><code class="docutils literal"><span class="pre">dest_folder$</span> <span class="pre">python</span> <span class="pre">pth/to/clone_OpenITI.py</span> <span class="pre">orgs</span> <span class="pre">OpenITI</span> <span class="pre">\d+AH$</span></code>
-<code class="docutils literal"><span class="pre">other_folder$</span> <span class="pre">python</span> <span class="pre">pth/to/clone_OpenITI.py</span> <span class="pre">orgs</span> <span class="pre">OpenITI</span> <span class="pre">\d+AH$</span> <span class="pre">path/to/dest_folder</span></code></p>
-<p class="last">If fewer than 3 arguments are given, the program will prompt you for the arguments:
-<code class="docutils literal"><span class="pre">$</span> <span class="pre">python</span> <span class="pre">clone_OpenITI.py</span></code>
-Enter the organization/user name:
-Organization or User? (orgs/users):
-Enter the regex pattern to match desired repo URLs:
-Enter the destination folder for the clone:</p>
+<dd><p class="first">To clone all the OpenITI organization’s 25-years repos:</p>
+<blockquote>
+<div><p><code class="docutils literal"><span class="pre">python</span> <span class="pre">clone_OpenITI.py</span> <span class="pre">[&quot;orgs&quot;</span> <span class="pre">or</span> <span class="pre">&quot;users&quot;]</span> <span class="pre">[user</span> <span class="pre">or</span> <span class="pre">org</span> <span class="pre">name]</span> <span class="pre">[path_pattern]</span> <span class="pre">[[dest_folder]]</span></code></p>
+<p><code class="docutils literal"><span class="pre">dest_folder$</span> <span class="pre">python</span> <span class="pre">pth/to/clone_OpenITI.py</span> <span class="pre">orgs</span> <span class="pre">OpenITI</span> <span class="pre">\d+AH$</span></code></p>
+<p><code class="docutils literal"><span class="pre">other_folder$</span> <span class="pre">python</span> <span class="pre">pth/to/clone_OpenITI.py</span> <span class="pre">orgs</span> <span class="pre">OpenITI</span> <span class="pre">\d+AH$</span> <span class="pre">path/to/dest_folder</span></code></p>
+</div></blockquote>
+<p>If fewer than 3 arguments are given, the program will prompt you for the arguments:</p>
+<div class="last highlight-default"><div class="highlight"><pre>$ python clone_OpenITI.py
+Enter the organization/user name: openiti
+Organization or User? (orgs/users): orgs
+Enter the regex pattern to match desired repo URLs: \d{4}AH
+Enter the destination folder for the clone: openiti_clone
+</pre></div>
+</div>
 </dd>
 </dl>
 <dl class="function">
@@ -1998,7 +2031,8 @@ if True, all changes will be executed immediately.</li>
 <p>Examples:</p>
 <div class="highlight-default"><div class="highlight"><pre><span class="c"># &gt;&gt;&gt; folder = r&quot;D:\OpenITI\barzakh&quot;</span>
 <span class="c"># &gt;&gt;&gt; target_base_pth = r&quot;D:\OpenITI\25Yrepos&quot;</span>
-<span class="c"># &gt;&gt;&gt; initialize_new_texts_in_folder(folder,        #                                    target_base_pth, execute=False)</span>
+<span class="c"># &gt;&gt;&gt; initialize_new_texts_in_folder(folder, target_base_pth,</span>
+<span class="c">#                                    execute=False)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -2188,26 +2222,30 @@ find_example_of_tag</td>
 <span id="openiti-new-books-convert-epub-converter-generic"></span><h4>openiti.new_books.convert.epub_converter_generic<a class="headerlink" href="#module-openiti.new_books.convert.epub_converter_generic" title="Permalink to this headline">¶</a></h4>
 <p>Generic converter that converts an Epub to OpenITI mARkdown.</p>
 <p class="rubric">Examples</p>
-<p>Generic epub conversion:
-&gt;&gt;&gt; from epub_converter_generic import GenericEpubConverter
-&gt;&gt;&gt; gen_converter = GenericEpubConverter(dest_folder=”test/converted”)
-&gt;&gt;&gt; gen_converter.VERBOSE = False
-&gt;&gt;&gt; folder = r”test”
-&gt;&gt;&gt; fn = r”Houellebecq 2019 - serotonine.epub”
-&gt;&gt;&gt; gen_converter.convert_file(os.path.join(folder, fn))
-&gt;&gt;&gt; gen_converter.convert_files_in_folder(folder, [“epub”,])</p>
-<p>##    Sub-class to create a converter specific to epubs from the Hindawi library:
-##    &gt;&gt;&gt; HindawiConverter = GenericEpubConverter(“test/converted”)
-##    &gt;&gt;&gt; HindawiConverter.VERBOSE = False
-##    &gt;&gt;&gt; from helper import html2md_hindawi
-##    &gt;&gt;&gt; HindawiConverter.convert_html2md = html2md_hindawi.markdownify  # (1)
-##    &gt;&gt;&gt; HindawiConverter.toc_fn = “nav.xhtml”  # (2)
-##    &gt;&gt;&gt; folder = r”test”
-##    &gt;&gt;&gt; fn = r”26362727.epub”
-##    &gt;&gt;&gt; HindawiConverter.convert_file(os.path.join(folder, fn))</p>
-<blockquote>
-<div># (1) overwrite the convert_html2md function
-# (2) specify the filename of the table of contents in Hindawi epub files</div></blockquote>
+<p>Generic epub conversion:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">epub_converter_generic</span> <span class="k">import</span> <span class="n">GenericEpubConverter</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gen_converter</span> <span class="o">=</span> <span class="n">GenericEpubConverter</span><span class="p">(</span><span class="n">dest_folder</span><span class="o">=</span><span class="s">&quot;test/converted&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gen_converter</span><span class="o">.</span><span class="n">VERBOSE</span> <span class="o">=</span> <span class="k">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">folder</span> <span class="o">=</span> <span class="s">r&quot;test&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fn</span> <span class="o">=</span> <span class="s">r&quot;Houellebecq 2019 - serotonine.epub&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gen_converter</span><span class="o">.</span><span class="n">convert_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">fn</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gen_converter</span><span class="o">.</span><span class="n">convert_files_in_folder</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="p">[</span><span class="s">&quot;epub&quot;</span><span class="p">,])</span>
+</pre></div>
+</div>
+<p>Sub-class to create a converter specific to epubs from the Hindawi library:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="c"># &gt;&gt;&gt; HindawiConverter = GenericEpubConverter(&quot;test/converted&quot;)</span>
+<span class="c"># &gt;&gt;&gt; HindawiConverter.VERBOSE = False</span>
+<span class="c"># &gt;&gt;&gt; from helper import html2md_hindawi</span>
+<span class="c"># &gt;&gt;&gt; HindawiConverter.convert_html2md = html2md_hindawi.markdownify  # (1)</span>
+<span class="c"># &gt;&gt;&gt; HindawiConverter.toc_fn = &quot;nav.xhtml&quot;  # (2)</span>
+<span class="c"># &gt;&gt;&gt; folder = r&quot;test&quot;</span>
+<span class="c"># &gt;&gt;&gt; fn = r&quot;26362727.epub&quot;</span>
+<span class="c"># &gt;&gt;&gt; HindawiConverter.convert_file(os.path.join(folder, fn))</span>
+
+<span class="c"># (1) overwrite the convert_html2md function</span>
+<span class="c"># (2) specify the filename of the table of contents in Hindawi epub files</span>
+</pre></div>
+</div>
 <p>An Epub file is in fact a zipped archive.
 The most important element of the archive for conversion purposes
 are the folders that contain the html files with the text.
@@ -3048,28 +3086,32 @@ genre metadata in the Shamela metadata table
 <p>Subclass the TeiConverter to make a converter for a new
 source of scraped books in TEI xml format.</p>
 <p class="rubric">Examples</p>
-<p>Generic tei conversion:
-&gt;&gt;&gt; from tei_converter_generic import TeiConverter
-&gt;&gt;&gt; conv = TeiConverter(dest_folder=”test/converted”)
-&gt;&gt;&gt; conv.VERBOSE = False
-&gt;&gt;&gt; folder = r”test”
-&gt;&gt;&gt; fn = r”GRAR000070”
-&gt;&gt;&gt; conv.convert_file(os.path.join(folder, fn))
-&gt;&gt;&gt; conv.convert_files_in_folder(folder, extensions = [“”])</p>
-<p>Sub-class to create a converter specific to GRAR collection tei files:
-#&gt;&gt;&gt; class GRARConverter(TeiConverter):
-#        def post_process(self, text):
-#            text = super().post_process(text)
-#            vols = re.findall(“#META#.+ vol. (d+) pp”, text)
-#            if len(vols) == 1:
-#                text = re.sub(“PageV00”, “PageV{:02d}”.format(int(vols[0])), text)
-#            elif len(vols) == 0:
-#                text = re.sub(“PageV00”, “PageV01”, text)
-#            return text
-#&gt;&gt;&gt; conv = GRARConverter(“test/converted”)
-#&gt;&gt;&gt; conv.VERBOSE = False
-#&gt;&gt;&gt; folder = r”test”
-#&gt;&gt;&gt; conv.convert_files_in_folder(folder, exclude_ext = [“py”, “yml”, “txt”, “epub”])</p>
+<p>Generic tei conversion:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tei_converter_generic</span> <span class="k">import</span> <span class="n">TeiConverter</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conv</span> <span class="o">=</span> <span class="n">TeiConverter</span><span class="p">(</span><span class="n">dest_folder</span><span class="o">=</span><span class="s">&quot;test/converted&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conv</span><span class="o">.</span><span class="n">VERBOSE</span> <span class="o">=</span> <span class="k">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">folder</span> <span class="o">=</span> <span class="s">r&quot;test&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fn</span> <span class="o">=</span> <span class="s">r&quot;GRAR000070&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conv</span><span class="o">.</span><span class="n">convert_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">fn</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conv</span><span class="o">.</span><span class="n">convert_files_in_folder</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Sub-class to create a converter specific to GRAR collection tei files:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="c">#&gt;&gt;&gt; class GRARConverter(TeiConverter):</span>
+<span class="c">#        def post_process(self, text):</span>
+<span class="c">#            text = super().post_process(text)</span>
+<span class="c">#            vols = re.findall(&quot;#META#.+ vol. (\d+) pp&quot;, text)</span>
+<span class="c">#            if len(vols) == 1:</span>
+<span class="c">#                text = re.sub(&quot;PageV00&quot;, &quot;PageV{:02d}&quot;.format(int(vols[0])), text)</span>
+<span class="c">#            elif len(vols) == 0:</span>
+<span class="c">#                text = re.sub(&quot;PageV00&quot;, &quot;PageV01&quot;, text)</span>
+<span class="c">#            return text</span>
+<span class="c">#&gt;&gt;&gt; conv = GRARConverter(&quot;test/converted&quot;)</span>
+<span class="c">#&gt;&gt;&gt; conv.VERBOSE = False</span>
+<span class="c">#&gt;&gt;&gt; folder = r&quot;test&quot;</span>
+<span class="c">#&gt;&gt;&gt; conv.convert_files_in_folder(folder, exclude_ext = [&quot;py&quot;, &quot;yml&quot;, &quot;txt&quot;, &quot;epub&quot;])</span>
+</pre></div>
+</div>
 <table border="1" class="docutils">
 <colgroup>
 <col width="57%" />
@@ -3879,6 +3921,14 @@ cur: a pypyodbc cursor object, needed to execute SQL</td>
 to output OpenITI mARkdown.
 It also adds methods for tables and images,
 and a post-processing method.</p>
+<p>The main componant of this script is the <cite>MarkdownConverter</cite> class,
+which contains a basic procedure for converting html, tag by tag,
+(<cite>MarkdownConverter.convert</cite>)
+and methods for converting specific html tags to mARkdown
+(<cite>MarkdownConverter.convert_a</cite>, <cite>MarkdownConverter.convert_img</cite>, …).</p>
+<p>The easiest way to use the MarkdownConverter is to use the
+<cite>markdownify</cite> function, which calls the <cite>convert</cite> method of
+the <cite>MarkdownConverter</cite> class.</p>
 <p>You can use this class as a base class and subclass it
 to add methods, adapt the post-processing method etc.</p>
 <dl class="docutils">
@@ -4011,6 +4061,349 @@ return text</dd>
 # | th1aaa | th2 |
 # | td1    | td2 |</p>
 </div></blockquote>
+<dl class="function">
+<dt id="openiti.new_books.convert.helper.html2md.markdownify">
+<code class="descclassname">openiti.new_books.convert.helper.html2md.</code><code class="descname">markdownify</code><span class="sig-paren">(</span><em>html</em>, <em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.markdownify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert html to markdown.</p>
+<p>Calls the convert() method of the MarkdownConverter class.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="openiti.new_books.convert.helper.html2md.MarkdownConverter">
+<em class="property">class </em><code class="descclassname">openiti.new_books.convert.helper.html2md.</code><code class="descname">MarkdownConverter</code><span class="sig-paren">(</span><em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.MarkdownConverter" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md.MarkdownConverter.convert">
+<code class="descname">convert</code><span class="sig-paren">(</span><em>html</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.MarkdownConverter.convert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert html to markdown.</p>
+<p># We want to take advantage of the html5 parsing, but we don’t actually
+# want a full document. Therefore, we’ll mark our fragment with an id,
+# create the document, and extract the element with the id.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_a">
+<code class="descname">convert_a</code><span class="sig-paren">(</span><em>el</em>, <em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_a" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert html links to markdown-style links.</p>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;a href=&quot;a/b/c&quot;&gt;abc&lt;/a&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;[abc](a/b/c)&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_b">
+<code class="descname">convert_b</code><span class="sig-paren">(</span><em>el</em>, <em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_b" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert &lt;b&gt; tags into markdown formatting</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_blockquote">
+<code class="descname">convert_blockquote</code><span class="sig-paren">(</span><em>el</em>, <em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_blockquote" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert &lt;blockquote&gt; tags into markdown formatting</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_br">
+<code class="descname">convert_br</code><span class="sig-paren">(</span><em>el</em>, <em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_br" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert &lt;br/&gt; tags into newline characters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_em">
+<code class="descname">convert_em</code><span class="sig-paren">(</span><em>el</em>, <em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_em" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert &lt;em&gt; (italics) tags into markdown formatting.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_hn">
+<code class="descname">convert_hn</code><span class="sig-paren">(</span><em>n</em>, <em>el</em>, <em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_hn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert html headings (&lt;h1&gt;, &lt;h2&gt;, etc. into markdown formatting.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_i">
+<code class="descname">convert_i</code><span class="sig-paren">(</span><em>el</em>, <em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_i" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert &lt;i&gt; (italics) tags into markdown formatting.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_img">
+<code class="descname">convert_img</code><span class="sig-paren">(</span><em>el</em>, <em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_img" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert &lt;img&gt; tags into markdown-style links to image files.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;div&gt;&lt;img class=&quot;figure&quot; src=&quot;../Images/figure1.png&quot; /&gt;&lt;/div&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;![](../Images/figure1.png)&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">image_link_regex</span><span class="o">=</span><span class="s">&quot;../Images&quot;</span><span class="p">,</span> <span class="n">image_folder</span><span class="o">=</span><span class="s">&quot;img&quot;</span><span class="p">)</span>
+<span class="go">&#39;![](img/figure1.png)&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_li">
+<code class="descname">convert_li</code><span class="sig-paren">(</span><em>el</em>, <em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_li" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert list element tags &lt;li&gt;.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_list">
+<code class="descname">convert_list</code><span class="sig-paren">(</span><em>el</em>, <em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert ordered and unordered html lists (&lt;ul&gt; and &lt;ol&gt; tags).</p>
+<p class="rubric">Examples</p>
+<p># unordered lists:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;ul&gt;&lt;li&gt;item1&lt;/li&gt;&lt;li&gt;item2&lt;/li&gt;&lt;/ul&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n* item1\n* item2\n\n&#39;</span>
+</pre></div>
+</div>
+<p># ordered lists:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;ol&gt;&lt;li&gt;item1&lt;/li&gt;&lt;li&gt;item2&lt;/li&gt;&lt;/ol&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n1. item1\n2. item2\n\n&#39;</span>
+</pre></div>
+</div>
+<p># nested lists:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="c">###### TEST FAILS FOR UNKNOWN REASONS</span>
+<span class="c">##&gt;&gt;&gt; import html2md</span>
+<span class="c">##&gt;&gt;&gt; h = &#39;&lt;ol&gt;&lt;li&gt;item1&lt;/li&gt;&lt;li&gt;item2:&lt;ul&gt;&lt;li&gt;item3&lt;/li&gt;&lt;li&gt;item4&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;/ol&gt;&#39;</span>
+<span class="c">##&gt;&gt;&gt; html2md.markdownify(h)</span>
+<span class="c">##&#39;\n1. item1\n2. item2:\n\n\t* item3\n\t* item4\n\t\n\n&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_ol">
+<code class="descname">convert_ol</code><span class="sig-paren">(</span><em>el</em>, <em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_ol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert ordered and unordered html lists (&lt;ul&gt; and &lt;ol&gt; tags).</p>
+<p class="rubric">Examples</p>
+<p># unordered lists:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;ul&gt;&lt;li&gt;item1&lt;/li&gt;&lt;li&gt;item2&lt;/li&gt;&lt;/ul&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n* item1\n* item2\n\n&#39;</span>
+</pre></div>
+</div>
+<p># ordered lists:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;ol&gt;&lt;li&gt;item1&lt;/li&gt;&lt;li&gt;item2&lt;/li&gt;&lt;/ol&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n1. item1\n2. item2\n\n&#39;</span>
+</pre></div>
+</div>
+<p># nested lists:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="c">###### TEST FAILS FOR UNKNOWN REASONS</span>
+<span class="c">##&gt;&gt;&gt; import html2md</span>
+<span class="c">##&gt;&gt;&gt; h = &#39;&lt;ol&gt;&lt;li&gt;item1&lt;/li&gt;&lt;li&gt;item2:&lt;ul&gt;&lt;li&gt;item3&lt;/li&gt;&lt;li&gt;item4&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;/ol&gt;&#39;</span>
+<span class="c">##&gt;&gt;&gt; html2md.markdownify(h)</span>
+<span class="c">##&#39;\n1. item1\n2. item2:\n\n\t* item3\n\t* item4\n\t\n\n&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_p">
+<code class="descname">convert_p</code><span class="sig-paren">(</span><em>el</em>, <em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_p" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts &lt;p&gt; tags.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&quot;&lt;p&gt;abc&lt;/p&gt;&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n\n# abc\n\n&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&quot;&lt;p&gt;abc&lt;/p&gt;&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">md_style</span><span class="o">=</span><span class="n">ATX</span><span class="p">)</span>
+<span class="go">&#39;\n\nabc\n\n&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&quot;&lt;p&gt;&lt;/p&gt;&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">md_style</span><span class="o">=</span><span class="n">ATX</span><span class="p">)</span>
+<span class="go">&#39;&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_strong">
+<code class="descname">convert_strong</code><span class="sig-paren">(</span><em>el</em>, <em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_strong" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert &lt;b&gt; and &lt;strong&gt; tags.</p>
+<p>NB: convert_b refers to this same function</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;strong&gt;def&lt;/strong&gt; ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc **def** ghi&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc &lt;b&gt;def&lt;/b&gt; ghi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;abc **def** ghi&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_table">
+<code class="descname">convert_table</code><span class="sig-paren">(</span><em>el</em>, <em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrap tables between double new lines.</p>
+<p>NB: conversion of the tables takes place on the tr level.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_tr">
+<code class="descname">convert_tr</code><span class="sig-paren">(</span><em>el</em>, <em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_tr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert table rows.</p>
+<p>NB: rows are processed before the table tag is.
+Spaces to fill out columns are added in post-processing!</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;            &lt;table&gt;              &lt;tr&gt;                &lt;th&gt;th1aaa&lt;/th&gt;&lt;th&gt;th2&lt;/th&gt;              &lt;/tr&gt;              &lt;tr&gt;                &lt;td&gt;td1&lt;/td&gt;&lt;td&gt;td2&lt;/td&gt;              &lt;/tr&gt;            &lt;/table&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n\n| th1aaa | th2 |\n| ------ | --- |\n| td1    | td2 |\n\n&#39;</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>i.e.:</dt>
+<dd><div class="first last line-block">
+<div class="line">th1aaa | th2 |</div>
+<div class="line">td1    | td2 |</div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_ul">
+<code class="descname">convert_ul</code><span class="sig-paren">(</span><em>el</em>, <em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.MarkdownConverter.convert_ul" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert ordered and unordered html lists (&lt;ul&gt; and &lt;ol&gt; tags).</p>
+<p class="rubric">Examples</p>
+<p># unordered lists:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;ul&gt;&lt;li&gt;item1&lt;/li&gt;&lt;li&gt;item2&lt;/li&gt;&lt;/ul&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n* item1\n* item2\n\n&#39;</span>
+</pre></div>
+</div>
+<p># ordered lists:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;&lt;ol&gt;&lt;li&gt;item1&lt;/li&gt;&lt;li&gt;item2&lt;/li&gt;&lt;/ol&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+<span class="go">&#39;\n1. item1\n2. item2\n\n&#39;</span>
+</pre></div>
+</div>
+<p># nested lists:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="c">###### TEST FAILS FOR UNKNOWN REASONS</span>
+<span class="c">##&gt;&gt;&gt; import html2md</span>
+<span class="c">##&gt;&gt;&gt; h = &#39;&lt;ol&gt;&lt;li&gt;item1&lt;/li&gt;&lt;li&gt;item2:&lt;ul&gt;&lt;li&gt;item3&lt;/li&gt;&lt;li&gt;item4&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;/ol&gt;&#39;</span>
+<span class="c">##&gt;&gt;&gt; html2md.markdownify(h)</span>
+<span class="c">##&#39;\n1. item1\n2. item2:\n\n\t* item3\n\t* item4\n\t\n\n&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md.MarkdownConverter.create_underline_line">
+<code class="descname">create_underline_line</code><span class="sig-paren">(</span><em>text</em>, <em>pad_char</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.MarkdownConverter.create_underline_line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a sequence of pad_char characters the same lenght as text.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md.MarkdownConverter.fill_out_columns">
+<code class="descname">fill_out_columns</code><span class="sig-paren">(</span><em>match</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.MarkdownConverter.fill_out_columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the longest cell in a column; add spaces to shorter columns.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md.MarkdownConverter.indent">
+<code class="descname">indent</code><span class="sig-paren">(</span><em>text</em>, <em>level</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.MarkdownConverter.indent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add tab indentation before text.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md.MarkdownConverter.post_process_md">
+<code class="descname">post_process_md</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.MarkdownConverter.post_process_md" title="Permalink to this definition">¶</a></dt>
+<dd><p>Post-processing operation to improve formatting of converted text.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md.MarkdownConverter.post_process_named_entities">
+<code class="descname">post_process_named_entities</code><span class="sig-paren">(</span><em>match</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.MarkdownConverter.post_process_named_entities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reformat named entity matches to mARkdown named entity standard.</p>
+<p>Named entities should be marked with &#64;TAG&#64; tags in the converter
+(3 capital letters between ampersands), and end with a new line.
+This post-processing step then converts these temporary tags
+into OpenITI mARkdown format &#64;TAGdd+:</p>
+<ul class="simple">
+<li>The first number after the &#64;QUR tag refers to the number of letters
+following the tag that do not belong to the named entity
+(in this automatic step, this number will always be set to 0);</li>
+<li>the following number(s) refer(s) to the length of the entity in tokens</li>
+</ul>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conv</span> <span class="o">=</span> <span class="n">html2md</span><span class="o">.</span><span class="n">MarkdownConverter</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conv</span><span class="o">.</span><span class="n">post_process_md</span><span class="p">(</span><span class="s">&quot;abc @QUR@ def ghi</span><span class="se">\n</span><span class="s">jkl&quot;</span><span class="p">)</span>
+<span class="go">&#39;abc @QUR02 def ghi jkl&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conv</span><span class="o">.</span><span class="n">post_process_md</span><span class="p">(</span><span class="s">&quot;abc @QUR@ def ghi</span><span class="se">\n</span><span class="s">~~jkl</span><span class="se">\n</span><span class="s">mno&quot;</span><span class="p">)</span>
+<span class="go">&#39;abc @QUR03 def ghi\n~~jkl mno&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md.MarkdownConverter.process_tag">
+<code class="descname">process_tag</code><span class="sig-paren">(</span><em>node</em>, <em>children_only=False</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.MarkdownConverter.process_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process each tag and its children.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md.MarkdownConverter.should_convert_tag">
+<code class="descname">should_convert_tag</code><span class="sig-paren">(</span><em>tag</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.MarkdownConverter.should_convert_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether a tag should be converted or simply stripped</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="openiti.new_books.convert.helper.html2md.MarkdownConverter.underline">
+<code class="descname">underline</code><span class="sig-paren">(</span><em>text</em>, <em>pad_char</em><span class="sig-paren">)</span><a class="headerlink" href="#openiti.new_books.convert.helper.html2md.MarkdownConverter.underline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Underline text with pad_char characters (-, =, or +).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>text</strong> (<em>str</em>) – the text within a tag, to be underlined</li>
+<li><strong>pad_char</strong> (<em>str</em>) – the character used for the line (-, =, or +)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">an underlined line of text</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">html2md</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">MarkdownConverter</span><span class="p">()</span><span class="o">.</span><span class="n">underline</span><span class="p">(</span><span class="s">&quot;123456789&quot;</span><span class="p">,</span> <span class="s">&quot;=&quot;</span><span class="p">)</span>
+<span class="go">&#39;123456789\n=========&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html2md</span><span class="o">.</span><span class="n">MarkdownConverter</span><span class="p">()</span><span class="o">.</span><span class="n">underline</span><span class="p">(</span><span class="s">&quot;123456789  &quot;</span><span class="p">,</span> <span class="s">&quot;=&quot;</span><span class="p">)</span>
+<span class="go">&#39;123456789\n=========&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-openiti.new_books.convert.helper.html2md_eShia">
 <span id="openiti-new-books-convert-helper-html2md-eshia"></span><h5>openiti.new_books.convert.helper.html2md_eShia<a class="headerlink" href="#module-openiti.new_books.convert.helper.html2md_eShia" title="Permalink to this headline">¶</a></h5>
@@ -4896,22 +5289,22 @@ The tei2md.preprocess_page_numbers function can be used for this.</p>
 <p>You can use the tei2md.TeiConverter class as a base class
 and subclass it to add methods, adapt the post-processing method etc.</p>
 <dl class="docutils">
-<dt>E.g.:</dt>
+<dt>E.g.::</dt>
 <dd><dl class="first last docutils">
 <dt>def Class GRAR_converter(tei2md.TeiConverter):</dt>
 <dd><dl class="first last docutils">
 <dt>def post_process_md(self, text):</dt>
-<dd>text = super().post_process_md(text)
-# remove blank lines marked with “DELETE_PREVIOUS_BLANKLINES” tag
-text = re.sub(r”</dd>
-</dl>
+<dd><p class="first">text = super().post_process_md(text)</p>
+<p># remove blank lines marked with “DELETE_PREVIOUS_BLANKLINES” tag</p>
+<p>text = re.sub(“\n+DELETE_PREVIOUS_BLANKLINES”, “”, text)</p>
+<p># replace placeholders for spaces in tables:</p>
+<p class="last">text = re.sub(“ç”, ” “, text)
+return text</p>
 </dd>
 </dl>
 </dd>
-<dt>+DELETE_PREVIOUS_BLANKLINES”, “”, text)</dt>
-<dd># replace placeholders for spaces in tables:
-text = re.sub(“ç”, ” “, text)
-return text</dd>
+</dl>
+</dd>
 </dl>
 <p>This table shows the methods and classes the TeiConverter
 inherits from html2md.MarkdownConverter,
@@ -5051,7 +5444,7 @@ find_heading_level (dummy)</td>
 </div>
 <div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;abc             &lt;lb/&gt;def             &lt;lb/&gt;ghi&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tei2md</span><span class="o">.</span><span class="n">markdownify</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
-<span class="go">&#39;abc\ndef\nghi&#39;</span>
+<span class="go">&#39;abc\n~~def\n~~ghi&#39;</span>
 </pre></div>
 </div>
 <div class="highlight-default"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="s">&#39;    abc    &lt;lg&gt;      &lt;l&gt;line1&lt;/l&gt;      &lt;l&gt;line2&lt;/l&gt;      &lt;l&gt;line3&lt;/l&gt;      &lt;l&gt;line4&lt;/l&gt;    &lt;/lg&gt;    def&#39;</span>
@@ -5162,9 +5555,14 @@ from html2md.MarkdownConverter that deal with more standard html tags:</p>
 <span class="go">&#39;\n\n| th1aaa | th2 |\n| ------ | --- |\n| td1    | td2 |\n\n&#39;</span>
 </pre></div>
 </div>
-<p># i.e.,
-# | th1aaa | th2 |
-# | td1    | td2 |</p>
+<dl class="docutils">
+<dt>i.e.:</dt>
+<dd><div class="first last line-block">
+<div class="line">th1aaa | th2 |</div>
+<div class="line">td1    | td2 |</div>
+</div>
+</dd>
+</dl>
 </div></blockquote>
 <dl class="function">
 <dt id="openiti.new_books.convert.helper.tei2md.preprocess_page_numbers">

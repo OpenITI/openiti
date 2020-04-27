@@ -144,6 +144,8 @@ openiti.new_books.convert.helper.html2md
 
 .. automodule:: openiti.new_books.convert.helper.html2md
   :members:
+.. autoclass:: openiti.new_books.convert.helper.html2md.MarkdownConverter
+  :members:
 
 openiti.new_books.convert.helper.html2md_eShia
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
