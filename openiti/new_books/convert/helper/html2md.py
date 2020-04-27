@@ -144,7 +144,7 @@ Examples (doctests):
 
 from bs4 import BeautifulSoup, NavigableString, Comment
 import re
-import six
+#import six
 
 
 convert_heading_re = re.compile(r'convert_h(\d+)')
@@ -235,7 +235,8 @@ class MarkdownConverter(object):
 
             if isinstance(el, NavigableString):
                 if not isinstance(el, Comment):  # remove html comments
-                    text += self.process_text(six.text_type(el))
+                    #text += self.process_text(six.text_type(el))
+                    text += self.process_text(str(el))
             else:
                 text += self.process_tag(el)
 

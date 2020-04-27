@@ -248,7 +248,6 @@ Examples (doctests):
 
 from bs4 import BeautifulSoup
 import re
-import six
 
 if __name__ == '__main__':
     from os import sys, path
