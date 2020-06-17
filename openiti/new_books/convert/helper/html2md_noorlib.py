@@ -82,8 +82,9 @@ class NoorlibHtmlConverter(html2md.MarkdownConverter):
     def __init__(self, **options):
         super().__init__(**options)
         self.class_dict = dict()
-        self.class_dict["rightpome"] = "\n# {} %~% "            # <span class>
+        self.class_dict["rightpome"] = "\n# {} %~% "              # <span class>
         self.class_dict["leftpome"] = "{}\n"                      # <span class>
+        self.class_dict["footnote"] = "{}\n"                      # <div class>
 ##        ##old:
 ##        self.class_dict["Titr3"] = "\n\n### ||| {}\n\n"         # <span class>
 ##        self.class_dict["KalamateKhas2"] = "\n\n### || {}\n\n"  # <p class>
