@@ -248,6 +248,7 @@ class MarkdownConverter(object):
                     #text += self.process_text(six.text_type(el))
                     text += self.process_text(str(el))
             else:
+                #print(text[-50:])
                 text += self.process_tag(el)
 
 
@@ -255,6 +256,7 @@ class MarkdownConverter(object):
             convert_fn = getattr(self, 'convert_%s' % node.name, None)
             if convert_fn and self.should_convert_tag(node.name):
                 #print("text is now:")
+                #print(text[:50])
                 #input(text)
                 text = convert_fn(node, text)
         return text
@@ -343,15 +345,17 @@ class MarkdownConverter(object):
 
         foll_char = match.group(3)
         entity = match.group(2)
-        ent_words = len(re.findall("[\n\r ]+", entity)) + 1
+        ent_words = len(re.findall("[\n\r ،؛:.!؟\-]+", entity)) + 1
         code = match.group(1)
+        if code.startswith("QUR"):
+            return "@{}@0{} {} {}".format(code, ent_words, entity, foll_char)
         return "@{}0{} {} {}".format(code, ent_words, entity, foll_char)
 
 
     def post_process_md(self, text):
         """Post-processing operation to improve formatting of converted text."""
         # post-process named entity tags:
-        text = re.sub("@([A-Z]+)@ +(.+?)\n([^~]|Z)",
+        text = re.sub("@([A-Z.\d]+)@ +(.+?)\n([^~]|Z)",
                       self.post_process_named_entities, text,
                       flags=re.DOTALL)
         # remove blank lines marked with "DELETE_PREVIOUS_BLANKLINES" tag
