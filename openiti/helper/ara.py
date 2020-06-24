@@ -1,5 +1,7 @@
 import re
 import unicodedata
+import urllib
+import doctest
 
 ar_chars = """\
 ء	ARABIC LETTER HAMZA
@@ -93,7 +95,7 @@ noise = re.compile(""" ّ    | # Tashdīd / Shadda
                        ٰ    | # Dagger Alif
                        ـ     # Taṭwīl / Kashīda
                    """, re.VERBOSE)
-splitter = "#META#Header#End#"
+
 
 def denoise(text):
     """Remove non-consonantal characters from Arabic text.
@@ -106,29 +108,40 @@ def denoise(text):
     """
     return re.sub(noise, "", text)
 
+
 deNoise = denoise
 
-def normalize(text, replacement_tuples=[]):
+
+def normalize(text, replacement_tuples=[], regex = False):
     """Normalize Arabic text by replacing complex characters by simple ones.
 
     Args:
         text (str): the string that needs to be normalized
         replacement_tuples (list of tuple pairs): (character, replacement)
+        regex (boolean): a booleann value to specify if a regex pattern should be replaced.
+         The default value is False.
 
     Examples:
         >>> normalize('AlphaBet', [("A", "a"), ("B", "b")])
         'alphabet'
     """
-    for char, repl in replacement_tuples:
-        text = text.replace(char, repl)
+    for pat, repl in replacement_tuples:
+        if not regex:
+            text = text.replace(pat, repl)
+        else:
+            text = re.sub(pat, repl, text)
     return text
 
 
-
-def normalize_ara_light(text):
+def normalize_ara_light(text, regex=False):
     """Lighlty normalize Arabic strings:
     fixing only Alifs, Alif Maqsuras;
     replacing hamzas on carriers with standalone hamzas
+
+    Args:
+        text (str): the string that needs to be normalized
+        regex (boolean): a booleann value to specify if a regex pattern should be replaced.
+         The default value is False.
 
     Examples:
         >>> normalize_ara_light("ألف الف إلف آلف ٱلف")
@@ -145,7 +158,7 @@ def normalize_ara_light(text):
             ("ى", "ي"),                                        # alif maqsura
             ("يء", "ء"), ("ىء", "ء"), ("ؤ", "ء"), ("ئ", "ء"),  # hamzas
             ]
-    return normalize(text, repl)
+    return normalize(text, repl, regex)
     
 
 def normalize_ara_heavy(text):
@@ -169,6 +182,7 @@ def normalize_ara_heavy(text):
             ("ة", "ه")                                       # ta marbuta
             ]
     return normalize(text, repl)
+
 
 def normalize_composites(text, method="NFKC"):
     """Normalize composite characters and ligatures
@@ -248,7 +262,7 @@ def ar_cnt_file(fp, mode="token"):
     Returns:
         (int): Arabic character/token count 
     """
-    import urllib
+    splitter = "#META#Header#End#"
     try:
         with urllib.request.urlopen(fp) as f:
             book = f.read().decode('utf-8')
@@ -273,7 +287,6 @@ def ar_cnt_file(fp, mode="token"):
     else:
         msg = "This text is missing the splitter!\n{}".format(fp)
         raise Exception(msg)
-
 
 
 def ar_ch_cnt(text):
@@ -307,7 +320,5 @@ def ar_tok_cnt(text):
 
 
 if __name__ == "__main__":
-    import doctest
     doctest.testmod()
-    
-    
+
