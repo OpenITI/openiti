@@ -28,7 +28,7 @@ if __name__ == '__main__':
 
 from openiti.helper.funcs import read_header
 from openiti.helper.ara import ar_cnt_file
-from openiti.helper.uri import move_to_new_uri_pth, add_character_count, URI
+from openiti.helper.uri import move_to_new_uri_pth, add_character_count, URI, new_yml
 
 
 created_ymls = []
@@ -300,7 +300,17 @@ if __name__ == "__main__":
 ##    print("Texts in csv file initialized; check if initialization was successful!")
 ##    input("Press Enter to continue")
 
-    # test download_texts_from_CSV function:
-    csv_fp = os.path.join(base_pth, "download_csv_to_uri.csv")
-    download_texts_from_CSV(csv_fp, new_base_pth=base_pth)
-    print("Texts in csv file downloaded and in the right folder. Check!")
+##    # test download_texts_from_CSV function:
+##    csv_fp = os.path.join(base_pth, "download_csv_to_uri.csv")
+##    download_texts_from_CSV(csv_fp, new_base_pth=base_pth)
+##    print("Texts in csv file downloaded and in the right folder. Check!")
+
+    folder = r"D:\London\OpenITI\barzakh\barzakh"
+    target_base_pth = r"D:\London\OpenITI\25Y_repos"
+    ignore = (".yml", ".md", ".py", ".git", ".gitignore")
+    for fn in os.listdir(folder):
+        if not fn.endswith(ignore) and "oorlib" not in fn:
+            fp = os.path.join(folder, fn)
+            print(fp)
+            if os.path.isfile(fp):
+                initialize_new_text(fp, target_base_pth, execute=False)
