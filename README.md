@@ -13,7 +13,13 @@ Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip in
 
 ## Change log: 
 
+### v.0.0.8: 
+
+* `openiti.new_books.add.add_books`: fix import bug
+* `openiti.new_books.convert`: add converter for Noorlib html files
+
 ### v.0.0.7: 
+
 * `openiti.git.get_issues`: change authentication from username/password to GitHub token
 * `openiti.helper.ara`: add function to normalize composite Arabic characters
 * `openiti.helper.uri`: move functions for adding texts to the corpus to a new module, `openiti.new_books.add.add_books` 
