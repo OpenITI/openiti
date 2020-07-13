@@ -112,36 +112,69 @@ def denoise(text):
 deNoise = denoise
 
 
-def normalize(text, replacement_tuples=[], regex = False):
+def normalize(text, replacement_tuples=[]):
     """Normalize Arabic text by replacing complex characters by simple ones.
+    The function is used internally to do batch replacements. Also, it can be called externally
+     to run custom replacements with a list of tuples of (character/regex, replacement).
 
     Args:
         text (str): the string that needs to be normalized
-        replacement_tuples (list of tuple pairs): (character, replacement)
-        regex (boolean): a booleann value to specify if a regex pattern should be replaced.
-         The default value is False.
+        replacement_tuples (list of tuple pairs): (character/regex, replacement)
 
     Examples:
         >>> normalize('AlphaBet', [("A", "a"), ("B", "b")])
         'alphabet'
     """
     for pat, repl in replacement_tuples:
-        if not regex:
-            text = text.replace(pat, repl)
-        else:
-            text = re.sub(pat, repl, text)
+        text = re.sub(pat, repl, text)
     return text
 
 
-def normalize_ara_light(text, regex=False):
+def normalize_per(text):
+    """Normalize Persian strings by converting Arabic chars to related Persian unicode chars.
+    fixing Alifs, Alif Maqsuras, hamzas, ta marbutas, kaf, ya، Fathatan, kasra;
+
+    Args:
+        text (str): user input string to be normalized
+
+    Examples:
+        >>> normalize_ara_light("سياسي")
+        'سیاسی'
+        >>> normalize_ara_light("مدينة")
+        'مدینه'
+        >>> normalize_ara_light("درِ باز")
+        'در باز'
+        >>> normalize_ara_light("حتماً")
+        'حتما'
+        >>> normalize_ara_light("مدرك")
+        'مدرک'
+        >>> normalize_ara_light("أسماء")
+        'اسما'
+        >>> normalize_ara_light("دربارۀ")
+        'درباره'
+
+    """
+
+    repl = [
+        ('ك', 'ک'),
+        ('[أاإٱ]', 'ا'),
+        ('[يى]ء?', 'ی'),
+        ('ؤِ', 'و'),
+        ('ئ', 'ی'),
+        ('[ءًِ]', ''),
+        ('[ۀة]', 'ه')
+    ]
+
+    return normalize(text, repl)
+
+
+def normalize_ara_light(text):
     """Lighlty normalize Arabic strings:
     fixing only Alifs, Alif Maqsuras;
     replacing hamzas on carriers with standalone hamzas
 
     Args:
         text (str): the string that needs to be normalized
-        regex (boolean): a booleann value to specify if a regex pattern should be replaced.
-         The default value is False.
 
     Examples:
         >>> normalize_ara_light("ألف الف إلف آلف ٱلف")
@@ -158,7 +191,7 @@ def normalize_ara_light(text, regex=False):
             ("ى", "ي"),                                        # alif maqsura
             ("يء", "ء"), ("ىء", "ء"), ("ؤ", "ء"), ("ئ", "ء"),  # hamzas
             ]
-    return normalize(text, repl, regex)
+    return normalize(text, repl)
     
 
 def normalize_ara_heavy(text):
