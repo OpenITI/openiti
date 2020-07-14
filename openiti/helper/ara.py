@@ -257,7 +257,7 @@ def ar_cnt_file(fp, mode="token"):
             book = f.read()
 
     if splitter in book:
-        text = book.split(splitter)[1]
+        text = book.split(splitter)[-1]
 
         # remove Editorial sections:
         
