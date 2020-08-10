@@ -128,9 +128,9 @@ class GenericConverter(object):
 
 
     def filter_files_in_folder(self, source_folder, extensions=[],
-                               exclude_extensions=[]):
+                               exclude_extensions=[], fn_regex=None):
         """Make a list of all the files that have (or don't have) \
-        specific extensions.
+        specific extensions, and/or match a specific regex pattern.
 
         Args:
             source_folder (str): path to the folder.
@@ -143,6 +143,11 @@ class GenericConverter(object):
                 only files without one of the extensions in this list
                 will be usedwill.
                 Defaults to an empty list
+                (=> all files in the `source_folder` will be used)
+            fn_regex (str): regular expression defining the filename pattern
+                e.g., "-(ara|per)\d". If `fn_regex` is defined,
+                only files whose filename matches the pattern will be converted.
+                Defaults to None
                 (=> all files in the `source_folder` will be used)
 
         Returns:
@@ -157,20 +162,25 @@ class GenericConverter(object):
         for fn in os.listdir(source_folder):
             fp = os.path.join(source_folder, fn)
             if os.path.isfile(fp):
+                incl = True
                 ext = os.path.splitext(fn)[-1]
+                if fn_regex:
+                    if not re.findall(fn_regex, fn):
+                        incl = False
                 if extensions:
-                    if ext in extensions:
-                        fp_list.append(fp)
-                elif exclude_extensions:
-                    if not ext in exclude_extensions:
-                        fp_list.append(fp)
-                else:
+                    if ext not in extensions:
+                        incl = False
+                if exclude_extensions:
+                    if ext in exclude_extensions:
+                        incl = False
+                if incl:
                     fp_list.append(fp)
         return fp_list
 
 
-    def convert_files_in_folder(self, source_folder,
-                                extensions=[], exclude_extensions=[]):
+    def convert_files_in_folder(self, source_folder, dest_folder=None,
+                                extensions=[], exclude_extensions=[],
+                                fn_regex=None):
         """Convert all files in a folder to OpenITI format.\
         Use the `extensions` and `exclude_extensions` lists to filter\
         the files to be converted.
@@ -183,17 +193,22 @@ class GenericConverter(object):
             exclude_extensions (list): list of extensions;
                 if this list is not empty,
                 only files whose extension is not in the list will be converted.
+            fn_regex (str): regular expression defining the filename pattern
+                e.g., "-(ara|per)\d". If `fn_regex` is defined,
+                only files whose filename matches the pattern will be converted.
 
         Returns:
             None
         """
+        if dest_folder:
+            self.dest_folder = dest_folder
         fp_list = self.filter_files_in_folder(source_folder, extensions,
-                                              exclude_extensions)
+                                              exclude_extensions, fn_regex)
         for fp in fp_list:
             self.convert_file(fp)
 
 
-    def convert_file(self, source_fp):
+    def convert_file(self, source_fp, dest_fp=None):
         """Convert one file to OpenITI format.
 
         Args:
@@ -209,7 +224,8 @@ class GenericConverter(object):
         # (based on the source_fp and the self.dest_folder value;
         # if no specific self.dest_folder is given, a `converted` folder
         # will be created in the folder of the source file)
-        dest_fp = self.make_dest_fp(source_fp)
+        if not dest_fp:
+            dest_fp = self.make_dest_fp(source_fp)
         self.source_fp = source_fp
 
 ##        # get the metadata from the source_fp and format it

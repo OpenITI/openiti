@@ -1,5 +1,17 @@
 """A converter for converting GRAR tei xml files into OpenITI format.
 
+The converter has two main functions:
+* convert_file: convert a single html file.
+* convert_files_in_folder: convert all html files in a given folder
+
+Usage examples:
+    >>> from tei_converter_GRAR import convert_file, convert_files_in_folder
+    >>> folder = r"test/GRAR/"
+    >>> convert_file(folder+"GRAR000070.xml", dest_fp=folder+"converted/GRAR000070")
+    >>> convert_files_in_folder(folder, dest_folder=folder+"converted")
+
+Both functions use the GRARConverter class to do the heavy lifting.
+
 The Graeco-Arabic studies website (graeco-arabic-studies.org)
 contains 78 texts transcribed in TEI xml, and 21 additional
 texts available only in html.
@@ -43,13 +55,13 @@ save_file                   (inherited)                (inherited)
                                                        format_html_metadata
 =========================== ========================== =========================
 
-Examples:
-    >>> from tei_converter_GRAR import GRARConverter
-    >>> conv = GRARConverter(dest_folder="test/converted")
-    >>> conv.VERBOSE = False
-    >>> folder = r"test"
-    >>> fn = r"GRAR000070"
-    >>> conv.convert_file(os.path.join(folder, fn))
+##Examples:
+##    >>> from tei_converter_GRAR import GRARConverter
+##    >>> conv = GRARConverter(dest_folder="test/GRAR/converted")
+##    >>> conv.VERBOSE = False
+##    >>> folder = r"test/GRAR"
+##    >>> fn = r"GRAR000070.xml"
+##    >>> conv.convert_file(os.path.join(folder, fn))
 
 """
 import os
@@ -64,6 +76,60 @@ if __name__ == '__main__':
 
 from openiti.new_books.convert.tei_converter_generic import TeiConverter
 from openiti.new_books.convert.helper import html2md_GRAR
+
+
+
+def convert_file(fp, dest_fp=None):
+    """Convert one file to OpenITI format.
+
+    Args:
+        source_fp (str): path to the file that must be converted.
+        dest_fp (str): path to the converted file. Defaults to None
+            (in which case, the converted folder will be put in a folder
+            named "converted" in the same folder as the source_fp)
+
+    Returns:
+        None
+    """
+    conv = GRARConverter() 
+    conv.convert_file(fp, dest_fp=dest_fp)
+
+def convert_files_in_folder(src_folder, dest_folder=None,
+                            extensions=[], exclude_extensions=["yml"],
+                            fn_regex=None):
+    """Convert all files in a folder to OpenITI format.\
+    Use the `extensions` and `exclude_extensions` lists to filter\
+    the files to be converted.
+
+    Args:
+        src_folder (str): path to the folder that contains
+            the files that must be converted.
+        dest_folder (str): path to the folder where converted files
+            will be stored.
+        extensions (list): list of extensions; if this list is not empty,
+            only files with an extension in the list should be converted.
+        exclude_extensions (list): list of extensions;
+            if this list is not empty,
+            only files whose extension is not in the list will be converted.
+        fn_regex (str): regular expression defining the filename pattern
+            e.g., "-(ara|per)\d". If `fn_regex` is defined,
+            only files whose filename matches the pattern will be converted.
+
+    Returns:
+        None
+    """
+    conv = GRARConverter()
+    conv.convert_files_in_folder(src_folder, dest_folder=dest_folder,
+                                 extensions=extensions,
+                                 exclude_extensions=exclude_extensions,
+                                 fn_regex=fn_regex)
+
+
+################################################################################
+
+
+
+
 
 
 class GRARConverter(TeiConverter):
@@ -139,24 +205,28 @@ class GRARConverter(TeiConverter):
         text = c.convert(text_soup)
         return text
 
-    def convert_files_in_folder(self, folder):
-        for fn in os.listdir(folder):
-            fp = os.path.join(folder, fn)
-            if os.path.isfile(fp) and fn.endswith("ara1"):
-                self.convert_file(fp)
+##    def convert_files_in_folder(self, folder):
+##        for fn in os.listdir(folder):
+##            fp = os.path.join(folder, fn)
+##            if os.path.isfile(fp) and fn.endswith("ara1"):
+##                self.convert_file(fp)
 
-    def convert_file(self, source_fp):
+    def convert_file(self, source_fp, dest_fp=None):
         """Convert one file to OpenITI format.
 
         Args:
             source_fp (str): path to the file that must be converted.
+            dest_fp (str): path to the converted file. Defaults to None
+                (in which case, the converted folder will be put in a folder
+                named "converted" in the same folder as the source_fp)
 
         Returns:
             None
         """
         if self.VERBOSE:
             print("converting", source_fp)
-        dest_fp = self.make_dest_fp(source_fp)
+        if dest_fp == None:
+            dest_fp = self.make_dest_fp(source_fp)
         with open(source_fp, mode="r", encoding="utf-8") as file:
             text = file.read()
         text = self.pre_process(text)
@@ -326,12 +396,12 @@ def list_all_tags(folder, header_end_tag="</teiHeader>"):
 ##############################################################################
 
 if __name__ == "__main__":
-    conv = GRARConverter(dest_folder="test/converted")
-    conv.VERBOSE = False
-    folder = r"test"
-    fn = r"GRAR000070"
-    conv.convert_file(os.path.join(folder, fn))
-    input("passed test")
+##    conv = GRARConverter(dest_folder="test/converted")
+##    conv.VERBOSE = False
+##    folder = r"test"
+##    fn = r"GRAR000070"
+##    conv.convert_file(os.path.join(folder, fn))
+##    input("passed test")
     import doctest
     doctest.testmod()
 

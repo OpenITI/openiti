@@ -1,12 +1,15 @@
 """Generic converter that converts HTML files to OpenITI mARkdown.
 
+This generic converter forms the basis for specific converters
+tailored to libraries whose texts are in html format.
+
 Examples:
     Generic html conversion:
     >>> from html_converter_generic import GenericHtmlConverter
     >>> gen_converter = GenericHtmlConverter(dest_folder="test/converted")
     >>> gen_converter.VERBOSE = False
-    >>> folder = r"test"
-    >>> fn = r"86596.html"
+    >>> folder = r"test/eShia"
+    >>> fn = "86596.html"
     >>> gen_converter.convert_file(os.path.join(folder, fn))
     >>> gen_converter.convert_files_in_folder(folder, extensions=[".html"])
 
@@ -15,8 +18,8 @@ Examples:
     >>> eShiaConv.VERBOSE = False
     >>> from helper import html2md_eShia
     >>> eShiaConv.add_structural_annotations = html2md_eShia.markdownify  # (1)
-    >>> folder = r"test"
-    >>> fn = r"86596.html"
+    >>> folder = r"test/eShia"
+    >>> fn = "86596.html"
     >>> eShiaConv.convert_file(os.path.join(folder, fn))
     
     # (1) overwrite the add_structural_annotations method with another function
