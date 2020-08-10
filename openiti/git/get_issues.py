@@ -30,8 +30,8 @@ def define_text_uris(issues, verbose=False):
         (list): the list of updated github issue objects
     """
     for issue in issues:
-        if re.findall(URI_REGEX, issue.title):
-            issue.uri = re.findall(URI_REGEX, issue.title)[0]
+        if re.findall(URI_REGEX, issue.title.strip()+"-ara1"):
+            issue.uri = re.findall(URI_REGEX, issue.title.strip()+"-ara1")[0]
         elif re.findall("OLD URI.+?"+URI_REGEX, issue.body):
             issue.uri = re.findall("OLD URI.+?"+URI_REGEX, issue.body)[0]
         elif re.findall(URI_REGEX, issue.body):
@@ -151,7 +151,7 @@ if __name__ == "__main__":
     with open(tok_fp, mode="r") as file:
         tok = file.read()
     issues = get_issues("OpenITI/Annotation",
-                        issue_labels=["URI change suggestion"],
+                        issue_labels=["text tagged"],
                         state="open", access_token=tok
                         )
     for issue in issues:
