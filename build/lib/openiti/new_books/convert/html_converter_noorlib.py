@@ -1,5 +1,18 @@
-"""Converter that converts HTML files from the eShia library to OpenITI mARkdown.
+"""Converter that converts HTML files from the Noorlib library
+to OpenITI mARkdown.
 
+The converter has two main functions:
+* convert_file: convert a single html file.
+* convert_files_in_folder: convert all html files in a given folder
+
+Usage examples:
+    >>> from html_converter_noorlib import convert_file
+    >>> folder = r"test/noorlib/"
+    >>> convert_file(folder+"10584.html", dest_fp=folder+"converted/10584")
+    >>> from html_converter_noorlib import convert_files_in_folder
+    >>> convert_files_in_folder(folder, dest_folder=folder+"converted")  
+
+Both functions use the NoorlibHtmlConverter class to do the heavy lifting.
 The NoorlibHtmlConverter is a subclass of GenericHtmlConverter,
 which in its turn inherits many functions from the GenericConverter.
 
@@ -8,12 +21,6 @@ GenericConverter
             \_ EShiaHtmlConverter
             \_ NoorlibHtmlConverter
             \_ ...
-
-NoorlibHtmlConverter's main methods are inherited from the GenericConverter:
-
-* convert_file(source_fp): basic procedure for converting an html file.
-* convert_files_in_folder(source_folder): convert all html files in the folder
-    (calls convert_file for each html file)
 
 Overview of the methods of these classes:
 (methods of GenericConverter are inherited by GenericHtmlConverter;
@@ -44,17 +51,17 @@ save_file                          (inherited)                (inherited)
                                    find_example_of_tag        (inherited)
 ================================== ========================== ==========================
 
-The EShiaHtmlConverter's add_structural_annotations method uses html2md_noorlib,
+The NoorlibHtmlConverter's add_structural_annotations method uses html2md_noorlib,
 an adaptation of the generic html2md (based on markdownify)
 to convert the html tags to OpenITI annotations. 
 
 Examples:
     >>> from html_converter_noorlib import NoorlibHtmlConverter
     >>> conv = NoorlibHtmlConverter()
-    >>> conv.dest_folder = "converted"
+    >>> conv.dest_folder = r"test/noorlib/converted"
     >>> conv.VERBOSE = False
-    >>> folder = r"test/"
-    >>> conv.convert_file(folder+"86596.html")
+    >>> folder = r"test/noorlib/"
+    >>> conv.convert_file(folder+"10584.html")
     >>> conv.convert_files_in_folder(folder, ["html"])
 """
 
@@ -69,6 +76,55 @@ if __name__ == '__main__':
 
 from openiti.new_books.convert.html_converter_generic import GenericHtmlConverter
 from openiti.new_books.convert.helper import html2md_noorlib
+
+
+def convert_file(fp, dest_fp=None):
+    """Convert one file to OpenITI format.
+
+    Args:
+        source_fp (str): path to the file that must be converted.
+        dest_fp (str): path to the converted file. Defaults to None
+            (in which case, the converted folder will be put in a folder
+            named "converted" in the same folder as the source_fp)
+
+    Returns:
+        None
+    """
+    conv = NoorlibHtmlConverter() 
+    conv.convert_file(fp, dest_fp=dest_fp)
+
+def convert_files_in_folder(src_folder, dest_folder=None,
+                            extensions=["html"], exclude_extensions=["yml"],
+                            fn_regex=None):
+    """Convert all files in a folder to OpenITI format.\
+    Use the `extensions` and `exclude_extensions` lists to filter\
+    the files to be converted.
+
+    Args:
+        src_folder (str): path to the folder that contains
+            the files that must be converted.
+        dest_folder (str): path to the folder where converted files
+            will be stored.
+        extensions (list): list of extensions; if this list is not empty,
+            only files with an extension in the list should be converted.
+        exclude_extensions (list): list of extensions;
+            if this list is not empty,
+            only files whose extension is not in the list will be converted.
+        fn_regex (str): regular expression defining the filename pattern
+            e.g., "-(ara|per)\d". If `fn_regex` is defined,
+            only files whose filename matches the pattern will be converted.
+
+    Returns:
+        None
+    """
+    conv = NoorlibHtmlConverter()
+    conv.convert_files_in_folder(src_folder, dest_folder=dest_folder,
+                                 extensions=extensions,
+                                 exclude_extensions=exclude_extensions,
+                                 fn_regex=fn_regex)
+
+
+################################################################################
 
 
 class NoorlibHtmlConverter(GenericHtmlConverter):
@@ -266,32 +322,10 @@ class NoorlibHtmlConverter(GenericHtmlConverter):
 
         return text
 
-if __name__ == "__main__":
-    #import doctest
-    #doctest.testmod()
-    #input("Passed all tests. Continue?")
-    import os
 
-    errors = [#r"G:\London\OpenITI\new\NoorLib\2020-06-16\0872IdrisCimadDin\0872IdrisCimadDin.CuyunAkhbar\0872IdrisCimadDin.CuyunAkhbar.Noorlib0020423-ara1_VOL6.html", # error: if "Book title" in line][0].strip() IndexError: list index out of range
-              #r"G:\London\OpenITI\new\NoorLib\2020-06-16\0872IdrisCimadDin\0872IdrisCimadDin.CuyunAkhbar\0872IdrisCimadDin.CuyunAkhbar.Noorlib0007954-ara1_VOL5.html", # error: if "Book title" in line][0].strip() IndexError: list index out of range
-              #r"G:\London\OpenITI\new\NoorLib\2020-06-16\0411HamidDinKirmani\0411HamidDinKirmani.RahatCaql.Noorlib0023925-ara1.html", # line 219, in add_structural_annotations : text = html2md_eShia.markdownify(html) error:  File "C:\Python34\lib\site-packages\openiti\new_books\convert\helper\html2md.py", line 234, in process_tag : for el in node.children: RuntimeError: maximum recursion depth exceeded
-              #r"G:\London\OpenITI\new\NoorLib\2020-06-16\Anon.KitabHaftWaAzilla\Anon.KitabHaftWaAzilla.NoorLb0015842-ara1.html", # # error: if "Book title" in line][0].strip() IndexError: list index out of range
-              #r"G:\London\OpenITI\new\NoorLib\2020-06-16\0000DaciQarmatiCabdan\converted\0000DaciQarmatiCabdan.ShajaratYaqin.Noorlib0035479-ara1_html", # error: meta = [line.strip() for line in re.split("<br ?/?>", meta_div.prettify())] : AttributeError: 'NoneType' object has no attribute 'prettify'
-              #r"G:\London\OpenITI\new\NoorLib\2020-06-16\0612CaliIbnWalidYamani\0612CaliIbnWalidYamani.DamighBatil_VOLS\CaliIbnWalidYamani.DamighBatil.Noorlib0005343-ara1_VOL2.html", # error: if "Book title" in line][0].strip() IndexError: list index out of range
-              #r"G:\London\OpenITI\new\NoorLib\2020-06-16\0612CaliIbnWalidYamani\0612CaliIbnWalidYamani.DamighBatil_VOLS\CaliIbnWalidYamani.DamighBatil.Noorlib0005343-ara1_VOL1.html", # error: if "Book title" in line][0].strip() IndexError: list index out of range
-              ]
-    
-    conv = NoorlibHtmlConverter()
-    folder = r"G:\London\OpenITI\new\NoorLib\2020-06-16"
-    conv.dest_folder = os.path.join(folder, "converted")
-    conv.convert_file(r"G:\London\OpenITI\new\NoorLib\2020-06-16\0411HamidDinKirmani\0411HamidDinKirmani.RahatCaql.Noorlib0023925-ara1.html")
-    input("CONTINUE?")
-    for root, dirs, files in os.walk(folder):
-        for fn in files:
-            fp = os.path.join(root, fn)
-            if fp.endswith("html"):
-                #print("converting", fp)
-                if fp not in errors:
-                    conv.convert_file(fp)
-    for fp in errors:
-        conv.convert_file(fp)
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
+    input("Passed all tests. Continue?")
+
+

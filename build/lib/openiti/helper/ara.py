@@ -1,5 +1,7 @@
 import re
 import unicodedata
+import urllib
+import doctest
 
 ar_chars = """\
 ء	ARABIC LETTER HAMZA
@@ -74,7 +76,7 @@ ar_chars = """\
 ۵	EXTENDED ARABIC-INDIC DIGIT FIVE
 ‌	ZERO WIDTH NON-JOINER
 ‍	ZERO WIDTH JOINER"""
-ar_chars = [x.split("\t")[0] for x in ar_chars.splitlines()]
+JOINERar_chars = [x.split("\t")[0] for x in ar_chars.splitlines()]
 #ar_chars = "ذ١٢٣٤٥٦٧٨٩٠ّـضصثقفغعهخحجدًٌَُلإإشسيبلاتنمكطٍِلأأـئءؤرلاىةوزظْلآآ"
 ar_char = re.compile("[{}]".format("".join(ar_chars))) # regex for one Arabic character
 ar_tok = re.compile("[{}]+".format("".join(ar_chars))) # regex for one Arabic token
@@ -93,7 +95,7 @@ noise = re.compile(""" ّ    | # Tashdīd / Shadda
                        ٰ    | # Dagger Alif
                        ـ     # Taṭwīl / Kashīda
                    """, re.VERBOSE)
-splitter = "#META#Header#End#"
+
 
 def denoise(text):
     """Remove non-consonantal characters from Arabic text.
@@ -106,29 +108,73 @@ def denoise(text):
     """
     return re.sub(noise, "", text)
 
+
 deNoise = denoise
+
 
 def normalize(text, replacement_tuples=[]):
     """Normalize Arabic text by replacing complex characters by simple ones.
+    The function is used internally to do batch replacements. Also, it can be called externally
+     to run custom replacements with a list of tuples of (character/regex, replacement).
 
     Args:
         text (str): the string that needs to be normalized
-        replacement_tuples (list of tuple pairs): (character, replacement)
+        replacement_tuples (list of tuple pairs): (character/regex, replacement)
 
     Examples:
         >>> normalize('AlphaBet', [("A", "a"), ("B", "b")])
         'alphabet'
     """
-    for char, repl in replacement_tuples:
-        text = text.replace(char, repl)
+    for pat, repl in replacement_tuples:
+        text = re.sub(pat, repl, text)
     return text
 
+
+def normalize_per(text):
+    """Normalize Persian strings by converting Arabic chars to related Persian unicode chars.
+    fixing Alifs, Alif Maqsuras, hamzas, ta marbutas, kaf, ya، Fathatan, kasra;
+
+    Args:
+        text (str): user input string to be normalized
+
+    Examples:
+        >>> normalize_ara_light("سياسي")
+        'سیاسی'
+        >>> normalize_ara_light("مدينة")
+        'مدینه'
+        >>> normalize_ara_light("درِ باز")
+        'در باز'
+        >>> normalize_ara_light("حتماً")
+        'حتما'
+        >>> normalize_ara_light("مدرك")
+        'مدرک'
+        >>> normalize_ara_light("أسماء")
+        'اسما'
+        >>> normalize_ara_light("دربارۀ")
+        'درباره'
+
+    """
+
+    repl = [
+        ('ك', 'ک'),
+        ('[أاإٱ]', 'ا'),
+        ('[يى]ء?', 'ی'),
+        ('ؤِ', 'و'),
+        ('ئ', 'ی'),
+        ('[ءًِ]', ''),
+        ('[ۀة]', 'ه')
+    ]
+
+    return normalize(text, repl)
 
 
 def normalize_ara_light(text):
     """Lighlty normalize Arabic strings:
     fixing only Alifs, Alif Maqsuras;
     replacing hamzas on carriers with standalone hamzas
+
+    Args:
+        text (str): the string that needs to be normalized
 
     Examples:
         >>> normalize_ara_light("ألف الف إلف آلف ٱلف")
@@ -169,6 +215,7 @@ def normalize_ara_heavy(text):
             ("ة", "ه")                                       # ta marbuta
             ]
     return normalize(text, repl)
+
 
 def normalize_composites(text, method="NFKC"):
     """Normalize composite characters and ligatures
@@ -237,18 +284,21 @@ def denormalize(text):
 
 
 #def ar_ch_len(fp):
-def ar_cnt_file(fp, mode="token"):
+def ar_cnt_file(fp, mode="token", incl_editor_sections=True):
     """Count the number of Arabic characters/tokens in a text, given its pth
 
     Args:
         fp (str): url / path to a file
         mode (str): either "char" for count of Arabic characters,
                     or "token" for count of Arabic tokens
+        incl_editor_sections (bool): if False, the sections marked as editorial
+            (### |EDITOR|) will be left out of the token/character count.
+            Default: True (editorial sections will be counted)
 
     Returns:
         (int): Arabic character/token count 
     """
-    import urllib
+    splitter = "#META#Header#End#"
     try:
         with urllib.request.urlopen(fp) as f:
             book = f.read().decode('utf-8')
@@ -257,12 +307,11 @@ def ar_cnt_file(fp, mode="token"):
             book = f.read()
 
     if splitter in book:
-        text = book.split(splitter)[1]
+        text = book.split(splitter)[-1]
 
-        # remove Editorial sections:
-        
-        text = re.sub(r"### \|EDITOR.+?(### |\Z)", r"\1", text,
-                      flags = re.DOTALL)
+        if not incl_editor_sections:
+            text = re.sub(r"### \|EDITOR.+?(### |\Z)", r"\1", text,
+                          flags = re.DOTALL)
 
         # count the number of Arabic letters or tokens:
         
@@ -273,7 +322,6 @@ def ar_cnt_file(fp, mode="token"):
     else:
         msg = "This text is missing the splitter!\n{}".format(fp)
         raise Exception(msg)
-
 
 
 def ar_ch_cnt(text):
@@ -307,7 +355,5 @@ def ar_tok_cnt(text):
 
 
 if __name__ == "__main__":
-    import doctest
     doctest.testmod()
-    
-    
+

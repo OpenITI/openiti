@@ -22,6 +22,7 @@ texts not available in the original program
 * etc.
 
 Database structure
+==================
 
 The database consists of a large number of folders and files:
 
@@ -42,6 +43,7 @@ of thousand books (xxxx being the Shamela id of the book):
 - txxxx contains the section titles
 
 Module description
+==================
 
 This module contains two major components:
 
@@ -107,6 +109,105 @@ from openiti.new_books.convert.helper import bok
 
 VERBOSE = False
 
+
+
+def main(meta_folder=None, files_folder=None, books_folder=None,
+         conv_folder=None, download_date="", download_source="",
+         config_fp=None, extensions=["mdb"], fn_regex=None):
+    """Collect the variables and carry out the conversion.
+
+    Args:
+        meta_folder (str): path to the folder containing metadata extracted
+            from the database
+        files_folder (str): path to the `Files` folder of the database
+            (containing the main metadata database files)
+        books_folder (str): path to the `Bookss` folder of the database
+            (containing the .mdb files containing the text of the books)
+        conv_folder (str): path to the folder where the converted files should
+            be stored
+        download_date (str): (approximate) date when the database was downloaded
+        download_source (str): name and/or dowload url of the database
+        config_fp (str): path to a config.py file containing
+            the above-mentioned parameters
+            NB: to print an empty config file: print_default_config_file()
+    """
+    # 0- import configuration if configuration file is given:
+
+    if config_fp:
+        import shutil
+        shutil.copyfile(config_fp, "temp_config.py")
+        from temp_config import files_folder, books_folder, meta_folder,\
+            conv_folder, download_date, download_source, fn_regex, extensions
+        os.remove("temp_config.py")
+
+    # 1a- collect metadata (extract it if it has not been extracted yet):
+
+    if not meta_folder:
+        if files_folder:
+            meta_folder = os.path.join(os.path.dirname(files_folder),
+                                       "extracted_metadata")
+            extract_metadata(files_folder, meta_folder)
+        else:
+            print("Has the metadata already been extracted?")
+            resp = input("Y/N? ")
+            if resp.upper() == "Y":
+                print("Provide the path to the folder that contains the \
+metadata json files:")
+                meta_folder = input()
+            else:
+                print("Provide the path to the `Files` folder of the \
+Shamela database:")
+                files_folder = input()
+                if not re.match("(?:\A|[\\/])Files[\\/]?", folder):
+                    msg = "folder path should end with `Files` or `Files/`"
+                    raise Exception(msg)
+                meta_folder = os.path.join(os.path.dirname(files_folder),
+                                           "extracted_metadata")
+                extract_metadata(files_folder, meta_folder)
+        if not books_folder:
+                  books_folder = os.path.join(os.path.dirname(meta_folder),
+                                   "Books")
+
+    if not books_folder:
+        print("Provide the path to the `Books` folder of the Shamela database:")
+        books_folder = input()
+    if not conv_folder:
+        conv_folder = books_folder+"Converted"
+
+    meta_fp = os.path.join(meta_folder, r"main_metadata_reform.json")
+    with open(meta_fp, mode="r", encoding="utf-8") as file:
+        all_meta = json.load(file)
+
+    # 1b - Add some additional metadata:
+
+    if not download_date:
+        print("Write the (approximate) date when the library was downloaded: ")
+        download_date = input()
+    if not download_source:
+        print("write the name and/or url of the downloaded library: ")
+        download_source = input()
+
+    additional_meta = OrderedDict()
+    additional_meta["DownloadSource"] = download_source
+    additional_meta["DownloadDate"] = download_date
+    additional_meta["ConversionDate"] = datetime.today().strftime('%Y-%m-%d')
+
+    # 2- convert files:
+
+    conv = BokJsonConverter(all_meta=all_meta,
+                            additional_meta=additional_meta,
+                            dest_folder=conv_folder)
+    conv.convert_files_in_folder(conv_folder, extensions=extensions,
+                                 fn_regex=fn_regex)
+    print("Converted files can be found in", conv_folder)
+    print("(metadata in {})".format(meta_folder))
+
+
+################################################################################
+
+
+
+
 class BokJsonConverter(generic_converter.GenericConverter):
     """Extract book data from .mdb files into json, and convert into mARkdown.
     """
@@ -133,7 +234,7 @@ class BokJsonConverter(generic_converter.GenericConverter):
         self.footnote_regex = r"[\r\¶\n ]*¬?_{5,}[\r\n\¶ ]*(.*)"
 
 
-    def convert_file(self, source_fp):
+    def convert_file(self, source_fp, dest_fp=None):
         """Convert one file to OpenITI format.
 
         Args:
@@ -144,7 +245,8 @@ class BokJsonConverter(generic_converter.GenericConverter):
         """
         if self.VERBOSE:
             print("converting", source_fp)
-        dest_fp = self.make_dest_fp(source_fp)
+        if dest_fp == None:
+            dest_fp = self.make_dest_fp(source_fp)
         shamid = re.findall("\d+", source_fp)[-1]
 
         book_data, toc_data, metadata = self.get_data(source_fp, shamid)
@@ -161,18 +263,19 @@ class BokJsonConverter(generic_converter.GenericConverter):
         self.save_file(text, dest_fp)
         #print("saved text to", dest_fp)
 
-    def convert_files_in_folder(self, source_folder,
-                                extensions=[]):
-        if extensions == ["mdb"] or extensions == [".mdb"]:
-            json_folder = self.mdb2json(source_folder)
+    def convert_files_in_folder(self, source_folder, dest_folder=None,
+                                extensions=[], fn_regex=None):
+        if "mdb" in " ".join(extensions):
+            json_folder = self.mdb2json(source_folder, fn_regex=fn_regex)
             print("conversion from mdb to json completed.")
             extensions = ["json"]
             source_folder = json_folder
             self.dest_folder = os.path.join(self.dest_folder, "txt")
         print("Converting from json to txt...")
-        super().convert_files_in_folder(source_folder, extensions=extensions)
+        super().convert_files_in_folder(source_folder, extensions=extensions,
+                                        fn_regex=fn_regex)
 
-    def mdb2json(self, source_folder):
+    def mdb2json(self, source_folder, fn_regex=None):
         """Convert mdb files to json files.
 
         The .mdb files are usually in the Books folder,
@@ -184,7 +287,7 @@ class BokJsonConverter(generic_converter.GenericConverter):
         mdb_files = []
         for root, dirs, files in os.walk(source_folder):
             for fn in files:
-                if fn.endswith(".mdb"):
+                if fn.endswith(".mdb") and re.findall(fn_regex, fn):
                     mdb_files.append(os.path.join(root, fn))
         print("Converting {} .mdb files to json".format(len(mdb_files)))
         failed = []
@@ -469,6 +572,8 @@ class BokJsonConverter(generic_converter.GenericConverter):
         return text
 
 
+################################################################################
+
 
 def extract_metadata(files_folder, outfolder):
     """Extract the book metadata from the Files folder of the Shamela program.
@@ -594,6 +699,7 @@ def reformat_metadata(d, authors_dict):
                         meta[i][k] = authors_dict[id_][v]
     return meta
 
+
 def reformat_betaka(meta, i, row):
     """Reformats the Shamela Betaka
 
@@ -613,6 +719,7 @@ def reformat_betaka(meta, i, row):
         else:
             meta[i]["digitization_comments"] = b[0].strip()
     return meta
+
 
 def print_default_config_file():
     config="""\
@@ -638,98 +745,17 @@ download_date = ""
 
 # name and/or url of the downloaded database:
 download_source = ""
+
+# regular expression pattern for file names to be converted:
+fn_regex = None
+
+# extensions of the files that should be converted:
+extensions = ["mdb"]
+
 """
     print(config)
 
-def main(meta_folder=None, files_folder=None, books_folder=None,
-         conv_folder=None, download_date="", download_source="",
-         config_fp=None):
-    """Collect the variables and carry out the conversion.
 
-    Args:
-        meta_folder (str): path to the folder containing metadata extracted
-            from the database
-        files_folder (str): path to the `Files` folder of the database
-            (containing the main metadata database files)
-        books_folder (str): path to the `Bookss` folder of the database
-            (containing the .mdb files containing the text of the books)
-        conv_folder (str): path to the folder where the converted files should
-            be stored
-        download_date (str): (approximate) date when the database was downloaded
-        download_source (str): name and/or dowload url of the database
-        config_fp (str): path to a config.py file containing
-            the above-mentioned parameters
-            NB: to print an empty config file: print_default_config_file()
-    """
-    # 0- import configuration if configuration file is given:
-
-    if config_fp:
-        import shutil
-        shutil.copyfile(config_fp, "temp_config.py")
-        from temp_config import files_folder, books_folder, meta_folder,\
-            conv_folder, download_date, download_source
-        os.remove("temp_config.py")
-
-    # 1a- collect metadata (extract it if it has not been extracted yet):
-
-    if not meta_folder:
-        if files_folder:
-            meta_folder = os.path.join(os.path.dirname(files_folder),
-                                       "extracted_metadata")
-            extract_metadata(files_folder, meta_folder)
-        else:
-            print("Has the metadata already been extracted?")
-            resp = input("Y/N? ")
-            if resp.upper() == "Y":
-                print("Provide the path to the folder that contains the \
-metadata json files:")
-                meta_folder = input()
-            else:
-                print("Provide the path to the `Files` folder of the \
-Shamela database:")
-                files_folder = input()
-                if not re.match("(?:\A|[\\/])Files[\\/]?", folder):
-                    msg = "folder path should end with `Files` or `Files/`"
-                    raise Exception(msg)
-                meta_folder = os.path.join(os.path.dirname(files_folder),
-                                           "extracted_metadata")
-                extract_metadata(files_folder, meta_folder)
-        if not books_folder:
-                  books_folder = os.path.join(os.path.dirname(meta_folder),
-                                   "Books")
-
-    if not books_folder:
-        print("Provide the path to the `Books` folder of the Shamela database:")
-        books_folder = input()
-    if not conv_folder:
-        conv_folder = books_folder+"Converted"
-
-    meta_fp = os.path.join(meta_folder, r"main_metadata_reform.json")
-    with open(meta_fp, mode="r", encoding="utf-8") as file:
-        all_meta = json.load(file)
-
-    # 1b - Add some additional metadata:
-
-    if not download_date:
-        print("Write the (approximate) date when the library was downloaded: ")
-        download_date = input()
-    if not download_source:
-        print("write the name and/or url of the downloaded library: ")
-        download_source = input()
-
-    additional_meta = OrderedDict()
-    additional_meta["DownloadSource"] = download_source
-    additional_meta["DownloadDate"] = download_date
-    additional_meta["ConversionDate"] = datetime.today().strftime('%Y-%m-%d')
-
-    # 2- convert files:
-
-    conv = BokJsonConverter(all_meta=all_meta,
-                            additional_meta=additional_meta,
-                            dest_folder=conv_folder)
-    conv.convert_files_in_folder(conv_folder, extensions=[".mdb"])
-    print("Converted files can be found in", conv_folder)
-    print("(metadata in {})".format(meta_folder))
 
 if __name__ == "__main__":
     #print_default_config_file()

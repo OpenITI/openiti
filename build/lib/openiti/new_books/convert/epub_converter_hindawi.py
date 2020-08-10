@@ -1,25 +1,19 @@
 """Convert Epubs from the Hindawi library to OpenITI mARkdown.
 
-Examples:
-    >>> from epub_converter_hindawi import HindawiEpubConverter
-    >>> from helper.yml2json import yml2json
-    >>> folder = "test/"
-    >>> fn = "26362727.epub"
-    >>> hc = HindawiEpubConverter(dest_folder="test/converted")
-    >>> hc.VERBOSE = False
-    >>> meta_fp = "test/hindawi_metadata_man.yml"
-    >>> hc.metadata_dic = yml2json(meta_fp, container = {})
-    >>> hc.metadata_file = meta_fp
-    >>> hc.convert_file(folder+fn)
+The converter has two main functions:
+* convert_file: convert a single epub file.
+* convert_files_in_folder: convert all epub files in a given folder
 
-    #>>> hc.convert_files_in_folder(folder)
+Usage examples:
+    >>> folder = r"test/hindawi/"
+    >>> meta_fp = folder+"hindawi_metadata_man.yml"
+    >>> from epub_converter_hindawi import convert_file, convert_files_in_folder
+    >>> src_fp = folder+"26362727.epub"
+    >>> convert_file(src_fp, meta_fp, dest_fp=folder+"converted/26362727")
+    >>> convert_files_in_folder(folder, meta_fp, dest_folder=folder+"converted")
+    Converting all files in folder test/hindawi/ with extensions ['epub']
 
-An Epub file is in fact a zipped archive.
-The most important element of the archive for conversion purposes
-are the folders that contain the html files with the text.
-Some Epubs have a table of contents that defines the order
-in which these html files should be read.
-
+Both functions use the HindawiEpubConverter class to do the heavy lifting.
 The HindawiEpubConverter is a subclass of the GenericEpubConverter,
 which in turn is a subclass of the GenericConverter
 from the generic_converter module:
@@ -27,12 +21,6 @@ from the generic_converter module:
 GenericConverter
     \_ GenericEpubConverter
             \_ HindawiEpubConverter
-
-HindawiConverter's main methods are inherited from the GenericConverter:
-
-* convert_file(source_fp): basic procedure for converting an epub file.
-* convert_files_in_folder(source_folder): convert all epub files in the folder
-    (calls convert_file)
 
 Methods of both classes:
 
@@ -64,6 +52,21 @@ save_file                   (inherited)               (inherited)
                             add_unique_tags           (inherited)
 =========================== ========================= =======================
 
+
+Examples:
+    >>> from epub_converter_hindawi import HindawiEpubConverter
+    >>> from helper.yml2json import yml2json
+    >>> folder = "test/"
+    >>> fn = "26362727.epub"
+    >>> hc = HindawiEpubConverter(dest_folder="test/converted")
+    >>> hc.VERBOSE = False
+    >>> meta_fp = "test/hindawi/hindawi_metadata_man.yml"
+    >>> hc.metadata_dic = yml2json(meta_fp, container = {})
+    >>> hc.metadata_file = meta_fp
+    >>> hc.convert_file(folder+fn)
+
+    #>>> hc.convert_files_in_folder(folder)
+
 """
 
 import os
@@ -81,6 +84,64 @@ from openiti.new_books.convert.helper.yml2json import yml2json
 ##from epub_converter_generic import GenericEpubConverter
 ##import html2md_hindawi
 ##from yml2json import yml2json
+
+
+def convert_file(fp, meta_fp, dest_fp=None, verbose=False):
+    """Convert one file to OpenITI format.
+
+    Args:
+        fp (str): path to the file that must be converted.
+        meta_fp (str): path to the yml file containing the Hindawi metadata
+        dest_fp (str): path to the converted file.
+
+    Returns:
+        None
+    """
+    conv = HindawiEpubConverter()
+    conv.VERBOSE = verbose
+    conv.metadata_dic = yml2json(meta_fp, container = {})
+    conv.metadata_file = meta_fp
+    conv.convert_file(fp, dest_fp=dest_fp)
+
+def convert_files_in_folder(src_folder, meta_fp, dest_folder=None, verbose=False,
+                            extensions=["epub"], exclude_extensions=["yml"],
+                            fn_regex=None):
+    """Convert all files in a folder to OpenITI format.\
+    Use the `extensions` and `exclude_extensions` lists to filter\
+    the files to be converted.
+
+    Args:
+        src_folder (str): path to the folder that contains
+            the files that must be converted.
+        meta_fp (str): path to the yml file containing the Hindawi metadata
+        dest_folder (str): path to the folder where converted files
+            will be stored.
+        extensions (list): list of extensions; if this list is not empty,
+            only files with an extension in the list should be converted.
+        exclude_extensions (list): list of extensions;
+            if this list is not empty,
+            only files whose extension is not in the list will be converted.
+        fn_regex (str): regular expression defining the filename pattern
+            e.g., "-(ara|per)\d". If `fn_regex` is defined,
+            only files whose filename matches the pattern will be converted.
+
+    Returns:
+        None
+    """
+    msg = "Converting all files in folder {} with extensions {}"
+    print(msg.format(src_folder, extensions))
+    conv = HindawiEpubConverter()
+    conv.VERBOSE = verbose
+    conv.metadata_dic = yml2json(meta_fp, container = {})
+    conv.metadata_file = meta_fp
+    conv.convert_files_in_folder(src_folder, dest_folder=dest_folder,
+                                 extensions=extensions,
+                                 exclude_extensions=exclude_extensions,
+                                 fn_regex=fn_regex)
+
+
+################################################################################
+
 
 
 

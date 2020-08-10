@@ -1,6 +1,18 @@
 """Converter that converts HTML files from the eShia library to OpenITI mARkdown.
 
-The eShiaHtmlConverter is a subclass of GenericHtmlConverter,
+The converter has two main functions:
+* convert_file: convert a single html file.
+* convert_files_in_folder: convert all html files in a given folder
+
+Usage examples:
+    >>> from html_converter_eShia import convert_file
+    >>> folder = r"test/eShia/"
+    >>> convert_file(folder+"86596.html", dest_fp=folder+"converted/86596")
+    >>> from html_converter_eShia import convert_files_in_folder
+    >>> convert_files_in_folder(folder, dest_folder=folder+"converted")  
+
+Both functions use the EShiaHtmlConverter class to do the heavy lifting.
+The EShiaHtmlConverter is a subclass of GenericHtmlConverter,
 which in its turn inherits many functions from the GenericConverter.
 
 GenericConverter
@@ -8,12 +20,6 @@ GenericConverter
             \_ EShiaHtmlConverter
             \_ NoorlibHtmlConverter
             \_ ...
-
-EShiaHtmlConverter's main methods are inherited from the GenericConverter:
-
-* convert_file(source_fp): basic procedure for converting an html file.
-* convert_files_in_folder(source_folder): convert all html files in the folder
-    (calls convert_file)
 
 Overview of the methods of these classes:
 (methods of GenericConverter are inherited by GenericHtmlConverter;
@@ -52,9 +58,9 @@ Examples:
     >>> from html_converter_eShia import EShiaHtmlConverter
     >>> conv = EShiaHtmlConverter()
     >>> conv.VERBOSE = False
-    >>> folder = r"test/"
+    >>> folder = r"test/eShia/"
     >>> conv.convert_file(folder+"86596.html")
-    >>> conv.convert_files_in_folder(folder, ["html"])
+    >>> conv.convert_files_in_folder(folder, extensions=["html"])
 """
 
 from bs4 import BeautifulSoup
@@ -68,6 +74,56 @@ if __name__ == '__main__':
 
 from openiti.new_books.convert.html_converter_generic import GenericHtmlConverter
 from openiti.new_books.convert.helper import html2md_eShia
+
+
+def convert_file(fp, dest_fp=None, verbose=False):
+    """Convert one file to OpenITI format.
+
+    Args:
+        source_fp (str): path to the file that must be converted.
+        dest_fp (str): path to the converted file.
+
+    Returns:
+        None
+    """
+    conv = EShiaHtmlConverter()
+    conv.VERBOSE = verbose
+    conv.convert_file(fp, dest_fp=dest_fp)
+
+def convert_files_in_folder(src_folder, dest_folder=None,
+                            extensions=["html"], exclude_extensions=["yml"],
+                            fn_regex=None, verbose=False):
+    """Convert all files in a folder to OpenITI format.\
+    Use the `extensions` and `exclude_extensions` lists to filter\
+    the files to be converted.
+
+    Args:
+        src_folder (str): path to the folder that contains
+            the files that must be converted.
+        dest_folder (str): path to the folder where converted files
+            will be stored.
+        extensions (list): list of extensions; if this list is not empty,
+            only files with an extension in the list should be converted.
+        exclude_extensions (list): list of extensions;
+            if this list is not empty,
+            only files whose extension is not in the list will be converted.
+        fn_regex (str): regular expression defining the filename pattern
+            e.g., "-(ara|per)\d". If `fn_regex` is defined,
+            only files whose filename matches the pattern will be converted.
+
+
+    Returns:
+        None
+    """
+    conv = EShiaHtmlConverter()
+    conv.VERBOSE = verbose
+    conv.convert_files_in_folder(src_folder, dest_folder=dest_folder,
+                                 extensions=extensions,
+                                 exclude_extensions=exclude_extensions,
+                                 fn_regex=fn_regex)
+
+
+################################################################################
 
 
 class EShiaHtmlConverter(GenericHtmlConverter):

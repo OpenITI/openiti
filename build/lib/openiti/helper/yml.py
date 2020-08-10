@@ -67,23 +67,28 @@ of colons): not a problem\\n\\n\\n\
         >>> ymlToDic(yml_str) == yml_dic
         True
     """
-    if yml_str == "":
+    if yml_str.strip() == "":
+        raise Exception("Empty YML file!")
         return {}
+    
     # remove new lines (and indentation) except before yaml keys:
 
-    #data = re.sub("\n+$", "", yml_str)
-    #data = re.sub("-\n[ \t]+", "-", data)
-    #data = re.sub("\n[ \t]+", " ", data)
-    data = re.sub("-\n+(?!\w*#+[\w#]+:)[ \t]*", "-", yml_str)
-    data = re.sub("\n+(?!\w*#+[\w#]+:)[ \t]*", " ", data).strip()
+    data = re.sub("\n+$", "", yml_str)
+    data = re.sub("-\n[ \t]+", "-", data)
+    data = re.sub("\n[ \t]+", " ", data)
+    #data = re.sub("-\n+(?!\w*#+[\w#]+:)[ \t]*", "-", yml_str)
+    #data = re.sub("\n+(?!\w*#+[\w#]+:)[ \t]*", " ", data).strip()
 
     # split into key-value pairs and convert to dictionary:
 
     data = data.split("\n")
     dic = dict()
     for d in data:
-        d = re.split(r"(^[\w#]+:)", d, 1)
-        dic[d[1]] = d[2].strip()
+        spl = re.split(r"(^[\w#]+:)", d, 1)
+        try:
+            dic[spl[1]] = spl[2].strip()
+        except:
+            raise Exception("no valid yml key in line", d)
 
     return dic
 
