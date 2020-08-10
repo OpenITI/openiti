@@ -76,7 +76,7 @@ ar_chars = """\
 ۵	EXTENDED ARABIC-INDIC DIGIT FIVE
 ‌	ZERO WIDTH NON-JOINER
 ‍	ZERO WIDTH JOINER"""
-ar_chars = [x.split("\t")[0] for x in ar_chars.splitlines()]
+JOINERar_chars = [x.split("\t")[0] for x in ar_chars.splitlines()]
 #ar_chars = "ذ١٢٣٤٥٦٧٨٩٠ّـضصثقفغعهخحجدًٌَُلإإشسيبلاتنمكطٍِلأأـئءؤرلاىةوزظْلآآ"
 ar_char = re.compile("[{}]".format("".join(ar_chars))) # regex for one Arabic character
 ar_tok = re.compile("[{}]+".format("".join(ar_chars))) # regex for one Arabic token
@@ -308,8 +308,8 @@ def ar_cnt_file(fp, mode="token"):
 
         # remove Editorial sections:
         
-        text = re.sub(r"### \|EDITOR.+?(### |\Z)", r"\1", text,
-                      flags = re.DOTALL)
+        # text = re.sub(r"### \|EDITOR.+?(### |\Z)", r"\1", text,
+        #               flags = re.DOTALL)
 
         # count the number of Arabic letters or tokens:
         
