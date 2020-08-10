@@ -13,6 +13,13 @@ Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip in
 
 ## Change log: 
 
+### v.0.0.9:
+
+* `openiti.new_books.convert` : check and update all converters
+* `openiti.helper.ara` : make counting characters in editorial sections optional (default: include Arabic characters in editorial sections)
+* `openiti.helper.yml` : add custom error messages for broken and empty yml files
+* `openiti.git.git_util` : add git utilities class, with `commit` method
+
 ### v.0.0.8: 
 
 * `openiti.new_books.add.add_books`: fix import bug
