@@ -284,13 +284,16 @@ def denormalize(text):
 
 
 #def ar_ch_len(fp):
-def ar_cnt_file(fp, mode="token"):
+def ar_cnt_file(fp, mode="token", incl_editor_sections=True):
     """Count the number of Arabic characters/tokens in a text, given its pth
 
     Args:
         fp (str): url / path to a file
         mode (str): either "char" for count of Arabic characters,
                     or "token" for count of Arabic tokens
+        incl_editor_sections (bool): if False, the sections marked as editorial
+            (### |EDITOR|) will be left out of the token/character count.
+            Default: True (editorial sections will be counted)
 
     Returns:
         (int): Arabic character/token count 
@@ -306,10 +309,9 @@ def ar_cnt_file(fp, mode="token"):
     if splitter in book:
         text = book.split(splitter)[-1]
 
-        # remove Editorial sections:
-        
-        # text = re.sub(r"### \|EDITOR.+?(### |\Z)", r"\1", text,
-        #               flags = re.DOTALL)
+        if not incl_editor_sections:
+            text = re.sub(r"### \|EDITOR.+?(### |\Z)", r"\1", text,
+                          flags = re.DOTALL)
 
         # count the number of Arabic letters or tokens:
         
