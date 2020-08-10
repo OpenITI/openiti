@@ -4,15 +4,17 @@ Todo:
     if more than one version of the text file is in the folder,
         the script will not automatically copy the best version! 
 
-Command line usage:
-    ``$ collect_txt_files D:\OpenITI\25Y_folders D:\OpenITI\release\texts``
+Examples:
+    Command line usage::
+    
+        $ collect_txt_files D:\\OpenITI\\25Y_folders D:\\OpenITI\\release\\texts
 
     If the source and target directories were not given,
-        the user will be prompted for them:
+    the user will be prompted for them::
 
-    ``$ collect_txt_files
-    Enter the source directory:
-    Enter the target directory:``
+        $ collect_txt_files
+        Enter the source directory:
+        Enter the target directory:
 """
 
 import os
@@ -55,7 +57,7 @@ def collect_text_files(source_dir, dest_dir,
             (e.g., Shamela001185-ara1). Defaults to True.
         
     Returns:
-        cnt (int): number of files copied
+        (int): number of files copied
     """
     cnt = 0
     if not os.path.exists(dest_dir):

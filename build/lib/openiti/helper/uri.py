@@ -55,42 +55,42 @@ Examples:
     0255JahizBasri.Hayawan
 
     - Validity tests: setting invalid values for part of a uri returns an error\
-    (implemented for instantiation of URI objects + setting URI components):
+    (implemented for instantiation of URI objects + setting URI components)::
 
-    # >>> URI("255Jahiz")
-    Exception: Date Error: URI must start with a date of 4 digits (255 has 3!)
+        # >>> URI("255Jahiz")
+        Exception: Date Error: URI must start with a date of 4 digits (255 has 3!)
 
-    # >>> URI("0255Jāḥiẓ")
-    Exception: Author name Error: Author name (Jāḥiẓ) should not contain
-    digits or non-ASCII characters(culprits: ['ā', 'ḥ', 'ẓ'])
+        # >>> URI("0255Jāḥiẓ")
+        Exception: Author name Error: Author name (Jāḥiẓ) should not contain
+        digits or non-ASCII characters(culprits: ['ā', 'ḥ', 'ẓ'])
 
-    # >>> t.author = "Jāḥiẓ"
-    Exception: Author name Error: Author name (Jāḥiẓ) should not contain
-    digits or non-ASCII characters(culprits: ['ā', 'ḥ', 'ẓ'])
+        # >>> t.author = "Jāḥiẓ"
+        Exception: Author name Error: Author name (Jāḥiẓ) should not contain
+        digits or non-ASCII characters(culprits: ['ā', 'ḥ', 'ẓ'])
 
-    # >>> t.author = "0255Jahiz"
-    Exception: Author name Error: Author name (0255Jahiz) should not contain
-    digits or non-ASCII characters(culprits: ['0', '2', '5', '5'])
+        # >>> t.author = "0255Jahiz"
+        Exception: Author name Error: Author name (0255Jahiz) should not contain
+        digits or non-ASCII characters(culprits: ['0', '2', '5', '5'])
 
-    # >>> URI("0255Jahiz.Al-Hayawan")
-    Exception: Book title Error: Book title (Al-Hayawan) should not contain
-    non-ASCII characters(culprits: ['-'])
+        # >>> URI("0255Jahiz.Al-Hayawan")
+        Exception: Book title Error: Book title (Al-Hayawan) should not contain
+        non-ASCII characters(culprits: ['-'])
 
-    # >>> URI("0255Jahiz.Hayawan.Shāmila00123545-ara1")
-    Exception: Version string Error: Version string (Shāmila00123545)
-    should not contain non-ASCII characters(culprits: ['ā'])
+        # >>> URI("0255Jahiz.Hayawan.Shāmila00123545-ara1")
+        Exception: Version string Error: Version string (Shāmila00123545)
+        should not contain non-ASCII characters(culprits: ['ā'])
 
-    # >>> URI("0255Jahiz.Hayawan.Shamela00123545-arab1")
-    Exception: Language code (arab) should be an ISO 639-2 language code,
-    consisting of 3 characters
+        # >>> URI("0255Jahiz.Hayawan.Shamela00123545-arab1")
+        Exception: Language code (arab) should be an ISO 639-2 language code,
+        consisting of 3 characters
 
-    # >>> t.extension = "markdown"
-    Exception: Extension (markdown) is not among the allowed extensions
-    (['inProgress', 'completed', 'mARkdown', 'yml', ''])
+        # >>> t.extension = "markdown"
+        Exception: Extension (markdown) is not among the allowed extensions
+        (['inProgress', 'completed', 'mARkdown', 'yml', ''])
 
-    # >>> URI("0255Jahiz.Hayawan.Shamela00123545-ara1.markdown")
-    Exception: Extension (markdown) is not among the allowed extensions
-    (['inProgress', 'completed', 'mARkdown', 'yml', ''])
+        # >>> URI("0255Jahiz.Hayawan.Shamela00123545-ara1.markdown")
+        Exception: Extension (markdown) is not among the allowed extensions
+        (['inProgress', 'completed', 'mARkdown', 'yml', ''])
 
     - Getting the URI's current uri_type ("author", "book", "version", None),\
     i.e., the longest URI that can be built from the object's components:
@@ -210,13 +210,14 @@ Examples:
         * the original book folders should be (re)moved
         * the original author folder itself should be (re)moved
 
-    Examples:
+    Examples::
+    
         change_uri("0255Jahiz", "0256Jahiz")
         change_uri("0255Jahiz", "0255JahizBasri")
         change_uri("0255Jahiz.Hayawan", "0255Jahiz.KitabHayawan")
-        change_uri("0255Jahiz.Hayawan.Shamela002526-ara1",\
+        change_uri("0255Jahiz.Hayawan.Shamela002526-ara1",
                    "0255Jahiz.Hayawan.Shamela002526-ara2")
-        change_uri("0255Jahiz.Hayawan.Shamela002526-ara1.completed",\
+        change_uri("0255Jahiz.Hayawan.Shamela002526-ara1.completed",
                    "0255Jahiz.Hayawan.Shamela002526-ara1.mARkdown")
 """
 
@@ -320,6 +321,7 @@ class URI:
         0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed
 
         Accessing components of the URI:
+        
         >>> t.author
         'Jahiz'
         >>> t.date
@@ -393,34 +395,42 @@ class URI:
         >>> u.build_pth()
         './0275AH/data/0255Jahiz/0255Jahiz.Hayawan'
 
-        Validity tests: setting invalid values for part of a uri returns an error:
+        Validity tests: setting invalid values for part of a uri returns an error::
 
-        # >>> URI("255Jahiz")
-        Exception: Date Error: URI must start with a date of 4 digits (255 has 3!)
-        # >>> URI("0255Jāḥiẓ")
-        Exception: Author name Error: Author name (Jāḥiẓ) should not contain
-        digits or non-ASCII characters(culprits: ['ā', 'ḥ', 'ẓ'])
-        # >>> t.author = "Jāḥiẓ"
-        Exception: Author name Error: Author name (Jāḥiẓ) should not contain
-        digits or non-ASCII characters(culprits: ['ā', 'ḥ', 'ẓ'])
-        # >>> t.author = "0255Jahiz"
-        Exception: Author name Error: Author name (0255Jahiz) should not contain
-        digits or non-ASCII characters(culprits: ['0', '2', '5', '5'])
-        # >>> URI("0255Jahiz.Al-Hayawan")
-        Exception: Book title Error: Book title (Al-Hayawan) should not contain
-        non-ASCII characters(culprits: ['-'])
-        # >>> URI("0255Jahiz.Hayawan.Shāmila00123545-ara1")
-        Exception: Version string Error: Version string (Shāmila00123545)
-        should not contain non-ASCII characters(culprits: ['ā'])
-        # >>> URI("0255Jahiz.Hayawan.Shamela00123545-arab1")
-        Exception: Language code (arab) should be an ISO 639-2 language code,
-        consisting of 3 characters
-        # >>> t.extension = "markdown"
-        Exception: Extension (markdown) is not among the allowed extensions
-        (['inProgress', 'completed', 'mARkdown', 'yml', ''])
-        # >>> URI("0255Jahiz.Hayawan.Shamela00123545-ara1.markdown")
-        Exception: Extension (markdown) is not among the allowed extensions
-        (['inProgress', 'completed', 'mARkdown', 'yml', ''])
+            # >>> URI("255Jahiz")
+            Exception: Date Error: URI must start with a date of 4 digits (255 has 3!)
+            
+            # >>> URI("0255Jāḥiẓ")
+            Exception: Author name Error: Author name (Jāḥiẓ) should not contain
+            digits or non-ASCII characters(culprits: ['ā', 'ḥ', 'ẓ'])
+            
+            # >>> t.author = "Jāḥiẓ"
+            Exception: Author name Error: Author name (Jāḥiẓ) should not contain
+            digits or non-ASCII characters(culprits: ['ā', 'ḥ', 'ẓ'])
+            
+            # >>> t.author = "0255Jahiz"
+            Exception: Author name Error: Author name (0255Jahiz) should not contain
+            digits or non-ASCII characters(culprits: ['0', '2', '5', '5'])
+            
+            # >>> URI("0255Jahiz.Al-Hayawan")
+            Exception: Book title Error: Book title (Al-Hayawan) should not contain
+            non-ASCII characters(culprits: ['-'])
+            
+            # >>> URI("0255Jahiz.Hayawan.Shāmila00123545-ara1")
+            Exception: Version string Error: Version string (Shāmila00123545)
+            should not contain non-ASCII characters(culprits: ['ā'])
+
+            # >>> URI("0255Jahiz.Hayawan.Shamela00123545-arab1")
+            Exception: Language code (arab) should be an ISO 639-2 language code,
+            consisting of 3 characters
+
+            # >>> t.extension = "markdown"
+            Exception: Extension (markdown) is not among the allowed extensions
+            (['inProgress', 'completed', 'mARkdown', 'yml', ''])
+
+            # >>> URI("0255Jahiz.Hayawan.Shamela00123545-ara1.markdown")
+            Exception: Extension (markdown) is not among the allowed extensions
+            (['inProgress', 'completed', 'mARkdown', 'yml', ''])
     """
 
     def __init__(self, uri_string=None):
@@ -710,6 +720,9 @@ class URI:
     def __repr__(self):
         """Return a representation of the components of the URI.
 
+        Returns:
+            (str): a representation of the components of the URI.
+
         Examples:
             >>> my_uri = URI("0255Jahiz.Hayawan.Sham19Y0023775-ara1")
             >>> repr(my_uri)
@@ -727,6 +740,9 @@ language:ara, edition_no:1, extension:)'
     def __str__(self, *args, **kwargs):
         """Return the reassembled URI.
 
+        Returns:
+            (str): the reassembled URI
+
         Examples:
             >>> my_uri = URI("0255Jahiz.Hayawan.Sham19Y0023775-ara1.inProgress")
             >>> my_uri.extension = "completed"
@@ -738,6 +754,9 @@ language:ara, edition_no:1, extension:)'
 
     def __iter__(self):
         """Enable iteration over a URI object.
+
+        Returns:
+            (iterator): an iterator containing the components of the URI
 
         Examples:
             >>> my_uri = URI("0255Jahiz.Hayawan.Sham19Y0023775-ara1.inProgress")
@@ -790,7 +809,7 @@ language:ara, edition_no:1, extension:)'
                 0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1
 
         Returns:
-            split_components (list): list of uri components
+            (list): list of uri components
 
         Examples:
             >>> my_uri = URI("0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed")
@@ -880,7 +899,7 @@ Did you put a dot between date and author name?"
                 (can be "completed", "inProgress", "mARkdown", "" or None).
 
         Returns:
-            uri_string (str): OpenITI URI, e.g.,
+            (str): OpenITI URI as a string, e.g.,
                 0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1
 
         Examples:
@@ -968,8 +987,8 @@ Did you put a dot between date and author name?"
         """
         Returns the version uri.
 
-        returns:
-            uri_string (str): OpenITI URI, e.g.,
+        Returns:
+            (str): OpenITI URI as a string, e.g.,
                 0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1
 
         Example:
@@ -984,8 +1003,8 @@ Did you put a dot between date and author name?"
         """
         Returns the book uri.
 
-        returns:
-            uri_string (str): OpenITI URI, e.g.,
+        Returns:
+            uri_string (str): OpenITI URI as a string, e.g.,
                 0768IbnMuhammadTaqiDinBaclabakki.Hadith
 
         Example:
@@ -999,8 +1018,8 @@ Did you put a dot between date and author name?"
         """
         Returns the author uri.
 
-        returns:
-            uri_string (str): OpenITI URI, e.g.,
+        Returns:
+            uri_string (str): OpenITI URI as a string, e.g.,
                 0768IbnMuhammadTaqiDinBaclabakki
 
         Example:
@@ -1037,7 +1056,7 @@ Did you put a dot between date and author name?"
                 to be prepended to the URI path
 
         Returns:
-            pth (str): relative/absolute path
+            (str): relative/absolute path
 
         Examples:
             >>> my_uri = URI("0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed")
@@ -1141,7 +1160,8 @@ def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False):
         * the original book folders should be (re)moved
         * the original author folder itself should be (re)moved
 
-    Examples:
+    Examples::
+    
         change_uri("0255Jahiz", "0256Jahiz")
         change_uri("0255Jahiz", "0255JahizBasri")
         change_uri("0255Jahiz.Hayawan", "0255Jahiz.KitabHayawan")
@@ -1161,6 +1181,9 @@ def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False):
             (the user will still be given the option to execute
             all proposed changes at the end);
             if True, all changes will be executed immediately.
+
+    Returns:
+        None
     """
     print("old_base_pth:", old_base_pth)
     old_uri = URI(old)
@@ -1262,17 +1285,38 @@ to abort: press Enter. ")
             print("User aborted carrying out these changes!")
 
 def add_readme(target_folder):
+    """Add default README.md file to target_folder.
+
+    Returns:
+        None
+    """
     with open(os.path.join(target_folder, "README.md"),
               mode="w", encoding="utf-8") as file:
         file.write(readme_template)
 
 def add_text_questionnaire(target_folder):
+    """Add default text_questionnaire.md file to target_folder.
+
+    Returns:
+        None
+    """
     with open(os.path.join(target_folder, "text_questionnaire.md"),
               mode="w", encoding="utf-8") as file:
         file.write(text_questionnaire_template)
 
 def add_character_count(tok_count, char_count, tar_uri, execute=False):
-    """Add the character count to the new version yml file"""
+    """Add the character and token counts to the new version yml file
+
+    Args:
+        tok_count (int): number of Arabic tokens in a text
+        char_count (int): number of Arabic characters in a text
+        tar_uri (URI object): uri of the target text
+        execute (bool): if True, the function will do its work silently.
+          If False, it will only print a description of the action.
+
+    Returns:
+        None
+    """
 
     tar_yfp = tar_uri.build_pth("version_yml")
     if execute:
@@ -1293,6 +1337,8 @@ def new_yml(tar_yfp, yml_type, execute=False):
         tar_yfp (str): filepath to the new yml file
         yml_type (str): type of yml file
             (either "version_yml", "book_yml", or "author_yml")
+    Returns:
+        None
     """
     template = eval("{}_template".format(yml_type))
     yml_dic = yml.ymlToDic(template)
@@ -1319,6 +1365,9 @@ def move_yml(yml_fp, new_uri, uri_type, execute=False):
             (the user will still be given the option to execute
             all proposed changes at the end);
             if True, all changes will be executed immediately.
+
+    Returns:
+        (str): filepath of the new yml file
     """
     new_yml_fp = new_uri.build_pth(uri_type=uri_type+"_yml")
     new_yml_folder = os.path.split(new_yml_fp)[0]
@@ -1353,6 +1402,9 @@ def make_folder(new_folder, new_uri, execute=False):
             (the user will still be given the option to execute
             all proposed changes at the end);
             if True, all changes will be executed immediately.
+
+    Returns:
+        None
     """
     if not os.path.exists(new_uri.base_pth):
         msg = """PathError: base path ({}) does not exist.
@@ -1399,6 +1451,9 @@ def move_to_new_uri_pth(old_fp, new_uri, execute=False):
             (the user will still be given the option to execute
             all proposed changes at the end);
             if True, all changes will be executed immediately.
+
+    Returns:
+        (str): path to the new file
     """
     new_folder = new_uri.build_pth(uri_type=new_uri.uri_type)
     new_fp = new_uri.build_pth(uri_type=new_uri.uri_type+"_file")
@@ -1414,6 +1469,16 @@ def move_to_new_uri_pth(old_fp, new_uri, execute=False):
 def check_token_count(version_uri, ymlD):
     """Check whether the token count in the version yml file agrees with the\
     actual token count of the text file.
+
+    Args:
+        version_uri (URI object): version uri of the target text
+        ymlD (dict): dictionary containing the data from the relevant yml file
+
+    Returns:
+        (tuple): Tuple containing 2 values (or None):
+
+            tok_count (int): number of Arabic tokens in the target text
+            char_count (int): number of Arabic characters in the target text
     """
     # Get the count from the most complete version of the text file: 
     #fp = version_uri.build_pth(uri_type="version_file")
@@ -1454,8 +1519,10 @@ def replace_tok_counts(missing_tok_count):
 
     Args:
         missing_tok_count (list): a list of tuples (uri, token_count):
+        
             uri (OpenITI URI object)
             token_count (int): the number of Arabic tokens in the text file
+
     Returns:
         None
     """
@@ -1483,7 +1550,22 @@ def check_yml_files(start_folder, exclude=[],
         execute (bool): if execute is set to False, the script will only show
             which changes it would undertake if set to True.
             After it has looped through all files and folders, it will give
-            the user the option to execute the proposed changes."""
+            the user the option to execute the proposed changes.
+
+    Returns:
+        (tuple): Tuple containing:
+
+            missing_ymls (list): list of paths to missing yml files
+            missing_tok_count (list): list of tuples with three elements:
+
+                * uri (URI object): uri of the target text
+                * tok_count (int): number of Arabic tokens in the target text
+                * char_count (int): number of Arabic characters in the target text
+                
+            non_uri_files (list): list of paths to files whose filename\
+                is not a valid OpenITI URI
+            erratic_ymls (list): list of paths to malformed yml files.
+    """
     uri_key = "00#{}#URI######:"
     missing_ymls = []
     missing_tok_count = []

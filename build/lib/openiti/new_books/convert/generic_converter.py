@@ -11,30 +11,30 @@ These are the main methods of the GenericConverter class:
 
 The procedure can be used as a template for other converters.
 Subclass the GenericConverter to make a converter for a new
-source of scraped books:
+source of scraped books::
 
-class GenericHtmlConverter(GenericConverter):
-    def new_function(self, text):
-        "This function adds functionality to GenericConverter"
+    class GenericHtmlConverter(GenericConverter):
+        def new_function(self, text):
+            "This function adds functionality to GenericConverter"
 
 Usually, it suffices to overwrite a small number of methods
 of the GenericConverter class in the sub-class, and/or add
 a number of methods needed for the conversion of a specific
-group of documents: e.g., 
+group of documents: e.g.:: 
 
-class GenericHtmlConverter(GenericConverter):
-    def get_data(self, source_fp):
-        # code written here overwrites the GenericConverter's get_data method
+    class GenericHtmlConverter(GenericConverter):
+        def get_data(self, source_fp):
+            # code written here overwrites the GenericConverter's get_data method
 
-    def post_process(self, text):
-        # append new actions by appending them to
-        # the superclass's post_process method:
-        text = super().post_process(text)
-        text = re.sub("\n\n+", "\n\n", text)
-        return text
+        def post_process(self, text):
+            # append new actions by appending them to
+            # the superclass's post_process method:
+            text = super().post_process(text)
+            text = re.sub("\\n\\n+", "\\n\\n", text)
+            return text
 
-    def new_function(self, text):
-        "This function adds functionality to GenericConverter"
+        def new_function(self, text):
+            "This function adds functionality to GenericConverter"
 
 The GenericConverter contains a number of dummy (placeholder) functions
 that must be overwritten in the subclass because they are dependent on

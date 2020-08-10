@@ -1,4 +1,96 @@
+"""A Converter for al-Maktaba al-Shamela databases to OpenITI mARkdown format.
+
+Al-Maktaba al-Shamela is a digital text collection, but it also 
+developed its own reader, which is based on an internal database.
+
+A large number of texts are available on its website (www.shamela.ws), 
+and can be downloaded in EPUB or .bok format (the latter is a zipped .mdb file). 
+These files must be converted with another script. 
+See https://github.com/OpenITI/raw_SHAM19Y/wiki for that conversion process.
+
+However, the program also allows users to add texts from other sources
+(incl. their own transcriptions) to the program's database.
+The database can be zipped, together with an executable for the reader,
+and disseminated. Some users have used this ability
+of the program to create their own collections that include many
+texts not available in the original program
+(for ideological or other reasons), e.g.,
+
+* al-maktaba al-shamela al-dhahabiyya
+* al-maktaba al-shamela al-ibadiyya
+* al-maktaba al-shamela al-zaydiyya
+* etc.
+
+Database structure
+
+The database consists of a large number of folders and files:
+
+* ``./Files/Main.mdb``: contains the metadata for every book in the program,
+    in a table called “0bok”
+* ``./Files/special.mdb``: contains more metadata + data that could be
+    marked up in the text (like Qur’anic passages)
+* ``./Books``: contains 10 folders, named "0" to "9", that each contain
+    a large number of .mdb files (one .mdb file per text; filename = id number)
+
+NB: in some versions of the database, the books are actually in
+in large multi-book .mdb files in another folder (``./Books/Archive``),
+which contains large .mdb files, each ca. 600 MB;
+each of these contain the bxxxx and txxxx tables for a couple
+of thousand books (xxxx being the Shamela id of the book):
+
+- bxxxx contains the text
+- txxxx contains the section titles
+
+Module description
+
+This module contains two major components:
+
+* ``extract_metadata``: extracts the metadata from the shamela database
+* ``BokJsonConverter`` class: extracts the text and book structure
+  from the books' .mdb files into json format,
+  fuses this with the book's metadata,
+  and converts it into OpenITI mARkdown format
+
+The main component of the module, the BokJsonConverter class,
+is a subclass of the GenericConverter from the generic_converter module:
+
+GenericConverter
+    \_ GenericEpubConverter
+    \_ BokJsonConverter
+
+Methods of both classes:
+(methods of GenericConverter are inherited by GenericHtmlConverter;
+methods of GenericConverter with the same name
+in GenericHtmlConverter are overwritten by the latter)
+
+=================================== =====================================
+GenericConverter                    BokJsonConverter
+=================================== =====================================
+__init__                            __init__ (appended)
+convert_files_in_folder             convert_files_in_folder
+convert file                        convert file
+make_dest_fp                        (inherited - generic!)
+get_metadata (dummy)                (metadata collected in get_data step)
+get_data                            get_data
+pre_process                         pre_process
+add_page_numbers (dummy)            (pages added in get_data step)
+add_structural_annotations (dummy)  add_structural_annotations
+remove_notes (dummy)                remove_notes
+reflow                              (inherited)
+add_milestones (dummy)              (inherited - dummy!)
+post_process                        post_process
+compose                             (inherited)
+save_file                           (inherited)
+                                    mdb2json
+                                    format_text
+                                    format_metadata
+=================================== =====================================
+
+"""
+
+
 from collections import defaultdict, OrderedDict
+from datetime import datetime
 import json
 import os
 import re
@@ -11,11 +103,14 @@ if __name__ == '__main__':
 
 from openiti.new_books.convert import generic_converter
 from openiti.helper.ara import deNoise
-from openiti.new_books.convert import bok
+from openiti.new_books.convert.helper import bok
 
 VERBOSE = False
 
 class BokJsonConverter(generic_converter.GenericConverter):
+    """Extract book data from .mdb files into json, and convert into mARkdown.
+    """
+
     def __init__(self, all_meta=None, additional_meta=None, dest_folder=None):
         """Set up the main variables of the class.
 
@@ -69,15 +164,21 @@ class BokJsonConverter(generic_converter.GenericConverter):
     def convert_files_in_folder(self, source_folder,
                                 extensions=[]):
         if extensions == ["mdb"] or extensions == [".mdb"]:
-            self.mdb2json(source_folder)
+            json_folder = self.mdb2json(source_folder)
             print("conversion from mdb to json completed.")
             extensions = ["json"]
-            source_folder = os.path.join(source_folder, "json")
-            print("Converting from json to txt...")
+            source_folder = json_folder
+            self.dest_folder = os.path.join(self.dest_folder, "txt")
+        print("Converting from json to txt...")
         super().convert_files_in_folder(source_folder, extensions=extensions)
 
     def mdb2json(self, source_folder):
-        dest_folder = os.path.join(source_folder, "json")
+        """Convert mdb files to json files.
+
+        The .mdb files are usually in the Books folder,
+        in subfolders numbered "0" to "9".
+        The converted files will be saved in <self.dest_folder>/json/"""
+        dest_folder = os.path.join(self.dest_folder, "json")
         if not os.path.exists(dest_folder):
             os.makedirs(dest_folder)
         mdb_files = []
@@ -86,10 +187,11 @@ class BokJsonConverter(generic_converter.GenericConverter):
                 if fn.endswith(".mdb"):
                     mdb_files.append(os.path.join(root, fn))
         print("Converting {} .mdb files to json".format(len(mdb_files)))
+        failed = []
         for fp in mdb_files:
             shamid = re.findall("\d+", fp)[-1]
             outfp = os.path.join(dest_folder, shamid+".json")
-            
+
             print("connecting to db {}...".format(fp))
             conn, cur = bok.connect_to_db(fp)
 
@@ -97,7 +199,7 @@ class BokJsonConverter(generic_converter.GenericConverter):
             d = bok.mdb2dict(cur, VERBOSE=False)
             #print(d.keys())
             #input()
-            
+
             print("saving to json...")
             try:
                 bok.save_to_json({"b"+shamid: d["book"],
@@ -111,7 +213,18 @@ class BokJsonConverter(generic_converter.GenericConverter):
                                      outfp)
                 except:
                     print("CONVERSION FAILED")
-            print("finished")        
+                    failed.append(fp)
+            print("finished")
+        if failed:
+            print("Conversion of these {} files failed:".format(len(failed)))
+            for f in failed:
+                print("    ", f)
+            input("Press Enter to continue")
+        else:
+            if VERBOSE:
+                msg = "all {} mdb files converted ".format(len(mdb_files))
+                print(msg + "successfully to", dest_folder)
+        return dest_folder
 
     def get_data(self, source_fp, shamid):
         """Extract the data from the source_fp and format it in OpenITI format.
@@ -126,7 +239,7 @@ class BokJsonConverter(generic_converter.GenericConverter):
         """
         with open(source_fp, mode="r", encoding="utf-8") as file:
             data = json.load(file)
-        
+
         book_data = data["b"+shamid]
 
         # load the table of contents:
@@ -138,7 +251,7 @@ class BokJsonConverter(generic_converter.GenericConverter):
         # If extracted from the Shamela program,
         # extract it from the dictionary that
         # contains metadata of all the books:
-        
+
         if self.all_meta:
             book_meta = self.all_meta[shamid]
         else:
@@ -197,10 +310,10 @@ class BokJsonConverter(generic_converter.GenericConverter):
             except:
                 print("book no.", book_id, ": unable to sort pages by volume and page:", e)
                 print("Keep book in the current order.")
-        
+
         for row in book:
             # set variables for current row:
-            
+
             if VERBOSE:
                 print("vol {} page {} id {} : {}".format(row["part"],
                                                          row["page"],
@@ -215,11 +328,11 @@ class BokJsonConverter(generic_converter.GenericConverter):
 
 
             # remove the short vowels etc.:
-            
+
             passage_text = self.pre_process(passage_text)
 
             # remove the footnotes:
-            
+
             passage_text, notes = self.remove_notes(passage_text, notes)
 
             # add the structural formatting:
@@ -239,19 +352,17 @@ class BokJsonConverter(generic_converter.GenericConverter):
             text.append(passage_text)
 
             # add page numbers:
-            
+
             if row["page"] != None:
                 text.append(vol_page)
             else:
-                text.append(row["nass"] + "\n\n\n----NO PAGE NO------\n\n\n\n")                    
-        
+                text.append(row["nass"] + "\n\n\n----NO PAGE NO------\n\n\n\n")
+
         # compile text and endnote strings from lists:
         text = "".join(text)
         notes = "".join(notes)
 
         return text, notes
-                    
-        
 
     def remove_notes(self, passage_text, notes):
         """Remove footnotes from the passage_text and add them to notes list."""
@@ -259,11 +370,11 @@ class BokJsonConverter(generic_converter.GenericConverter):
                                passage_text, flags=re.DOTALL)
         if footnotes:
             fmt = "PageV{:02d}P{:03d}:\n\n{}\n\n"
-            notes.append(fmt.format(vol_no, page_no, footnotes[0]))       
+            notes.append(fmt.format(vol_no, page_no, footnotes[0]))
             passage_text = re.sub(self.footnote_regex, "",
                                   passage_text, flags=re.DOTALL)
         return passage_text, notes
-        
+
     def add_structural_annotations(self, passage_text, passage_id):
         """Add structural tags to titles in passage_text."""
         #print("passage_id", passage_id)
@@ -299,7 +410,7 @@ class BokJsonConverter(generic_converter.GenericConverter):
                 # treat the "betaka" field different from the other fields.
                 # It contains a multi-line string with a number of headings.
                 # Store each of these headings with their value separately:
-                
+
                 if k == "betaka":
                     m.append(fmt.format("Shamela_short_metadata_record", ""))
                     betaka = re.split("[\n\r]+", v)
@@ -312,8 +423,8 @@ class BokJsonConverter(generic_converter.GenericConverter):
                 else:
                     #print(col_headers[i], field)
                     #print(re.sub(r"\.?\n+", ". ", str(field)))
-                    m.append(fmt.format(k, re.sub(r"\.?[\r\n]+", ". ", str(v))))                             
-        for k,v in additional_meta.items():
+                    m.append(fmt.format(k, re.sub(r"\.?[\r\n]+", ". ", str(v))))
+        for k,v in self.additional_meta.items():
             m.append(fmt.format(k,v))
         metadata = "\n\n".join(m)
         return self.magic_value + metadata + self.header_splitter
@@ -334,14 +445,14 @@ class BokJsonConverter(generic_converter.GenericConverter):
         Returns:
             texgt (str): the text after post-processing operations.
         """
-        # remove unwanted spaces: 
+        # remove unwanted spaces:
         text = re.sub("  +", " ", text)
         text = re.sub("\n ", "\n", text)
         text = re.sub("\n# ?\n+", "\n", text)
 
         #print(text[:50000])
-        
-        # remove the new lines before page numbers: 
+
+        # remove the new lines before page numbers:
         text = re.sub(r" *\n+ *(PageV\d+P\d+)\n+", r" \1 ", text)
         # restore new lines when the page number is preceded by a relevant character:
         text = re.sub(r"""([.:!؟|*"]|AUTO|CHECK) +(PageV\d+P\d+) """,
@@ -363,29 +474,31 @@ def extract_metadata(files_folder, outfolder):
     """Extract the book metadata from the Files folder of the Shamela program.
 
     The metadata is located in two separate mdb files:
+    
     * Files/main.mdb
     * Files/special.mdb
 
     The metadata is extracted into json files in the outfolder:
+    
     * [outfolder]/main_metadata.json: full metadata from Files/main.mdb
-        in json format (dictionary). Under key "0bok" it contains a 
-        list of metadata dictionaries, one for each book in the collection
+      in json format (dictionary). Under key "0bok" it contains a
+      list of metadata dictionaries, one for each book in the collection
     * [outfolder]/special_metadata.json: full metadata from Files/special.mdb
-        in json format
+      in json format
     * [outfolder]/genres.json: a dictionary of genres and their ids
-        extracted from main.mdb
+      extracted from main.mdb
     * [outfolder]/Authors_metadata.json: a dictionary of authors and their ids
-        extracted from special.mdb
+      extracted from special.mdb
     * [outfolder]/main_metadata_reform.json: a reformatted version of
-        main_metadata.json (dictionary of dictionaries, one for each book:
-        key = bookID, value = book metadata in dictionary format)
+      main_metadata.json (dictionary of dictionaries, one for each book:
+      key = bookID, value = book metadata in dictionary format)
 
     Only main_metadata_reform.json is necessary for the conversion
     of Shamela mdb files to txt.
     """
     if not os.path.exists(outfolder):
         os.makedirs(outfolder)
-    
+
     # extract metadata from special.mdb (most importantly, the author metadata):
     fp = os.path.join(files_folder, "special.mdb")
     conn, cur = bok.connect_to_db(fp)
@@ -422,9 +535,9 @@ def extract_metadata(files_folder, outfolder):
     outfp = os.path.join(outfolder, "main_metadata_reform.json")
     with open(outfp, mode="w", encoding="utf-8") as file:
         json.dump(new, file, ensure_ascii=False, indent=4, sort_keys=True)
-    
 
-    
+
+
 
 def reformat_metadata(d, authors_dict):
     """Reformats the Shamela Betaka
@@ -439,10 +552,10 @@ def reformat_metadata(d, authors_dict):
     Args:
         d (dict): a dictionary containing two items:
             d["0bok"]: a list of dictionary representations of the
-                metadata of each book in the Shamela metadata table 'Main'
+            metadata of each book in the Shamela metadata table 'Main'.
             d["0cat"]: a list of dictionary representations of the
-                genre metadata in the Shamela metadata table
-                (keys: id, name, catord, lvl)
+            genre metadata in the Shamela metadata table
+            (keys: id, name, catord, lvl)
     Returns:
         meta (list): the same list of dictionaries, but with the metadata
             in the betaka field split out into keys and values
@@ -451,14 +564,14 @@ def reformat_metadata(d, authors_dict):
     meta = d["0bok"]
 
     for i, row in enumerate(meta):
-        
+
         # reformat the betaka:
-        
+
         if row["betaka"]:
             meta = reformat_betaka(meta, i, row)
 
         # replace the genre id with the genre name:
-        
+
         if row["cat"]:
             id_ = row["cat"]
             meta[i]["cat"] = genres[id_]["name"]
@@ -478,7 +591,7 @@ def reformat_metadata(d, authors_dict):
                         else:
                             meta[i][k] = authors_dict[id_][v]
                     else:
-                        meta[i][k] = authors_dict[id_][v]       
+                        meta[i][k] = authors_dict[id_][v]
     return meta
 
 def reformat_betaka(meta, i, row):
@@ -499,30 +612,125 @@ def reformat_betaka(meta, i, row):
             meta[i][b[0].strip()] = b[1].strip()
         else:
             meta[i]["digitization_comments"] = b[0].strip()
-    return meta    
+    return meta
 
+def print_default_config_file():
+    config="""\
+# Shamela converter configuration file:
 
+# path to the Files folder of the shamela database
+# (this folder contains the main metadata database files):
+files_folder = None
 
-if __name__ == "__main__":
+# path to the Books folder of the shamela database:
+# (this folder contains subfolders with the separate book .mdb files)
+books_folder = None
 
-##    meta_fp = r"Zaydiyya_metadata_reform.json"    
-##    with open(meta_fp, mode="r", encoding="utf-8") as file:
-##        all_meta = json.load(file)
+# path to the folder that contains the converted metadata files
+# (if the metadata has been extracted before):
+meta_folder = None
 
-    #extract_metadata(r"Zaydiyya\Files", r"metadata")
-    meta_fp = r"metadata\main_metadata_reform.json"
+# path to the folder in which the converted text files should be saved:
+conv_folder = None
+
+# date when the database was downloaded:
+download_date = ""
+
+# name and/or url of the downloaded database:
+download_source = ""
+"""
+    print(config)
+
+def main(meta_folder=None, files_folder=None, books_folder=None,
+         conv_folder=None, download_date="", download_source="",
+         config_fp=None):
+    """Collect the variables and carry out the conversion.
+
+    Args:
+        meta_folder (str): path to the folder containing metadata extracted
+            from the database
+        files_folder (str): path to the `Files` folder of the database
+            (containing the main metadata database files)
+        books_folder (str): path to the `Bookss` folder of the database
+            (containing the .mdb files containing the text of the books)
+        conv_folder (str): path to the folder where the converted files should
+            be stored
+        download_date (str): (approximate) date when the database was downloaded
+        download_source (str): name and/or dowload url of the database
+        config_fp (str): path to a config.py file containing
+            the above-mentioned parameters
+            NB: to print an empty config file: print_default_config_file()
+    """
+    # 0- import configuration if configuration file is given:
+
+    if config_fp:
+        import shutil
+        shutil.copyfile(config_fp, "temp_config.py")
+        from temp_config import files_folder, books_folder, meta_folder,\
+            conv_folder, download_date, download_source
+        os.remove("temp_config.py")
+
+    # 1a- collect metadata (extract it if it has not been extracted yet):
+
+    if not meta_folder:
+        if files_folder:
+            meta_folder = os.path.join(os.path.dirname(files_folder),
+                                       "extracted_metadata")
+            extract_metadata(files_folder, meta_folder)
+        else:
+            print("Has the metadata already been extracted?")
+            resp = input("Y/N? ")
+            if resp.upper() == "Y":
+                print("Provide the path to the folder that contains the \
+metadata json files:")
+                meta_folder = input()
+            else:
+                print("Provide the path to the `Files` folder of the \
+Shamela database:")
+                files_folder = input()
+                if not re.match("(?:\A|[\\/])Files[\\/]?", folder):
+                    msg = "folder path should end with `Files` or `Files/`"
+                    raise Exception(msg)
+                meta_folder = os.path.join(os.path.dirname(files_folder),
+                                           "extracted_metadata")
+                extract_metadata(files_folder, meta_folder)
+        if not books_folder:
+                  books_folder = os.path.join(os.path.dirname(meta_folder),
+                                   "Books")
+
+    if not books_folder:
+        print("Provide the path to the `Books` folder of the Shamela database:")
+        books_folder = input()
+    if not conv_folder:
+        conv_folder = books_folder+"Converted"
+
+    meta_fp = os.path.join(meta_folder, r"main_metadata_reform.json")
     with open(meta_fp, mode="r", encoding="utf-8") as file:
         all_meta = json.load(file)
-    
-    additional_meta = OrderedDict()
-    additional_meta["ScrapeDate"] = "21-02-2020"
-    additional_meta["ScrapedFrom"] = "al-Maktaba al-Shamela al-Zaydiyya"
 
-    src_folder = r"test"
-    dest_folder = r"test"
-    VERBOSE=False
+    # 1b - Add some additional metadata:
+
+    if not download_date:
+        print("Write the (approximate) date when the library was downloaded: ")
+        download_date = input()
+    if not download_source:
+        print("write the name and/or url of the downloaded library: ")
+        download_source = input()
+
+    additional_meta = OrderedDict()
+    additional_meta["DownloadSource"] = download_source
+    additional_meta["DownloadDate"] = download_date
+    additional_meta["ConversionDate"] = datetime.today().strftime('%Y-%m-%d')
+
+    # 2- convert files:
 
     conv = BokJsonConverter(all_meta=all_meta,
                             additional_meta=additional_meta,
-                            dest_folder=dest_folder)
-    conv.convert_files_in_folder(src_folder, extensions=[".mdb"])
+                            dest_folder=conv_folder)
+    conv.convert_files_in_folder(conv_folder, extensions=[".mdb"])
+    print("Converted files can be found in", conv_folder)
+    print("(metadata in {})".format(meta_folder))
+
+if __name__ == "__main__":
+    #print_default_config_file()
+    main(config_fp="test/shamela/config.py")

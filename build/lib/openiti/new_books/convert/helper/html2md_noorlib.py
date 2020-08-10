@@ -1,11 +1,11 @@
-"""Convert eShia library html to OpenITI mARkdown.
+"""Convert Noorlib library html to OpenITI mARkdown.
 
 This script subclasses the generic MarkdownConverter class
 from the html2md module (based on python-markdownify,
 https://github.com/matthewwithanm/python-markdownify),
 which uses BeautifulSoup to create a flexible converter.
 
-The subclass in this module, GRARHtmlConverter,
+The subclass in this module, NoorlibHtmlConverter,
 adds methods specifically for the conversion of books from
 the eShia library to OpenITI mARkdown:
 
@@ -13,10 +13,10 @@ the eShia library to OpenITI mARkdown:
     are defined in self.class_dict.
 
 
-Inheritance schema of the GRARHtmlConverter:
+Inheritance schema of the NoorlibHtmlConverter:
 
 ======================== ==========================
-MarkdownConverter        EShiaHtmlConverter
+MarkdownConverter        NoorlibHtmlConverter
 ======================== ==========================
 Options                  (inherited)
 DefaultOptions           (inherited)
@@ -64,38 +64,42 @@ from openiti.new_books.convert.helper import html2md
 from openiti.new_books.convert.helper.html2md import *  # import all constants!
 
 
-class EShiaHtmlConverter(html2md.MarkdownConverter):
-    """Convert EShia library html to OpenITI mARkdown.
+class NoorlibHtmlConverter(html2md.MarkdownConverter):
+    """Convert Noorlib library html to OpenITI mARkdown.
 
     Examples:
-        >>> import html2md_eShia
+        >>> import html2md_noorlib
         >>> h = '<img class="libimages" src="/images/books/86596/01/cover.jpg">'
-        >>> html2md_eShia.markdownify(h)
+        >>> html2md_noorlib.markdownify(h)
         '![](img/86596/01/cover.jpg)'
 
-        >>> import html2md_eShia
+        >>> import html2md_noorlib
         >>> h = 'abc <a href="www.example.com">def</a> ghi'
-        >>> html2md_eShia.markdownify(h)
+        >>> html2md_noorlib.markdownify(h)
         'abc def ghi'
     """
 
     def __init__(self, **options):
         super().__init__(**options)
         self.class_dict = dict()
-        self.class_dict["Titr3"] = "\n\n### ||| {}\n\n"         # <span class>
-        self.class_dict["KalamateKhas2"] = "\n\n### || {}\n\n"  # <p class>
-        self.class_dict["KalamateKhas"] = "\n\n### ||| {}\n\n"  # <p class>
-        self.class_dict["TextsStyles3"] = "\n\n### ||| {}\n\n"  # <p class>
-        self.class_dict["TextsStyles1"] = "@QUR@ {}\n"          # <span class>
-        self.class_dict["Aye"] = "@QUR@ {}\n"                   # <span class>
-        self.class_dict["tdfehrest2"] = "\t{}"                  # <td class>
-        self.class_dict["list3"] = "\t{}"                       # <div class>
-        self.class_dict["sher"] = "# {}\n"                      # <p class>
-        self.class_dict["#6C3934"] = "\n\n# {}\n\n"             # <span class>
+        self.class_dict["rightpome"] = "\n# {} %~% "              # <span class>
+        self.class_dict["leftpome"] = "{}\n"                      # <span class>
+        self.class_dict["footnote"] = "{}\n"                      # <div class>
+##        ##old:
+##        self.class_dict["Titr3"] = "\n\n### ||| {}\n\n"         # <span class>
+##        self.class_dict["KalamateKhas2"] = "\n\n### || {}\n\n"  # <p class>
+##        self.class_dict["KalamateKhas"] = "\n\n### ||| {}\n\n"  # <p class>
+##        self.class_dict["TextsStyles3"] = "\n\n### ||| {}\n\n"  # <p class>
+##        self.class_dict["TextsStyles1"] = "@QUR@ {}\n"          # <span class>
+##        self.class_dict["Aye"] = "@QUR@ {}\n"                   # <span class>
+##        self.class_dict["tdfehrest2"] = "\t{}"                  # <td class>
+##        self.class_dict["list3"] = "\t{}"                       # <div class>
+##        self.class_dict["sher"] = "# {}\n"                      # <p class>
+##        self.class_dict["#6C3934"] = "\n\n# {}\n\n"             # <span class>
 
         self.options["image_link_regex"] = "/?images/books"
-        self.options["image_folder"] = "img"
-        self.options["strip"] = ["a"]
+##        self.options["image_folder"] = "img"
+        self.options["strip"] = ["a", "img"]
 
 
     def convert_span(self, el, text):
@@ -106,35 +110,43 @@ class EShiaHtmlConverter(html2md.MarkdownConverter):
         E.g., {"quran": "@QUR@ {}\\n"}
 
         Example:
-            >>> import html2md_eShia
+            >>> import html2md_noorlib
             >>> h = 'abc <span>def</span> ghi'
-            >>> html2md_eShia.markdownify(h)
+            >>> html2md_noorlib.markdownify(h)
             'abc def ghi'
 
             >>> h = 'abc <span class="unknown_span_class">def</span> ghi'
-            >>> html2md_eShia.markdownify(h)
+            >>> html2md_noorlib.markdownify(h)
             'abc def ghi'
 
-            >>> h = 'abc <span class="Aye">def  ghi</span> jkl'
-            >>> html2md_eShia.markdownify(h)
-            'abc @QUR02 def ghi jkl'
-
-            >>> h = 'abc <span class="TextsStyles1">def  ghi</span> jkl'
-            >>> html2md_eShia.markdownify(h)
-            'abc @QUR02 def ghi jkl'
+            #>>> h = 'abc <span class="Aya">def  ghi</span> jkl'
+            #>>> html2md_noorlib.markdownify(h)
+            #'abc @QUR02 def ghi jkl'
 
             # the @QUR@ example outputs are a result of post-processing;
             # the function itself will produce:
             # 'abc @QUR@ def ghi\\njkl'
-
-            >>> h = 'abc <span class="Titr3">def</span> ghi'
-            >>> html2md_eShia.markdownify(h)
-            'abc\\n\\n### ||| def\\n\\nghi'
+            
+            >>> h = '<span class="rightpome">abc def</span><span class="leftpome">ghi jkl</span>'
+            >>> html2md_noorlib.markdownify(h)
+            '\\n# abc def %~% ghi jkl'
         """
         try:  # will fail if el has no class attribute
             for c in el["class"]:
+                #print(c)
                 if c in self.class_dict:
                     return self.class_dict[c].format(text) if text else ''
+                if c == "ayah":
+                    try:
+                        sura = el["surah"]
+                    except:
+                        sura = "0"
+                    try:
+                        aya = el["ayah"]
+                    except:
+                        aya = "0"
+                    #print("@QUR{}.{}@ {}".format(sura, aya, text))
+                    return "@QUR{}.{}@ {}\n".format(sura, aya, text)
         except Exception as e:
             pass
         return text
@@ -147,23 +159,25 @@ class EShiaHtmlConverter(html2md.MarkdownConverter):
         (key: div class (str); value: formatting string)
 
         Example:
-            >>> import html2md_eShia
+            >>> import html2md_noorlib
             >>> h = 'abc <div>def</div> ghi'
-            >>> html2md_eShia.markdownify(h)
+            >>> html2md_noorlib.markdownify(h)
             'abc def ghi'
 
             >>> h = 'abc <div class="unknown_div_class">def</div> ghi'
-            >>> html2md_eShia.markdownify(h)
+            >>> html2md_noorlib.markdownify(h)
             'abc def ghi'
 
-            >>> h = 'abc <div class="list3">def  ghi</div> jkl'
-            >>> html2md_eShia.markdownify(h)
-            'abc \\tdef ghi jkl'
+            >>> h = '<div class="ClssDivMeesage">Page Is Empty</div>'
+            >>> html2md_noorlib.markdownify(h)
+            ''
         """
         try:  # will fail if el has no class attribute
             for c in el["class"]:
                 if c in self.class_dict:
                     return self.class_dict[c].format(text) if text else ''
+                if c == "ClssDivMeesage":
+                    return ""
         except Exception as e:
             pass
         return text
@@ -181,40 +195,33 @@ class EShiaHtmlConverter(html2md.MarkdownConverter):
         (from super().DefaultOptions)
 
         Examples:
-            >>> import html2md_eShia
+            >>> import html2md_noorlib
             >>> h = "<p>abc</p>"
-            >>> html2md_eShia.markdownify(h)
+            >>> html2md_noorlib.markdownify(h)
             '\\n\\n# abc\\n\\n'
 
             >>> h = "<p>abc</p>"
-            >>> html2md_eShia.markdownify(h, md_style=ATX)
+            >>> html2md_noorlib.markdownify(h, md_style=ATX)
             '\\n\\nabc\\n\\n'
 
             >>> h = "<p></p>"
-            >>> html2md_eShia.markdownify(h, md_style=ATX)
+            >>> html2md_noorlib.markdownify(h, md_style=ATX)
             ''
-
-            >>> h = '<p class="KalamateKhas">abc</p>'
-            >>> html2md_eShia.markdownify(h)
-            '\\n\\n### ||| abc\\n\\n'
         """
-        try:  # will fail if el has no class attribute
-            for c in el["class"]:
-                if c in self.class_dict:
-                    if c == "sher":
-                        text = re.sub("\* \* \*", "%~%", text)
-                    return self.class_dict[c].format(text) if text else ''
-        except Exception as e:
-            pass
         if self.options['md_style'] == OPENITI:
             return '\n\n# %s\n\n' % text if text else ''
         else:
             return '\n\n%s\n\n' % text if text else ''
 
+    def convert_sup(self, el, text):
+        """Converts <sup> tags (used for footnote markers)."""
+        return "({})".format(text.strip())
+    
+
 
 def markdownify(html, **options):
     """Shortcut to the convert method of the HindawiConverter class."""
-    return EShiaHtmlConverter(**options).convert(html)
+    return NoorlibHtmlConverter(**options).convert(html)
 
 
 if __name__ == "__main__":

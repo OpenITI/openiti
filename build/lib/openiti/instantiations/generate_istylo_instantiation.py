@@ -1,8 +1,9 @@
 # inserting milestones for splitting texts into chunks of the same size
 
 import re, os
-import helper.funcs as hlp
-import zfunc
+#import helper.funcs as hlp
+#import zfunc
+from openiti.helper import funcs, ara
 
 stopper = 1
 
@@ -25,7 +26,8 @@ def reformatting(path_full, target_folder):
         print("\ninto:\t" + file_id)
         with open(path_full, "r", encoding="utf8") as f1:
             data = f1.read()
-            data = data.split(hlp.funcs.splitter)[1]
+            #data = data.split(hlp.funcs.splitter)[1]
+            data = data.split(funcs.splitter)[1]
 
             data = data.replace("\n~~", " ")
             # data = data.replace("#", "(@@)")
@@ -33,7 +35,8 @@ def reformatting(path_full, target_folder):
 
             data = re.sub(" +", " ", data)
 
-            data = hlp.ara.normalize_ara_extra_light(data)
+            #data = hlp.ara.normalize_ara_extra_light(data)
+            data = ara.normalize_ara_extra_light(data)
             data = re.sub("Page\w+|[#\|\-\%\d]", "", data)
 
             with open(target_path, "w", encoding="utf8") as ft:
@@ -72,7 +75,8 @@ def process_all(folder, target_path):
     not_in_meta_list = []
 
     for root, dirs, files in os.walk(folder):
-        dirs[:] = [d for d in dirs if d not in zfunc.exclude]
+        #dirs[:] = [d for d in dirs if d not in zfunc.exclude]
+        dirs[:] = [d for d in dirs if d not in funcs.exclude]
 
         for file in files:
             if re.search("^\d{4}\w+\.\w+\.\w+-\w{4}(\.(mARkdown|inProgress|completed))?$", file):

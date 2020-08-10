@@ -1,29 +1,34 @@
 """Clone github repositories to your local machine.
 
 Examples:
-    Clone all OpenITI 25-year repos: 
-    # >>> repo_list = get_repo_urls(group="orgs", name="OpenITI", \
-                                      path_pattern="\d{4}AH$")
-    # >>> clone_repos(repo_list, r"D:\OpenITI")
+    Clone all OpenITI 25-year repos::
+    
+        # >>> repo_list = get_repo_urls(group="orgs", name="OpenITI", 
+        #                                path_pattern="\\d{4}AH$")
+        # >>> clone_repos(repo_list, r"D:\\OpenITI")
 
-    Clone specific repos:
-    # >>> base = ""https://github.com/OpenITI/"
-    # >>> repo_list = [base+"mARkdown_scheme", base+"RELEASE"]
-    # >>> clone_repos(repo_list, r"D:\OpenITI")
+    Clone specific repos::
+    
+        # >>> base = ""https://github.com/OpenITI/"
+        # >>> repo_list = [base+"mARkdown_scheme", base+"RELEASE"]
+        # >>> clone_repos(repo_list, r"D:\\OpenITI")
 
 Command line usage:
     To clone all the OpenITI organization's 25-years repos:
-      ``python clone_OpenITI.py ["orgs" or "users"] [user or org name] [path_pattern] [[dest_folder]]``
+    
+        ``python clone_OpenITI.py ["orgs" or "users"] [user or org name] [path_pattern] [[dest_folder]]``
 
-    ``dest_folder$ python pth/to/clone_OpenITI.py orgs OpenITI \d+AH$``
-    ``other_folder$ python pth/to/clone_OpenITI.py orgs OpenITI \d+AH$ path/to/dest_folder``
+        ``dest_folder$ python pth/to/clone_OpenITI.py orgs OpenITI \d+AH$``
+    
+        ``other_folder$ python pth/to/clone_OpenITI.py orgs OpenITI \d+AH$ path/to/dest_folder``
 
-    If fewer than 3 arguments are given, the program will prompt you for the arguments:
-    ``$ python clone_OpenITI.py``
-    Enter the organization/user name:
-    Organization or User? (orgs/users):
-    Enter the regex pattern to match desired repo URLs:
-    Enter the destination folder for the clone: 
+    If fewer than 3 arguments are given, the program will prompt you for the arguments::
+
+        $ python clone_OpenITI.py
+        Enter the organization/user name: openiti
+        Organization or User? (orgs/users): orgs
+        Enter the regex pattern to match desired repo URLs: \d{4}AH
+        Enter the destination folder for the clone: openiti_clone
 """
 
 import sys
@@ -43,7 +48,7 @@ def get_repo_urls(group="orgs", name="OpenITI", path_pattern=r"\d{4}AH$"):
             If none is defined, all repos will be cloned. Defaults to r"\d{4}AH$".
 
     Returns:
-        repo_urls (list): a list of repo urls that matches the `path_pattern` regex.
+        (list): a list of repo urls that matches the `path_pattern` regex.
     """
     repo_urls = []
     page = 1

@@ -28,7 +28,7 @@ if __name__ == '__main__':
 
 from openiti.helper.funcs import read_header
 from openiti.helper.ara import ar_cnt_file
-from openiti.helper.uri import move_to_new_uri_pth, add_character_count, URI
+from openiti.helper.uri import move_to_new_uri_pth, add_character_count, URI, new_yml
 
 
 created_ymls = []
@@ -61,6 +61,9 @@ def initialize_texts_from_CSV(csv_fp, old_base_pth="", new_base_pth="",
             (the user will still be given the option to execute
             all proposed changes at the end);
             if True, all changes will be executed immediately.
+
+    Returns:
+        None
     """
     with open(csv_fp, mode="r", encoding="utf-8") as file:
         csv = file.read().splitlines()
@@ -105,11 +108,15 @@ def initialize_new_texts_in_folder(folder, target_base_pth, execute=False):
             all proposed changes at the end);
             if True, all changes will be executed immediately.
 
-    Examples:
-        # >>> folder = r"D:\OpenITI\barzakh"
-        # >>> target_base_pth = r"D:\OpenITI\25Yrepos"
-        # >>> initialize_new_texts_in_folder(folder,\
-        #                                    target_base_pth, execute=False)
+    Returns:
+        None
+
+    Examples::
+    
+        # >>> folder = r"D:\\OpenITI\\barzakh"
+        # >>> target_base_pth = r"D:\\OpenITI\\25Yrepos"
+        # >>> initialize_new_texts_in_folder(folder, target_base_pth,
+        #                                    execute=False)
     """
     for fn in os.listdir(folder):
         ext = os.path.splitext(fn)[1]
@@ -140,10 +147,10 @@ def initialize_new_text(origin_fp, target_base_pth, execute=False):
         None
 
     Example:
-        # >>> origin_folder = r"D:\OpenITI\barzakh"
+        # >>> origin_folder = r"D:\\OpenITI\\barzakh"
         # >>> fn = "0375IkhwanSafa.Rasail.Hindawi95926405Vols-ara1.completed"
         # >>> origin_fp = os.path.join(origin_folder, fn)
-        # >>> target_base_pth = r"D:\OpenITI\25Yrepos"
+        # >>> target_base_pth = r"D:\\OpenITI\\25Yrepos"
         # >>> initialize_new_text(origin_fp, target_base_pth, execute=False)
     """
     ori_uri = URI(origin_fp)
@@ -231,6 +238,9 @@ def download_texts_from_CSV(csv_fp, base_url="", new_base_pth=""):
             the files that need to be initialized. Defaults to "".
         new_base_pth (str): path to the folder containing
             the OpenITI 25-years repos. Defaults to "".
+    
+    Returns:
+        None
     """
     with open(csv_fp, mode="r", encoding="utf-8") as file:
         csv = file.read().splitlines()
@@ -290,7 +300,17 @@ if __name__ == "__main__":
 ##    print("Texts in csv file initialized; check if initialization was successful!")
 ##    input("Press Enter to continue")
 
-    # test download_texts_from_CSV function:
-    csv_fp = os.path.join(base_pth, "download_csv_to_uri.csv")
-    download_texts_from_CSV(csv_fp, new_base_pth=base_pth)
-    print("Texts in csv file downloaded and in the right folder. Check!")
+##    # test download_texts_from_CSV function:
+##    csv_fp = os.path.join(base_pth, "download_csv_to_uri.csv")
+##    download_texts_from_CSV(csv_fp, new_base_pth=base_pth)
+##    print("Texts in csv file downloaded and in the right folder. Check!")
+
+    folder = r"D:\London\OpenITI\barzakh\barzakh"
+    target_base_pth = r"D:\London\OpenITI\25Y_repos"
+    ignore = (".yml", ".md", ".py", ".git", ".gitignore")
+    for fn in os.listdir(folder):
+        if not fn.endswith(ignore) and "oorlib" not in fn:
+            fp = os.path.join(folder, fn)
+            print(fp)
+            if os.path.isfile(fp):
+                initialize_new_text(fp, target_base_pth, execute=False)

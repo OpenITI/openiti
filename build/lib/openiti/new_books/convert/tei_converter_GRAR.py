@@ -41,7 +41,7 @@ save_file                   (inherited)                (inherited)
                                                        get_html_data
                                                        get_html_metadata
                                                        format_html_metadata
-=========================== ========================== ==========================
+=========================== ========================== =========================
 
 Examples:
     >>> from tei_converter_GRAR import GRARConverter

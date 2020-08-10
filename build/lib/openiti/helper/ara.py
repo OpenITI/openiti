@@ -196,8 +196,9 @@ def normalize_composites(text, method="NFKC"):
         >>> len(normalize_composites("ﻹ"))
         2
 
-        # alif+hamza written with 2 unicode characters:
-        # U+0627 (ARABIC LETTER ALEF) + U+0654 (ARABIC HAMZA ABOVE)
+        alif+hamza written with 2 unicode characters:
+        U+0627 (ARABIC LETTER ALEF) + U+0654 (ARABIC HAMZA ABOVE):
+        
         >>> a = "أ"
         >>> len(a)
         2
@@ -245,7 +246,7 @@ def ar_cnt_file(fp, mode="token"):
                     or "token" for count of Arabic tokens
 
     Returns:
-        length (int): Arabic character/token count 
+        (int): Arabic character/token count 
     """
     import urllib
     try:

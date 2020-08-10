@@ -14,155 +14,158 @@ because it considers any string a unicode string.
 Current (convoluted but working) solution for extracting text from bok:
 save the text as a temp file, open it with Windows-1256 encoding
 (encoding="cp1256") and save it again in utf-8 encoding.
-Saving to JSON also seems to do the job. 
+Saving to JSON also seems to do the job.
 
 In order to interact with the database,
 use the cursor object cur returned by the connect_to_db function.
 
 Most important functions with the cursor object:
+
 * cur.tables() : get a list of all tables in the database
 * cur.execute() : execute an sql string
 * cur.description: get the headings of the columns in the current cur object
 
 
 The bok file contains a number of tables, of which the most important are:
+
 * Main: contains the metadata of the book
 * bxxxx (in which xxxx is the Shamela id of the book): contains the text,
   one page per row.
 * txxxx (in which xxxx is the Shamela id of the book): contains the headings,
   with reference to the page numbers
 
-List of tables in all bok files in the official Shamela corpus (October 2019):  
+List of tables in all bok files in the official Shamela corpus (October 2019):
 
-|table name|column name    |present in number of files|data in number of files|
-|----------|---------------|--------------------------|-----------------------|
-|bxxxx     |               |7509                      |7509                   |
-|          |nass           |7509                      |7509                   |
-|          |seal           |7509                      |7509                   |
-|          |id             |7509                      |7509                   |
-|          |page           |7509                      |7451                   |
-|          |part           |7509                      |7449                   |
-|          |hno            |1748                      |1744                   |
-|          |na             |1027                      |100                    |
-|          |sora           |1027                      |100                    |
-|          |aya            |1027                      |100                    |
-|          |b1             |17                        |17                     |
-|          |b2             |1                         |1                      |
-|          |b3             |1                         |1                      |
-|          |b4             |1                         |1                      |
-|          |blnk           |16                        |16                     |
-|          |ppart1         |40                        |40                     |
-|          |ppage1         |40                        |40                     |
-|          |ppart2         |7                         |7                      |
-|          |ppage2         |7                         |7                      |
-|          |ppart3         |7                         |7                      |
-|          |ppage3         |7                         |7                      |
-|          |ppart4         |2                         |2                      |
-|          |ppage4         |2                         |2                      |
-|          |done           |3                         |3                      |
-|          |bhno           |1                         |1                      |
-|Main      |               |7509                      |7509                   |
-|          |oauth          |7509                      |7509                   |
-|          |auth           |7509                      |7509                   |
-|          |bver           |7509                      |7509                   |
-|          |oauthver       |7509                      |7509                   |
-|          |over           |7509                      |7509                   |
-|          |lng            |7509                      |7509                   |
-|          |betaka         |7509                      |7509                   |
-|          |aseal          |7509                      |7509                   |
-|          |seal           |7509                      |7509                   |
-|          |bk             |7509                      |7509                   |
-|          |onum           |7509                      |7509                   |
-|          |bkid           |7509                      |7509                   |
-|          |ad             |7509                      |7509                   |
-|          |cat            |7509                      |7509                   |
-|          |islamshort     |7509                      |7508                   |
-|          |authinf        |7509                      |7265                   |
-|          |higrid         |7509                      |7265                   |
-|          |pdfcs          |7509                      |6711                   |
-|          |pdf            |7509                      |6480                   |
-|          |inf            |7509                      |5617                   |
-|          |shrtcs         |2664                      |2124                   |
-|          |tafseernam     |7509                      |183                    |
-|          |vername        |7509                      |16                     |
-|          |blnk           |7509                      |16                     |
-|txxxx     |               |7509                      |7507                   |
-|          |sub            |7509                      |7507                   |
-|          |id             |7509                      |7507                   |
-|          |tit            |7509                      |7507                   |
-|          |lvl            |7509                      |7507                   |
-|abc       |               |7509                      |397                    |
-|          |a              |7509                      |397                    |
-|          |b              |7509                      |397                    |
-|          |c              |7509                      |397                    |
-|Shorts    |               |7509                      |341                    |
-|          |nass           |7509                      |341                    |
-|          |ramz           |7509                      |341                    |
-|          |bk             |7509                      |341                    |
-|sPdf      |               |7509                      |236                    |
-|          |part           |7509                      |236                    |
-|          |sfilename      |7509                      |236                    |
-|          |onum           |7509                      |236                    |
-|men_u     |               |7509                      |148                    |
-|          |id             |7509                      |148                    |
-|          |name           |7509                      |148                    |
-|          |bk             |7509                      |148                    |
-|avPdf     |               |7509                      |28                     |
-|          |cs             |7509                      |28                     |
-|          |def            |7509                      |28                     |
-|          |onum           |7509                      |28                     |
-|          |vername        |7509                      |28                     |
-|          |pdfver         |7509                      |28                     |
-|men_b     |               |7509                      |17                     |
-|          |id             |7509                      |17                     |
-|          |manid          |7509                      |17                     |
-|          |name           |7509                      |17                     |
-|          |bk             |7509                      |17                     |
-|nBound    |               |7509                      |13                     |
-|          |d              |7509                      |13                     |
-|          |b              |7509                      |13                     |
-|          |dver           |7509                      |13                     |
-|          |bver           |7509                      |13                     |
-|          |bcode          |7509                      |13                     |
-|oShr      |               |7509                      |9                      |
-|          |matn           |7509                      |9                      |
-|          |sharhid        |7509                      |9                      |
-|          |matnid         |7509                      |9                      |
-|          |sharh          |7509                      |9                      |
-|oShrooh   |               |7509                      |9                      |
-|          |matn           |7509                      |9                      |
-|          |matnver        |7509                      |9                      |
-|          |sharhver       |7509                      |9                      |
-|          |sharh          |7509                      |9                      |
-|Shrooh    |               |7509                      |0                      |
-|          |matn           |7509                      |0                      |
-|          |sharhid        |7509                      |0                      |
-|          |matnid         |7509                      |0                      |
-|          |sharh          |7509                      |0                      |
-|com       |               |7509                      |0                      |
-|          |id             |7509                      |0                      |
-|          |com            |7509                      |0                      |
-|          |bk             |7509                      |0                      |
-|men_h     |               |7509                      |0                      |
-|          |id             |7509                      |0                      |
-|          |name           |7509                      |0                      |
-|          |upg            |7509                      |0                      |
-|10759     |               |1                         |1                      |
-|          |wrd            |1                         |1                      |
-|          |pos            |1                         |1                      |
-|10786     |               |1                         |1                      |
-|          |wrd            |1                         |1                      |
-|          |pos            |1                         |1                      |
-|10772     |               |1                         |1                      |
-|          |wrd            |1                         |1                      |
-|          |pos            |1                         |1                      |
-|10769     |               |1                         |1                      |
-|          |wrd            |1                         |1                      |
-|          |pos            |1                         |1                      |
-|10773     |               |1                         |1                      |
-|          |wrd            |1                         |1                      |
-|          |pos            |1                         |1                      |
-
+========== =============== ========================== =======================
+table name column name     present in number of files data in number of files
+========== =============== ========================== =======================
+bxxxx                      7509                       7509
+           nass            7509                       7509
+           seal            7509                       7509
+           id              7509                       7509
+           page            7509                       7451
+           part            7509                       7449
+           hno             1748                       1744
+           na              1027                       100
+           sora            1027                       100
+           aya             1027                       100
+           b1              17                         17
+           b2              1                          1
+           b3              1                          1
+           b4              1                          1
+           blnk            16                         16
+           ppart1          40                         40
+           ppage1          40                         40
+           ppart2          7                          7
+           ppage2          7                          7
+           ppart3          7                          7
+           ppage3          7                          7
+           ppart4          2                          2
+           ppage4          2                          2
+           done            3                          3
+           bhno            1                          1
+Main                       7509                       7509
+           oauth           7509                       7509
+           auth            7509                       7509
+           bver            7509                       7509
+           oauthver        7509                       7509
+           over            7509                       7509
+           lng             7509                       7509
+           betaka          7509                       7509
+           aseal           7509                       7509
+           seal            7509                       7509
+           bk              7509                       7509
+           onum            7509                       7509
+           bkid            7509                       7509
+           ad              7509                       7509
+           cat             7509                       7509
+           islamshort      7509                       7508
+           authinf         7509                       7265
+           higrid          7509                       7265
+           pdfcs           7509                       6711
+           pdf             7509                       6480
+           inf             7509                       5617
+           shrtcs          2664                       2124
+           tafseernam      7509                       183
+           vername         7509                       16
+           blnk            7509                       16
+txxxx                      7509                       7507
+           sub             7509                       7507
+           id              7509                       7507
+           tit             7509                       7507
+           lvl             7509                       7507
+abc                        7509                       397
+           a               7509                       397
+           b               7509                       397
+           c               7509                       397
+Shorts                     7509                       341
+           nass            7509                       341
+           ramz            7509                       341
+           bk              7509                       341
+sPdf                       7509                       236
+           part            7509                       236
+           sfilename       7509                       236
+           onum            7509                       236
+men_u                      7509                       148
+           id              7509                       148
+           name            7509                       148
+           bk              7509                       148
+avPdf                      7509                       28
+           cs              7509                       28
+           def             7509                       28
+           onum            7509                       28
+           vername         7509                       28
+           pdfver          7509                       28
+men_b                      7509                       17
+           id              7509                       17
+           manid           7509                       17
+           name            7509                       17
+           bk              7509                       17
+nBound                     7509                       13
+           d               7509                       13
+           b               7509                       13
+           dver            7509                       13
+           bver            7509                       13
+           bcode           7509                       13
+oShr                       7509                       9
+           matn            7509                       9
+           sharhid         7509                       9
+           matnid          7509                       9
+           sharh           7509                       9
+oShrooh                    7509                       9
+           matn            7509                       9
+           matnver         7509                       9
+           sharhver        7509                       9
+           sharh           7509                       9
+Shrooh                     7509                       0
+           matn            7509                       0
+           sharhid         7509                       0
+           matnid          7509                       0
+           sharh           7509                       0
+com                        7509                       0
+           id              7509                       0
+           com             7509                       0
+           bk              7509                       0
+men_h                      7509                       0
+           id              7509                       0
+           name            7509                       0
+           upg             7509                       0
+10759                      1                          1
+           wrd             1                          1
+           pos             1                          1
+10786                      1                          1
+           wrd             1                          1
+           pos             1                          1
+10772                      1                          1
+           wrd             1                          1
+           pos             1                          1
+10769                      1                          1
+           wrd             1                          1
+           pos             1                          1
+10773                      1                          1
+           wrd             1                          1
+           pos             1                          1
+========== =============== ========================== =======================
 
 """
 
@@ -174,16 +177,16 @@ import re
 
 def connect_to_db(fp):
     """Connect to the mdb database in the bok file.
+
     Uses pypyodbc (https://github.com/jiangwen365/pypyodbc)
 
     Args:
         fp (str): path to the bok file
 
     Returns:
-        conn: a pypyodbc connection object. Needs to be closed (conn.close())
-            at the end of the database session
-        cur: a pypyodbc cursor object, needed to execute SQL
-    """
+        conn: a pypyodbc connection object. Needs to be closed (conn.close())\
+          at the end of the database session
+        cur: a pypyodbc cursor object, needed to execute SQL"""
     # connect to the database:
     conn = pypyodbc.connect(r"Driver={Microsoft Access Driver (*.mdb, *.accdb)};"
                             + r"Dbq={};unicode_results=True".format(fp))
@@ -213,7 +216,7 @@ def mdb2dict(cur, VERBOSE=False):
 
     Args:
         cur: a pypyodbc cursor object, needed to execute SQL
-        VERBOSE (bool): if True, table names will be printed 
+        VERBOSE (bool): if True, table names will be printed
 
     Returns:
         d (dict): a dictionary containing all tables in the database:
@@ -246,7 +249,7 @@ def mdb2dict(cur, VERBOSE=False):
                         val = None
                     row_dict[heading] = val
                 d[table_name].append(row_dict)
-    return d    
+    return d
 
 
 def save_to_json(d, fp):
@@ -292,4 +295,4 @@ if __name__ == "__main__":
     d = mdb2dict(cur, VERBOSE=False)
     save_to_json(d, "test_bok2json.json")
     close_db(conn)
-    
+
