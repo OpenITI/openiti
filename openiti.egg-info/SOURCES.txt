@@ -11,6 +11,7 @@ openiti/git/clone_OpenITI.py
 openiti/git/collect_txt_files.py
 openiti/git/commit_push.py
 openiti/git/get_issues.py
+openiti/git/git_util.py
 openiti/git/resolve_URI_change_issues.py
 openiti/helper/__init__.py
 openiti/helper/ara.py
@@ -30,6 +31,7 @@ openiti/new_books/convert/epub_converter_hindawi.py
 openiti/new_books/convert/generic_converter.py
 openiti/new_books/convert/html_converter_eShia.py
 openiti/new_books/convert/html_converter_generic.py
+openiti/new_books/convert/html_converter_noorlib.py
 openiti/new_books/convert/shamela_converter.py
 openiti/new_books/convert/tei_converter_GRAR.py
 openiti/new_books/convert/tei_converter_generic.py
@@ -39,6 +41,7 @@ openiti/new_books/convert/helper/html2md.py
 openiti/new_books/convert/helper/html2md_GRAR.py
 openiti/new_books/convert/helper/html2md_eShia.py
 openiti/new_books/convert/helper/html2md_hindawi.py
+openiti/new_books/convert/helper/html2md_noorlib.py
 openiti/new_books/convert/helper/md2html.py
 openiti/new_books/convert/helper/tei2md.py
 openiti/new_books/convert/helper/yml2json.py
