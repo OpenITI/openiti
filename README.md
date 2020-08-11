@@ -13,9 +13,9 @@ Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip in
 
 ## Change log: 
 
-### v.0.0.9a (patch): 
+### v.0.0.9.post1 (patch): 
 
-* `openiti.helper.ara`: fix bug
+* `openiti.helper.ara`: fix bug in regex compilation
 
 ### v.0.0.9:
 
