@@ -13,6 +13,10 @@ Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip in
 
 ## Change log: 
 
+### v.0.0.9a (patch): 
+
+* `openiti.helper.ara`: fix bug
+
 ### v.0.0.9:
 
 * `openiti.new_books.convert` : check and update all converters
