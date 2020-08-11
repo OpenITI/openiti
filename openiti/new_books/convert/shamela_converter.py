@@ -135,7 +135,7 @@ def main(meta_folder=None, files_folder=None, books_folder=None,
 
     if config_fp:
         import shutil
-        shutil.copyfile(config_fp, "temp_config.py")
+        shutil.copyfile(config_fp, "./temp_config.py")
         from temp_config import files_folder, books_folder, meta_folder,\
             conv_folder, download_date, download_source, fn_regex, extensions
         os.remove("temp_config.py")
@@ -197,7 +197,8 @@ Shamela database:")
     conv = BokJsonConverter(all_meta=all_meta,
                             additional_meta=additional_meta,
                             dest_folder=conv_folder)
-    conv.convert_files_in_folder(conv_folder, extensions=extensions,
+    conv.convert_files_in_folder(books_folder,
+                                 dest_folder=conv_folder, extensions=extensions,
                                  fn_regex=fn_regex)
     print("Converted files can be found in", conv_folder)
     print("(metadata in {})".format(meta_folder))
@@ -285,10 +286,15 @@ class BokJsonConverter(generic_converter.GenericConverter):
         if not os.path.exists(dest_folder):
             os.makedirs(dest_folder)
         mdb_files = []
+        print("source folder:", source_folder)
         for root, dirs, files in os.walk(source_folder):
             for fn in files:
-                if fn.endswith(".mdb") and re.findall(fn_regex, fn):
-                    mdb_files.append(os.path.join(root, fn))
+                if fn_regex:
+                    if fn.endswith(".mdb") and re.findall(fn_regex, fn):
+                        mdb_files.append(os.path.join(root, fn))
+                else:
+                    if fn.endswith(".mdb"):
+                        mdb_files.append(os.path.join(root, fn))
         print("Converting {} .mdb files to json".format(len(mdb_files)))
         failed = []
         for fp in mdb_files:
@@ -398,7 +404,8 @@ class BokJsonConverter(generic_converter.GenericConverter):
             return struct_dict
 
         self.struct_dict = format_struct_dict(toc)
-        text = ["### |EDITOR|\n", ]
+        #text = ["### |EDITOR|\n", ]
+        text = []
         notes = []
         page_no = 0
         vol_page = ""
@@ -436,7 +443,7 @@ class BokJsonConverter(generic_converter.GenericConverter):
 
             # remove the footnotes:
 
-            passage_text, notes = self.remove_notes(passage_text, notes)
+            passage_text, notes = self.remove_notes(passage_text, notes, vol_no, page_no)
 
             # add the structural formatting:
 
@@ -463,11 +470,11 @@ class BokJsonConverter(generic_converter.GenericConverter):
 
         # compile text and endnote strings from lists:
         text = "".join(text)
-        notes = "".join(notes)
+        notes = "\n\n### |EDITOR|\nENDNOTES\n\n" + "".join(notes)
 
         return text, notes
 
-    def remove_notes(self, passage_text, notes):
+    def remove_notes(self, passage_text, notes, vol_no, page_no):
         """Remove footnotes from the passage_text and add them to notes list."""
         footnotes = re.findall(self.footnote_regex,
                                passage_text, flags=re.DOTALL)
@@ -495,7 +502,7 @@ class BokJsonConverter(generic_converter.GenericConverter):
             if re.findall(tit_regex, passage_text):
                 r = "\n\n### {} AUTO ".format(int(lvl)*"|")+r"\1\n\n"
                 passage_text = re.sub("[\n\r¶]*({})".format(tit_regex),
-                                      r, passage_text)
+                                      r, passage_text, count=1)
             else:
                 if VERBOSE:
                     print("!!!title not inside text", tit)
@@ -568,6 +575,8 @@ class BokJsonConverter(generic_converter.GenericConverter):
         text = re.sub("(PageV\d+P\d+)(\n\n)(?!#)", r"\1\2# ", text)
 
         text = re.sub("\n{2,}", "\n\n", text)
+        print(text[-50:])
+        text = re.sub("[\r\n]+# *(?:[\r\n]+|\Z)", "\n", text)
 
         return text
 
@@ -759,4 +768,38 @@ extensions = ["mdb"]
 
 if __name__ == "__main__":
     #print_default_config_file()
-    main(config_fp="test/shamela/config.py")
+    # path to the Files folder of the shamela database
+    # (this folder contains the main metadata database files):
+    files_folder = r"G:\London\OpenITI\new\Zaydiyya\Zaydiyya\Files"
+
+    # path to the Books folder of the shamela database:
+    # (this folder contains subfolders with the separate book .mdb files)
+    books_folder = r"G:\London\OpenITI\new\Zaydiyya\Zaydiyya\Books"
+
+    # path to the folder that contains the converted metadata files
+    # (if the metadata has been extracted before):
+    meta_folder = r"G:\London\OpenITI\new\Zaydiyya\Zaydiyya\extracted_metadata"
+
+    # path to the folder in which the converted text files should be saved:
+    conv_folder = r"G:\London\OpenITI\new\Zaydiyya\Zaydiyya\BooksConverted2"
+
+    # date when the database was downloaded:
+    download_date = "2020-04-16"
+
+    # name and/or url of the downloaded database:
+    download_source = "al-Maktaba al-Shamela al-Zaydiyya"
+
+    # regular expression pattern for file names to be converted:
+    fn_regex = "337"
+
+    # extensions of the files that should be converted:
+    extensions = ["mdb"]
+
+    main(files_folder=files_folder,
+         books_folder=books_folder,
+         meta_folder=meta_folder,
+         conv_folder=conv_folder,
+         download_date=download_date,
+         download_source=download_source,
+         fn_regex=fn_regex,
+         extensions=extensions)
