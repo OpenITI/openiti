@@ -575,7 +575,6 @@ class BokJsonConverter(generic_converter.GenericConverter):
         text = re.sub("(PageV\d+P\d+)(\n\n)(?!#)", r"\1\2# ", text)
 
         text = re.sub("\n{2,}", "\n\n", text)
-        print(text[-50:])
         text = re.sub("[\r\n]+# *(?:[\r\n]+|\Z)", "\n", text)
 
         return text
