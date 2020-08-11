@@ -73,10 +73,10 @@ ar_chars = """\
 ۲	EXTENDED ARABIC-INDIC DIGIT TWO
 ۳	EXTENDED ARABIC-INDIC DIGIT THREE
 ۴	EXTENDED ARABIC-INDIC DIGIT FOUR
-۵	EXTENDED ARABIC-INDIC DIGIT FIVE
-‌	ZERO WIDTH NON-JOINER
-‍	ZERO WIDTH JOINER"""
-JOINERar_chars = [x.split("\t")[0] for x in ar_chars.splitlines()]
+۵	EXTENDED ARABIC-INDIC DIGIT FIVE"""
+##‌	ZERO WIDTH NON-JOINER
+##‍	ZERO WIDTH JOINER"""
+ar_chars = [x.split("\t")[0] for x in ar_chars.splitlines()]
 #ar_chars = "ذ١٢٣٤٥٦٧٨٩٠ّـضصثقفغعهخحجدًٌَُلإإشسيبلاتنمكطٍِلأأـئءؤرلاىةوزظْلآآ"
 ar_char = re.compile("[{}]".format("".join(ar_chars))) # regex for one Arabic character
 ar_tok = re.compile("[{}]+".format("".join(ar_chars))) # regex for one Arabic token
@@ -95,7 +95,6 @@ noise = re.compile(""" ّ    | # Tashdīd / Shadda
                        ٰ    | # Dagger Alif
                        ـ     # Taṭwīl / Kashīda
                    """, re.VERBOSE)
-
 
 def denoise(text):
     """Remove non-consonantal characters from Arabic text.
