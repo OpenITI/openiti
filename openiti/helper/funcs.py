@@ -24,6 +24,40 @@ exclude_folders = ["OpenITI.github.io", "Annotation", "maintenance",
 exclude_files = ["README.md", ".DS_Store",
                  ".gitignore", "text_questionnaire.md"]
 
+def get_all_text_files_in_folder(start_folder, excluded_folders=exclude_folders,
+                                 exclude_files=exclude_files):
+    """A generator that yields the file path for all OpenITI text files \
+    in a folder and its subfolders.
+
+    OpenITI text files are defined here as files that have a language
+    identifier (-ara1, -ara2, -per1, etc.) and have either no extension
+    or .mARkdown, .completed, or .inProgress.
+    
+    The script creates a generator over which you can iterate.
+    It yields the full path to each of the text files.
+
+    Args:
+        start_folder (str): path to the folder containing the text files
+        excluded_folders (list): list of folder names that should be excluded
+            (default: the list of excluded folders defined in this module)
+        excluded_files (list): list of file names that should be excluded
+            (default: the list of excluded file names defined in this module)
+
+    Examples:
+        > folder = r"D:\London\OpenITI\25Y_repos"
+        > for fp in get_all_text_files_in_folder(folder):
+            print(fp)
+        > folder = r"D:\London\OpenITI\25Y_repos\0025AH"
+        > AH0025_file_list = [fp for fp in get_all_text_files_in_folder(folder)]
+    """
+    for root, dirs, files in os.walk(start_folder):
+        dirs[:] = [d for d in dirs if d not in exclude_folders]
+        files[:] = [f for f in files if f not in exclude_files]
+        for fn in files:
+            if re.findall(r"-\w\w\w\d(?:.inProgress|completed|mARkdown)?\Z", fn):
+                fp = os.path.join(root, fn)
+                yield(fp)
+
 def get_all_characters_in_text(fp):
     """Get a set of all characters used in a text.
 
