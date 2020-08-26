@@ -113,7 +113,7 @@ VERBOSE = False
 
 def main(meta_folder=None, files_folder=None, books_folder=None,
          conv_folder=None, download_date="", download_source="",
-         config_fp=None, extensions=["mdb"], fn_regex=None):
+         config_fp=None, extensions=["mdb"], fn_regex=None, verbose=False):
     """Collect the variables and carry out the conversion.
 
     Args:
@@ -197,6 +197,8 @@ Shamela database:")
     conv = BokJsonConverter(all_meta=all_meta,
                             additional_meta=additional_meta,
                             dest_folder=conv_folder)
+    if verbose:
+        conv.VERBOSE = True
     conv.convert_files_in_folder(books_folder,
                                  dest_folder=conv_folder, extensions=extensions,
                                  fn_regex=fn_regex)
@@ -470,7 +472,10 @@ class BokJsonConverter(generic_converter.GenericConverter):
 
         # compile text and endnote strings from lists:
         text = "".join(text)
-        notes = "\n\n### |EDITOR|\nENDNOTES\n\n" + "".join(notes)
+        if notes:
+            notes = "\n\n### |EDITOR|\nENDNOTES\n\n" + "".join(notes)
+        else:
+            notes = ""
 
         return text, notes
 
@@ -540,6 +545,8 @@ class BokJsonConverter(generic_converter.GenericConverter):
         return self.magic_value + metadata + self.header_splitter
 
     def pre_process(self, text):
+        if not text:
+            return ""
         text = re.sub(" ?¶ ?", "\n\n", text)
         text = super().pre_process(text)
         return text
