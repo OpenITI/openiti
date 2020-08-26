@@ -13,6 +13,11 @@ Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip in
 
 ## Change log: 
 
+### v.0.1.0:
+
+* `openiti.helper.yml`: add support for empty lines and bullet lists in multiline values
+* `openiti/new_books/convert/shamela_converter.py`: fix bugs in shamela converter
+
 ### v.0.0.9.post1 (patch): 
 
 * `openiti.helper.ara`: fix bug in regex compilation
