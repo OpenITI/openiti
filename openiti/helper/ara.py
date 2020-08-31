@@ -137,19 +137,19 @@ def normalize_per(text):
         text (str): user input string to be normalized
 
     Examples:
-        >>> normalize_ara_light("سياسي")
+        >>> normalize_per_light("سياسي")
         'سیاسی'
-        >>> normalize_ara_light("مدينة")
+        >>> normalize_per_light("مدينة")
         'مدینه'
-        >>> normalize_ara_light("درِ باز")
+        >>> normalize_per_light("درِ باز")
         'در باز'
-        >>> normalize_ara_light("حتماً")
+        >>> normalize_per_light("حتماً")
         'حتما'
-        >>> normalize_ara_light("مدرك")
+        >>> normalize_per_light("مدرك")
         'مدرک'
-        >>> normalize_ara_light("أسماء")
+        >>> normalize_per_light("أسماء")
         'اسما'
-        >>> normalize_ara_light("دربارۀ")
+        >>> normalize_per_light("دربارۀ")
         'درباره'
 
     """
