@@ -1,4 +1,18 @@
 """This module provides useful regular expression patterns for OpenITI texts.
+
+The patterns are roughly divided into the following sections:
+
+# 1. Characters, words and spaces
+# 2. OpenITI URIs and filenames
+# 3. OpenITI mARkdown tags
+
+
+See also:
+
+* https://alraqmiyyat.github.io/mARkdown/
+* https://docs.python.org/3/library/re.html
+* https://pypi.org/project/regex/
+
 """
 
 # NB: "(?s)" = inline flag (to be put at the start of a regex pattern)
@@ -110,6 +124,7 @@ any_word = any_unicode_letter + "+"
 
 space ="(?: |[\r\n]+~~|PageV[^P]+P\d+)+"
 space_word = "(?:{}{})".format(space, ar_tok)
+
 
 # 2. URIs and OpenITI filenames:
 
