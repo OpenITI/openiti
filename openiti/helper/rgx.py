@@ -16,7 +16,7 @@ See also:
 """
 
 # NB: "(?s)" = inline flag (to be put at the start of a regex pattern)
-# that forces the regex module to consider the dot as representing any
+# that forces the regex machine to consider the dot as representing any
 # character including newline (= using flag re.DOTALL while compiling a regex)
 dotall = (?s)
 
@@ -92,7 +92,7 @@ ar_char = re.compile("""
     ۲	| # EXTENDED ARABIC-INDIC DIGIT TWO
     ۳	| # EXTENDED ARABIC-INDIC DIGIT THREE
     ۴	| # EXTENDED ARABIC-INDIC DIGIT FOUR
-    ۵	| # EXTENDED ARABIC-INDIC DIGIT FIVE
+    ۵	  # EXTENDED ARABIC-INDIC DIGIT FIVE
     """, re.VERBOSE)
 ##‌        | # ZERO WIDTH NON-JOINER
 ##‍        | # ZERO WIDTH JOINER
@@ -214,3 +214,7 @@ anal_tag_text = "(?:@[A-Z]{3})?@[A-Z]{3}(?:$\w+)?" + tag_range
 #                     16%(w)s{16}|17%(w)s{17}))?""" % {"w": space_word}
 
 
+
+if __name__ == "__main__":
+    import re
+    
