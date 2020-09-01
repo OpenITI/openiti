@@ -97,10 +97,9 @@ ar_chars = """\
 ۵	EXTENDED ARABIC-INDIC DIGIT FIVE"""
 ##‌	ZERO WIDTH NON-JOINER
 ##‍	ZERO WIDTH JOINER"""
-ar_chars = [x.split("\t")[0] for x in ar_chars.splitlines()]
-#ar_chars = "ذ١٢٣٤٥٦٧٨٩٠ّـضصثقفغعهخحجدًٌَُلإإشسيبلاتنمكطٍِلأأـئءؤرلاىةوزظْلآآ"
-ar_char = "[{}]".format("".join(ar_chars)) # regex for one Arabic character
-ar_tok = "[{}]+".format("".join(ar_chars)) # regex for one Arabic token
+ar_chars = "".join([x.split("\t")[0] for x in ar_chars.splitlines()])
+ar_char = "[{}]".format(ar_chars) # regex for one Arabic character
+ar_tok = "[{}]+".format(ar_chars) # regex for one Arabic token
 
 noise = re.compile(""" ّ    | # Tashdīd / Shadda
                        َ    | # Fatḥa
@@ -132,9 +131,9 @@ space_word = "(?:{}{})".format(space, ar_tok)
 # 2. URIs and OpenITI filenames:
 
 # OpenITI URIs
-auth = "\d{4}(?:[A-Z][a-z])+"
-book = auth + "\.(?:[A-Z][a-z])+"
-version = book + "\w+(?:Vols)?(?:BK\d+|[A-Z])-\w{3}\d+"
+auth = r"\b\d{4}(?:[A-Z][a-z]+)"
+book = auth + "\.(?:[A-Z][a-z]+)"
+version = book + "\.\w+(?:Vols)?(?:BK\d+|[A-Z])?-\w{3}\d+"
 
 # OpenITI text file names:
 extensions = ["inProgress", "completed", "mARkdown"]
@@ -220,3 +219,27 @@ anal_tag_text = "(?:@[A-Z]{3})?@[A-Z]{3}(?:$\w+)?" + tag_range
 #                     13%(w)s{13}|14%(w)s{14}|15%(w)s{15}|
 #                     16%(w)s{16}|17%(w)s{17}))?""" % {"w": space_word}
 
+if __name__ == "__main__":
+    def test_regex_findall(ptrn, txt, res, verbose=True):
+        shouldbe = "Should be {}".format(res)
+        if verbose:
+            print(re.findall(ptrn, txt))
+        assert re.findall(ptrn, txt) == res, shouldbe
+    test_regex_findall(ar_char, "كتاب kitab", ['ك', 'ت', 'ا', 'ب'])
+    test_regex_findall(ar_tok, "كتاب kitab", ['كتاب'])
+    res = ['ك', 'ت', 'ا', 'ب', 'k', 'i', 't', 'a', 'b']
+    test_regex_findall(any_unicode_letter, "كتاب_kitab", res)
+    test_regex_findall(any_word, "كتاب_kitab", ['كتاب', 'kitab'])
+    txt = """الكلمة الأولى
+~~السطر الثاني PageV01P003 الصفحة التالية"""
+    res = [' الأولى', '\n~~السطر', ' الثاني', ' PageV01P003 الصفحة', ' التالية']
+    test_regex_findall(space_word, txt, res)
+    uri = "0255Jahiz.Hayawan.Shamela0001234VolsBk1-ara1.completed"
+    test_regex_findall(auth, uri, ["0255Jahiz"])
+    test_regex_findall(book, uri, ["0255Jahiz.Hayawan"])
+    test_regex_findall(version, uri, ["0255Jahiz.Hayawan.Shamela0001234VolsBk1-ara1"])
+
+    
+    
+        
+    
