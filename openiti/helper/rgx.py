@@ -125,6 +125,7 @@ any_word = any_unicode_letter + "+"
 #any_unicode_diacritic = "\p{M}"
 
 space ="(?: |[\r\n]+~~|PageV[^P]+P\d+)+"
+space ="(?:\W|PageV[^P]+P\d+)+"
 space_word = "(?:{}{})".format(space, ar_tok)
 
 
@@ -137,14 +138,19 @@ version = book + "\.\w+(?:Vols)?(?:BK\d+|[A-Z])?-\w{3}\d+"
 
 # OpenITI text file names:
 extensions = ["inProgress", "completed", "mARkdown"]
-ext_regex = "(?:\.{})? ".format("|\.".join(extensions))
+ext_regex = r"(?:\.{}|(?= |\n|\r|\Z))".format("|\.".join(extensions))
 version_file = version+ext_regex
+version_fp = r"%s[/\\]%s[/\\]%s" % (auth, book, version_file)
 
 # OpenITI yml file names:
 yml ="\.yml"
 auth_yml = auth+yml
 book_yml = book+yml
 version_yml = version+yml
+
+auth_yml_fp = r"%s[/\\]%s" % (auth, auth_yml)
+book_yml_fp = r"%s[/\\]%s[/\\]%s" % (auth, book, book_yml)
+version_yml_fp = r"%s[/\\]%s[/\\]%s" % (auth, book, version_yml)
 
 # 3. OpenITI mARkdown tags
 
@@ -155,37 +161,40 @@ header_splitter = "#META#Header#End#"
 vol_page = "PageV[^P]+P\d+"
 vol_no = "PageV([^P]+)P\d+"
 page_no = "PageV[^P]+P(\d+)"
-page = dotall + r"(?<={}|{}).+?(?:{}|\Z)".format(vol_page, header_splitter, vol_page)
+vol_page_3 = "PageV[^P]{2}P\d{3}"
+vol_page_4 = "PageV[^P]{2}P\d{4}"
+page = dotall + r"(?:(?<={})|(?<={})|(?<={})).+?(?:{}|\Z)".format(vol_page_3,
+                    vol_page_4, header_splitter, vol_page)
 
 # Hierarchical section tags:
 section_tag = "### \|+ "
 section_title = section_tag + "([^\r\n]*)"
-section = dotall + section_tag + ".+?(?=###)"
-section_text = dotall + section_tag + "[^\r\n]*[\r\n]+(.+?)(?=###)"
+section = dotall + section_tag + r".+?(?=###|\Z)"
+section_text = dotall + section_tag + "[^\r\n]*[\r\n]+(.+?)(?=###|\Z)"
 
 # biographies
-bio_tag = "### (?:|+ )$+ "
-bio = dotall + bio_tag + "[^\r\n]*[\r\n]+.+?(?=###)"
+bio_tag = r"### (?:\|+ )?\$+ "
+bio = dotall + bio_tag + "[^\r\n]*[\r\n]+.+?(?=###|\Z)"
 bio_title = bio_tag + "([^\r\n]*)"
-bio_text = dotall + bio_tag + "[^\r\n]*[\r\n]+(.+?)(?=###)"
+bio_text = dotall + bio_tag + "[^\r\n]*[\r\n]+(.+?)(?=###|\Z)"
 
-bio_man_tag = "### (?:|+ )$ "
-bio_man = dotall + bio_man_tag + "[^\r\n]*[\r\n]+.+?(?=###)"
+bio_man_tag = "### (?:\|+ )?\$ "
+bio_man = dotall + bio_man_tag + "[^\r\n]*[\r\n]+.+?(?=###|\Z)"
 bio_man_title = bio_man_tag + "([^\r\n]*)"
-bio_man_text = dotall + bio_man_tag + "[^\r\n]*[\r\n]+(.+?)(?=###)"
+bio_man_text = dotall + bio_man_tag + "[^\r\n]*[\r\n]+(.+?)(?=###|\Z)"
 
-bio_woman_tag = "### (?:|+ )$$ "
-bio_woman = dotall + bio_woman_tag + "[^\r\n]*[\r\n]+.+?(?=###)"
+bio_woman_tag = "### (?:\|+ )?\$\$ "
+bio_woman = dotall + bio_woman_tag + "[^\r\n]*[\r\n]+.+?(?=###|\Z)"
 bio_woman_title = bio_woman_tag + "([^\r\n]*)"
-bio_woman_text = dotall + bio_woman_tag + "[^\r\n]*[\r\n]+(.+?)(?=###)"
+bio_woman_text = dotall + bio_woman_tag + "[^\r\n]*[\r\n]+(.+?)(?=###|\Z)"
 
 # editorial sections:
-editorial_tag = "### |EDITOR|"
+editorial_tag = "### \|EDITOR\|"
 editorial = dotall + editorial_tag + r"[^\r\n]*[\r\n]+.+?(?=###|\Z)"
 editorial_text = dotall + editorial_tag + "[^\r\n]*[\r\n]+(.+?)(?=###|\Z)"
 
 # paratext sections:
-paratext_tag = "### |PARATEXT|"
+paratext_tag = "### \|PARATEXT\|"
 paratext = dotall + paratext_tag + r"[^\r\n]*[\r\n]+.+?(?=###|\Z)"
 paratext_text = dotall + paratext_tag + r"[^\r\n]*[\r\n]+(.+?)(?=###|\Z)"
 
@@ -193,7 +202,8 @@ paratext_text = dotall + paratext_tag + r"[^\r\n]*[\r\n]+(.+?)(?=###|\Z)"
 paragraph_tag = r"(?<=[\r\n])# "
 paragraph = r"(?<=[\r\n])# [^#]+"
 paragraph_text = r"(?<=[\r\n]# )[^#]+"
-word_in_paragraph = r"(?<=[\r\n]# )[^#]+?{}[^#]+" # insert word using string formatting
+word_in_paragraph = r"(?<=[\r\n])# [^#]+?{}[^#]+" # insert word using string formatting
+word_in_paragraph_text= r"(?<=[\r\n]# )[^#]+?{}[^#]+" # insert word using string formatting
 
 # years:
 year = r"\bY[A-Z]?\d+"
@@ -201,10 +211,11 @@ year_born = r"\bYB\d+"
 year_died = r"\bYD\d+"
 
 # analytical tag pattern:
-anal_tag = "(?:@[A-Z]{3})?[@#][A-Z]{3}(?:$\w+)?(?:@?\d\d+)?"
+anal_tag = "(?:@[A-Z]{3})?[@#][A-Z]{3}(?:\$[\w+\-]+)?(?:@?\d\d+)?"
 tag_range = "|".join([str(i)+"%(w)s{"+str(i)+"}" for i in range(1,21)])
-tag_range = "@?(?:\d(?:" + tag_range % {"w": space_word} + "))?"
-anal_tag_text = "(?:@[A-Z]{3})?@[A-Z]{3}(?:$\w+)?" + tag_range
+tag_range = "@?(?:\d\W*?(?:" + tag_range % {"w": space_word} + "))?"
+anal_tag_text = "(?:@[A-Z]{3})?[@#][A-Z]{3}(?:\$[\w+\-]+)?" + tag_range
+
 #(this is identical to:)
 #anal_tag_text = """(?x)                                 # verbose inline flag
 #                   (?:@[A-Z]{3})?                       # optional personal ID
@@ -220,11 +231,16 @@ anal_tag_text = "(?:@[A-Z]{3})?@[A-Z]{3}(?:$\w+)?" + tag_range
 #                     16%(w)s{16}|17%(w)s{17}))?""" % {"w": space_word}
 
 if __name__ == "__main__":
-    def test_regex_findall(ptrn, txt, res, verbose=True):
+    # tests for the regex patterns involved:
+    verbose=True
+    def test_regex_findall(ptrn, txt, res):
         shouldbe = "Should be {}".format(res)
         if verbose:
             print(re.findall(ptrn, txt))
         assert re.findall(ptrn, txt) == res, shouldbe
+
+    # test word/character regexes:
+    
     test_regex_findall(ar_char, "كتاب kitab", ['ك', 'ت', 'ا', 'ب'])
     test_regex_findall(ar_tok, "كتاب kitab", ['كتاب'])
     res = ['ك', 'ت', 'ا', 'ب', 'k', 'i', 't', 'a', 'b']
@@ -234,12 +250,157 @@ if __name__ == "__main__":
 ~~السطر الثاني PageV01P003 الصفحة التالية"""
     res = [' الأولى', '\n~~السطر', ' الثاني', ' PageV01P003 الصفحة', ' التالية']
     test_regex_findall(space_word, txt, res)
-    uri = "0255Jahiz.Hayawan.Shamela0001234VolsBk1-ara1.completed"
-    test_regex_findall(auth, uri, ["0255Jahiz"])
-    test_regex_findall(book, uri, ["0255Jahiz.Hayawan"])
-    test_regex_findall(version, uri, ["0255Jahiz.Hayawan.Shamela0001234VolsBk1-ara1"])
+
+    # test URI/fn regexes:
+    
+    fn = "0255Jahiz.Hayawan.Shamela0001234VolsBk1-ara1.completed"
+    test_regex_findall(auth, fn, ["0255Jahiz"])
+    test_regex_findall(book, fn, ["0255Jahiz.Hayawan"])
+    test_regex_findall(version, fn,
+                       ["0255Jahiz.Hayawan.Shamela0001234VolsBk1-ara1"])
+    test_regex_findall(version_file, fn,
+                       ["0255Jahiz.Hayawan.Shamela0001234VolsBk1-ara1.completed"])
+    fn = "0255Jahiz.Hayawan.Shamela0001234-per3"
+    test_regex_findall(version, fn,
+                       ["0255Jahiz.Hayawan.Shamela0001234-per3"])
+    test_regex_findall(version_file, fn,
+                       ["0255Jahiz.Hayawan.Shamela0001234-per3"])
+    fps = """
+0255Jahiz/0255Jahiz.yml
+0255Jahiz/0255Jahiz.Hayawan/0255Jahiz.Hayawan.yml
+0255Jahiz/0255Jahiz.Hayawan/0255Jahiz.Hayawan.Shamela0001234-per3.inProgress
+0255Jahiz/0255Jahiz.Hayawan/0255Jahiz.Hayawan.Shamela0001234-per3.yml
+"""
+    test_regex_findall(auth_yml, fps, ["0255Jahiz.yml"])
+    test_regex_findall(book_yml, fps, ["0255Jahiz.Hayawan.yml"])
+    test_regex_findall(version_yml, fps, ["0255Jahiz.Hayawan.Shamela0001234-per3.yml"])
+    test_regex_findall(auth_yml_fp, fps,
+                       ["0255Jahiz/0255Jahiz.yml"])
+    test_regex_findall(book_yml_fp, fps,
+                       ["0255Jahiz/0255Jahiz.Hayawan/0255Jahiz.Hayawan.yml"])
+    test_regex_findall(version_yml_fp, fps,
+                       ["0255Jahiz/0255Jahiz.Hayawan/0255Jahiz.Hayawan.Shamela0001234-per3.yml"])
+    test_regex_findall(version_fp, fps,
+                       ["0255Jahiz/0255Jahiz.Hayawan/0255Jahiz.Hayawan.Shamela0001234-per3.inProgress"])
+    
+    # test OpenITI mARkdown regexes:
+
+    txt = """######OpenITI#
+#META# blabla
+#META#Header#End#
+
+Text text text"""
+    test_regex_findall(header_splitter, txt, ["#META#Header#End#"])
+    test_regex_findall(magic_value, txt, ["######OpenITI#"])
+    pages = "PageV01P001 PageV02P0002 PageVM3P003 Pagev04P004 PageV05p0005"
+    test_regex_findall(vol_page, pages, ["PageV01P001", "PageV02P0002", "PageVM3P003"])
+    test_regex_findall(vol_no, pages, ["01", "02", "M3"])
+    test_regex_findall(page_no, pages, ["001", "0002", "003"])
+    pages = "#META#Header#End#\n\npage text 1 PageV01P001 page text 2 PageV02P0002 text without page number"
+    res = ['\n\npage text 1 PageV01P001', ' page text 2 PageV02P0002', ' text without page number']
+    test_regex_findall(page, pages, res)
+    
+    txt = """### | heading 1
+text section 1
+### || heading 2
+text section 2
+text section 2"""
+    test_regex_findall(section_tag, txt, ["### | ", "### || "])
+    test_regex_findall(section_title, txt, ["heading 1", "heading 2"])
+    test_regex_findall(section, txt, ['### | heading 1\ntext section 1\n',
+                                      '### || heading 2\ntext section 2\ntext section 2'])
+    test_regex_findall(section_text, txt, ['text section 1\n',
+                                           'text section 2\ntext section 2'])
+    
+    txt = """### | biographies
+text section 1
+### || $ biography 1
+text biography 1
+### $$ biography 2
+text biography 2"""
+    test_regex_findall(bio_tag, txt, ["### || $ ", "### $$ "])
+    test_regex_findall(bio_title, txt, ["biography 1", "biography 2"])
+    test_regex_findall(bio, txt, ["### || $ biography 1\ntext biography 1\n",
+                                  "### $$ biography 2\ntext biography 2"])
+    test_regex_findall(bio_text, txt, ["text biography 1\n",
+                                       "text biography 2"])
 
     
+    test_regex_findall(bio_man_tag, txt, ["### || $ "])
+    test_regex_findall(bio_man_title, txt, ["biography 1"])
+    test_regex_findall(bio_man, txt, ["### || $ biography 1\ntext biography 1\n"])
+    test_regex_findall(bio_man_text, txt, ["text biography 1\n"])
     
-        
+
+    test_regex_findall(bio_woman_tag, txt, ["### $$ "])
+    test_regex_findall(bio_woman_title, txt, ["biography 2"])
+    test_regex_findall(bio_woman, txt, ["### $$ biography 2\ntext biography 2"])
+    test_regex_findall(bio_woman_text, txt, ["text biography 2"])
+
+
+    txt = """
+### |EDITOR|
+editorial intro
+### | title
+main text
+### |EDITOR|
+editorial outro"""
+    test_regex_findall(editorial_tag, txt, ["### |EDITOR|", "### |EDITOR|"])
+    test_regex_findall(editorial, txt, ["### |EDITOR|\neditorial intro\n",
+                                        "### |EDITOR|\neditorial outro"])
+    test_regex_findall(editorial_text, txt, ["editorial intro\n",
+                                             "editorial outro"])
+
+    txt = """
+### |PARATEXT|
+paratext intro
+### | title
+main text
+### |PARATEXT|
+paratext outro"""
+    test_regex_findall(paratext_tag, txt, ["### |PARATEXT|", "### |PARATEXT|"])
+    test_regex_findall(paratext, txt, ["### |PARATEXT|\nparatext intro\n",
+                                        "### |PARATEXT|\nparatext outro"])
+    test_regex_findall(paratext_text, txt, ["paratext intro\n",
+                                             "paratext outro"])
     
+    txt = """### | section title
+# paragraph 1
+~~paragraph 1 continued
+# paragraph 2
+### | section 2
+# paragraph 3"""
+    test_regex_findall(paragraph_tag, txt, ["# ", "# ", "# "])
+    test_regex_findall(paragraph, txt, ["# paragraph 1\n~~paragraph 1 continued\n",
+                                        "# paragraph 2\n",
+                                        "# paragraph 3"])
+    test_regex_findall(paragraph_text, txt, ["paragraph 1\n~~paragraph 1 continued\n",
+                                             "paragraph 2\n",
+                                             "paragraph 3"])
+    w = word_in_paragraph.format("continued")
+    test_regex_findall(w, txt, ["# paragraph 1\n~~paragraph 1 continued\n"])
+    w = word_in_paragraph_text.format("continued")
+    test_regex_findall(w, txt, ["paragraph 1\n~~paragraph 1 continued\n"])
+
+    txt = """wulida YB0100 sana mia wa-mata YD170 sana mia wa-sabcin"""
+    test_regex_findall(year, txt, ["YB0100", "YD170"])
+    test_regex_findall(year_born, txt, ["YB0100"])
+    test_regex_findall(year_died, txt, ["YD170"])
+
+    txt = "مع #PER$0310Tabari أبي جرير الطبري #PER$0279Baladhuri@12 وأحمد البلاذري"
+    test_regex_findall(anal_tag, txt, ["#PER$0310Tabari", "#PER$0279Baladhuri@12"])
+    test_regex_findall(anal_tag_text, txt, ["#PER$0310Tabari", "#PER$0279Baladhuri@12 وأحمد البلاذري"])
+
+
+    txt = """مع @MGR@PER$0310Tabari أبي جرير الطبري @PER$0279Baladhuri@12 وأحمد\n~~البلاذري"""
+    test_regex_findall(anal_tag, txt, ["@MGR@PER$0310Tabari", "@PER$0279Baladhuri@12"])
+    test_regex_findall(anal_tag_text, txt, ["@MGR@PER$0310Tabari",
+                                            "@PER$0279Baladhuri@12 وأحمد\n~~البلاذري"])
+
+    txt = """قال: @QUR$1_1-2@08 ( بسم الله الرحمن الرحيم الحمد لله رب العلمين )"""
+    test_regex_findall(anal_tag, txt, ["@QUR$1_1-2@08"])
+    test_regex_findall(anal_tag_text, txt, ["@QUR$1_1-2@08 ( بسم الله الرحمن الرحيم الحمد لله رب العلمين"])
+
+
+    print("finished testing")
+
