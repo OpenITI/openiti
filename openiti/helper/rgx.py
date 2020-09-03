@@ -125,7 +125,7 @@ any_word = any_unicode_letter + "+"
 #any_unicode_diacritic = "\p{M}"
 
 space ="(?: |[\r\n]+~~|PageV[^P]+P\d+)+"
-space ="(?:\W|PageV[^P]+P\d+)+"
+space ="(?:\W|PageV[^P]+P\d+)+" # also takes care of commas etc.
 space_word = "(?:{}{})".format(space, ar_tok)
 
 
