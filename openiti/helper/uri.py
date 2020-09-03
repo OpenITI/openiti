@@ -1343,7 +1343,9 @@ def new_yml(tar_yfp, yml_type, execute=False):
     template = eval("{}_template".format(yml_type))
     yml_dic = yml.ymlToDic(template)
     uri_key = "00#{}#URI######:".format(yml_type[:4].upper())
-    yml_dic[uri_key] = URI(tar_yfp[:4]).build_uri()
+    u = URI(tar_yfp)
+    u.extension = ""
+    yml_dic[uri_key] = u.build_uri()
     if execute:
         with open(tar_yfp, mode="w", encoding="utf-8") as file:
             file.write(yml.dicToYML(yml_dic))
