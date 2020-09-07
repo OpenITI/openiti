@@ -185,7 +185,8 @@ def dicToYML(dic, max_length=72, reflow=True):
                                       for line in lines[1:]]
             
             if reflow:
-                lines = ["\n    ".join(textwrap.wrap(line, max_length))
+                lines = ["\n    ".join(textwrap.wrap(line, max_length,
+                                                     break_long_words=False))
                          for line in lines]
             i = "\n".join(lines)
         data.append(i)
