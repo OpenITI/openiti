@@ -147,7 +147,7 @@ def text_cleaner(text):
     Returns:
         (str): the cleaned string
     """
-    text = ara.normalize_ara_extra_light(text)
+    text = ara.normalize_ara_light(text)
     text = re.sub("\W|\d|[A-z]", " ", text)
     text = re.sub(" +", " ", text)
     return text
