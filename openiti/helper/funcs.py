@@ -214,6 +214,60 @@ def read_header(fp):
 def absolute_path(path):
     return os.path.abspath(path)
 
+def get_page_number(page_numbers, pos):
+    """Get the page number of a token at index position `pos` in a string \
+    based on a dictionary `page_numbers` that contains the index positions \
+    of the page numbers in that string.
+
+    Args:
+        page_numbers (dict):
+            key: index of the last character of the page number in the string
+            value: page number
+        pos (int): the index position of the start of a token in the string
+    """
+    for k in sorted(page_numbers.keys()):
+        if pos < k:
+            return page_numbers[k]
+
+def report_missing_numbers(fp, no_regex="### \$ \((\d+)"
+                           report_repeated_numbers=True):
+    """Use a regular expression to check whether numbers\
+    (of books, pages, etc.) are in sequence and no numbers are missing.
+
+    Arguments:
+        fp (str): path to the text file
+        no_regex (str): regular expression pattern describing the number
+            for which the sequence should be checked.
+            NB: the numbers should be in the first/only capture group
+
+    Use cases:
+        - Page numbers: use regex `PageV\d+P(\d+)`
+        - numbered sections: e.g.,
+          `### \$ \(?(\d+)` for dictionary items,
+          `### \|{2} (\d+)` for second-level sections, ...
+    """
+    with open(fp, mode="r", encoding="utf-8") as file:
+        text = file.read()
+    current_num = 0
+    page_numbers = {m.end(): m.group(0) \
+                    for m in re.finditer("PageV\d+P\d+", text)}
+    for match in re.finditer(no_regex, text):
+        no = int(match.group(1))
+        if no == 1:
+            current_num = 1
+            page = get_page_number(page_numbers, match.start())
+            print("start recounting from 1 at", page)
+        elif no == current_num:
+            page = get_page_number(page_numbers, match.start())
+            if report_repeated_numbers:
+                print(page, no, "follows", current_num)
+        elif no != current_num + 1:
+            page = get_page_number(page_numbers, match.start())
+            print(page, no, "follows", current_num)
+            current_num = no
+        else:
+            current_num = no
+
 
 if __name__ == "__main__":
     import doctest
