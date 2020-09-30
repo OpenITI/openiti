@@ -113,7 +113,8 @@ VERBOSE = False
 
 def main(meta_folder=None, files_folder=None, books_folder=None,
          conv_folder=None, download_date="", download_source="",
-         config_fp=None, extensions=["mdb"], fn_regex=None, verbose=False):
+         config_fp=None, extensions=["mdb"], fn_regex=None, verbose=False,
+         multiple_books_in_mdb=False):
     """Collect the variables and carry out the conversion.
 
     Args:
@@ -196,7 +197,8 @@ Shamela database:")
 
     conv = BokJsonConverter(all_meta=all_meta,
                             additional_meta=additional_meta,
-                            dest_folder=conv_folder)
+                            dest_folder=conv_folder,
+                            multiple_books_in_mdb=multiple_books_in_mdb)
     if verbose:
         conv.VERBOSE = True
     conv.convert_files_in_folder(books_folder,
@@ -215,7 +217,8 @@ class BokJsonConverter(generic_converter.GenericConverter):
     """Extract book data from .mdb files into json, and convert into mARkdown.
     """
 
-    def __init__(self, all_meta=None, additional_meta=None, dest_folder=None):
+    def __init__(self, all_meta=None, additional_meta=None,
+                 dest_folder=None, multiple_books_in_mdb=False):
         """Set up the main variables of the class.
 
         Args:
@@ -235,6 +238,7 @@ class BokJsonConverter(generic_converter.GenericConverter):
         if dest_folder:
             self.dest_folder = dest_folder  # otherwise: default "converted"
         self.footnote_regex = r"[\r\¶\n ]*¬?_{5,}[\r\n\¶ ]*(.*)"
+        self.multiple_books_in_mdb = multiple_books_in_mdb
 
 
     def convert_file(self, source_fp, dest_fp=None):
@@ -260,6 +264,8 @@ class BokJsonConverter(generic_converter.GenericConverter):
         text = self.reflow(text)
         #text = self.add_milestones(text)
         text = self.post_process(text)
+        notes = self.reflow(notes)
+        notes = re.sub("(\n+)(?![\n~P])", r"\1# ", notes)
         text = self.compose(metadata, text, notes)
         #print(9, text)
 
@@ -272,8 +278,10 @@ class BokJsonConverter(generic_converter.GenericConverter):
             json_folder = self.mdb2json(source_folder, fn_regex=fn_regex)
             print("conversion from mdb to json completed.")
             extensions = ["json"]
-            source_folder = json_folder
-            self.dest_folder = os.path.join(self.dest_folder, "txt")
+        else:
+            json_folder = os.path.join(self.dest_folder, "json")
+        source_folder = json_folder
+        self.dest_folder = os.path.join(self.dest_folder, "txt")
         print("Converting from json to txt...")
         super().convert_files_in_folder(source_folder, extensions=extensions,
                                         fn_regex=fn_regex)
@@ -312,20 +320,39 @@ class BokJsonConverter(generic_converter.GenericConverter):
             #input()
 
             print("saving to json...")
-            try:
-                bok.save_to_json({"b"+shamid: d["book"],
-                                  "t"+shamid: d["title"]},
-                                 outfp)
-            except:
-                print("TITLE TABLE MISSING!")
+            if self.multiple_books_in_mdb:
+                for k in d:
+                    if k.startswith("b"):
+                        shamid = k[1:]
+                        outfp = os.path.join(dest_folder, shamid+".json")
+                        try:
+                            bok.save_to_json({"b"+shamid: d["b"+shamid],
+                                              "t"+shamid: d["t"+shamid]},
+                                             outfp)
+                        except:
+                            print("TITLE TABLE MISSING!")
+                            try:
+                                bok.save_to_json({"b"+shamid: d["b"+shamid],
+                                                  "t"+shamid: {}},
+                                                 outfp)
+                            except:
+                                print("CONVERSION FAILED")
+                                failed.append(shamid)
+            else:
                 try:
                     bok.save_to_json({"b"+shamid: d["book"],
-                                      "t"+shamid: {}},
+                                      "t"+shamid: d["title"]},
                                      outfp)
                 except:
-                    print("CONVERSION FAILED")
-                    failed.append(fp)
-            print("finished")
+                    print("TITLE TABLE MISSING!")
+                    try:
+                        bok.save_to_json({"b"+shamid: d["book"],
+                                          "t"+shamid: {}},
+                                         outfp)
+                    except:
+                        print("CONVERSION FAILED")
+                        failed.append(fp)
+                print("finished")
         if failed:
             print("Conversion of these {} files failed:".format(len(failed)))
             for f in failed:
@@ -484,8 +511,8 @@ class BokJsonConverter(generic_converter.GenericConverter):
         footnotes = re.findall(self.footnote_regex,
                                passage_text, flags=re.DOTALL)
         if footnotes:
-            fmt = "PageV{:02d}P{:03d}:\n\n{}\n\n"
-            notes.append(fmt.format(vol_no, page_no, footnotes[0]))
+            fmt = "\n\n{}\nPageV{:02d}P{:03d}"
+            notes.append(fmt.format(footnotes[0], vol_no, page_no))
             passage_text = re.sub(self.footnote_regex, "",
                                   passage_text, flags=re.DOTALL)
         return passage_text, notes
@@ -570,18 +597,18 @@ class BokJsonConverter(generic_converter.GenericConverter):
         #print(text[:50000])
 
         # remove the new lines before page numbers:
-        text = re.sub(r" *\n+ *(PageV\d+P\d+)\n+", r" \1 ", text)
+        text = re.sub(r" *\n+ *(PageV\d+P\d+)\n+", r" \1\n~~", text)
         # restore new lines when the page number is preceded by a relevant character:
-        text = re.sub(r"""([.:!؟|*"]|AUTO|CHECK) +(PageV\d+P\d+) """,
+        text = re.sub(r"""([.:!؟|*"]|AUTO|CHECK) +(PageV\d+P\d+)\n~~""",
                       r"\1\n\n\2\n\n", text)
         # restore new lines when the page number is followed by ###:
-        text = re.sub(r"""\s+(PageV\d+P\d+)\s+(\#+)""", r"\n\n\1\n\n\2", text)
+        text = re.sub(r"""\s+(PageV\d+P\d+)\n~~\s*(\#+)""", r"\n\n\1\n\n\2", text)
         # double the new lines when the page number is preceded by a relevant character
         #text = re.sub("""(?<=[.:!؟|*"])\n+(PageV\d+P\d+)""", r"\n\n\1", text)
 
-        text = re.sub("(PageV\d+P\d+)(\n\n)(?!#)", r"\1\2# ", text)
+        text = re.sub("(PageV\d+P\d+)(\n\n+)(?!#)", r"\1\2# ", text)
 
-        text = re.sub("\n{2,}", "\n\n", text)
+        text = re.sub("\n{2,}", "\n", text)
         text = re.sub("[\r\n]+# *(?:[\r\n]+|\Z)", "\n", text)
 
         return text
