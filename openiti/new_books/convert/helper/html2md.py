@@ -203,6 +203,7 @@ class MarkdownConverter(object):
         self.options = _todict(self.DefaultOptions)
         self.options.update(_todict(self.Options))
         self.options.update(options)
+        print("options", self.options)
         if self.options['strip'] is not None and self.options['convert'] is not None:
             raise ValueError('You may specify either tags to strip or tags to'
                              ' convert, but not both.')
@@ -218,6 +219,9 @@ class MarkdownConverter(object):
 
         html = wrapped % html
         soup = BeautifulSoup(html, 'html.parser')
+        if 'strip' in self.options:
+            for tag in self.options["strip"]:
+                [t.decompose() for t in soup.find_all(tag)]
         text = self.process_tag(soup.find(id=FRAGMENT_ID), children_only=True)
 
 ##        # post-processing: remove unneeded blank lines and spaces:
