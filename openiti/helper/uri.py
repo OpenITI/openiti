@@ -385,6 +385,9 @@ class URI:
         >>> t.data_in_25_year_repos = False
         >>> t.build_pth()
         './0255Jahiz/0255Jahiz.Hayawan'
+        >>> t.language="ara"
+        >>> t.build_pth()
+        './0255Jahiz/0255Jahiz.Hayawan'
         >>> t.data_in_25_year_repos = True
         
         >>> URI.data_in_25_year_repos = False
