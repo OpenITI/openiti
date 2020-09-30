@@ -15,7 +15,12 @@ Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip in
 
 ### v.0.1.1:
 
-* `openiti.helper.funcs`: Add get_all_text_files_in_folder() generator
+* `openiti.helper.funcs`: Added get_all_text_files_in_folder() generator
+* `openiti.helper.uri`: Fix bug in `new_yml` function (URI used to have ".yml" in it)
+* `openiti.new_books.convert.shamela_converter.py`: Improved formatting of the text and notes and added support for shamela collections in which the .mdb files contain more than one book.
+* `openiti.new_books.convert.tei_converter_Thielen`, `new_books/convert/helper/html2md_Thielen`: added new converter for TEI files provided by Jan Thielen.
+* `new_books/convert/tei_converter_generic.py`, `new_books/convert/helper/html2md.py`: Add the possibility to pass options to the `markdownify` function
+
 
 ### v.0.1.0:
 
