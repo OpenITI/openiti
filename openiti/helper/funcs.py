@@ -229,7 +229,7 @@ def get_page_number(page_numbers, pos):
         if pos < k:
             return page_numbers[k]
 
-def report_missing_numbers(fp, no_regex="### \$ \((\d+)"
+def report_missing_numbers(fp, no_regex="### \$ \((\d+)",
                            report_repeated_numbers=True):
     """Use a regular expression to check whether numbers\
     (of books, pages, etc.) are in sequence and no numbers are missing.
@@ -277,4 +277,4 @@ if __name__ == "__main__":
     chars = get_all_characters_in_folder(start_folder, verbose=False,
                                          exclude_folders=exclude_folders,
                                          exclude_files=exclude_files)
-    get_character_names(chars, verbose=True)
+    #get_character_names(chars, verbose=True)
