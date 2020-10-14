@@ -94,7 +94,7 @@ from openiti.helper.ara import deNoise, normalize, normalize_composites
 
 class GenericConverter(object):
 
-    def __init__(self, dest_folder=None):
+    def __init__(self, dest_folder=None, overwrite=True):
         """Initialize the default values."""
         self.magic_value = "######OpenITI#\n\n\n"
         self.header_splitter = "\n\n#META#Header#End#\n\n"
@@ -123,6 +123,7 @@ class GenericConverter(object):
 
         self.VERBOSE = False
         self.metadata_file = "inline"
+        self.OVERWRITE = overwrite
 
 ##        self.conversion_procedure(source_fp, dest_dir)
 
@@ -227,6 +228,11 @@ class GenericConverter(object):
         if not dest_fp:
             dest_fp = self.make_dest_fp(source_fp)
         self.source_fp = source_fp
+
+        if not self.OVERWRITE and os.path.exists(dest_fp):
+            print("Not overwriting already existing file:", dest_fp)
+            print("Set self.overwrite to True if you want to overwrite")
+            return
 
 ##        # get the metadata from the source_fp and format it
 ##        # WARNING: this is a dummy method, returning

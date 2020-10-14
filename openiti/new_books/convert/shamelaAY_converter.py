@@ -1,5 +1,11 @@
 """A Converter for al-Maktaba al-Shamela databases to OpenITI mARkdown format.
 
+***This is an adapted version of the shamela_converter module
+for collections that are organized differently:
+instead of one .mdb file per book,
+Abu Yacqub's collection contains 28 .mdb files
+that each contain thousands of books.***
+
 Al-Maktaba al-Shamela is a digital text collection, but it also 
 developed its own reader, which is based on an internal database.
 
@@ -113,8 +119,7 @@ VERBOSE = False
 
 def main(meta_folder=None, files_folder=None, books_folder=None,
          conv_folder=None, download_date="", download_source="",
-         config_fp=None, extensions=["mdb"], fn_regex=None, verbose=False,
-         multiple_books_in_mdb=False, overwrite=True):
+         config_fp=None, extensions=["mdb"], fn_regex=None, verbose=False):
     """Collect the variables and carry out the conversion.
 
     Args:
@@ -197,9 +202,7 @@ Shamela database:")
 
     conv = BokJsonConverter(all_meta=all_meta,
                             additional_meta=additional_meta,
-                            dest_folder=conv_folder,
-                            multiple_books_in_mdb=multiple_books_in_mdb,
-                            overwrite=overwrite)
+                            dest_folder=conv_folder)
     if verbose:
         conv.VERBOSE = True
     conv.convert_files_in_folder(books_folder,
@@ -218,9 +221,7 @@ class BokJsonConverter(generic_converter.GenericConverter):
     """Extract book data from .mdb files into json, and convert into mARkdown.
     """
 
-    def __init__(self, all_meta=None, additional_meta=None,
-                 dest_folder=None, multiple_books_in_mdb=False,
-                 overwrite=True):
+    def __init__(self, all_meta=None, additional_meta=None, dest_folder=None):
         """Set up the main variables of the class.
 
         Args:
@@ -240,8 +241,6 @@ class BokJsonConverter(generic_converter.GenericConverter):
         if dest_folder:
             self.dest_folder = dest_folder  # otherwise: default "converted"
         self.footnote_regex = r"[\r\¶\n ]*¬?_{5,}[\r\n\¶ ]*(.*)"
-        self.multiple_books_in_mdb = multiple_books_in_mdb
-        self.OVERWRITE = overwrite
 
 
     def convert_file(self, source_fp, dest_fp=None):
@@ -257,11 +256,6 @@ class BokJsonConverter(generic_converter.GenericConverter):
             print("converting", source_fp)
         if dest_fp == None:
             dest_fp = self.make_dest_fp(source_fp)
-        if not self.OVERWRITE and os.path.exists(dest_fp):
-            print("Not overwriting already existing file:", dest_fp)
-            print("Set self.overwrite to True if you want to overwrite")
-            return
-        
         shamid = re.findall("\d+", source_fp)[-1]
 
         book_data, toc_data, metadata = self.get_data(source_fp, shamid)
@@ -272,8 +266,6 @@ class BokJsonConverter(generic_converter.GenericConverter):
         text = self.reflow(text)
         #text = self.add_milestones(text)
         text = self.post_process(text)
-        notes = self.reflow(notes)
-        notes = re.sub("(\n+)(?![\n~P])", r"\1# ", notes)
         text = self.compose(metadata, text, notes)
         #print(9, text)
 
@@ -316,70 +308,36 @@ class BokJsonConverter(generic_converter.GenericConverter):
         print("Converting {} .mdb files to json".format(len(mdb_files)))
         failed = []
         for fp in mdb_files:
-            shamid = re.findall("\d+", fp)[-1]
-            outfp = os.path.join(dest_folder, shamid+".json")
+            #shamid = re.findall("\d+", fp)[-1]
+            #outfp = os.path.join(dest_folder, shamid+".json")
 
             print("connecting to db {}...".format(fp))
             conn, cur = bok.connect_to_db(fp)
 
             print("converting db to dict...")
             d = bok.mdb2dict(cur, VERBOSE=False)
-            #print(d.keys())
+            #print(sorted(d.keys()))
             #input()
 
             print("saving to json...")
-            if self.multiple_books_in_mdb:
-                for k in d:
-                    if k.startswith("b"):
-                        shamid = k[1:]
-                        outfp = os.path.join(dest_folder, shamid+".json")
-                        try:
-                            t = d["t"+shamid]
-                        except:
-                            print(k, "TITLE TABLE MISSING!")
-                            t = {}
-                        try:
-                            b = d["b"+shamid]
-                        except Exception as e:
-                            print(k)
-                            print(e)
-                            b = {}
-                        if b:
-                            bok.save_to_json({"b"+shamid: b,
-                                              "t"+shamid: t},
-                                             outfp)
-                        else:
-                            print("CONVERSION FAILED")
-                            failed.append(shamid)
-##                        try:
-##                            bok.save_to_json({"b"+shamid: d["b"+shamid],
-##                                              "t"+shamid: d["t"+shamid]},
-##                                             outfp)
-##                        except:
-##                            print(k)
-##                            print("TITLE TABLE MISSING!")
-##                            try:
-##                                bok.save_to_json({"b"+shamid: d["b"+shamid],
-##                                                  "t"+shamid: {}},
-##                                                 outfp)
-##                            except:
-##                                print("CONVERSION FAILED")
-##                                failed.append(shamid)
-            else:
-                try:
-                    bok.save_to_json({"b"+shamid: d["book"],
-                                      "t"+shamid: d["title"]},
-                                     outfp)
-                except:
-                    print("TITLE TABLE MISSING!")
+            for k in d:
+                if k.startswith("b"):
+                    shamid = k[1:]
+                    outfp = os.path.join(dest_folder, shamid+".json")
                     try:
-                        bok.save_to_json({"b"+shamid: d["book"],
-                                          "t"+shamid: {}},
+                        bok.save_to_json({"b"+shamid: d["b"+shamid],
+                                          "t"+shamid: d["t"+shamid]},
                                          outfp)
                     except:
-                        print("CONVERSION FAILED")
-                        failed.append(fp)
-                print("finished")
+                        print("TITLE TABLE MISSING!")
+                        try:
+                            bok.save_to_json({"b"+shamid: d["b"+shamid],
+                                              "t"+shamid: {}},
+                                             outfp)
+                        except:
+                            print("CONVERSION FAILED")
+                            failed.append(shamid)
+        print("finished")
         if failed:
             print("Conversion of these {} files failed:".format(len(failed)))
             for f in failed:
@@ -522,8 +480,7 @@ class BokJsonConverter(generic_converter.GenericConverter):
             if row["page"] != None:
                 text.append(vol_page)
             else:
-                if row["nass"]:
-                    text.append(row["nass"] + "\n\n\n----NO PAGE NO------\n\n\n\n")
+                text.append(row["nass"] + "\n\n\n----NO PAGE NO------\n\n\n\n")
 
         # compile text and endnote strings from lists:
         text = "".join(text)
@@ -539,8 +496,8 @@ class BokJsonConverter(generic_converter.GenericConverter):
         footnotes = re.findall(self.footnote_regex,
                                passage_text, flags=re.DOTALL)
         if footnotes:
-            fmt = "\n\n{}\nPageV{:02d}P{:03d}"
-            notes.append(fmt.format(footnotes[0], vol_no, page_no))
+            fmt = "PageV{:02d}P{:03d}:\n\n{}\n\n"
+            notes.append(fmt.format(vol_no, page_no, footnotes[0]))
             passage_text = re.sub(self.footnote_regex, "",
                                   passage_text, flags=re.DOTALL)
         return passage_text, notes
@@ -552,10 +509,7 @@ class BokJsonConverter(generic_converter.GenericConverter):
                          key= lambda item: item["lvl"],
                          reverse=True):
             lvl = el["lvl"]
-            try:
-                tit = deNoise(el["tit"])
-            except:
-                tit = "[NO TITLE]"
+            tit = deNoise(el["tit"])
             #print("title", tit)
             tit_regex = re.sub("(\w+)", r"W\1", tit)[1:]
             tit_regex = re.sub("\W+", r"", tit_regex)
