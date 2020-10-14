@@ -13,6 +13,13 @@ Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip in
 
 ## Change log: 
 
+
+### v.0.1.2:
+
+* `openiti.helper.funcs`: Fixed bug in report_missing_numbers function.
+* `openiti.new_books.convert`: added ShamAY converter and small updates to
+    other shamela converters.
+
 ### v.0.1.1:
 
 * `openiti.helper.funcs`: Added get_all_text_files_in_folder() generator
