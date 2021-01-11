@@ -34,7 +34,7 @@ from openiti.helper.templates import author_yml_template, book_yml_template, \
 
 
 
-def ymlToDic(yml_str, reflow=True):
+def ymlToDic(yml_str, reflow=True, yml_fp=""):
     """Convert a yml string into a dictionary.
 
     NB: in order to be read correctly, OpenITI yml keys (lemmata) should always:
@@ -75,7 +75,7 @@ def ymlToDic(yml_str, reflow=True):
         
     """
     if yml_str.strip() == "":
-        raise Exception("Empty YML file!")
+        raise Exception(yml_fp, "Empty YML file!")
         return {}
     
     # normalize new line characters:
@@ -105,7 +105,7 @@ def ymlToDic(yml_str, reflow=True):
         try:
             dic[spl[1]] = spl[2].strip()
         except:
-            raise Exception("no valid yml key in line", d)
+            raise Exception(yml_fp, "no valid yml key in line", d)
 
     return dic
 
@@ -125,7 +125,11 @@ def readYML(fp):
 ##        {}
     """
     with open(fp, "r", encoding="utf8") as file:
-        return ymlToDic(file.read())
+        try:
+           return ymlToDic(file.read(), yml_fp=fp)
+        except Exception as e:
+           print(fp)
+           print(e)
 
 
 def dicToYML(dic, max_length=72, reflow=True):
@@ -170,30 +174,46 @@ def dicToYML(dic, max_length=72, reflow=True):
         True
     """
     data = []
-    for k,v in dic.items():
-        if k.strip().endswith(":"):
-            i = "{} {}".format(k.strip(), str(v).strip())
-        else:
-            i = "{}: {}".format(k.strip(), str(v).strip())
+    if dic:
+        for k,v in dic.items():
+            if k.strip().endswith(":"):
+                i = "{} {}".format(k.strip(), str(v).strip())
+            else:
+                i = "{}: {}".format(k.strip(), str(v).strip())
 
-        # split long values into indented multiline values:
+            # split long values into indented multiline values:
 
-        if "#URI#" not in i:
-            lines = re.split("¶", i)
-            if len(lines) > 1:
-                lines = [lines[0]] + [line if line.startswith((" ", "\t")) else "    "+line
-                                      for line in lines[1:]]
-            
-            if reflow:
-                lines = ["\n    ".join(textwrap.wrap(line, max_length,
-                                                     break_long_words=False))
-                         for line in lines]
-            i = "\n".join(lines)
-        data.append(i)
+            if "#URI#" not in i:
+                lines = re.split("¶", i)
+                if len(lines) > 1:
+                    lines = [lines[0]] + [line if line.startswith((" ", "\t")) else "    "+line
+                                          for line in lines[1:]]
+
+                if reflow:
+                    lines = ["\n    ".join(textwrap.wrap(line, max_length,
+                                                         break_long_words=False))
+                             for line in lines]
+                i = "\n".join(lines)
+            data.append(i)
 
     return "\n".join(sorted(data))
 
 if __name__ == "__main__":
+    yml_fp = "../../../../../OpenITI/Github_clone/0875AH/data/0852IbnHajarCasqalani/0852IbnHajarCasqalani.InbaGhumr/0852IbnHajarCasqalani.InbaGhumr.Shamela0026317-ara1.yml" 
+#    with open(yml_fp, mode="r", encoding="utf-8") as file:
+#        t = file.read()
+#    print(t)
+#    input("continue?")
+#    t = t.replace("\xa0", " ")
+#    print(t)
+#    input("continue?")
+#    with open(yml_fp, mode="w", encoding="utf-8") as file:
+#        file.write(t)
+#    yml_dic = readYML(yml_fp)
+#    print(yml_dic)
+#    yml_str = dicToYML(yml_dic)
+#    print(yml_str)
+#    input("continue?")
     yml_str = """\
 key1: short description
 key2: longer description with : :: colons
@@ -205,7 +225,6 @@ key3: longer multiline description longer multiline description longer multiline
 
     * bullet item 1
     * bullet item 2
- 
 """
     print("do not reflow:")
     print(ymlToDic(yml_str, reflow=False))
@@ -224,4 +243,4 @@ key3: longer multiline description longer multiline description longer multiline
     import doctest
     input()
 
-    doctest.testmod()
+#    doctest.testmod()
