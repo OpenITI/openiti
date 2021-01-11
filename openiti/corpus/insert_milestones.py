@@ -119,7 +119,7 @@ def process_files(main_folder, ms_len):
                     for g in group:
                         milestones(os.path.join(root, g), ms_len, 0)
 
-                elif any(re.search("[A-Z]$", re.split("-[a-z]]{3}\d{1}", x)[0]) for x in sorted(group)):
+                elif any(re.search("[A-Z]$", re.split("-[a-z]{3}\d{1}", x)[0]) for x in sorted(group)):
                     # prev_ms_cnt = 0
                     group.sort(key=lambda f: f.split("-")[1])
                     grouped_extensions = [list(items) for gr, items in groupby(group,
