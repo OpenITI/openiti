@@ -54,7 +54,7 @@ def get_all_text_files_in_folder(start_folder, excluded_folders=exclude_folders,
         dirs[:] = [d for d in dirs if d not in exclude_folders]
         files[:] = [f for f in files if f not in exclude_files]
         for fn in files:
-            if re.findall(r"-\w\w\w\d(?:.inProgress|completed|mARkdown)?\Z", fn):
+            if re.findall(r"-\w\w\w\d(?:.inProgress|.completed|.mARkdown)?\Z", fn):
                 fp = os.path.join(root, fn)
                 yield(fp)
 
