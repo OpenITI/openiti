@@ -187,11 +187,12 @@ def generate_ids_through_permutations(char_string_for_ids, id_len_char, limit):
 
 
 
-def read_header(fp):
+def read_header(fp, lines=300):
     """Read only the OpenITI header of a file without opening the entire file.
 
     Args:
         fp (str): path to the text file
+        lines (int): number of lines at the top of the file to be read
 
     Returns:
         (list): A list of all metadata lines in the header
@@ -200,7 +201,7 @@ def read_header(fp):
         header = []
         line = file.readline()
         i=0
-        while i < 100:
+        while i < lines:
         #while "#META#Header#End" not in line and i < 100:
             #if "#META#" in line or "#NewRec#" in line:
             header.append(line)
@@ -208,6 +209,7 @@ def read_header(fp):
                 return header
             line = file.readline() # move to next line
             i += 1
+        print("splitter not in text!", fp)
     return header
 
 
