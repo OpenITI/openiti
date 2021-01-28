@@ -209,7 +209,7 @@ def read_header(fp, lines=300):
                 return header
             line = file.readline() # move to next line
             i += 1
-        print("splitter not in text!", fp)
+        print("{}: header splitter not reached after {} lines".format(fp, lines))
     return header
 
 
