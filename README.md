@@ -14,6 +14,24 @@ Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip in
 ## Change log: 
 
 
+### v.0.1.3:
+
+* new_books.convert.`: add converters for ALCorpus and Ptolemaeus texts
+* `new_books.convert.helper.html2md`: tweaks to import of options + small tweaks
+* `helper.ara`: Stop ar_cnt_file from raising exception if book misses splitter; instead, print warning
+* `helper.funcs`: 
+  - fix bug in `get_all_text_files_in_folder` function: missing periods in regex.
+  - improve missing splitter message
+  - use `ara.normalize_ara_light` function instead of `ara.normalize_ara_extra_light` in `text_cleaner` function
+* `helper.uri`: 
+  - make it possible to pass a specific `version_fp` to the `check_token_count` function; before, that function generated that path from the URI, but this created problems when files were not stored in the standard OpenITI folders. 
+  - add `find_latest` parameter in `check_token_count` function; if ``False`, the function will count the tokens in the specific `version_fp` provided; if `True, the script will count tokens in the file with the most advanced extension (.mARkdown > .completed > .inProgress > [no extension])
+* `helper.yml`: 
+  - make it possible to pass a specific `yml_fp` to the `ymlToDic` function, so that the script can print the path (if provided) for signalling empty yml files.
+  - Include possibility that yml key ends with more than one colon
+  - `readYML`: add exception message when yml file could not be read.
+
+
 ### v.0.1.2:
 
 * `openiti.helper.funcs`: Fixed bug in report_missing_numbers function.
