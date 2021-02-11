@@ -219,7 +219,7 @@ class MarkdownConverter(object):
 
         html = wrapped % html
         soup = BeautifulSoup(html, 'html.parser')
-        if 'strip' in self.options:
+        if 'strip' in self.options and self.options["strip"]:
             for tag in self.options["strip"]:
                 [t.decompose() for t in soup.find_all(tag)]
         text = self.process_tag(soup.find(id=FRAGMENT_ID), children_only=True)
@@ -371,7 +371,7 @@ class MarkdownConverter(object):
         text = re.sub(r"\n{3,}", r"\n\n", text)
         text = re.sub(r" +", r" ", text)
         # fill out columns in tables:
-        text = re.sub("\n\n(\|.+?)\n\n", self.fill_out_columns, text, flags=re.DOTALL)
+        #text = re.sub("\n\n(\|.+?)\n\n", self.fill_out_columns, text, flags=re.DOTALL)
         return text
 
     def __getattr__(self, attr):
@@ -647,7 +647,7 @@ class MarkdownConverter(object):
         else:
             for td in el.find_all('td'):
                 #t.append(wrap_cell_text(td.text))
-                t.append(td.text)
+                t.append(td.get_text(" ", strip=True))
             return '|{}|\n'.format("|".join(t))
 
     convert_ul = convert_list
