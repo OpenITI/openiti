@@ -307,20 +307,21 @@ def ar_cnt_file(fp, mode="token", incl_editor_sections=True):
 
     if splitter in book:
         text = book.split(splitter)[-1]
-
-        if not incl_editor_sections:
-            text = re.sub(r"### \|EDITOR.+?(### |\Z)", r"\1", text,
-                          flags = re.DOTALL)
-
-        # count the number of Arabic letters or tokens:
-        
-        if mode == "char":
-            return ar_ch_cnt(text)
-        else:
-            return ar_tok_cnt(text)
     else:
+        text = book
         msg = "This text is missing the splitter!\n{}".format(fp)
-        raise Exception(msg)
+        #raise Exception(msg)
+    if not incl_editor_sections:
+        text = re.sub(r"### \|EDITOR.+?(### |\Z)", r"\1", text,
+                      flags = re.DOTALL)
+
+    # count the number of Arabic letters or tokens:
+    
+    if mode == "char":
+        return ar_ch_cnt(text)
+    else:
+        return ar_tok_cnt(text)
+
 
 
 def ar_ch_cnt(text):
