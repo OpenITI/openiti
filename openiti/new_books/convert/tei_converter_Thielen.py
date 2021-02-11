@@ -347,9 +347,7 @@ class ThielenConverter(TeiConverter):
         elif len(vols) > 1:
             print("More than one volume! adjust volume numbers manually")
         text = re.sub("# Page(V\d+P\d+)", r"Page\1\n\n#", text)
-        if verbose:
-            print(text)
-            input()
+
         text = re.sub("\n~~ *(PageV\d+P\d+)\n", r"\n\n\1\n", text)
         text = re.sub("\n~~ ", r"\n~~", text)
         text = re.sub("(### \|+[^#]+)\n~~", r"\1 ", text)
