@@ -19,6 +19,8 @@ Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip in
 book yml file with a single field, `#40#BOOK#RELATED##:`.
 * `helper.yml`: make not rearranging lines ("reflowing") in yml files the default,
 and change the default line length to 80.
+* `helper.funcs`: add a `get_all_yml_files_in_folder`, analogous to the existing
+`get_all_text_files_in_folder` function
 
 ### v.0.1.3:
 
