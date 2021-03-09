@@ -34,7 +34,7 @@ from openiti.helper.templates import author_yml_template, book_yml_template, \
 
 
 
-def ymlToDic(yml_str, reflow=True, yml_fp=""):
+def ymlToDic(yml_str, reflow=False, yml_fp=""):
     """Convert a yml string into a dictionary.
 
     NB: in order to be read correctly, OpenITI yml keys (lemmata) should always:
@@ -110,12 +110,19 @@ def ymlToDic(yml_str, reflow=True, yml_fp=""):
     return dic
 
 
-def readYML(fp):
+def readYML(fp, reflow=False):
     """Read a yml file and convert it into a dictionary.
 
     Args:
         fp (str): path to the yml file.
-
+        reflow (bool): if set to False, the original layout
+            (line endings, indentation) of the yml file
+            will be preserved (useful for files containing bullet lists etc.);
+            in the output string, new line characters will be replaced with ¶.
+            if set to True, new line characters will be removed
+            (except double line breaks and line breaks in bullet lists)
+            and the indentation and line length will be standardized.
+            
     Returns:
         (dict): dictionary representation of the yml key-value pairs
 
@@ -132,7 +139,7 @@ def readYML(fp):
            print(e)
 
 
-def dicToYML(dic, max_length=72, reflow=True):
+def dicToYML(dic, max_length=80, reflow=True):
     """Convert a dictionary into a yml string.
 
     NB: use the pilcrow (¶) to force a line break within dictionary values.
