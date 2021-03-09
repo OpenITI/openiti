@@ -61,10 +61,10 @@ book_yml_template = """\
 10#BOOK#TITLEB#AR: Risālaŧ al-Muʾallif
 20#BOOK#WROTE####: URIs from Althurayya, comma separated
 30#BOOK#WROTE##AH: YEAR-MON-DA (X+ for unknown)
-40#BOOK#ABRIDGED#: URI of a book from OpenITI, or [Author's Title]
-40#BOOK#COMMENTD#: URI of a book from OpenITI, or [Author's Title]
-40#BOOK#FOLLOWED#: URI of a book from OpenITI, or [Author's Title]
-40#BOOK#PRECEDED#: URI of a book from OpenITI, or [Author's Title]
+40#BOOK#RELATED##: URI of a book from OpenITI, or [Author's Title],
+    followed by abbreviation for relation type between brackets (see
+    book_relations repo). Only include relations with older books. Separate
+    related books with semicolon.
 80#BOOK#EDITIONS#: permalink, permalink, permalink
 80#BOOK#LINKS####: permalink, permalink, permalink
 80#BOOK#MSS######: permalink, permalink, permalink
