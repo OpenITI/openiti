@@ -14,9 +14,15 @@ Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip in
 ## Change log: 
 
 
+### v.0.1.4:
+* `helper.templates`: replace the multiple book relations fields in the 
+book yml file with a single field, `#40#BOOK#RELATED##:`.
+* `helper.yml`: make not rearranging lines ("reflowing") in yml files the default,
+and change the default line length to 80.
+
 ### v.0.1.3:
 
-* new_books.convert.`: add converters for ALCorpus and Ptolemaeus texts
+* `new_books.convert`: add converters for ALCorpus and Ptolemaeus texts
 * `new_books.convert.helper.html2md`: tweaks to import of options + small tweaks
 * `helper.ara`: Stop ar_cnt_file from raising exception if book misses splitter; instead, print warning
 * `helper.funcs`: 
