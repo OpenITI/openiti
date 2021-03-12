@@ -360,8 +360,40 @@ def ar_tok_cnt(text):
     return len(ar_tok.findall(text))
 
 
+def tokenize(text, token_regex=ar_tok):
+    """Tokenize a text into tokens defined by `token_regex`
 
+    NB: make sure to remove the OpenITI header from the text
+
+    Args:
+        text (str): full text with OpenITI header removed,
+            cleaned of order marks ("\u202a", "\u202b", "\u202c")
+        token_regex (str): regex that defines a token
+        
+    Returns:
+        tuple (tokens (list): list of all tokens in the text,
+               tokenStarts (list): list of start index of each token
+               tokenEnds (list): list of end index of each token
+               )
+    Examples:
+        >>> a = "ابجد ابجد اَبًجٌدُ"
+        >>> tokens, tokenStarts, tokenEnds = tokenize(a)
+        >>> tokens
+        ['ابجد', 'ابجد', 'اَبًجٌدُ']
+        >>> tokenStarts
+        [0, 5, 10]
+        >>> tokenEnds
+        [4, 9, 18]
+    """
+    #find matches
+    tokens = [m for m in re.finditer(token_regex,text)]
+
+    #extract tokens and start,end positions
+    tokenStarts = [m.start() for m in tokens]
+    tokenEnds = [m.end() for m in tokens]
+    tokens = [m.group() for m in tokens]
+
+    return tokens, tokenStarts, tokenEnds
 
 if __name__ == "__main__":
     doctest.testmod()
-
