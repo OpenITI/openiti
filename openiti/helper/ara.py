@@ -143,19 +143,19 @@ def normalize_per(text):
         text (str): user input string to be normalized
 
     Examples:
-        >>> normalize_per_light("سياسي")
+        >>> normalize_per("سياسي")
         'سیاسی'
-        >>> normalize_per_light("مدينة")
+        >>> normalize_per("مدينة")
         'مدینه'
-        >>> normalize_per_light("درِ باز")
+        >>> normalize_per("درِ باز")
         'در باز'
-        >>> normalize_per_light("حتماً")
+        >>> normalize_per("حتماً")
         'حتما'
-        >>> normalize_per_light("مدرك")
+        >>> normalize_per("مدرك")
         'مدرک'
-        >>> normalize_per_light("أسماء")
+        >>> normalize_per("أسماء")
         'اسما'
-        >>> normalize_per_light("دربارۀ")
+        >>> normalize_per("دربارۀ")
         'درباره'
 
     """
