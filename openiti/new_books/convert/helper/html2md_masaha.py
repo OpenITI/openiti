@@ -305,11 +305,14 @@ class MasahaConverter(html2md.MarkdownConverter):
             'abc [1]'
         """
         href = el.get('href')
-        if "ftn" in href or "fn" in href:
-            # do not include a link for footnotes:
-            return '[%s]' % text
+        if href:
+            if "ftn" in href or "fn" in href:
+                # do not include a link for footnotes:
+                return '[%s]' % text
+            else:
+                # return a markdown representation of a link: [text](href)
+                return super().convert_a(el, text)
         else:
-            # return a markdown representation of a link: [text](href)
             return super().convert_a(el, text)
 
     def convert_div(self, el, text):
