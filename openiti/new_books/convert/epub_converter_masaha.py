@@ -84,7 +84,7 @@ from openiti.new_books.convert.helper import html2md_masaha
 from openiti.new_books.convert.helper.yml2json import yml2json
 
 
-def convert_file(fp, meta_fp, dest_fp=None, verbose=False):
+def convert_file(fp, meta_fp, dest_fp=None, verbose=False, overwrite=False):
     """Convert one file to OpenITI format.
 
     Args:
@@ -95,7 +95,7 @@ def convert_file(fp, meta_fp, dest_fp=None, verbose=False):
     Returns:
         None
     """
-    conv = MasahaEpubConverter()
+    conv = MasahaEpubConverter(overwrite=overwrite)
     conv.VERBOSE = verbose
     with open(meta_fp, mode="r", encoding="utf-8") as file:
         d = json.load(file)
@@ -112,7 +112,7 @@ def convert_file(fp, meta_fp, dest_fp=None, verbose=False):
 
 def convert_files_in_folder(src_folder, meta_fp, dest_folder=None, verbose=False,
                             extensions=["epub"], exclude_extensions=["yml"],
-                            fn_regex=None):
+                            fn_regex=None, overwrite=False):
     """Convert all files in a folder to OpenITI format.\
     Use the `extensions` and `exclude_extensions` lists to filter\
     the files to be converted.
@@ -137,7 +137,7 @@ def convert_files_in_folder(src_folder, meta_fp, dest_folder=None, verbose=False
     """
     msg = "Converting all files in folder {} with extensions {}"
     print(msg.format(src_folder, extensions))
-    conv = MasahaEpubConverter()
+    conv = MasahaEpubConverter(overwrite=overwrite)
     conv.VERBOSE = verbose
     with open(meta_fp, mode="r", encoding="utf-8") as file:
         d = json.load(file)
@@ -155,8 +155,8 @@ def convert_files_in_folder(src_folder, meta_fp, dest_folder=None, verbose=False
 
 
 class MasahaEpubConverter(GenericEpubConverter):
-    def __init__(self, dest_folder=None):
-        super().__init__(dest_folder)
+    def __init__(self, dest_folder=None, overwrite=True):
+        super().__init__(dest_folder=dest_folder, overwrite=overwrite)
         self.toc_fn = "content.opf"
         self.metadata_file = None
 
@@ -202,6 +202,18 @@ class MasahaEpubConverter(GenericEpubConverter):
         multivol_folders = [os.path.join(source_folder, f) for f in multivol_folders]
         
         for folder in multivol_folders:
+            print(folder)
+            try:
+                first_fn = sorted(os.listdir(folder))[0]
+            except Exception as e:
+                print("folder does not contain files:", e)
+                failed.append((folder, e))
+                continue
+            outfn = re.sub("\.epub", "Vols.automARkdown", first_fn)
+            outfp = os.path.join(dest_folder, outfn)
+            if os.path.exists(outfp):
+                print(outfp, "already exists")
+                continue
             temp_folder = os.path.join(dest_folder, "temp")
             if os.path.exists(temp_folder):
                 shutil.rmtree(temp_folder)
