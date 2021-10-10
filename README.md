@@ -13,6 +13,22 @@ Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip in
 
 ## Change log: 
 
+### v.0.1.5: 
+* `helper.yml`: add `fix_broken_yml` function to fix yml files
+that are unreadable due to indentation problems 
+(or keys that don't end with a colon)
+* `helper.uri`: rewrite the `check_yml_files` function to fix
+a bug in the character count and add additional checks.
+* `helper.funcs`: allow more than one `yml_type` in the function
+`get_all_yml_files_in_folder`.
+* `helper.ara`: 
+  - Add missing EXTENDED ARABIC-INDIC DIGITS characters 67890
+  - Add tokenize function
+  - Fix typos in `normalize_per` doctest
+* `new_books.convert`: add converter for Masāḥa Ḥurra epub files
+(`epub_converter_masaha.py`, with helper file `html2md_masaha.py`)
+* `new_books.convert.epub_converter_generic.py`: implement overwrite 
+option for (dis)allowing overwriting existing converted files.
 
 ### v.0.1.4:
 * `helper.templates`: replace the multiple book relations fields in the 
