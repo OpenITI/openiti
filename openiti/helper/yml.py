@@ -138,6 +138,47 @@ def readYML(fp, reflow=False):
            print(fp)
            print(e)
 
+def fix_broken_yml(fp, execute=True):
+    """Fix a yml file that is broken because
+    (1) a line does not start with a valid key or space
+    or (2) the colon after the key is absent
+
+    Args:
+        fp (str): path to the broken yml file
+        execute (bool): if False, user's judgment about the fix
+             will be asked before the fix is implemented
+
+    Returns:
+        None or yml_d
+    """
+    with open(fp, mode="r", encoding="utf-8") as file:
+        data = file.read()
+    key_lines = []
+    current = []
+    for line in data.splitlines():
+        if re.findall("^\d\d#[#\w]{14}:?", line):
+            if current:
+                key_lines.append(current)
+                current = []
+        current.append(line.strip())
+    if current:
+        key_lines.append(current)
+    key_lines = ["¶".join(line) for line in key_lines]
+    key_regex = "^(\d\d#[#\w]{14}):?"
+    yml_d = {re.findall(key_regex, line)[0]+":" : re.sub(key_regex, "", line).strip()
+             for line in key_lines}
+    print("original yml file:\n")
+    print(data)
+    print("\nAttempt to solve the issue:\n")
+    print(dicToYML(yml_d))
+    if execute or input("\nAccept change? Y/N: ").lower() == "y":
+        return yml_d
+    else:
+        print("Aborting change. Please review YML file manually")
+        return
+
+    
+
 
 def dicToYML(dic, max_length=80, reflow=True):
     """Convert a dictionary into a yml string.
