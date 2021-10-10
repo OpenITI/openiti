@@ -58,7 +58,8 @@ def get_all_text_files_in_folder(start_folder, excluded_folders=exclude_folders,
                 fp = os.path.join(root, fn)
                 yield(fp)
 
-def get_all_yml_files_in_folder(start_folder, yml_type,
+#def get_all_yml_files_in_folder(start_folder, yml_type,
+def get_all_yml_files_in_folder(start_folder, yml_types,
                                 excluded_folders=exclude_folders,
                                 exclude_files=exclude_files):
     """A generator that yields the file path for all yml files \
@@ -71,7 +72,8 @@ def get_all_yml_files_in_folder(start_folder, yml_type,
 
     Args:
         start_folder (str): path to the folder containing the text files
-        yml_type (str): desired yml file type: one of "author", "book", or "version"
+        yml_type (list): list of desired yml file types:
+            one or more of "author", "book", or "version"
         excluded_folders (list): list of folder names that should be excluded
             (default: the list of excluded folders defined in this module)
         excluded_files (list): list of file names that should be excluded
@@ -85,13 +87,17 @@ def get_all_yml_files_in_folder(start_folder, yml_type,
         > AH0025_file_list = [fp for fp in get_all_text_files_in_folder(folder)]
     """
     dots = {"author": 1, "book": 2, "version": 3}
+    if isinstance(yml_types, str):
+        yml_types = [yml_types,]
     for root, dirs, files in os.walk(start_folder):
         dirs[:] = [d for d in dirs if d not in exclude_folders]
         files[:] = [f for f in files if f not in exclude_files]
         for fn in files:
-            if re.findall(r"^(?:[^.]+\.){%s}yml$" % dots[yml_type], fn):
-                fp = os.path.join(root, fn)
-                yield(fp)
+            for yml_type in yml_types:
+                if re.findall(r"^(?:[^.]+\.){%s}yml$" % dots[yml_type], fn):
+                    fp = os.path.join(root, fn)
+                    yield(fp)
+
 
 def get_all_characters_in_text(fp):
     """Get a set of all characters used in a text.
