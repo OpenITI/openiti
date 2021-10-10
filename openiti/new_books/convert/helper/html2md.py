@@ -203,7 +203,7 @@ class MarkdownConverter(object):
         self.options = _todict(self.DefaultOptions)
         self.options.update(_todict(self.Options))
         self.options.update(options)
-        print("options", self.options)
+        #print("options", self.options)
         if self.options['strip'] is not None and self.options['convert'] is not None:
             raise ValueError('You may specify either tags to strip or tags to'
                              ' convert, but not both.')
