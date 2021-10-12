@@ -74,9 +74,15 @@ ar_chars = """\
 ۳	EXTENDED ARABIC-INDIC DIGIT THREE
 ۴	EXTENDED ARABIC-INDIC DIGIT FOUR
 ۵	EXTENDED ARABIC-INDIC DIGIT FIVE
-‌	ZERO WIDTH NON-JOINER
-‍	ZERO WIDTH JOINER"""
-JOINERar_chars = [x.split("\t")[0] for x in ar_chars.splitlines()]
+۶	EXTENDED ARABIC-INDIC DIGIT SIX
+۷	EXTENDED ARABIC-INDIC DIGIT SEVEN
+۸	EXTENDED ARABIC-INDIC DIGIT EIGHT
+۹	EXTENDED ARABIC-INDIC DIGIT NINE
+۰	EXTENDED ARABIC-INDIC DIGIT ZERO
+"""
+##‌	ZERO WIDTH NON-JOINER
+##‍	ZERO WIDTH JOINER"""
+ar_chars = [x.split("\t")[0] for x in ar_chars.splitlines()]
 #ar_chars = "ذ١٢٣٤٥٦٧٨٩٠ّـضصثقفغعهخحجدًٌَُلإإشسيبلاتنمكطٍِلأأـئءؤرلاىةوزظْلآآ"
 ar_char = re.compile("[{}]".format("".join(ar_chars))) # regex for one Arabic character
 ar_tok = re.compile("[{}]+".format("".join(ar_chars))) # regex for one Arabic token
@@ -95,7 +101,6 @@ noise = re.compile(""" ّ    | # Tashdīd / Shadda
                        ٰ    | # Dagger Alif
                        ـ     # Taṭwīl / Kashīda
                    """, re.VERBOSE)
-
 
 def denoise(text):
     """Remove non-consonantal characters from Arabic text.
@@ -138,19 +143,19 @@ def normalize_per(text):
         text (str): user input string to be normalized
 
     Examples:
-        >>> normalize_ara_light("سياسي")
+        >>> normalize_per("سياسي")
         'سیاسی'
-        >>> normalize_ara_light("مدينة")
+        >>> normalize_per("مدينة")
         'مدینه'
-        >>> normalize_ara_light("درِ باز")
+        >>> normalize_per("درِ باز")
         'در باز'
-        >>> normalize_ara_light("حتماً")
+        >>> normalize_per("حتماً")
         'حتما'
-        >>> normalize_ara_light("مدرك")
+        >>> normalize_per("مدرك")
         'مدرک'
-        >>> normalize_ara_light("أسماء")
+        >>> normalize_per("أسماء")
         'اسما'
-        >>> normalize_ara_light("دربارۀ")
+        >>> normalize_per("دربارۀ")
         'درباره'
 
     """
@@ -308,20 +313,21 @@ def ar_cnt_file(fp, mode="token", incl_editor_sections=True):
 
     if splitter in book:
         text = book.split(splitter)[-1]
-
-        if not incl_editor_sections:
-            text = re.sub(r"### \|EDITOR.+?(### |\Z)", r"\1", text,
-                          flags = re.DOTALL)
-
-        # count the number of Arabic letters or tokens:
-        
-        if mode == "char":
-            return ar_ch_cnt(text)
-        else:
-            return ar_tok_cnt(text)
     else:
+        text = book
         msg = "This text is missing the splitter!\n{}".format(fp)
-        raise Exception(msg)
+        #raise Exception(msg)
+    if not incl_editor_sections:
+        text = re.sub(r"### \|EDITOR.+?(### |\Z)", r"\1", text,
+                      flags = re.DOTALL)
+
+    # count the number of Arabic letters or tokens:
+    
+    if mode == "char":
+        return ar_ch_cnt(text)
+    else:
+        return ar_tok_cnt(text)
+
 
 
 def ar_ch_cnt(text):
@@ -354,6 +360,40 @@ def ar_tok_cnt(text):
     return len(ar_tok.findall(text))
 
 
+def tokenize(text, token_regex=ar_tok):
+    """Tokenize a text into tokens defined by `token_regex`
+
+    NB: make sure to remove the OpenITI header from the text
+
+    Args:
+        text (str): full text with OpenITI header removed,
+            cleaned of order marks ("\u202a", "\u202b", "\u202c")
+        token_regex (str): regex that defines a token
+        
+    Returns:
+        tuple (tokens (list): list of all tokens in the text,
+               tokenStarts (list): list of start index of each token
+               tokenEnds (list): list of end index of each token
+               )
+    Examples:
+        >>> a = "ابجد ابجد اَبًجٌدُ"
+        >>> tokens, tokenStarts, tokenEnds = tokenize(a)
+        >>> tokens
+        ['ابجد', 'ابجد', 'اَبًجٌدُ']
+        >>> tokenStarts
+        [0, 5, 10]
+        >>> tokenEnds
+        [4, 9, 18]
+    """
+    #find matches
+    tokens = [m for m in re.finditer(token_regex,text)]
+
+    #extract tokens and start,end positions
+    tokenStarts = [m.start() for m in tokens]
+    tokenEnds = [m.end() for m in tokens]
+    tokens = [m.group() for m in tokens]
+
+    return tokens, tokenStarts, tokenEnds
+
 if __name__ == "__main__":
     doctest.testmod()
-

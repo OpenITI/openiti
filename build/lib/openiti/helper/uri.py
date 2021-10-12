@@ -231,7 +231,7 @@ if __name__ == '__main__':
     root_folder = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
     sys.path.append(root_folder)
 
-from openiti.helper.funcs import read_header
+from openiti.helper.funcs import read_header, get_all_yml_files_in_folder, get_all_text_files_in_folder
 from openiti.helper.ara import ar_cnt_file
 from openiti.helper.templates import author_yml_template, book_yml_template, \
                                      version_yml_template, readme_template, \
@@ -383,6 +383,9 @@ class URI:
         >>> t.build_pth()
         './0275AH/data/0255Jahiz/0255Jahiz.Hayawan'
         >>> t.data_in_25_year_repos = False
+        >>> t.build_pth()
+        './0255Jahiz/0255Jahiz.Hayawan'
+        >>> t.language="ara"
         >>> t.build_pth()
         './0255Jahiz/0255Jahiz.Hayawan'
         >>> t.data_in_25_year_repos = True
@@ -1343,7 +1346,9 @@ def new_yml(tar_yfp, yml_type, execute=False):
     template = eval("{}_template".format(yml_type))
     yml_dic = yml.ymlToDic(template)
     uri_key = "00#{}#URI######:".format(yml_type[:4].upper())
-    yml_dic[uri_key] = URI(tar_yfp).build_uri()
+    u = URI(tar_yfp)
+    u.extension = ""
+    yml_dic[uri_key] = u.build_uri()
     if execute:
         with open(tar_yfp, mode="w", encoding="utf-8") as file:
             file.write(yml.dicToYML(yml_dic))
@@ -1466,14 +1471,18 @@ def move_to_new_uri_pth(old_fp, new_uri, execute=False):
     return new_fp
 
 
-def check_token_count(version_uri, ymlD):
+#def check_token_count(version_uri, ymlD):
+def check_token_count(version_uri, ymlD, version_fp="", find_latest=True):
     """Check whether the token count in the version yml file agrees with the\
     actual token count of the text file.
 
     Args:
         version_uri (URI object): version uri of the target text
         ymlD (dict): dictionary containing the data from the relevant yml file
-
+        version_fp (str): file path to the target text
+        find_latest (bool): if False, the version_fp will be used as is;
+            if set to True, the script will find the most developed version of
+            the text file, based on its extension (mARkdown > completed > inProgress)
     Returns:
         (tuple): Tuple containing 2 values (or None):
 
@@ -1482,11 +1491,19 @@ def check_token_count(version_uri, ymlD):
     """
     # Get the count from the most complete version of the text file: 
     #fp = version_uri.build_pth(uri_type="version_file")
-    for ext in ["mARkdown", "completed", "inProgress", ""]:
-        version_uri.extension = ext
-        fp = version_uri.build_pth(uri_type="version_file")
-        if os.path.exists(fp):
-            break
+    if version_fp and not find_latest:
+        fp = version_fp
+    elif version_fp and find_latest:
+        for ext in [".mARkdown", ".completed", ".inProgress", ""]:
+            fp = version_fp + ext
+            if os.path.exists(fp):
+                break
+    else:
+        for ext in ["mARkdown", "completed", "inProgress", ""]:
+            version_uri.extension = ext
+            fp = version_uri.build_pth(uri_type="version_file")
+            if os.path.exists(fp):
+                break
     tok_count = ar_cnt_file(fp, mode="token")
     char_count = ar_cnt_file(fp, mode="char")
     len_key = "00#VERS#LENGTH###:"
@@ -1518,17 +1535,23 @@ def replace_tok_counts(missing_tok_count):
     """Replace the token counts in the relevant yml files.
 
     Args:
-        missing_tok_count (list): a list of tuples (uri, token_count):
-        
+        missing_tok_count (list): a list of tuples:
             uri (OpenITI URI object)
+            version_fp (str)
             token_count (int): the number of Arabic tokens in the text file
+            char_count (int): the number of Arabic characters in the text file
 
     Returns:
         None
     """
     print("replacing token count in {} files".format(len(missing_tok_count)))
-    for uri, tok_count, char_count in missing_tok_count:
-        yml_fp = uri.build_pth("version_yml")
+    for uri, version_fp, tok_count, char_count in missing_tok_count:
+        print(uri, version_fp)
+        #yml_fp = uri.build_pth("version_yml")
+        if version_fp.endswith(("mARkdown", "completed", "inProgress")):
+            yml_fp = os.path.splitext(version_fp)[0] + ".yml"
+        else:
+            yml_fp = version_fp + ".yml"
         ymlD = yml.readYML(yml_fp)
         len_key = "00#VERS#LENGTH###:"
         ymlD[len_key] = str(tok_count)
@@ -1537,6 +1560,83 @@ def replace_tok_counts(missing_tok_count):
         ymlS = yml.dicToYML(ymlD)
         with open(yml_fp, mode="w", encoding="utf-8") as outf:
             outf.write(ymlS)
+
+def check_yml_file(yml_fp, yml_type, version_fp=None, execute=False,
+                   check_token_counts=True):
+    """Check whether a yml file exist, is valid, and contains no foreign keys
+
+    Args:
+        yml_fp (str): path to the yml file
+        yml_type (str): either "author", "book", or "version"
+        version_fp (str): path to the text file of the version
+            (only relevant for version yml files; default = None)
+        execute (bool): if False, the user will be prompted
+            before any changes are made to the yml file
+        check_token_counts (bool): if True, the script will check
+            the number of tokens (and characters) in the text
+
+    Returns:
+        None or fp
+    """
+    yml_changed = False
+    
+    # Check if yml file exists:
+    if not os.path.exists(yml_fp):
+        print(yml_fp, "DOES NOT EXIST")
+        # create a new yml file:
+        if execute or input("Create yml file? Y/N? ").lower() == "y":
+            new_yml(yml_fp, yml_type, True)
+            print("New yml file created.")
+
+    # Check if yml is valid:
+    try:
+        yml_d = yml.readYML(yml_fp)
+        yml_d.keys()
+    except Exception as e:
+        print("invalid YML file structure:", yml_fp)
+        print("Error message:", e)
+        yml_d = yml.fix_broken_yml(yml_fp, execute)
+        if yml_d:
+            yml_changed = True
+        else:
+            return yml_fp
+    for key in list(yml_d.keys()):  # NB: list needed because otherwise keys cannot be deleted!
+        
+        # check if all keys have the prefix of the yml type (..#AUTH, ..#BOOK, ..#VERS):
+        if key[3:7] != yml_type.upper()[:4]:
+            print("wrong key in yml file", yml_fp, ":", key)
+            if execute or input("Delete yml key {}? Y/N: ".format(key)).lower() == "y":
+                del yml_d[key]
+                yml_changed = True
+                print("-> deleted yml key", key)
+
+        # check whether the URI in the yml file is identical with that in the filename:
+        if "URI" in key:
+            fn = os.path.splitext(os.path.split(yml_fp)[-1])[0]
+            fn = re.sub("\.inProgress|\.mARkdown|\.completed", "", fn)
+            if yml_d[key].strip() != fn:
+                print("URI", yml_d[key], "!= filename", fn)
+                if execute or input("Replace URI with filename? Y/N: ").lower() == "y":
+                    yml_d[key] = fn
+                    yml_changed = True
+                    print("-> URI replaced with", fn)
+                
+    # check whether version yml files contain token and character length values:
+    if yml_type == "version" and check_token_counts:
+        res = check_token_count(URI(yml_fp), yml_d, version_fp)
+        if res:
+            tok_count, char_count = res
+            if execute or input("Change token count? Y/N? ").lower() == "y":
+                yml_d["00#VERS#LENGTH###:"] = str(tok_count)
+                yml_d["00#VERS#CLENGTH##:"] = str(char_count)
+                yml_changed = True
+                print(yml_fp)
+                print("-> token and character counts changed")
+
+    # save changes to yml file if anything has changed: 
+    if yml_changed:
+        with open(yml_fp, mode="w", encoding="utf-8") as file:
+            file.write(yml.dicToYML(yml_d))
 
 
 def check_yml_files(start_folder, exclude=[],
@@ -1553,156 +1653,40 @@ def check_yml_files(start_folder, exclude=[],
             the user the option to execute the proposed changes.
 
     Returns:
-        (tuple): Tuple containing:
-
-            missing_ymls (list): list of paths to missing yml files
-            missing_tok_count (list): list of tuples with three elements:
-
-                * uri (URI object): uri of the target text
-                * tok_count (int): number of Arabic tokens in the target text
-                * char_count (int): number of Arabic characters in the target text
-                
-            non_uri_files (list): list of paths to files whose filename\
-                is not a valid OpenITI URI
-            erratic_ymls (list): list of paths to malformed yml files.
+        None
     """
-    uri_key = "00#{}#URI######:"
-    missing_ymls = []
-    missing_tok_count = []
-    non_uri_files = []
-    erratic_ymls = []
-    for root, dirs, files in os.walk(start_folder):
-        dirs[:] = [d for d in sorted(dirs) if d not in exclude]
-
-        for file in files:
-            if file not in ["README.md", ".DS_Store",
-                            ".gitignore", "text_questionnaire.md"]:
-                fp = os.path.join(root, file)
-
-                # Check whether a filename has the uri format:
-                try:
-                    uri = URI(fp)
-                    #print("uri:", uri)
-                    #print("uri.base_pth:", uri.base_pth)
-                except:
-                    non_uri_files.append(file)
-                    uri = None
-
-                # Check for every text file whether a version, book and author yml file
-                # are associated with it:
-
-                if uri:
-                    if uri.uri_type == "version" and not file.endswith(".yml"):
-                        for yml_type in ["version_yml", "book_yml", "author_yml"]:
-                            yml_fp = uri.build_pth(uri_type=yml_type)
-                            #print(yml_type, yml_fp)
-
-                            # make new yml file if yml file does not exist:
-
-                            if not os.path.exists(yml_fp):
-                                print(yml_fp, "missing")
-                                missing_ymls.append(yml_fp)
-                                # create a new yml file:
-                                if execute:
-                                    new_yml(yml_fp, yml_type, execute)
-                                    print("yml file created.")
-                                else:
-                                    print("create yml file {}?".format(yml_fp))
-
-                            # check whether the URI in yml file is the same
-                            # as the URI in the filename;
-                            # if not: replace URI in yml file with
-                            # filename URI:
-
-                            try:
-                                ymlD = yml.readYML(yml_fp)
-                            except:
-                                ymlD = None # mistake in the yml file!
-                                
-                            if ymlD == {}:
-                                print(yml_fp, "empty")
-                                missing_ymls.append(yml_fp)
-                                if execute:
-                                    new_yml(yml_fp, yml_type, execute)
-                                    print("yml file created.")
-                                else:
-                                    msg = "Replace empty yml file {}?"
-                                    print(msg.format(uri(yml_type)))
-                            elif ymlD == None:
-                                msg = "Yml file {} could not be read. Check manually!"
-                                print(msg.format(uri(yml_type)))
-                                erratic_ymls.append(yml_fp)
-                            else:
-                                key = uri_key.format(yml_type[:4].upper())
-                                if ymlD[key] != uri(yml_type[:-4]):
-                                    print("URI in yml file wrong!",
-                                          ymlD[key], "!=", uri(yml_type[:-4]))
-                                    if execute:
-                                        ymlD[key] = uri(yml_type[:-4])
-                                        ymlS = yml.dicToYML(ymlD)
-                                        with open(yml_fp, mode="w",
-                                                  encoding="utf-8") as outf:
-                                            outf.write(ymlS)
-
-                                # check whether token count in version yml file
-                                # agrees with the current token count of the text
-
-                                if yml_type == "version_yml":
-                                    if check_token_counts:
-                                        res = check_token_count(uri, ymlD)
-                                        try:
-                                            tok_count, char_count = res
-                                        except:
-                                            tok_count = None
-                                        if tok_count:
-                                            missing_tok_count.append((uri, tok_count, char_count))
-    if  erratic_ymls:
-        print()
-        print("The following yml files were found to contain errors.")
-        print("Check manually:")
-        print()
-        for file in sorted(erratic_ymls):
-            print("    ", file)
-
-    cnt = len(missing_tok_count)
-    if missing_ymls!=[] or missing_tok_count !=[]:
-        print("Token count must be changed in {} files".format(cnt))
-        print()
-        if not execute:   
-            print("Execute these changes?")
-            resp = input("Press OK+Enter to execute; press Enter to abort: ")
-            if resp == "OK":
-                doit = True
+    failed = []
+    for fp in get_all_text_files_in_folder(start_folder, excluded_folders=exclude):
+        uri = URI(fp)
+        for yml_type in ("author", "book", "version"):
+            yml_fn = uri.build_uri(uri_type="{}_yml".format(yml_type))
+            if yml_type == "author":
+                yml_fp = os.path.join(os.path.dirname(os.path.dirname(fp)), yml_fn)
             else:
-                print("Changes aborted by user")
-                doit = False
-        else:
-            doit = True
-        if doit:
-            replace_tok_counts(missing_tok_count)
-            check_yml_files(start_folder, exclude=exclude,
-                            execute=True, check_token_counts=False)
-            print()
-            print("Token count changed in {} files".format(cnt))
-            print()
-    else:
-        print("No missing yml files.")
-
-    if non_uri_files:
+                yml_fp = os.path.join(os.path.dirname(fp), yml_fn)
+            r = check_yml_file(yml_fp, yml_type, version_fp=fp, execute=execute,
+                               check_token_counts=check_token_counts)
+            if r:
+                failed.append(r)
+    if failed:
+        print("The following yml files could not be read. Please correct them manually:")
+        for yml_fp in failed:
+            print("*", yml_fp)
         print()
-        print("The following files could have problems with their URI:")
-        print()
-        for file in sorted(set(non_uri_files)):
-            print("    ", file)
 
-    return missing_ymls, missing_tok_count, non_uri_files, erratic_ymls
-
+folder = r"D:\London\OpenITI\25Y_repos\0775AH\data\0774IbnKathir\0774IbnKathir.TabaqatFuqahaShaficiyyin"
+check_yml_files(folder)
+input("CONTINUE?")
 
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
     print("passed doctests")
     print()
+
+    folder = r"D:\London\OpenITI\25Y_repos/0450AH"
+    check_yml_files(folder)
+    input("CONTINUE?")
 
     # Additional tests:
 

@@ -283,7 +283,8 @@ class GenericHtmlConverter(GenericConverter):
                                header_tag="",
                                only_tag_names=True,
                                strip_attr=["id", "href"],
-                               print_tags=True):
+                               print_tags=True,
+                               within_tag=None):
         """Extracts a set of all tags used in the texts in a folder.
 
         Args:
@@ -315,6 +316,9 @@ class GenericHtmlConverter(GenericConverter):
             print(fp)
             with open(fp, mode="r", encoding="utf-8") as file:
                 text = file.read()
+                if within_tag:
+                    soup = BeautifulSoup(text)
+                    text = soup.find(within_tag[0], attrs=within_tag[1]).prettify()
             fp_tags = self.inspect_tags_in_html(text, header_tag, only_tag_names, strip_attr,
                                                 print_tags=False)
             tags = tags.union(fp_tags)
@@ -374,19 +378,20 @@ class GenericHtmlConverter(GenericConverter):
 
 if __name__ == "__main__":
     import doctest
-    doctest.testmod()
+    #doctest.testmod()
     print("Passed all tests.")
 
-##    conv = GenericHtmlConverter()
-##    folder = r"G:\London\OpenITI\new\eShia"
+    conv = GenericHtmlConverter()
+    folder = r"G:\London\OpenITI\new\Rafed\test"
 ##    conv.inspect_tags_in_folder(folder,
 ##                                extensions=["html"],
 ##                                only_tag_names=False,
-##                                strip_attr=["id", "name", "href", "title"],
-##                                print_tags=True)
+##                                strip_attr=["name", "href", "title"],
+##                                print_tags=True,
+##                                within_tag=("div", {"id": "content1"}))
 
-##    conv.find_example_of_tag(folder, "span", attr={"class", "Titr3"},
-##                             n=15, incl_parent=True, extensions=["html"])
+    conv.find_example_of_tag(folder, "p", attr={"class", "rfdCenterBold2"},
+                             n=15, incl_parent=True, extensions=["html"])
     
 ##    conv.convert_files_in_folder(folder)
 

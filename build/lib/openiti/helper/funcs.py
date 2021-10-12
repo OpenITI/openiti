@@ -24,6 +24,81 @@ exclude_folders = ["OpenITI.github.io", "Annotation", "maintenance",
 exclude_files = ["README.md", ".DS_Store",
                  ".gitignore", "text_questionnaire.md"]
 
+def get_all_text_files_in_folder(start_folder, excluded_folders=exclude_folders,
+                                 exclude_files=exclude_files):
+    """A generator that yields the file path for all OpenITI text files \
+    in a folder and its subfolders.
+
+    OpenITI text files are defined here as files that have a language
+    identifier (-ara1, -ara2, -per1, etc.) and have either no extension
+    or .mARkdown, .completed, or .inProgress.
+    
+    The script creates a generator over which you can iterate.
+    It yields the full path to each of the text files.
+
+    Args:
+        start_folder (str): path to the folder containing the text files
+        excluded_folders (list): list of folder names that should be excluded
+            (default: the list of excluded folders defined in this module)
+        excluded_files (list): list of file names that should be excluded
+            (default: the list of excluded file names defined in this module)
+
+    Examples:
+        > folder = r"D:\London\OpenITI\25Y_repos"
+        > for fp in get_all_text_files_in_folder(folder):
+            print(fp)
+        > folder = r"D:\London\OpenITI\25Y_repos\0025AH"
+        > AH0025_file_list = [fp for fp in get_all_text_files_in_folder(folder)]
+    """
+    for root, dirs, files in os.walk(start_folder):
+        dirs[:] = [d for d in dirs if d not in exclude_folders]
+        files[:] = [f for f in files if f not in exclude_files]
+        for fn in files:
+            if re.findall(r"-\w\w\w\d(?:.inProgress|.completed|.mARkdown)?\Z", fn):
+                fp = os.path.join(root, fn)
+                yield(fp)
+
+#def get_all_yml_files_in_folder(start_folder, yml_type,
+def get_all_yml_files_in_folder(start_folder, yml_types,
+                                excluded_folders=exclude_folders,
+                                exclude_files=exclude_files):
+    """A generator that yields the file path for all yml files \
+    of a specific type in a folder and its subfolders.
+
+    OpenITI yml files exist for authors, books and versions.
+    
+    The script creates a generator over which you can iterate.
+    It yields the full path to each of the yml files.
+
+    Args:
+        start_folder (str): path to the folder containing the text files
+        yml_type (list): list of desired yml file types:
+            one or more of "author", "book", or "version"
+        excluded_folders (list): list of folder names that should be excluded
+            (default: the list of excluded folders defined in this module)
+        excluded_files (list): list of file names that should be excluded
+            (default: the list of excluded file names defined in this module)
+
+    Examples:
+        > folder = r"D:\London\OpenITI\25Y_repos"
+        > for fp in get_all_yml_files_in_folder(folder):
+            print(fp)
+        > folder = r"D:\London\OpenITI\25Y_repos\0025AH"
+        > AH0025_file_list = [fp for fp in get_all_text_files_in_folder(folder)]
+    """
+    dots = {"author": 1, "book": 2, "version": 3}
+    if isinstance(yml_types, str):
+        yml_types = [yml_types,]
+    for root, dirs, files in os.walk(start_folder):
+        dirs[:] = [d for d in dirs if d not in exclude_folders]
+        files[:] = [f for f in files if f not in exclude_files]
+        for fn in files:
+            for yml_type in yml_types:
+                if re.findall(r"^(?:[^.]+\.){%s}yml$" % dots[yml_type], fn):
+                    fp = os.path.join(root, fn)
+                    yield(fp)
+
+
 def get_all_characters_in_text(fp):
     """Get a set of all characters used in a text.
 
@@ -113,7 +188,7 @@ def text_cleaner(text):
     Returns:
         (str): the cleaned string
     """
-    text = ara.normalize_ara_extra_light(text)
+    text = ara.normalize_ara_light(text)
     text = re.sub("\W|\d|[A-z]", " ", text)
     text = re.sub(" +", " ", text)
     return text
@@ -153,11 +228,12 @@ def generate_ids_through_permutations(char_string_for_ids, id_len_char, limit):
 
 
 
-def read_header(fp):
+def read_header(fp, lines=300):
     """Read only the OpenITI header of a file without opening the entire file.
 
     Args:
         fp (str): path to the text file
+        lines (int): number of lines at the top of the file to be read
 
     Returns:
         (list): A list of all metadata lines in the header
@@ -166,7 +242,7 @@ def read_header(fp):
         header = []
         line = file.readline()
         i=0
-        while i < 100:
+        while i < lines:
         #while "#META#Header#End" not in line and i < 100:
             #if "#META#" in line or "#NewRec#" in line:
             header.append(line)
@@ -174,11 +250,66 @@ def read_header(fp):
                 return header
             line = file.readline() # move to next line
             i += 1
+        print("{}: header splitter not reached after {} lines".format(fp, lines))
     return header
 
 
 def absolute_path(path):
     return os.path.abspath(path)
+
+def get_page_number(page_numbers, pos):
+    """Get the page number of a token at index position `pos` in a string \
+    based on a dictionary `page_numbers` that contains the index positions \
+    of the page numbers in that string.
+
+    Args:
+        page_numbers (dict):
+            key: index of the last character of the page number in the string
+            value: page number
+        pos (int): the index position of the start of a token in the string
+    """
+    for k in sorted(page_numbers.keys()):
+        if pos < k:
+            return page_numbers[k]
+
+def report_missing_numbers(fp, no_regex="### \$ \((\d+)",
+                           report_repeated_numbers=True):
+    """Use a regular expression to check whether numbers\
+    (of books, pages, etc.) are in sequence and no numbers are missing.
+
+    Arguments:
+        fp (str): path to the text file
+        no_regex (str): regular expression pattern describing the number
+            for which the sequence should be checked.
+            NB: the numbers should be in the first/only capture group
+
+    Use cases:
+        - Page numbers: use regex `PageV\d+P(\d+)`
+        - numbered sections: e.g.,
+          `### \$ \(?(\d+)` for dictionary items,
+          `### \|{2} (\d+)` for second-level sections, ...
+    """
+    with open(fp, mode="r", encoding="utf-8") as file:
+        text = file.read()
+    current_num = 0
+    page_numbers = {m.end(): m.group(0) \
+                    for m in re.finditer("PageV\d+P\d+", text)}
+    for match in re.finditer(no_regex, text):
+        no = int(match.group(1))
+        if no == 1:
+            current_num = 1
+            page = get_page_number(page_numbers, match.start())
+            print("start recounting from 1 at", page)
+        elif no == current_num:
+            page = get_page_number(page_numbers, match.start())
+            if report_repeated_numbers:
+                print(page, no, "follows", current_num)
+        elif no != current_num + 1:
+            page = get_page_number(page_numbers, match.start())
+            print(page, no, "follows", current_num)
+            current_num = no
+        else:
+            current_num = no
 
 
 if __name__ == "__main__":
@@ -189,4 +320,4 @@ if __name__ == "__main__":
     chars = get_all_characters_in_folder(start_folder, verbose=False,
                                          exclude_folders=exclude_folders,
                                          exclude_files=exclude_files)
-    get_character_names(chars, verbose=True)
+    #get_character_names(chars, verbose=True)

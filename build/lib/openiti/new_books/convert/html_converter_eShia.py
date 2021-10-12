@@ -240,5 +240,7 @@ if __name__ == "__main__":
     
     conv = EShiaHtmlConverter()
     folder = r"G:\London\OpenITI\new\eShia"
+    import os
+    conv.convert_file(os.path.join(folder, "10461.html"))
 
     conv.convert_files_in_folder(folder)

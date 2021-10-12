@@ -184,10 +184,10 @@ class TeiConverter(GenericConverter):
         return metadata
 
 
-    def add_structural_annotations(self, text):
+    def add_structural_annotations(self, text, options=None):
         soup = BeautifulSoup(text, "xml")
         text_soup = soup.find("text")
-        text = tei2md.markdownify(str(text_soup))
+        text = tei2md.markdownify(str(text_soup), options=options)
         return text
 
 
