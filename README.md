@@ -13,6 +13,10 @@ Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip in
 
 ## Change log: 
 
+### v.0.1.5.2: bug fix
+* `helper.uri`: Remove test that blocked the script.
+
+
 ### v.0.1.5.1: bug fix
 * `helper.yml`: fix bug related to long lines in the `dicToYML` function.
 
