@@ -138,49 +138,10 @@ def readYML(fp, reflow=False):
            print(fp)
            print(e)
 
-def fix_broken_yml(fp, execute=True):
-    """Fix a yml file that is broken because
-    (1) a line does not start with a valid key or space
-    or (2) the colon after the key is absent
-
-    Args:
-        fp (str): path to the broken yml file
-        execute (bool): if False, user's judgment about the fix
-             will be asked before the fix is implemented
-
-    Returns:
-        None or yml_d
-    """
-    with open(fp, mode="r", encoding="utf-8") as file:
-        data = file.read()
-    key_lines = []
-    current = []
-    for line in data.splitlines():
-        if re.findall("^\d\d#[#\w]{14}:?", line):
-            if current:
-                key_lines.append(current)
-                current = []
-        current.append(line.strip())
-    if current:
-        key_lines.append(current)
-    key_lines = ["¶".join(line) for line in key_lines]
-    key_regex = "^(\d\d#[#\w]{14}):?"
-    yml_d = {re.findall(key_regex, line)[0]+":" : re.sub(key_regex, "", line).strip()
-             for line in key_lines}
-    print("original yml file:\n")
-    print(data)
-    print("\nAttempt to solve the issue:\n")
-    print(dicToYML(yml_d))
-    if execute or input("\nAccept change? Y/N: ").lower() == "y":
-        return yml_d
-    else:
-        print("Aborting change. Please review YML file manually")
-        return
-
-    
 
 
-def dicToYML(dic, max_length=80, reflow=True):
+
+def dicToYML(dic, max_length=80, reflow=True, break_long_words=False):
     """Convert a dictionary into a yml string.
 
     NB: use the pilcrow (¶) to force a line break within dictionary values.
@@ -193,6 +154,8 @@ def dicToYML(dic, max_length=80, reflow=True):
             will be preserved (useful for files containing bullet lists etc.);
             if set to True, the indentation and line length
             will be standardized.
+        break_long_words (bool): if False, long words will be kept on one line
+            
     Returns:
         (str): yml string representation of the dic's key-value pairs
 
@@ -232,19 +195,62 @@ def dicToYML(dic, max_length=80, reflow=True):
             # split long values into indented multiline values:
 
             if "#URI#" not in i:
+
                 lines = re.split("¶", i)
+
                 if len(lines) > 1:
                     lines = [lines[0]] + [line if line.startswith((" ", "\t")) else "    "+line
                                           for line in lines[1:]]
-
+                
                 if reflow:
-                    lines = ["\n    ".join(textwrap.wrap(line, max_length,
-                                                         break_long_words=False))
+                    lines = ["\n    ".join(textwrap.wrap(line.strip(), max_length,
+                                                         break_long_words=break_long_words))
                              for line in lines]
-                i = "\n".join(lines)
+
+                i = "\n    ".join(lines)
             data.append(i)
 
     return "\n".join(sorted(data))
+
+def fix_broken_yml(fp, execute=True):
+    """Fix a yml file that is broken because
+    (1) a line does not start with a valid key or space
+    or (2) the colon after the key is absent
+
+    Args:
+        fp (str): path to the broken yml file
+        execute (bool): if False, user's judgment about the fix
+             will be asked before the fix is implemented
+
+    Returns:
+        None or yml_d
+    """
+    with open(fp, mode="r", encoding="utf-8") as file:
+        data = file.read()
+    key_lines = []
+    current = []
+    for line in data.splitlines():
+        if re.findall("^\d\d#[#\w]{14}:?", line):
+            if current:
+                key_lines.append(current)
+                current = []
+        current.append(line.strip())
+    if current:
+        key_lines.append(current)
+    key_lines = ["¶".join(line) for line in key_lines]
+    key_regex = "^(\d\d#[#\w]{14}):?"
+    yml_d = {re.findall(key_regex, line)[0]+":" : re.sub(key_regex, "", line).strip()
+             for line in key_lines}
+    print("original yml file:\n")
+    print(data)
+    print("\nAttempt to solve the issue:\n")
+    print(dicToYML(yml_d))
+    if execute or input("\nAccept change? Y/N: ").lower() == "y":
+        return yml_d
+    else:
+        print("Aborting change. Please review YML file manually")
+        return
+
 
 if __name__ == "__main__":
     yml_fp = "../../../../../OpenITI/Github_clone/0875AH/data/0852IbnHajarCasqalani/0852IbnHajarCasqalani.InbaGhumr/0852IbnHajarCasqalani.InbaGhumr.Shamela0026317-ara1.yml" 
