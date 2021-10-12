@@ -13,6 +13,9 @@ Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip in
 
 ## Change log: 
 
+### v.0.1.5.1: bug fix
+* `helper.yml`: fix bug related to long lines in the `dicToYML` function.
+
 ### v.0.1.5: 
 * `helper.yml`: add `fix_broken_yml` function to fix yml files
 that are unreadable due to indentation problems 
