@@ -13,6 +13,9 @@ Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip in
 
 ## Change log: 
 
+### v.0.1.5.3: bug fix
+* `helper.yml`: make sure that yml keys always contain a hashtag.
+
 ### v.0.1.5.2: bug fix
 * `helper.uri`: Remove test that blocked the script.
 
