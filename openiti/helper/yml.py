@@ -101,7 +101,7 @@ def ymlToDic(yml_str, reflow=False, yml_fp=""):
     data = data.split("\n")
     dic = dict()
     for d in data:
-        spl = re.split(r"(^[\w#]+:+)", d, 1)
+        spl = re.split(r"(^(?:#+\w+|\w+#+)[\w#]*:+)", d, 1)
         try:
             dic[spl[1]] = spl[2].strip()
         except:
