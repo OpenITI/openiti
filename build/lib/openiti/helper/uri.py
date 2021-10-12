@@ -1674,9 +1674,6 @@ def check_yml_files(start_folder, exclude=[],
             print("*", yml_fp)
         print()
 
-folder = r"D:\London\OpenITI\25Y_repos\0775AH\data\0774IbnKathir\0774IbnKathir.TabaqatFuqahaShaficiyyin"
-check_yml_files(folder)
-input("CONTINUE?")
 
 if __name__ == "__main__":
     import doctest
