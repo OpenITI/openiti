@@ -13,6 +13,9 @@ Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip in
 
 ## Change log: 
 
+### v.0.1.5.5:
+* `helper.uri`: add support for flat folders.
+
 ### v.0.1.5.4: bug fix
 * `helper.yml`: fix remaining bugs with long lines.
 * `helper.uri`: fix bugs in `check_yml_file` function.
