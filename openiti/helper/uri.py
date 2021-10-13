@@ -1661,7 +1661,8 @@ def check_yml_file(yml_fp, yml_type, version_fp=None, execute=False,
 
 
 def check_yml_files(start_folder, exclude=[],
-                    execute=False, check_token_counts=True):
+                    execute=False, check_token_counts=True,
+                    flat_folder=False):
     """Check whether yml files are missing or have faulty data in them.
 
     Args:
@@ -1682,7 +1683,10 @@ def check_yml_files(start_folder, exclude=[],
         for yml_type in ("author", "book", "version"):
             yml_fn = uri.build_uri(uri_type="{}_yml".format(yml_type))
             if yml_type == "author":
-                yml_fp = os.path.join(os.path.dirname(os.path.dirname(fp)), yml_fn)
+                if flat_folder:
+                    yml_fp = os.path.join(os.path.dirname(fp), yml_fn)
+                else:
+                    yml_fp = os.path.join(os.path.dirname(os.path.dirname(fp)), yml_fn)
             else:
                 yml_fp = os.path.join(os.path.dirname(fp), yml_fn)
             r = check_yml_file(yml_fp, yml_type, version_fp=fp, execute=execute,
