@@ -13,12 +13,15 @@ Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip in
 
 ## Change log: 
 
+### v.0.1.5.4: bug fix
+* `helper.yml`: fix remaining bugs with long lines.
+* `helper.uri`: fix bugs in `check_yml_file` function.
+
 ### v.0.1.5.3: bug fix
 * `helper.yml`: make sure that yml keys always contain a hashtag.
 
 ### v.0.1.5.2: bug fix
 * `helper.uri`: Remove test that blocked the script.
-
 
 ### v.0.1.5.1: bug fix
 * `helper.yml`: fix bug related to long lines in the `dicToYML` function.
