@@ -75,7 +75,7 @@ def ymlToDic(yml_str, reflow=False, yml_fp=""):
         
     """
     if yml_str.strip() == "":
-        raise Exception(yml_fp, "Empty YML file!")
+        #raise Exception(yml_fp, "Empty YML file!")
         return {}
     
     # normalize new line characters:
@@ -101,7 +101,7 @@ def ymlToDic(yml_str, reflow=False, yml_fp=""):
     data = data.split("\n")
     dic = dict()
     for d in data:
-        spl = re.split(r"(^(?:#+\w+|\w+#+)[\w#]*:+)", d, 1)
+        spl = re.split(r"^((?:#+\w+|\w+#+)[\w#]*:+)", d, 1)
         try:
             dic[spl[1]] = spl[2].strip()
         except:
@@ -131,14 +131,13 @@ def readYML(fp, reflow=False):
 ##        >>> readYML(fp)
 ##        {}
     """
-    with open(fp, "r", encoding="utf8") as file:
+    with open(fp, "r", encoding="utf-8") as file:
+        s = file.read()
         try:
-           return ymlToDic(file.read(), yml_fp=fp)
+           return ymlToDic(s, yml_fp=fp)
         except Exception as e:
            print(fp)
            print(e)
-
-
 
 
 def dicToYML(dic, max_length=80, reflow=True, break_long_words=False):
