@@ -223,11 +223,55 @@ def normalize_ara_heavy(text):
 
 
 def normalize_composites(text, method="NFKC"):
-    """Normalize composite characters and ligatures
+    """Normalize composite characters and ligatures\
+    using unicode normalization methods.
 
-    Ligatures like "Allah" will be broken into their components,
-    while combining characters like alif + hamza above will be joined
-    into one character. 
+    Composite characters are characters that consist of
+    a combination of a letter and a diacritic (e.g.,
+    ؤ "U+0624 : ARABIC LETTER WAW WITH HAMZA ABOVE",
+    آ "U+0622 : ARABIC LETTER ALEF WITH MADDA ABOVE").
+    Some normalization methods (NFD, NFKD) decompose
+    these composite characters into their constituent characters,
+    others (NFC, NFKC) compose these characters
+    from their constituent characters.
+
+    Ligatures are another type of composite character:
+    one unicode point represents one or more letters (e.g.,
+    ﷲ "U+FDF2 : ARABIC LIGATURE ALLAH ISOLATED FORM",
+    ﰋ "U+FC0B : ARABIC LIGATURE TEH WITH JEEM ISOLATED FORM").
+    Such ligatures can only be decomposed (NFKC, NFKD)
+    or kept as they are (NFC, NFD); there are no methods
+    that compose them from their constituent characters.
+    
+    Finally, Unicode also contains code points for the
+    different contextual forms of a letter (isolated,
+    initial, medial, final), in addition to the code point
+    for the general letter. E.g., for the letter ba':
+
+    * general:	0628	ب
+    * isolated:	FE8F	ﺏ
+    * final:  	FE90	ﺐ
+    * medial: 	FE92	ﺒ
+    * initial: 	FE91	ﺑ
+    
+    Some methods (NFKC, NFKD)
+    replace those contextual form code points by the
+    equivalent general code point. The other methods
+    (NFC, NFD) keep the contextual code points as they are.
+    There are no methods that turn general letter code points
+    into their contextual code points.
+
+    ====== ========== ========= ================
+    method composites ligatures contextual forms
+    ====== ========== ========= ================
+    NFC    join       keep      keep
+    NFD    split      keep      keep
+    NFKC   join       decompose generalize
+    NFKD   split      decompose generalize
+    ====== ========== ========= ================
+    
+    For more details about Unicode normalization methods,
+    see https://unicode.org/reports/tr15/
 
     Args:
         text (str): the string to be normalized
