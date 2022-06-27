@@ -1494,7 +1494,8 @@ def check_token_count(version_uri, ymlD, version_fp="", find_latest=True):
     if version_fp and not find_latest:
         fp = version_fp
     elif version_fp and find_latest:
-        for ext in [".mARkdown", ".completed", ".inProgress", ""]:
+        #for ext in [".mARkdown", ".completed", ".inProgress", ""]:
+         for ext in [".mARkdown", ".completed", "", ".inProgress"]:
             fp = version_fp + ext
             if os.path.exists(fp):
                 break
