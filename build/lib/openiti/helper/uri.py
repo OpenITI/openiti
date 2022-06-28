@@ -1576,7 +1576,7 @@ def check_yml_file(yml_fp, yml_type, version_fp=None, execute=False,
             the number of tokens (and characters) in the text
 
     Returns:
-        None or fp
+        None or yml_fp
     """
     yml_changed = False
     
@@ -1585,12 +1585,27 @@ def check_yml_file(yml_fp, yml_type, version_fp=None, execute=False,
         print(yml_fp, "DOES NOT EXIST")
         # create a new yml file:
         if execute or input("Create yml file? Y/N? ").lower() == "y":
-            new_yml(yml_fp, yml_type, True)
+            new_yml(yml_fp, yml_type+"_yml", True)
             print("New yml file created.")
+            yml_d = yml.readYML(yml_fp) 
+        else:
+            print("No new yml file created. Check manually!")
+            return yml_fp
+        
 
     # Check if yml is valid:
     try:
         yml_d = yml.readYML(yml_fp)
+        if yml_d == {}:
+            print("Empty yml file")
+            if execute or input("Create yml file? Y/N? ").lower() == "y":
+                new_yml(yml_fp, yml_type+"_yml", True)
+                print("New yml file created.")
+                yml_d = yml.readYML(yml_fp)
+            else:
+                print("No new file created. Check manually!")
+                return yml_fp
+            
         yml_d.keys()
     except Exception as e:
         print("invalid YML file structure:", yml_fp)
@@ -1609,6 +1624,8 @@ def check_yml_file(yml_fp, yml_type, version_fp=None, execute=False,
                 del yml_d[key]
                 yml_changed = True
                 print("-> deleted yml key", key)
+            else:
+                return yml_fp
 
         # check whether the URI in the yml file is identical with that in the filename:
         if "URI" in key:
@@ -1620,6 +1637,8 @@ def check_yml_file(yml_fp, yml_type, version_fp=None, execute=False,
                     yml_d[key] = fn
                     yml_changed = True
                     print("-> URI replaced with", fn)
+                else:
+                    return yml_fp
                 
     # check whether version yml files contain token and character length values:
     if yml_type == "version" and check_token_counts:
@@ -1632,6 +1651,8 @@ def check_yml_file(yml_fp, yml_type, version_fp=None, execute=False,
                 yml_changed = True
                 print(yml_fp)
                 print("-> token and character counts changed")
+            else:
+                return yml_fp
 
     # save changes to yml file if anything has changed: 
     if yml_changed:
@@ -1640,7 +1661,8 @@ def check_yml_file(yml_fp, yml_type, version_fp=None, execute=False,
 
 
 def check_yml_files(start_folder, exclude=[],
-                    execute=False, check_token_counts=True):
+                    execute=False, check_token_counts=True,
+                    flat_folder=False):
     """Check whether yml files are missing or have faulty data in them.
 
     Args:
@@ -1661,7 +1683,10 @@ def check_yml_files(start_folder, exclude=[],
         for yml_type in ("author", "book", "version"):
             yml_fn = uri.build_uri(uri_type="{}_yml".format(yml_type))
             if yml_type == "author":
-                yml_fp = os.path.join(os.path.dirname(os.path.dirname(fp)), yml_fn)
+                if flat_folder:
+                    yml_fp = os.path.join(os.path.dirname(fp), yml_fn)
+                else:
+                    yml_fp = os.path.join(os.path.dirname(os.path.dirname(fp)), yml_fn)
             else:
                 yml_fp = os.path.join(os.path.dirname(fp), yml_fn)
             r = check_yml_file(yml_fp, yml_type, version_fp=fp, execute=execute,
