@@ -35,7 +35,7 @@ convert_files_in_folder            (inherited)                (inherited)
 convert file                       (inherited)                (inherited)
 make_dest_fp                       (inherited - generic!)     (inherited - generic!)
 get_metadata (dummy)               (inherited - dummy!)       get_metadata
-get_data                           get_data                   (inherited)
+get_data                           (inherited)                (inherited)
 pre_process                        (inherited)                (inherited)
 add_page_numbers (dummy)           (inherited - dummy!)       add_page_numbers
 add_structural_annotations (dummy) add_structural_annotations add_structural_annotations
@@ -65,6 +65,7 @@ Examples:
 
 from bs4 import BeautifulSoup
 import re
+import os
 
 if __name__ == '__main__':
     from os import sys, path
@@ -74,7 +75,38 @@ if __name__ == '__main__':
 
 from openiti.new_books.convert.html_converter_generic import GenericHtmlConverter
 from openiti.new_books.convert.helper import html2md_eShia
+from openiti.helper.funcs import natural_sort
 
+
+def combine_html_files_in_folder(folder, dest_fp="temp"):
+    text = []
+    for fn in natural_sort(os.listdir(folder)):
+        fp = os.path.join(folder, fn)
+        with open(fp, mode="r", encoding="utf-8") as file:
+            html = file.read()
+##        # Beautiful soup has problems correctly parsing some eShia books
+##        # (parsers tested: no parser, "lxml", "html", "xml", "html.parser")
+##        # - "html.parser" leaves out some footnotes!
+##        # - "xml" doesn't parse some pages at all
+##        # - "lxml" and "html" move the closing </span> tag of the footnote section
+##        # this issue seems not linked to the <hr> tag above it
+##        # html = re.sub("</?hr[^>]*>", "", html)  # does not influence the results.
+##        soup = BeautifulSoup(html, "html")
+##        text.append(soup.find_all("td", class_="book-page-show")[0].prettify())
+##        print(soup.find_all("td", class_="book-page-show")[0].prettify())
+##        print("---")
+##        print(soup.find_all("td", class_="book-page-show")[0])
+##        print("***")
+##        input()
+        text.append(re.findall('<td[^>]+class="book-page-show"[\s\S]+?(?=\<td)', html)[0])
+        page = int(fp[:-5].split("_")[-1])
+        vol = int(fp[:-5].split("_")[-2])
+        text.append("PageV{:02d}P{:03d}".format(vol, page))
+        
+    with open(dest_fp, mode="w", encoding="utf-8") as file:
+        file.write("\n\n".join(text))
+    #convert_file("temp", dest_fp)
+        
 
 def convert_file(fp, dest_fp=None, verbose=False):
     """Convert one file to OpenITI format.
@@ -161,6 +193,7 @@ class EShiaHtmlConverter(GenericHtmlConverter):
         # remove footnotes from metadata page:
         [x.extract() for x in meta_td.find_all("span", "footnotes")]
         [x.extract() for x in meta_td.find_all("footnote")]
+        [x.extract() for x in meta_td.find_all("FootNote")]
 
         # remove all tags in the metadata page and add #META# tags: 
         metadata = re.sub("<[^>]+> *", "\n", str(meta_td))
@@ -175,6 +208,8 @@ class EShiaHtmlConverter(GenericHtmlConverter):
 
     def add_page_numbers(self, text, source_fp):
         """Convert the page numbers in the text into OpenITI mARkdown format"""
+        if re.findall("PageV\d+P\d+", text):
+            return text
         try:
             vol_no = int(re.findall("V(\d+)", source_fp)[0])
             vol_no = "PageV{:02d}P{}".format(vol_no, "{:03d}")
@@ -202,18 +237,78 @@ class EShiaHtmlConverter(GenericHtmlConverter):
         for i, t in enumerate(split_text):
             if re.match("PageV\d+P\d+", t):
                 text.append(t)
-            else: # check if the horizontal line splitting apparatus off is there
+            else:
+##                # this doesn't work because none of the BeautifulSoup parsers parses the page correctly;
+##                # some move the closing </span> tag of the footnote section to after the first footnote;
+##                # others even leave out all except the first footnote
+##                if "FootNote" in t:  
+##                    soup = BeautifulSoup(t.strip(), 'lxml')
+##                    note_nodes = soup.find_all("span", class_="FootNote")
+##                    notes = ""
+##                    for note in note_nodes:
+##                        notes += note.prettify() + "\n"
+##                    try:
+##                        notes = "Notes to {}:<br/>{}".format(split_text[i+1], notes)
+##                    except:
+##                        notes = "Notes to [NO PAGE]:<br/>{}".format(notes)
+##                    print(t)
+##                    print("----")
+##                    print(notes)
+##                    input()
+##                    # remove footnotes:
+##                    [x.extract() for x in soup.find_all("span", class_="FootNote")]
+##                    text.append(t)
+##                else: # check if the horizontal line splitting apparatus off is there
+                # check if the horizontal line splitting apparatus off is there
                 spl = re.split("<hr */? *>", t)
-                if len(spl) == 1: # no footnotes
+                if len(spl) == 1: # no footnotes separated by line
                     text.append(t)
+                    notes = None
                 else:
-                    try:
-                        notes = "Notes to {}:<br/>{}".format(split_text[i+1], spl[-1])
-                    except:
-                        notes = "Notes to [NO PAGE]:<br/>{}".format(spl[-1])
+                    if "مقدمه صفحه" in t:
+                        #print("*"*60)
+                        #print("MUQADDIMA!")
+                        page_text = ['<td class="book-page-show">\n']
+                        for el in re.split("(<\w+>\s*مقدمه صفحه \d+\s*</\w+>)", t):
+                            #print(el)
+                            
+                            if re.findall("مقدمه صفحه", el):
+                                page_no = re.findall("\d+", el)
+                                print(page_no)
+                            elif "book-page-show" in el:
+                                continue
+                            else:
+                                spl = re.split("<hr */? *>", el)
+                                fmt = '</td>\nPageV00P{:03d}\n<td class="book-page-show">\n'
+                                #print("x"*15)
+                                #print("\n---\n".join(spl))
+                                #print("o"*15)
+                                if len(spl) == 1: # no footnotes separated by line
+                                    page_text.append(el)
+                                    try:
+                                        page_text.append(fmt.format(int(page_no[-1])))
+                                    except:
+                                        pass
+                                else:
+                                    try:
+                                        page_text.append(spl[0])
+                                        page_text.append(fmt.format(int(page_no[-1])))
+                                        page_no = "PageV00P{:03d}".format(int(page_no[-1]))
+                                        notes = "Notes to {}:<br/>{}".format(page_no, spl[-1])
+                                    except:
+                                        notes = "Notes to [NO PAGE]:<br/>{}".format(spl[-1])
+                            #print("-------------------")
+                        text.append("\n\n".join(page_text))
+                    else:
+                        try:
+                            notes = "Notes to {}:<br/>{}".format(split_text[i+1], spl[-1])
+                        except:
+                            notes = "Notes to [NO PAGE]:<br/>{}".format(spl[-1])
+                        text.append("\n\n".join(spl[:-1]))
+                if notes:
                     notes = html2md_eShia.markdownify(notes) 
                     footnotes.append(notes)
-                    text.append("\n\n".join(spl[:-1]))
+                
 
         text = "\n\n".join(text)
         notes = "\n\n".join(footnotes)
@@ -224,13 +319,40 @@ class EShiaHtmlConverter(GenericHtmlConverter):
     #def convert_html2md(self, html):
     def add_structural_annotations(self, html):
         """Convert html to mARkdown text using a html2md converter."""
-        text = html2md_eShia.markdownify(html)
+        #text = html2md_eShia.markdownify(html)
+        text = []
+
+        for i, p in enumerate(re.split("(\n+PageV\d+P\d+\n+)", html)):
+            if re.findall("PageV\d+P\d+", p):
+                text.append(p)
+            else:
+                soup = BeautifulSoup(p)
+                try:
+                    t = html2md_eShia.markdownify(soup.td.prettify())
+                except:
+                    print("no <td> tag on this page:")
+                    print(soup.prettify())
+                    html2md_eShia.markdownify(soup.prettify())
+                text.append(t)
+        text = "".join(text)
         return text             
 
     def post_process(self, text):
+        print("post_processing")
         empty = """ *اين صفحه در كتاب اصلي بدون متن است / هذه الصفحة فارغة في النسخة المطبوعة *"""
         text = re.sub(empty, "\n", text)
         text = super().post_process(text)
+        # convert kalematekhass tags at the beginning of a line to headers:
+        text = re.sub("# \*\* (.+)\*\*", r"### || \1", text)
+        text = re.sub("# \*\*\* (.+)\*\*\*", r"### ||| \1", text)
+        # add footnotes after a title to same line as the title:
+        text = re.sub("(### \|+ .+)[\r\n]+# (\[\d+\][\r\n]+)", r"\1 \2", text)
+        # remove floating hashtags and pipes
+        text = re.sub("[\r\n]+# *([\r\n]+)", r"\1", text)
+        text = re.sub("[\r\n]+\|+ *([\r\n]+)", r"\1", text)
+        
+        #
+        text = re.sub("([^\r\n .!؟][\r\n]+PageV[^P]+P\d+[\r\n]+)# ", r"\1~~", text)
         return text
 
 if __name__ == "__main__":
@@ -240,5 +362,7 @@ if __name__ == "__main__":
     
     conv = EShiaHtmlConverter()
     folder = r"G:\London\OpenITI\new\eShia"
+    import os
+    conv.convert_file(os.path.join(folder, "10461.html"))
 
     conv.convert_files_in_folder(folder)
