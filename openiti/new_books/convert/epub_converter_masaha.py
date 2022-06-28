@@ -243,7 +243,7 @@ class MasahaEpubConverter(GenericEpubConverter):
             with open(outfp, mode="w", encoding="utf-8") as file:
                 text = "\n\n".join(combined)
                 endnotes = "\n\n".join(endnotes)
-                file.write(text + "\n\n### |EDITOR\|\n\nENDNOTES:\n\n" + endnotes)
+                file.write(text + "\n\n### |EDITOR|\n\nENDNOTES:\n\n" + endnotes)
         print("Converting all files done")
         if failed:
             print("These files failed to convert:")
