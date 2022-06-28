@@ -83,8 +83,8 @@ class EShiaHtmlConverter(html2md.MarkdownConverter):
         super().__init__(**options)
         self.class_dict = dict()
         self.class_dict["Titr3"] = "\n\n### ||| {}\n\n"         # <span class>
-        self.class_dict["KalamateKhas2"] = "\n\n### || {}\n\n"  # <p class>
-        self.class_dict["KalamateKhas"] = "\n\n### ||| {}\n\n"  # <p class>
+        self.class_dict["KalamateKhas2"] = "\n\n***{}***\n\n"   # <p class>
+        self.class_dict["KalamateKhas"] = "\n\n**{}**\n\n"      # <p class>
         self.class_dict["TextsStyles3"] = "\n\n### ||| {}\n\n"  # <p class>
         self.class_dict["TextsStyles1"] = "@QUR@ {}\n"          # <span class>
         self.class_dict["Aye"] = "@QUR@ {}\n"                   # <span class>
@@ -92,10 +92,13 @@ class EShiaHtmlConverter(html2md.MarkdownConverter):
         self.class_dict["list3"] = "\t{}"                       # <div class>
         self.class_dict["sher"] = "# {}\n"                      # <p class>
         self.class_dict["#6C3934"] = "\n\n# {}\n\n"             # <span class>
+        self.class_dict["Header"] = "\n\n### | {}\n\n"          # <span class>
+        
 
         self.options["image_link_regex"] = "/?images/books"
         self.options["image_folder"] = "img"
-        self.options["strip"] = ["a"]
+        #self.options["strip"] = ["a"]
+        self.options["strip"] = [""]
 
 
     def convert_span(self, el, text):
@@ -167,6 +170,12 @@ class EShiaHtmlConverter(html2md.MarkdownConverter):
         except Exception as e:
             pass
         return text
+
+    def convert_a(self, el, text):
+        if "ftn" in el["href"]:
+            return text
+        else:
+            return super().convert_a(el,text)
 
     def convert_p(self, el, text):
         """Converts <p> tags according to their class.
