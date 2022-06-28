@@ -311,6 +311,17 @@ def report_missing_numbers(fp, no_regex="### \$ \((\d+)",
         else:
             current_num = no
 
+def natural_sort(obj):
+    """Sort a list containing letters and numbers in its natural order
+    (1,2,3,4,5,6,7,8,9,10, ... instead of 1,10,2,3,4,5,6,7,8,9,10)
+
+    based on https://stackoverflow.com/a/16090640/4045481
+    """
+    natsort = lambda s: [int(t) if t.isdigit() else t.lower()
+                         for t in re.split('(\d+)', s)]
+    return sorted(obj, key=natsort)
+    
+
 
 if __name__ == "__main__":
     import doctest
