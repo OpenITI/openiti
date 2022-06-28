@@ -218,7 +218,8 @@ class MarkdownConverter(object):
         """
 
         html = wrapped % html
-        soup = BeautifulSoup(html, 'html.parser')
+        #soup = BeautifulSoup(html, 'html.parser')
+        soup = BeautifulSoup(html, 'html')
         if 'strip' in self.options and self.options["strip"]:
             for tag in self.options["strip"]:
                 [t.decompose() for t in soup.find_all(tag)]
@@ -349,7 +350,7 @@ class MarkdownConverter(object):
 
         foll_char = match.group(3)
         entity = match.group(2)
-        ent_words = len(re.findall("[\n\r ،؛:.!؟\-]+", entity)) + 1
+        ent_words = len(re.findall("[\n\r ،؛:.!؟\-]+", entity)) # + 1
         code = match.group(1)
         if code.startswith("QUR"):
             return "@{}@0{} {} {}".format(code, ent_words, entity, foll_char)
@@ -497,7 +498,6 @@ class MarkdownConverter(object):
             >>> html2md.markdownify(h, image_link_regex="../Images", image_folder="img")
             '![](img/figure1.png)'
         """
-
         alt = el.attrs.get('alt', None) or ''
         src = el.attrs.get('src', None) or ''
         title = el.attrs.get('title', None) or ''
