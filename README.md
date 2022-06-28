@@ -13,6 +13,18 @@ Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip in
 
 ## Change log: 
 
+### v.0.1.5.6:
+* `helper.funcs`: add `natural_sort` function to sort a list of strings
+  that include numbers in natural order (e.g., ["1", "2", "10"] instead of ["1", "10", "2"] )
+* `helper.uri`: give files without extension priority over files with ".inProgress"
+  extension in deciding which text file to use to count characters and tokens
+  for a specific version yml file.
+* `new_books.convert.epub_converter_masaha.py` : remove superfluous backslash in EDITOR tag
+* `new_books.convert.helper.html2md.py`: fix bug in token count
+* `openiti.new_books.convert.helper.html2md_eShia.py`: fix bug in footnote conversion
+* `openiti.new_books.convert.html_converter_eShia.py`: improve eShia conversion
+* Add converters for Ghbook, Ghaemiyeh and Rafed files.
+
 ### v.0.1.5.5:
 * `helper.uri`: add support for flat folders.
 
