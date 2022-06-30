@@ -1500,6 +1500,13 @@ def check_token_count(version_uri, ymlD, version_fp="", find_latest=True):
             fp = version_fp + ext
             if os.path.exists(fp):
                 break
+    else:
+        #for ext in ["mARkdown", "completed", "inProgress", ""]:
+        for ext in ["mARkdown", "completed", "", ".inProgress"]:
+            version_uri.extension = ext
+            fp = version_uri.build_pth(uri_type="version_file")
+            if os.path.exists(fp):
+                break 
 
     tok_count = ar_cnt_file(fp, mode="token")
     char_count = ar_cnt_file(fp, mode="char")
