@@ -1489,11 +1489,13 @@ def check_token_count(version_uri, ymlD, version_fp="", find_latest=True):
             tok_count (int): number of Arabic tokens in the target text
             char_count (int): number of Arabic characters in the target text
     """
+    
     # Get the count from the most complete version of the text file: 
     #fp = version_uri.build_pth(uri_type="version_file")
     if version_fp and not find_latest:
         fp = version_fp
     elif version_fp and find_latest:
+        version_fp = re.sub("\.mARkdown|\.completed|\.inProgress", "", version_fp)
         #for ext in [".mARkdown", ".completed", ".inProgress", ""]:
         for ext in [".mARkdown", ".completed", "", ".inProgress"]:
             fp = version_fp + ext
@@ -1501,7 +1503,7 @@ def check_token_count(version_uri, ymlD, version_fp="", find_latest=True):
                 break
     else:
         #for ext in ["mARkdown", "completed", "inProgress", ""]:
-        for ext in ["mARkdown", "completed", "", ".inProgress"]:
+        for ext in ["mARkdown", "completed", "", "inProgress"]:
             version_uri.extension = ext
             fp = version_uri.build_pth(uri_type="version_file")
             if os.path.exists(fp):
@@ -1681,6 +1683,7 @@ def check_yml_files(start_folder, exclude=[],
     """
     failed = []
     for fp in get_all_text_files_in_folder(start_folder, excluded_folders=exclude):
+        print(fp)
         uri = URI(fp)
         for yml_type in ("author", "book", "version"):
             yml_fn = uri.build_uri(uri_type="{}_yml".format(yml_type))
@@ -1708,7 +1711,7 @@ if __name__ == "__main__":
     print("passed doctests")
     print()
 
-    folder = r"D:\London\OpenITI\25Y_repos/0450AH"
+    folder = r"D:\London\OpenITI\25Y_repos/0550AH/data/0548Shahrastani"
     check_yml_files(folder)
     input("CONTINUE?")
 
