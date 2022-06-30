@@ -13,6 +13,9 @@ Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip in
 
 ## Change log: 
 
+### v.0.1.5.7: 
+* `helper.uri`: fix bug in the extension looping process of the `check_token_count` function
+
 ### v.0.1.5.6:
 * `helper.funcs`: add `natural_sort` function to sort a list of strings
   that include numbers in natural order (e.g., ["1", "2", "10"] instead of ["1", "10", "2"] )
