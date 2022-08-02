@@ -222,8 +222,10 @@ Examples:
 """
 
 import copy
+import json
 import os
 import re
+import requests
 import shutil
 
 if __name__ == '__main__':
@@ -1139,7 +1141,8 @@ Did you put a dot between date and author name?"
 # OpenITI corpus functions dependent on URIs:
 
 
-def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False):
+def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False,
+               book_relations_fp="https://github.com/OpenITI/kitab-metadata-automation/raw/master/output/OpenITI_Github_clone_book_relations.json"):
     """Change a uri and put all files in the correct folder.
 
     If a version URI changes:
@@ -1153,6 +1156,8 @@ def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False):
         * all annotation text files of all versions of the book should be moved
         * all yml files of versions of that book should be updated and moved
         * the original book folder itself should be (re)moved
+        * (optionally) all references to the book in book yml files of other books
+          should be updated
         
     if an author uri changes:
 
@@ -1189,8 +1194,10 @@ def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False):
         None
     """
     print("old_base_pth:", old_base_pth)
+    old = old.strip()
     old_uri = URI(old)
     old_uri.base_pth = old_base_pth
+    new = new.strip()
     new_uri = URI(new)
     new_uri.base_pth = new_base_pth
 
@@ -1262,21 +1269,57 @@ def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False):
                     else:
                         print("  Move", fp, "to", new_fp)
 
+    # change references to the book in book relations sections of book yml files:
+
+    if new_uri.uri_type == "book" and book_relations_fp is not None:
+        print("CHECKING BOOK RELATIONS...")
+        if book_relations_fp.startswith("http"):
+            book_relations_d = requests.get(book_relations_fp).json()
+        else:
+            book_relations_d = json.load(book_relations_fp)
+        if old in book_relations_d:
+            print("Old URI found in book relations!")
+            for rel_d in book_relations_d[old]:
+                print(rel_d)
+                if rel_d["dest"].strip() == old:
+                    rel_uri = URI(rel_d["source"])
+                    rel_uri.base_pth = old_base_pth
+                    rel_yml_fp = rel_uri.build_pth(uri_type="book_yml")
+                    with open(rel_yml_fp, mode="r", encoding="utf-8") as file:
+                        data = file.read()
+                    new_data = re.sub(r"\b{}\b".format(old), new, data)
+                    if new_data != data:
+                        if new_base_pth:
+                            rel_uri.base_pth = new_base_pth
+                        rel_yml_fp = rel_uri.build_pth(uri_type="book_yml")
+                        print("Replace book uri in:", rel_yml_fp)
+                        print(new_data)
+                        if execute:
+                            with open(rel_yml_fp, mode="w", encoding="utf-8") as file:
+                                file.write(new_data)
+            
+
     # Remove folders:
 
     if new_uri.uri_type == "author":
-        if execute:
-            shutil.rmtree(old_folder)
+        if os.path.exists(old_folder):
+            if execute:
+                shutil.rmtree(old_folder)
+            else:
+                for book_dir in os.listdir(old_folder):
+                    pth = os.path.join(old_folder, book_dir)
+                    print("REMOVE BOOK FOLDER", pth)
+                print("REMOVE AUTHOR FOLDER", old_folder)
         else:
-            for book_dir in os.listdir(old_folder):
-                if not book_dir.endswith("yml"):
-                    print("REMOVE BOOK FOLDER", os.path.join(old_folder, book_dir))
-            print("REMOVE AUTHOR FOLDER", old_folder)
+            print("Old folder", old_folder, "does not exist!")
     if new_uri.uri_type == "book":
-        if execute:
-            shutil.rmtree(old_folder)
+        if os.path.exists(old_folder):
+            if execute:
+                shutil.rmtree(old_folder)
+            else:
+                print("REMOVE BOOK FOLDER", old_folder)
         else:
-            print("REMOVE BOOK FOLDER", old_folder)
+            print("Old folder", old_folder, "does not exist!")
 
     if not execute:
         resp = input("To carry out these changes: press OK+Enter; \
@@ -1286,6 +1329,7 @@ to abort: press Enter. ")
             change_uri(old, new, old_base_pth, new_base_pth, execute=True)
         else:
             print("User aborted carrying out these changes!")
+    print("Done")
 
 def add_readme(target_folder):
     """Add default README.md file to target_folder.
@@ -1444,6 +1488,7 @@ Make sure base path is correct.""".format(new_uri.base_pth)
                         add_readme(target_folder)
                     if "text_questionnaire.md" not in os.listdir(target_folder):
                         add_text_questionnaire(target_folder)
+             
 
 
 def move_to_new_uri_pth(old_fp, new_uri, execute=False):
