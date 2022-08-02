@@ -1552,7 +1552,8 @@ def check_token_count(version_uri, ymlD, version_fp="", find_latest=True):
             version_uri.extension = ext
             fp = version_uri.build_pth(uri_type="version_file")
             if os.path.exists(fp):
-                break
+                break 
+
     tok_count = ar_cnt_file(fp, mode="token")
     char_count = ar_cnt_file(fp, mode="char")
     len_key = "00#VERS#LENGTH###:"
