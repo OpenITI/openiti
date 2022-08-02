@@ -15,6 +15,7 @@ Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip in
 
 ### v.0.1.5.8: 
 * `helper.uri`: when a book URI changes, also change references to it in related books.
+* `helper.yml`: add functions to check completeness of yml files
 
 ### v.0.1.5.7: 
 * `helper.uri`: fix bug in the extension looping process of the `check_token_count` function

@@ -21,6 +21,7 @@ The ymlToDic and dicToYML functions will retain double new lines
 and new lines before bullet lists (in which bullets are `*` or `-`)
 """
 
+import os
 import re
 import textwrap
 
@@ -31,6 +32,14 @@ if __name__ == '__main__':
 
 from openiti.helper.templates import author_yml_template, book_yml_template, \
                                      version_yml_template
+
+all_template_strings = [author_yml_template, book_yml_template, version_yml_template]
+
+
+# set of yml keys that should not be taken into account when calculating
+# completeness of a yml file:
+exclude_keys = set(["00#AUTH#URI######:", "00#BOOK#URI######:",
+                    "00#VERS#LENGTH###:", "00#VERS#CLENGTH##:", "00#VERS#URI######:"])
 
 
 
@@ -249,6 +258,78 @@ def fix_broken_yml(fp, execute=True):
     else:
         print("Aborting change. Please review YML file manually")
         return
+
+
+def check_yml_completeness(fp, exclude_keys=exclude_keys, templates=all_template_strings):
+    """Check how much of a yml file's fields have been filled in.
+
+    Returns a list of all keys in the yml file that do not contain
+    default values or are empty, and a list of all relevant keys.
+
+    NB: some fields are filled automatically (e.g., the URI field,
+    token count, etc.), so you can choose to exclude such fields
+    from the check.
+
+    Use this function if you are interested in which fields exactly
+    are not filled in; if you are only interested in the percentage,
+    use the `check_yml_completeness_pct` function instead.
+    
+    Args:
+        fp (str): path to the yml file
+        exclude_keys (set): do not take these keys into account when 
+        templates (list): list of templates from which the default values are taken
+
+    Returns:
+        tuple (list of keys that contain non-default values,
+               list of relevant keys)
+    """
+    # convert the yml file to a dictionary:
+    yml_d = readYML(fp)
+    
+    # create a dictionary containing the default values for all yml keys:
+    defaults = dict()
+    for t in templates:
+        #defaults.update(ymlToDic(t))
+        for k, v in ymlToDic(t).items():
+            if not k in defaults:
+                defaults[k] = set([""])
+            defaults[k].add(v)
+        
+    # check for all relevant yml keys whether they contain default values:
+    relevant_keys = [k for k in yml_d if k not in exclude_keys]
+    non_default_vals = []
+    for k in relevant_keys:
+        try:
+            if yml_d[k] not in defaults[k]:
+                non_default_vals.append(k)
+        except:
+            print("non-default key in", os.path.basename(fp), ":", k)
+            non_default_vals.append(k)
+                
+    return (non_default_vals, relevant_keys)
+        
+def check_yml_completeness_pct(fp, exclude_keys=exclude_keys,
+                               templates=all_template_strings):
+    """Check which proportion of the relevant fields in a yml file have been filled.
+
+    NB: some fields are filled automatically (e.g., the URI field,
+    token count, etc.), so you can choose to exclude such fields
+    from the check.
+
+    Use this function if you are only interested in the percentage
+    of fields filled in; if you are interested in which fields exactly
+    are not filled in, use the `check_yml_completeness` function instead.
+    
+    Args:
+        fp (str): path to the yml file
+        exclude_keys (set): do not take these keys into account when 
+        templates (list): list of templates from which the default values are taken
+
+    Returns:
+        float (percentage of the fields filled in)
+    """
+    non_default_vals, relevant_keys = check_yml_completeness(fp, exclude_keys=exclude_keys)
+    return len(non_default_vals) / len(relevant_keys) 
 
 
 if __name__ == "__main__":
