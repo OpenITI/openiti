@@ -13,6 +13,9 @@ Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip in
 
 ## Change log: 
 
+### v.0.1.5.9: 
+* `helper.yml`: fix bug: pass `reflow` parameter in readYML function to ymlToDic
+
 ### v.0.1.5.8: 
 * `helper.uri`: when a book URI changes, also change references to it in related books.
 * `helper.yml`: add functions to check completeness of yml files

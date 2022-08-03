@@ -143,7 +143,7 @@ def readYML(fp, reflow=False):
     with open(fp, "r", encoding="utf-8") as file:
         s = file.read()
         try:
-           return ymlToDic(s, yml_fp=fp)
+           return ymlToDic(s, yml_fp=fp, reflow=reflow)
         except Exception as e:
            print(fp)
            print(e)
