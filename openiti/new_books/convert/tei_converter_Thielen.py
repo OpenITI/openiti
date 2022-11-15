@@ -1,37 +1,29 @@
-"""A converter for converting GRAR tei xml files into OpenITI format.
+"""A converter for converting Jan Thielen's tei xml files into OpenITI format.
 
 The converter has two main functions:
 * convert_file: convert a single html file.
 * convert_files_in_folder: convert all html files in a given folder
 
 Usage examples:
-    >>> from tei_converter_GRAR import convert_file, convert_files_in_folder
-    >>> folder = r"test/GRAR/"
-    >>> convert_file(folder+"GRAR000070.xml", dest_fp=folder+"converted/GRAR000070")
+    >>> from tei_converter_Thielen import convert_file, convert_files_in_folder
+    >>> folder = r"test/Thielen/"
+    >>> convert_file(folder+"Thielen000070.xml", dest_fp=folder+"converted/Thielen000070")
     >>> convert_files_in_folder(folder, dest_folder=folder+"converted")
 
-Both functions use the GRARConverter class to do the heavy lifting.
+Both functions use the ThielenConverter class to do the heavy lifting.
 
-The Graeco-Arabic studies website (graeco-arabic-studies.org)
-contains 78 texts transcribed in TEI xml, and 21 additional
-texts available only in html.
 
-The XML texts were downloaded as is; for the html texts,
-for each text every separate page was downloaded,
-and a compound html file containing the metdata of that text
-+ the div containing the text of each page was created
-(using the combine_files_in_folder function).
 
-The GRARConverter (which is sub-classed from tei_converter_generic.TeiConverter)
+The ThielenConverter (which is sub-classed from tei_converter_generic.TeiConverter)
 converts both the tei xml files and the html files.
 It uses the generic TeiConverter's tei2md.TeiConverter for the xml files,
-and for the html files the html2md_GRAR.GRARHtmlConverter
+and for the html files the html2md_Thielen.ThielenHtmlConverter
 (which is a modified version (sub-class) of the html2md.MarkdownConverter).
 
-Schema representing the method inheritance in the GRARConverter:
+Schema representing the method inheritance in the ThielenConverter:
 
 =========================== ========================== =========================
-GenericConverter            TeiConverter               GRARConverter
+GenericConverter            TeiConverter               ThielenConverter
 =========================== ========================== =========================
 __init__                    __init__ (appended)        (inherited)
 convert_files_in_folder     (inherited)                convert_files_in_folder
@@ -56,11 +48,11 @@ save_file                   (inherited)                (inherited)
 =========================== ========================== =========================
 
 ##Examples:
-##    >>> from tei_converter_GRAR import GRARConverter
-##    >>> conv = GRARConverter(dest_folder="test/GRAR/converted")
+##    >>> from tei_converter_Thielen import ThielenConverter
+##    >>> conv = ThielenConverter(dest_folder="test/Thielen/converted")
 ##    >>> conv.VERBOSE = False
-##    >>> folder = r"test/GRAR"
-##    >>> fn = r"GRAR000070.xml"
+##    >>> folder = r"test/Thielen"
+##    >>> fn = r"Thielen000070.xml"
 ##    >>> conv.convert_file(os.path.join(folder, fn))
 
 """
@@ -388,7 +380,7 @@ def combine_files_in_folder(folder, output_fp=None):
     comp = BeautifulSoup(comp).prettify()
     if not output_fp:
         #output_fp = os.path.join(folder, os.path.split(folder)[-1]+"_combined.html")
-        #output_fp = re.findall("GRAR\d+", os.path.split(folder)[-1])[0]
+        #output_fp = re.findall("Thielen\d+", os.path.split(folder)[-1])[0]
         output_fp = os.path.join("combined", os.path.split(folder)[-1])
     with open(output_fp, mode="w", encoding="utf-8") as file:
         file.write(comp)
@@ -397,7 +389,7 @@ def list_all_tags(folder, header_end_tag="</teiHeader>"):
     """
     Extracts a list of all tags used in the texts in a folder:
 
-    For GRAR:
+    For Thielen:
 
     <body>
     <div1 type="" n="" (name="")(/)>     # book subdivision level 1
@@ -482,10 +474,10 @@ def list_all_tags(folder, header_end_tag="</teiHeader>"):
 ##############################################################################
 
 if __name__ == "__main__":
-##    conv = GRARConverter(dest_folder="test/converted")
+##    conv = ThielenConverter(dest_folder="test/converted")
 ##    conv.VERBOSE = False
 ##    folder = r"test"
-##    fn = r"GRAR000070"
+##    fn = r"Thielen000070"
 ##    conv.convert_file(os.path.join(folder, fn))
 ##    input("passed test")
     import doctest
@@ -494,7 +486,7 @@ if __name__ == "__main__":
     input("Passed tests. Press Enter to start converting")
   
 
-    folder = r"G:\London\OpenITI\RAWrabica\RAWrabica005000\GRAR"
-    conv = GRARConverter(os.path.join(folder, "converted"))
+    folder = r"G:\London\OpenITI\RAWrabica\RAWrabica005000\Thielen"
+    conv = ThielenConverter(os.path.join(folder, "converted"))
     conv.extension = ""
     conv.convert_files_in_folder(folder)
