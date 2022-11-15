@@ -360,7 +360,7 @@ class MarkdownConverter(object):
     def post_process_md(self, text):
         """Post-processing operation to improve formatting of converted text."""
         # post-process named entity tags:
-        text = re.sub("@([A-Z.\d]+)@ +(.+?)\n([^~]|Z)",
+        text = re.sub("@([A-Z.\d_]+)@ +(.+?)\n([^~]|Z)",
                       self.post_process_named_entities, text,
                       flags=re.DOTALL)
         # remove blank lines marked with "DELETE_PREVIOUS_BLANKLINES" tag
