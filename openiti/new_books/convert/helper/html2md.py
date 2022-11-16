@@ -350,7 +350,7 @@ class MarkdownConverter(object):
 
         foll_char = match.group(3)
         entity = match.group(2)
-        ent_words = len(re.findall("[\n\r ،؛:.!؟\-]+", entity)) # + 1
+        ent_words = len(re.findall("[\n\r ،؛:.!؟\-]+", entity.strip())) + 1
         code = match.group(1)
         if code.startswith("QUR"):
             return "@{}@0{} {} {}".format(code, ent_words, entity, foll_char)
