@@ -207,7 +207,7 @@ class LALConverter(TeiConverter):
         meta = self.extract_ed_decl(tei_header, meta)
         meta = re.sub("([a-z])([A-Z])", r"\1 \2", meta)
         meta = re.sub("\n+(?!#META#)", " ", meta)
-        meta = "######OpenITI#\n\n" + meta + "#META#Header#End#\n\n"
+        meta = "######OpenITI#\n\n" + meta + "\n\n#META#Header#End#\n\n"
         
         print(meta)
         return meta
@@ -217,6 +217,7 @@ class LALConverter(TeiConverter):
         # remove zero-width joiner:
         text = re.sub(r"‌", "", text)
         text = re.sub(" *<caesura/> *", " %~% ", text)
+        text = re.sub("[\r\n]+", " ", text)
 ##        soup = BeautifulSoup(text, "xml")
 ##        # remove the front page:
 ##        soup.extract("front")
@@ -310,47 +311,7 @@ def list_all_tags(folder, header_end_tag="</teiHeader>"):
     """
     Extracts a list of all tags used in the texts in a folder:
 
-    For LAL:
 
-    <body>
-    <div1 type="" n="" (name="")(/)>     # book subdivision level 1
-    <div2 type="" n="" (name="")(/)>     # book subdivision level 2 
-    <head>                               # title
-    <lb(/)>                              # start of new line
-    <milestone unit="" n=""/>            #
-    <p>                                  # paragraph
-    <pb (type="") n=""/>                 # start of new page
-    <quote type="" (author="") (id="")>  # quotation of a source
-    <text lang="" id="">                 # metadata
-
-    # tables: 
-    <table>
-    <tr>
-    <td>
-
-    # line groups (e.g., for poetry):
-    <lg>                                 # line group
-    <l>                                  # line in line group
-
-
-    div types:
-
-    ================= =================== 
-    div1              div2
-    ================= ===================
-    book
-    books
-    chapter           chapter
-    folio
-    sentence          sentence
-                      aphorism
-    ================= ===================
-
-    pb types: primary, secondary
-
-    quote types: lemma, commentary
-
-    milestone units: book, ed1chapter, ed1page, ms1folio
     """
     tags = []
     full_tags = []
