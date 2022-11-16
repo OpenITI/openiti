@@ -89,14 +89,14 @@ class LALHtmlConverter(html2md.MarkdownConverter):
         if "type" in el.attrs and "prelim" in el["type"]:
             return "\n### |PARATEXT|" + text
         
-        try:
-            n = el["n"]
-        except:
-            # use xml:id (e.g., xml:id="ARA.section.4.1.2") to get the section number
-            xml_id = el["xml:id"]
-            xml_id = re.sub("\.(\d+)([a-zA-Z]+)$", r".\1.\2", xml_id)            
-            #n = ".".join(xml_id.split(".")[2:])
-            n = re.findall("(?:\d\.)*[\da-zA-Z]+$", xml_id)[0]
+        #try:
+        #    n = el["n"]
+        #except:
+        # use xml:id (e.g., xml:id="ARA.section.4.1.2") to get the section number
+        xml_id = el["xml:id"]
+        xml_id = re.sub("\.(\d+)([a-zA-Z]+)$", r".\1.\2", xml_id)            
+        #n = ".".join(xml_id.split(".")[2:])
+        n = re.findall("(?:\d\.)*[\da-zA-Z]+$", xml_id)[0]
         n = alpha2num(n)
         level = len(n.split("."))
         header = ""
@@ -156,7 +156,11 @@ class LALHtmlConverter(html2md.MarkdownConverter):
             qid = "_".join(qid)
             return " @QUR_{}@ {}\n".format(qid, quote)
         #return " @QB@ {} @QE@ ".format(el.quote.text.strip())
-        return " @QUR@ {} \n".format(quote)
+        return " @QUR@ {}\n".format(quote)
+
+    def convert_item(self, el, text):
+        """Convert list items"""
+        return "\n# * " + text
 
     def convert_p(self, el, text):
         """Convert p tags (paragraphs)"""
