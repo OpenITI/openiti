@@ -4,6 +4,7 @@ import random
 import re
 import unicodedata
 import urllib.request as url
+import requests
 
 if __name__ == '__main__':
     from os import sys, path
@@ -228,30 +229,110 @@ def generate_ids_through_permutations(char_string_for_ids, id_len_char, limit):
 
 
 
-def read_header(fp, lines=300):
+def read_header(pth, lines=300, header_splitter="#META#Header#End#", 
+                encoding="utf-8-sig"):
     """Read only the OpenITI header of a file without opening the entire file.
 
     Args:
-        fp (str): path to the text file
+        pth (str): path to local text file / URL of remote text file 
         lines (int): number of lines at the top of the file to be read
+        header_splitter (str): string that separates the header from the body text
+        encoding (str): text encoding to use. Default: "utf-8-sig" 
+            (Unicode utf-8, strips BOM at start of file)
 
     Returns:
-        (list): A list of all metadata lines in the header
+        (str): the metadata header of the text file
     """
-    with open(fp, mode="r", encoding="utf-8") as file:
-        header = []
-        line = file.readline()
-        i=0
-        while i < lines:
-        #while "#META#Header#End" not in line and i < 100:
-            #if "#META#" in line or "#NewRec#" in line:
-            header.append(line)
-            if "#META#Header#End" in line:
-                return header
-            line = file.readline() # move to next line
-            i += 1
-        print("{}: header splitter not reached after {} lines".format(fp, lines))
-    return header
+    header = ""
+    i=0
+    try:   # local text file:
+        with open(pth, mode="r", encoding=encoding) as file:
+            while i <= lines:
+                # read next line in file:
+                line = file.readline()
+                # add the line to the header:
+                header += line
+                # stop and return the header when we reach the header splitter:
+                if header_splitter in line:
+                    return header
+                # start a new iteration
+                i += 1
+    except:  # URL of online text:
+        with requests.get(pth, stream=True) as r:
+            for line in r.iter_lines():
+                # decode the new line and add it to the header:
+                line = line.decode(encoding)
+                header += line+"\n"   # r.iter_lines() strips off the newline character!
+                # stop and return the header when we reach the header splitter:
+                if header_splitter in line:
+                    return header
+                # start a new iteration iteration unless we run out of lines to read:
+                i+=1
+                if i >= lines:
+                    break
+
+    print("{}: header splitter not reached after {} lines".format(fp, lines))
+    
+    return ""
+
+
+
+
+def read_text(pth, max_header_lines=300, split_header=False, remove_header=False,
+              encoding="utf-8-sig", header_splitter="#META#Header#End#"):
+    """Read a text from a file or from a URL.
+    
+    The parameters allow you to choose to  
+    * full text file content: metadata header + text in a single string
+    * only the text, without the header, in a single string (remove_header=True)
+    * header and text, separated, in a tuple of strings (split_header=True)
+
+    Args:
+        pth (str): path to local text file / URL of remote text file 
+        max_header_lines (int): number of lines at the top of the file to be read to find the header
+        split_header (bool): if True, the header and main body of the text 
+            will be returned as separate strings
+        remove_header (bool): if True, only the main body of the text will be returned
+        encoding (str): text encoding to use. Defaults to "utf-8-sig" 
+            (Unicode utf-8, strips BOM at start of file)
+        header_splitter (str): string that separates the header from the body text.
+            Defaults to "#META#Header#End#" (end of the standard OpenITI metadata header)
+
+    Returns: 
+        str or tuple
+    """
+    # full text+header:
+    if not split_header and not remove_header:
+        try:
+            with open(pth, mode="r", encoding=encoding) as file:
+                return file.read()
+        except:
+            r = requests.get(pth)
+            return r.text
+    # split the main text from the header:
+    else:
+        # get the header:
+        header = read_header(pth, lines=max_header_lines)
+        
+        # get the main body of the text:
+        try:   # path to local text file:
+            with open(pth, mode="r", encoding="utf-8") as file:
+                # read the full text file:
+                text = file.read()
+                # strip the header:
+                text = text[len(header):]
+                
+        except:  # URL to online text:
+            with requests.get(pth) as r:
+                # download and read the full text file:
+                text = r.text
+                # strip the header:
+                text = text[len(header):]
+        
+        if remove_header:  # return only the main body of the text
+            return text
+        # else: return both header and text
+        return (header, text) 
 
 
 def absolute_path(path):
@@ -321,6 +402,74 @@ def natural_sort(obj):
                          for t in re.split('(\d+)', s)]
     return sorted(obj, key=natsort)
     
+def get_semantic_tag_elements(tag_name, text, include_tag=False,
+                              include_prefix=False, include_offsets=False,
+                              max_tokens=99):
+    """Extract semantic tags (the likes of @TOP\d\d+) from an OpenITI text
+
+    E.g., 
+        `get_semantic_tag_elements("@TOP", text)`
+        `get_semantic_tag_elements("(?:@TOP|@PER)", text)`
+        `get_semantic_tag_elements("@T(?:OP)?", text)`
+
+    Args:
+        tag_name (str): the tag name of the elements you want to extract 
+            (e.g., @TOP, @PER, ...). Will accept a regex like 
+            "(?:@TOP|@PER)" or "@T(?:OP)?".
+        text (str): the string from which the elements are to be extracted
+        include_tag (bool): if False, only the content of the tag
+            will be returned. If True, both tag+content (default: False)
+        include_prefix (bool): if False, the prefix (that is, the number
+            of characters defined by the first digit after the tag name)
+            will be stripped off from the result. Only if include_tag is
+            set to False. Default: False.
+        include_offsets (bool): if True, the start and end offsets of
+            each element will be returned together with the match
+            (as a dictionary with keys "match", "start", "end"). Default: False.
+        max_tokens (int): the maximum number of tokens inside a tag.
+            Default: 99.
+
+    Returns:
+        list (of strings (include_offsets=False) or dictionaries (include_offsets=True))
+    """
+    # first extract a large number of tokens after the tag
+    pattern = tag_name+"\d\d+(?:[^@\w]+\w+){1,"+str(max_tokens)+"}"
+    tmp_results = re.finditer(pattern, text)
+
+    # select the amount of tokens as defined in the tag:
+    final_results = []
+    for result in tmp_results:
+        tokens = re.split("([^\w@]+)", result.group())
+        res_tag = tokens.pop(0)
+        n_prefix, n_toks = re.findall("(\d)(\d+)", res_tag)[0]
+        
+        if not include_tag:
+            cleaned_res = "".join(tokens[1:(2*int(n_toks))])
+            # move start offset to first character of the content of the tag:
+            start_offset = result.start() + len(res_tag+tokens[0])
+            if not include_prefix:
+                # remove the prefix from the match:
+                cleaned_res = cleaned_res[int(n_prefix):]
+                # move the start offset to the first character after the prefix:
+                start_offset += int(n_prefix)
+            end_offset =  start_offset + len(cleaned_res)
+            if include_offsets:
+                final_results.append({"match":cleaned_res,
+                                      "start":start_offset,
+                                      "end":end_offset})
+            else:
+                final_results.append(cleaned_res)
+        else:
+            cleaned_res = res_tag+("".join(tokens[0:(2*int(n_toks))]))
+            if include_offsets:
+                final_results.append({"match":cleaned_res,
+                                      "start":result.start(),
+                                      "end":result.start()+len(cleaned_res)})
+            else:
+                final_results.append(cleaned_res)
+
+    return final_results
+
 
 
 if __name__ == "__main__":
@@ -332,3 +481,10 @@ if __name__ == "__main__":
                                          exclude_folders=exclude_folders,
                                          exclude_files=exclude_files)
     #get_character_names(chars, verbose=True)
+    test_str = """this is a test about @TOP01 London; it contains
+a new line and a second example: @TOP12 wTower Bridge.
+Also: a person: @PER01 Ahmad!"""
+
+
+    res = get_semantic_tag_elements("@T(?:OP)?", test_str, include_tag=False, include_prefix=False, include_offsets=True)
+    print(res)
