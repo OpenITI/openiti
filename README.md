@@ -15,6 +15,19 @@ Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip in
 
 ### v.0.1.5.9: 
 * `helper.yml`: fix bug: pass `reflow` parameter in readYML function to ymlToDic
+* `helper.funcs`: Add functions: 
+  - `read_header`: read header of an OpenITI file (local path / URL)
+  - `read_text`: read text of an OpenITI file (local path / URL)
+  - `get_page_number`: get the page number of a token based on its offset
+  - `get_semantic_tag_elements`: extract semantic tags (like @TOP, @PER) from an OpenITI text
+  - `find_section_title`: get the section title of any location inside a text
+  - `get_sections`: get a list of all sections in an OpenITI text
+* `helper.ara`: 
+  - Add a whitelist of characters that are allowed in OpenITI texts, with support for Hebrew and Cyrillic characters.
+  - Add new characters (subscript alef, inverted damma, quranic sukun, small high madda) to the `noise` variable
+* `new_books.convert.helper.html2md`: Add underscore to allowed characters in named entity tags and fix named entity count
+* `new_books.convert.tei_converter_LAL`: add a new converter for TEI texts from the Library of Arabic Literature
+
 
 ### v.0.1.5.8: 
 * `helper.uri`: when a book URI changes, also change references to it in related books.
