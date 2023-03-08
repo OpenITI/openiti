@@ -402,49 +402,53 @@ def natural_sort(obj):
                          for t in re.split('(\d+)', s)]
     return sorted(obj, key=natsort)
     
-def get_semantic_tag_elements(tag_name, text, include_tag=False,
-                              include_prefix=False, include_offsets=False,
-                              max_tokens=99):
-    """Extract semantic tags (the likes of @TOP\d\d+) from an OpenITI text
 
-    E.g., 
-        `get_semantic_tag_elements("@TOP", text)`
-        `get_semantic_tag_elements("(?:@TOP|@PER)", text)`
-        `get_semantic_tag_elements("@T(?:OP)?", text)`
+def get_semantic_tag_elements(tag_name, text, include_tag=False,
+                                  include_prefix=False, include_offsets=False,
+                                  max_tokens=99, normalize_spaces=False):
+    """Extract semantic tags (the likes of @TOP\d\d+) from OpenITI texts
 
     Args:
-        tag_name (str): the tag name of the elements you want to extract 
-            (e.g., @TOP, @PER, ...). Will accept a regex like 
-            "(?:@TOP|@PER)" or "@T(?:OP)?".
-        text (str): the string from which the elements are to be extracted
+        tag_name (str): the tag you want to extract (e.g., @TOP, @PER, ...)
+        text (str): the string from which the tags are to be extracted
         include_tag (bool): if False, only the content of the tag
             will be returned. If True, both tag+content (default: False)
         include_prefix (bool): if False, the prefix (that is, the number
-            of characters defined by the first digit after the tag name)
+            of characters defined by the first digit after the tag)
             will be stripped off from the result. Only if include_tag is
             set to False. Default: False.
         include_offsets (bool): if True, the start and end offsets of
-            each element will be returned together with the match
-            (as a dictionary with keys "match", "start", "end"). Default: False.
+            each element will be included (as a dictionary:
+            with keys "match", "start", "end")
         max_tokens (int): the maximum number of tokens inside a tag.
             Default: 99.
+        normalize_spaces (bool): if True, new lines, page numbers etc. 
+            will be removed from the returned tokens.
 
     Returns:
-        list (of strings (include_offsets=False) or dictionaries (include_offsets=True))
+        list
     """
     # first extract a large number of tokens after the tag
-    pattern = tag_name+"\d\d+(?:[^@\w]+\w+){1,"+str(max_tokens)+"}"
+    ar_tok = "[" + "".join(ara.ar_chars)+"]+"
+    not_token_not_tag = "[^@"+ar_tok[1:]
+    n_tokens = "{1,"+str(max_tokens)+"}"
+    #pattern = tag_name+"\d\d+(?:[^@\w]+\w+){1,"+str(max_tokens)+"}"
+    pattern = f"{tag_name}\d\d+(?:{not_token_not_tag}{ar_tok}){n_tokens}"
     tmp_results = re.finditer(pattern, text)
 
     # select the amount of tokens as defined in the tag:
     final_results = []
     for result in tmp_results:
-        tokens = re.split("([^\w@]+)", result.group())
-        res_tag = tokens.pop(0)
-        n_prefix, n_toks = re.findall("(\d)(\d+)", res_tag)[0]
-        
+        # extract the tag from the result:
+        res_tag = re.findall(tag_name+"\d\d+", result.group())[0]
+        not_token = "[^"+ar_tok[1:]
+        tokens = re.split("("+not_token+")", result.group()[len(res_tag):])
+        # remove empty string matches:
+        tokens = [tok for tok in tokens if tok != ""]
+        n_prefix, n_toks = re.findall("(\d)(\d+)", res_tag)[-1]
         if not include_tag:
-            cleaned_res = "".join(tokens[1:(2*int(n_toks))])
+            selected_toks = tokens[1:(2*int(n_toks))]
+            cleaned_res = "".join(selected_toks)
             # move start offset to first character of the content of the tag:
             start_offset = result.start() + len(res_tag+tokens[0])
             if not include_prefix:
@@ -453,6 +457,13 @@ def get_semantic_tag_elements(tag_name, text, include_tag=False,
                 # move the start offset to the first character after the prefix:
                 start_offset += int(n_prefix)
             end_offset =  start_offset + len(cleaned_res)
+            # remove new lines, page numbers, etc. from the tokens:
+            if normalize_spaces:
+                selected_toks = [re.sub(not_token, " ", tok) for tok in selected_toks]
+                cleaned_res = "".join(selected_toks)
+                if not include_prefix:
+                    # remove the prefix from the match:
+                    cleaned_res = cleaned_res[int(n_prefix):]
             if include_offsets:
                 final_results.append({"match":cleaned_res,
                                       "start":start_offset,
@@ -460,16 +471,66 @@ def get_semantic_tag_elements(tag_name, text, include_tag=False,
             else:
                 final_results.append(cleaned_res)
         else:
-            cleaned_res = res_tag+("".join(tokens[0:(2*int(n_toks))]))
+            selected_toks = tokens[0:(2*int(n_toks))]
+            cleaned_res = res_tag+("".join(selected_toks))
+            start = result.start()
+            end = start+len(cleaned_res)
+            if normalize_spaces:
+                selected_toks = [re.sub(not_token, " ", tok) for tok in selected_toks]
+                cleaned_res = res_tag+("".join(selected_toks))
             if include_offsets:
                 final_results.append({"match":cleaned_res,
-                                      "start":result.start(),
-                                      "end":result.start()+len(cleaned_res)})
+                                      "start":start,
+                                      "end":end})
             else:
                 final_results.append(cleaned_res)
 
     return final_results
 
+
+def find_section_title(loc, section_titles, section_starts):
+    """Find the section title(s) for a character offset
+
+    Args:
+        loc (int): character offset for which the section title is wanted
+        section_titles (list): a list of all section titles in the document
+        section_starts (list): a list of character offsets of the
+            starts of all sections in the text
+    """
+    i = bisect(section_starts, loc)
+    return section_titles[i]
+
+def get_sections(text, section_header_regex="### .+", include_hierarchy=True):
+    """Get the section titles and start offsets for all sections in the text
+
+    Args:
+        text (str): the text containing the sections
+        section_header_regex (str): regular expression pattern for section headers
+        include_hierarchy (bool): if False, only the title of the section
+            will be returned; if True, a list of titles of all parent sections
+            will be returned
+
+    Returns:
+        list (section_titles, section_starts)
+    """
+    section_titles = [] 
+    section_starts = [] 
+    open_sections = [] 
+    for m in re.finditer(section_header_regex, text):
+        title = m.group()
+        level = title.count("|") - 1
+        if not include_hierarchy:
+            open_sections = title
+        elif level == 0:
+            open_sections = [title,] 
+        else:
+            open_sections = open_sections[:level]
+            open_sections.append(title)
+         
+        section_titles.append(open_sections) 
+        section_starts.append(m.start())
+
+    return section_titles, section_starts
 
 
 if __name__ == "__main__":
@@ -481,9 +542,9 @@ if __name__ == "__main__":
                                          exclude_folders=exclude_folders,
                                          exclude_files=exclude_files)
     #get_character_names(chars, verbose=True)
-    test_str = """this is a test about @TOP01 London; it contains
-a new line and a second example: @TOP12 wTower Bridge.
-Also: a person: @PER01 Ahmad!"""
+    test_str = """هذه محاولة ثانية: @TOP01 بغداد مدينة
+يعرف أيضا @TOP12 بمدينة ms001 PageV01P001 السلام.
+واسم المؤسس: @PER01 أحمد!"""
 
 
     res = get_semantic_tag_elements("@T(?:OP)?", test_str, include_tag=False, include_prefix=False, include_offsets=True)
