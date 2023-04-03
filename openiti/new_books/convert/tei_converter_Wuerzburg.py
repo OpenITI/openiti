@@ -103,6 +103,8 @@ class WuerzburgTeiConverter(TeiConverter):
         metadata += "#META# responsibility: {}\n".format(resp)
         metadata += "#META# version: {}\n".format(version)
         metadata += "#META# ed_info: {}\n".format(ed)
+        # remove unwanted line breaks:
+        metadata = re.sub(r"\n([^#])", r" \1", metadata)
         
         metadata = self.magic_value + metadata + self.header_splitter
         print(metadata)
@@ -204,6 +206,10 @@ class WuerzburgTeiConverter(TeiConverter):
         text = re.sub("[\r\n]+#? ?~~(?=[\r\n])", "", text)
         text = re.sub("(PageV\d+P\d+)[\r\n]+~~(\d+)", r"\1\2", text)
         #text = re.sub("@QUOTE@", "", text)
+        # fix tildes at start and end of text:
+        text = re.sub(r"\A~~ *", "# ", text.strip())
+        text = re.sub(r"[\r\n]+~~\Z", "", text)
+
         text = deNoise(text)
         return text
 
