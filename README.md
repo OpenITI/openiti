@@ -13,6 +13,58 @@ Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip in
 
 ## Change log: 
 
+### v.0.1.5.11:
+- `helper.ara`: 
+    * Arabic-Indic digits and Extended Arabic-Indic digits are removed from the
+      `ar_chars` liststring, and put into a new liststring: `ar_nums`. 
+      This has the effect that numbers written written with these characters 
+      are not considered Arabic tokens anymore
+      (just like numbers written with Western Arabic numerals).
+    * A large number of Greek, Coptic, Syriac and Latin characters are added to the
+      `allowed_chars` stringlist, which means they should not be removed
+      from texts before putting them into the corpus.
+- `helper.funcs.text_cleaner`: this function, which removes all non-word-characters,
+    numbers and Latin-script characters from the texts, now uses
+    `helper.ara.transcription_chars` instead of `[A-z]` to define Latin-script letters.
+    This means it will now also remove common transcription letters 
+    (ā, ḥ, ...) instead of only ASCII letters.
+- `helper.rgx`: 
+    * add a list of Islamicate language codes
+    * add regex for author (`author_uri`), book (`book_uri`) and version URIs
+      (`version_uri`)
+    * fix the page number related regexes to include PageBeg and PageEnd tags,
+      and folio numbers that end with lower-case "a" or "b"
+    * adapt the `section_tag` regex to include this new flavour: `### |5|` 
+      (which is the same as a section tag with five pipes)
+    * add an `all_tags` regex that can be used to remove all OpenITI mARkdown tags
+    * add an `html_tags` regex that can be used to find html tags
+- `helper.uri` :
+    * `build_pth`: take into account the different repo name formats 
+      for Arabic and other languages (Arabic: 0025AH, 0050AH, ...; 
+      Persian: PER0025AH, PER0050AH, ...; Urdu: URD0025AH, ...)
+    * `change_uri`: add a `non_25Y_folder` argument. Set this to True
+      if you want to use the function for folders that do not have
+      subfolders for each 25-year period.
+    * `add_character_count`: idem
+    * `move_yml`: idem
+    * `make_folder`: idem
+    * `move_to_new_uri_pth`: idem
+    * `check_yml_files`: return list of paths to yml files where the checks failed
+      instead of `None`
+- `new_books.add.add_books`: implement `non_25Y_folder` argument in all functions 
+  (see above in `helper.uri`)
+- `new_books.convert.epub_converter_hindawi`: deal with possibility of 
+  unavailable metadata
+- `new_books.convert.helper.html2md`: improve named entity tagging
+- `new_books.convert.helper.html2md_LAL`: various improvements for 
+  formatting Library of Arabic Literature XML files
+- `openiti/new_books/convert/tei_converter_LAL`: idem
+
+
+
+### v.0.1.5.10:
+- `new_books.convert.tei_converter_Wuerzburg`: small post-processing tweaks.
+
 ### v.0.1.5.9: 
 * `helper.yml`: fix bug: pass `reflow` parameter in readYML function to ymlToDic
 * `helper.funcs`: Add functions: 
