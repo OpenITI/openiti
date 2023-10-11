@@ -99,7 +99,11 @@ def convert_file(fp, meta_fp, dest_fp=None, verbose=False):
     """
     conv = HindawiEpubConverter()
     conv.VERBOSE = verbose
-    conv.metadata_dic = yml2json(meta_fp, container = {})
+    try:
+        conv.metadata_dic = yml2json(meta_fp, container = {})
+    except:
+        conv.metadata_dic = dict()
+        print("No metadata found")
     conv.metadata_file = meta_fp
     conv.convert_file(fp, dest_fp=dest_fp)
 
@@ -132,7 +136,11 @@ def convert_files_in_folder(src_folder, meta_fp, dest_folder=None, verbose=False
     print(msg.format(src_folder, extensions))
     conv = HindawiEpubConverter()
     conv.VERBOSE = verbose
-    conv.metadata_dic = yml2json(meta_fp, container = {})
+    try:
+        conv.metadata_dic = yml2json(meta_fp, container = {})
+    except:
+        conv.metadata_dic = dict()
+        print("No metadata found")
     conv.metadata_file = meta_fp
     conv.convert_files_in_folder(src_folder, dest_folder=dest_folder,
                                  extensions=extensions,
@@ -161,7 +169,11 @@ class HindawiEpubConverter(GenericEpubConverter):
         source_fp = self.source_fp
         bookID = os.path.split(source_fp)[1]
         bookID = os.path.splitext(bookID)[0]
-        meta_dic = self.metadata_dic[bookID]
+        try:
+            meta_dic = self.metadata_dic[bookID]
+        except:
+            meta_dic = dict()
+
         meta = ["#META# {}: {}".format(k,v) for k,v in sorted(meta_dic.items())]
         return self.magic_value + "\n".join(meta) + self.header_splitter
 
