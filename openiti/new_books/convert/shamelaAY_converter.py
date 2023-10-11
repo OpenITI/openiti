@@ -532,6 +532,11 @@ class BokJsonConverter(generic_converter.GenericConverter):
         """Convert the metadata in the metadata dict to a string."""
         m = []
         fmt = "#META# {}: {}"
+        try:
+            for k,v in metadata.items():
+                pass
+        except: 
+            metadata = metadata[0]
         for k,v in metadata.items():
             if v:
                 # treat the "betaka" field different from the other fields.
