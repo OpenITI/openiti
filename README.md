@@ -13,7 +13,8 @@ Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip in
 
 ## Change log: 
 
-### v.0.1.5.11:
+
+### v.0.1.5.10:
 - `helper.ara`: 
     * Arabic-Indic digits and Extended Arabic-Indic digits are removed from the
       `ar_chars` liststring, and put into a new liststring: `ar_nums`. 
@@ -58,11 +59,7 @@ Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip in
 - `new_books.convert.helper.html2md`: improve named entity tagging
 - `new_books.convert.helper.html2md_LAL`: various improvements for 
   formatting Library of Arabic Literature XML files
-- `openiti/new_books/convert/tei_converter_LAL`: idem
-
-
-
-### v.0.1.5.10:
+- `openiti.new_books.convert.tei_converter_LAL`: idem
 - `new_books.convert.tei_converter_Wuerzburg`: small post-processing tweaks.
 
 ### v.0.1.5.9: 
