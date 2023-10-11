@@ -70,6 +70,7 @@ if __name__ == '__main__':
 
 from openiti.new_books.convert.tei_converter_generic import TeiConverter
 from openiti.new_books.convert.helper import html2md_LAL
+from openiti.helper.ara import deNoise
 
 
 
@@ -152,20 +153,48 @@ class LALConverter(TeiConverter):
             isbn = tei_header.publicationStmt.idno
             meta += "#META# ISBN: {}\n".format(isbn.text.strip())
         except Exception as e:
-            print("publication statement not found:", e)
+            print("isbn not found:", e)
+            pass
+        try:
+            publisher = tei_header.publicationStmt.publisher
+            meta += "#META# Publisher: {}\n".format(publisher.text.strip())
+        except Exception as e:
+            print("Publisher not found:", e)
+            pass
+        try:
+            pubPlace = tei_header.publicationStmt.pubPlace
+            meta += "#META# Place of publication: {}\n".format(pubPlace.text.strip())
+        except Exception as e:
+            print("pubPlace not found:", e)
             pass
         return meta
 
     def extract_witnesses(self, tei_header, meta):
         """Extract witness data from the teiHeader"""
+        # try:
+        #     witnesses = tei_header.sourceDesc.listBibl
+        # except Exception as e:
+        #     try: 
+        #         witnesses = tei_header.sourceDesc
+        #     except:
+        #         print("witnesses not found:", e)
+        #         return meta
+        # for w in witnesses.find_all("bibl"):
+        #     w = w.text.strip()
+        #     meta += "#META# Witness: {}\n".format(w)
         try:
             witnesses = tei_header.sourceDesc.listBibl
             for w in witnesses.find_all("bibl"):
                 w = w.text.strip()
                 meta += "#META# Witness: {}\n".format(w)
-        except Exception as e:
-            print("witnesses not found:", e)
+            return meta
+        except:
             pass
+
+        for ref in tei_header.find_all("bibl"):
+            if "xml:id" in ref.attrs and "wit" in ref["xml:id"]:
+                w = ref.text.strip()
+                meta += "#META# Witness: {}\n".format(w)
         return meta
                 
     def extract_ed_decl(self, tei_header, meta):
@@ -209,7 +238,6 @@ class LALConverter(TeiConverter):
         meta = re.sub("\n+(?!#META#)", " ", meta)
         meta = "######OpenITI#\n\n" + meta + "\n\n#META#Header#End#\n\n"
         
-        print(meta)
         return meta
 
     def pre_process(self, text):
@@ -268,10 +296,14 @@ class LALConverter(TeiConverter):
         notes = ""
         #text, notes = self.remove_notes(text)
         
+        text = deNoise(text)
+
         soup = BeautifulSoup(text, "xml")
         if not soup.find_all("lb") and not soup.find_all(title="linebreak"):
             text = self.reflow(text)
+        
         text = self.post_process(text)
+        
         text = self.compose(self.metadata, text, notes)
 
         self.save_file(text, dest_fp)
@@ -300,6 +332,33 @@ class LALConverter(TeiConverter):
         text = re.sub("(### \|PARATEXT\|(?:\n# .+)+)\n### \|PARATEXT\|", r"\1", text)
         # fix sections without headers:
         text = re.sub("(### \|+)([\r\n]+)", r"\1 \2", text)
+        # put poems always on one line:
+        text = re.sub(r"(%~%.+)[\r\n]+~~", r"\1 ", text)
+        # remove waṣlas:
+        text = re.sub("ٱ", "ا", text)
+        # Format the paragraph numbers as page number:
+        # (this proved to be the wrong approach: some text have a number for every line)
+        # temp = ""
+        # current_p = ""
+        # for p in re.split("(\[[\d.]+\])", text):
+        #     if p.startswith("["):
+        #         split_p = p[1:-1].split(".")
+        #         if len(split_p) == 2:
+        #             v, p = split_p
+        #         elif len(split_p) > 2:
+        #             v = split_p[0]
+        #             p = "0".join(split_p[1:])
+        #             print(split_p)
+        #         else:
+        #             v = 0
+        #             p = split_p[0]
+        #         current_p = "PageV{:02d}P{:03d}".format(int(v), int(p))
+        #     else:
+        #         temp += p + current_p
+        # text = re.sub("\[(\d)\]", r"PageV00P00\1", temp)
+        # text = re.sub("\[(\d\d)\]", r"PageV00P0\1", text)
+        # text = re.sub("\[(\d\d+)\]", r"PageV00P\1", text)
+
         return text
 
 
@@ -319,7 +378,6 @@ def list_all_tags(folder, header_end_tag="</teiHeader>"):
         fp = os.path.join(folder, fn)
         #if not fn.endswith("yml") and not fn.endswith("py"):
         if fn.endswith("xml"):
-            print(fn)
             with open(fp, mode="r", encoding="utf-8") as file:
                 text = file.read()
     ##        orig_len = len(text)
