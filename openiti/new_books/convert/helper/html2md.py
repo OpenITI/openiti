@@ -349,8 +349,15 @@ class MarkdownConverter(object):
         """
 
         foll_char = match.group(3)
-        entity = match.group(2)
-        ent_words = len(re.findall("[\n\r ،؛:.!؟\-]+", entity.strip())) + 1
+        entity = match.group(2).strip()
+        #ent_words = len(re.findall("[\n\r ~،؛:.!؟\-]+", entity)) + 1
+        # count the number of spaces in the entity. In order not to count
+        # a bracket followed by a space followed as an entity, 
+        # include brackets in the list of space characters
+        # and add spaces before and after the entity; 
+        # this necessitates subtracting 1 from the number of spaces in the end
+        # to get to the number of words:
+        ent_words = len(re.findall("[\n\r ~،؛:.!؟\-{}()\[\]]+", " " + entity + " ")) - 1
         code = match.group(1)
         if code.startswith("QUR"):
             return "@{}@0{} {} {}".format(code, ent_words, entity, foll_char)
@@ -360,7 +367,7 @@ class MarkdownConverter(object):
     def post_process_md(self, text):
         """Post-processing operation to improve formatting of converted text."""
         # post-process named entity tags:
-        text = re.sub("@([A-Z.\d_]+)@ +(.+?)\n([^~]|Z)",
+        text = re.sub("@([A-Z.\d_\-]+)@ +(.+?)\n([^~]|Z)",
                       self.post_process_named_entities, text,
                       flags=re.DOTALL)
         # remove blank lines marked with "DELETE_PREVIOUS_BLANKLINES" tag
