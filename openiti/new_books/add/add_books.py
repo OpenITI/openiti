@@ -34,7 +34,7 @@ from openiti.helper.uri import move_to_new_uri_pth, add_character_count, URI, ne
 created_ymls = []
 
 def initialize_texts_from_CSV(csv_fp, old_base_pth="", new_base_pth="",
-                              execute=False):
+                              execute=False, non_25Y_folder=None):
     """
     Use a CSV file (filename, URI) to move a list of texts to the relevant \
     OpenITI folder.
@@ -61,6 +61,9 @@ def initialize_texts_from_CSV(csv_fp, old_base_pth="", new_base_pth="",
             (the user will still be given the option to execute
             all proposed changes at the end);
             if True, all changes will be executed immediately.
+        non_25Y_folder (str): name of the parent folder for the new files,
+            to be used instead of the 25 years folder (0025AH, 0050AH, ...).
+            Defaults to None (that is: use the auto-generated 25 years folder).
 
     Returns:
         None
@@ -79,23 +82,26 @@ def initialize_texts_from_CSV(csv_fp, old_base_pth="", new_base_pth="",
         tok_count = ar_cnt_file(old_fp, mode="token")
         char_count = ar_cnt_file(old_fp, mode="char")
 
-        move_to_new_uri_pth(old_fp, new_uri, execute)
+        move_to_new_uri_pth(old_fp, new_uri, execute, 
+                            non_25Y_folder=non_25Y_folder)
 
-        add_character_count(tok_count, char_count, new_uri, execute)
+        add_character_count(tok_count, char_count, new_uri, execute, 
+                            non_25Y_folder=non_25Y_folder)
 
     if not execute:
         resp = input("To carry out these changes: press OK+Enter; \
 to abort: press Enter. ")
         if resp == "OK":
             initialize_texts_from_CSV(csv_fp, old_base_pth, new_base_pth,
-                              execute=True)
+                                      execute=True, non_25Y_folder=non_25Y_folder)
         else:
             print()
             print("User aborted carrying out these changes!")
             print("*"*60)
 
 
-def initialize_new_texts_in_folder(folder, target_base_pth, execute=False):
+def initialize_new_texts_in_folder(folder, target_base_pth, execute=False, 
+                                   non_25Y_folder=None):
     """Move all new texts in folder to their OpenITI repo, creating yml files\
     if necessary (or copying them from the same folder if present).
 
@@ -107,6 +113,9 @@ def initialize_new_texts_in_folder(folder, target_base_pth, execute=False):
             (the user will still be given the option to execute
             all proposed changes at the end);
             if True, all changes will be executed immediately.
+        non_25Y_folder (str): name of the parent folder for the new files,
+            to be used instead of the 25 years folder (0025AH, 0050AH, ...).
+            Defaults to None (that is: use the auto-generated 25 years folder).
 
     Returns:
         None
@@ -124,10 +133,10 @@ def initialize_new_texts_in_folder(folder, target_base_pth, execute=False):
             fp = os.path.join(folder, fn)
             print(fp)
             if os.path.isfile(fp):
-                initialize_new_text(fp, target_base_pth, execute)
+                initialize_new_text(fp, target_base_pth, execute, non_25Y_folder=non_25Y_folder)
 
 
-def initialize_new_text(origin_fp, target_base_pth, execute=False):
+def initialize_new_text(origin_fp, target_base_pth, execute=False, non_25Y_folder=None):
     """Move a new text file to its OpenITI repo, creating yml files\
     if necessary (or copying them from the same folder if present).
 
@@ -142,6 +151,9 @@ def initialize_new_text(origin_fp, target_base_pth, execute=False):
             (the user will still be given the option to execute
             all proposed changes at the end);
             if True, all changes will be executed immediately.
+        non_25Y_folder (str): name of the parent folder for the new files,
+            to be used instead of the 25 years folder (0025AH, 0050AH, ...).
+            Defaults to None (that is: use the auto-generated 25 years folder).
 
     Returns:
         None
@@ -157,10 +169,14 @@ def initialize_new_text(origin_fp, target_base_pth, execute=False):
     tar_uri = copy.deepcopy(ori_uri)
     tar_uri.base_pth = target_base_pth
     target_fp = tar_uri.build_pth("version_file")
+    if non_25Y_folder:
+        target_fp = re.sub("\d{4}AH", non_25Y_folder, target_fp)
+        print("target_fp:", target_fp)
 
     # Check whether the text file has OpenITI format:
 
-    header = "\n".join(read_header(origin_fp))
+    #header = "\n".join(read_header(origin_fp))
+    header = read_header(origin_fp)
     if "#META#Header#End" not in header:
         print("Initialization aborted: ")
         print("{} does not contain OpenITI metadata header splitter!".format(origin_fp))
@@ -176,16 +192,16 @@ def initialize_new_text(origin_fp, target_base_pth, execute=False):
     tok_count = ar_cnt_file(origin_fp, mode="token")
     char_count = ar_cnt_file(origin_fp, mode="char")
 
-    # Move the text file:
-
-    target_folder = tar_uri.build_pth("version")
-    move_to_new_uri_pth(origin_fp, tar_uri, execute)
+    # Move the text file:    
+    move_to_new_uri_pth(origin_fp, tar_uri, execute, non_25Y_folder=non_25Y_folder)
 
     # Move or create the YML files:
 
     for yf in ("version_yml", "book_yml", "author_yml"):
         yfp = os.path.join(ori_uri.base_pth, ori_uri.build_uri(yf))
         tar_yfp = tar_uri.build_pth(yf)
+        if non_25Y_folder:
+            tar_yfp = re.sub("\d{4}AH", non_25Y_folder, tar_yfp)
         if os.path.exists(yfp):
             if execute:
                 shutil.move(yfp, tar_yfp)
@@ -202,7 +218,8 @@ def initialize_new_text(origin_fp, target_base_pth, execute=False):
 
     # Add the character count to the new yml file:
 
-    add_character_count(tok_count, char_count, tar_uri, execute)
+    add_character_count(tok_count, char_count, tar_uri, execute, 
+                        non_25Y_folder=non_25Y_folder)
 
     # Give the option to execute the changes:
 
@@ -210,12 +227,16 @@ def initialize_new_text(origin_fp, target_base_pth, execute=False):
         print("Execute these changes?")
         resp = input("Type OK + Enter to execute; press Enter to abort: ")
         if resp == "OK":
-            initialize_new_text(origin_fp, target_base_pth, execute=True)
+            initialize_new_text(origin_fp, target_base_pth, execute=True, 
+                                non_25Y_folder=non_25Y_folder)
         else:
             print("User aborted the execution of the changes.")
 
+    return target_fp
 
-def download_texts_from_CSV(csv_fp, base_url="", new_base_pth=""):
+
+def download_texts_from_CSV(csv_fp, base_url="", new_base_pth="", 
+                            non_25Y_folder=None):
     """
     Use a CSV file (filename, URI) to download a list of texts to the relevant \
     OpenITI folder.
@@ -238,6 +259,9 @@ def download_texts_from_CSV(csv_fp, base_url="", new_base_pth=""):
             the files that need to be initialized. Defaults to "".
         new_base_pth (str): path to the folder containing
             the OpenITI 25-years repos. Defaults to "".
+        non_25Y_folder (str): name of the parent folder for the new files,
+            to be used instead of the 25 years folder (0025AH, 0050AH, ...).
+            Defaults to None (that is: use the auto-generated 25 years folder).
     
     Returns:
         None
@@ -273,12 +297,14 @@ def download_texts_from_CSV(csv_fp, base_url="", new_base_pth=""):
                 print("download finished")
             
 
-            move_to_new_uri_pth(temp_fp, new_uri, execute=True)
+            move_to_new_uri_pth(temp_fp, new_uri, execute=True, 
+                                non_25Y_folder=non_25Y_folder)
 
             if not temp_fp.endswith("pdf") and not temp_fp.endswith("zip"):
                 tok_count = ar_cnt_file(temp_fp, mode="token")
                 char_count = ar_cnt_file(temp_fp, mode="char")
-                add_character_count(tok_count, char_count, new_uri, execute=True)
+                add_character_count(tok_count, char_count, new_uri, execute=True, 
+                                    non_25Y_folder=non_25Y_folder)
 
     shutil.rmtree(temp_folder)
 
