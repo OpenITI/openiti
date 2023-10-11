@@ -132,9 +132,24 @@ space_word = "(?:{}{})".format(space, ar_tok)
 # 2. URIs and OpenITI filenames:
 
 # OpenITI URIs
-auth = r"\b\d{4}(?:[A-Z][a-z]+)"
-book = auth + "\.(?:[A-Z][a-z]+)"
-version = book + "\.\w+(?:Vols)?(?:BK\d+|[A-Z])?-\w{3}\d+"
+language_codes = [        # ISO 639-2B language codes: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+    "ara", # Arabic
+    "per", # Persian
+    "urd", # Urdu
+    "heb", # Hebrew
+    "arm", # Armenian
+    "ave", # Avestan
+    "geo", # Georgian
+    "kur", # Kurdish
+    "pus", # Pashtu
+    "swa", # Swahili
+    ]
+auth = r"\b\d{4}[A-Z][a-zA-Z]+"
+book = auth + "\.[A-Z][a-zA-Z]+"
+version = book + "\.\w+(?:Vols)?(?:BK\d+|[A-Z])*-(?:%s)+\d+" % "|".join(language_codes)
+author_uri = auth
+book_uri = book
+version_uri = version
 
 # OpenITI text file names:
 extensions = ["inProgress", "completed", "mARkdown"]
@@ -158,16 +173,16 @@ magic_value = "######OpenITI#"
 header_splitter = "#META#Header#End#"
 
 # Page numbers:
-vol_page = "PageV[^P]+P\d+"
-vol_no = "PageV([^P]+)P\d+"
-page_no = "PageV[^P]+P(\d+)"
-vol_page_3 = "PageV[^P]{2}P\d{3}"
-vol_page_4 = "PageV[^P]{2}P\d{4}"
+vol_page = "Page(?:Beg|End)?V[^P]+P\d+[ABab]?"
+vol_no = "Page(?:Beg|End)?V([^P]+)P\d+[ABab]?"
+page_no = "Page(?:Beg|End)?V[^P]+P(\d+[ABab]?)"
+vol_page_3 = "Page(?:Beg|End)?V[^P]{2}P\d{3}[ABab]?"
+vol_page_4 = "Page(?:Beg|End)?V[^P]{2}P\d{4}[ABab]?"
 page = dotall + r"(?:(?<={})|(?<={})|(?<={})).+?(?:{}|\Z)".format(vol_page_3,
                     vol_page_4, header_splitter, vol_page)
 
 # Hierarchical section tags:
-section_tag = "### \|+ "
+section_tag = "### \|\w*\|* "
 section_title = section_tag + "([^\r\n]*)"
 section = dotall + section_tag + r".+?(?=###|\Z)"
 section_text = dotall + section_tag + "[^\r\n]*[\r\n]+(.+?)(?=###|\Z)"
@@ -210,6 +225,9 @@ year = r"\bY[A-Z]?\d+"
 year_born = r"\bYB\d+"
 year_died = r"\bYD\d+"
 
+# milestones:
+ms = r"\bms[A-Z]?\d+"
+
 # analytical tag pattern:
 anal_tag = "(?:@[A-Z]{3})?[@#][A-Z]{3}(?:\$[\w+\-]+)?(?:@?\d\d+)?"
 tag_range = "|".join([str(i)+"%(w)s{"+str(i)+"}" for i in range(1,21)])
@@ -229,6 +247,20 @@ anal_tag_text = "(?:@[A-Z]{3})?[@#][A-Z]{3}(?:\$[\w+\-]+)?" + tag_range
 #                     10%(w)s{10}|11%(w)s{11}|12%(w)s{12}|
 #                     13%(w)s{13}|14%(w)s{14}|15%(w)s{15}|
 #                     16%(w)s{16}|17%(w)s{17}))?""" % {"w": space_word}
+
+# match all OpenITI mARkdown tags:
+all_tags = r"|".join([
+    vol_page, ms, year, 
+    r"### [\$|]\w*[\$|]*",  # section headers, paratext, editor, biographies
+    r"[#@]\S+",  # ampersand/hash followed by any combination of non-whitespace chars
+    r"# ",
+    r"~~",
+    r"%~%"
+    ])
+
+# match any html tag:
+html_tags = r"<[^>]+>"
+html_tag_w_content = dotall + r"<\W*([a-zA-Z]+)<[^>]+>.+?<\W*/\1\W*>"
 
 if __name__ == "__main__":
     # tests for the regex patterns involved:
