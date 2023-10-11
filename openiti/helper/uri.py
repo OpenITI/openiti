@@ -1095,7 +1095,7 @@ Did you put a dot between date and author name?"
             elif self.author:
                 return self.build_pth(uri_type="author", base_pth=base_pth)
             elif self.date:
-                return self.build_pth("date", base_pth)
+                return self.build_pth("date", base_pth=base_pth)
 
 
         if uri_type == "date":
@@ -1106,7 +1106,13 @@ Did you put a dot between date and author name?"
                     d = "{:04d}AH".format((int(int(self.date)/25) + 1)*25)
                 else:
                     d = "{:04d}AH".format(int(self.date))
-                #p = os.path.join(base_pth, d)
+                # take into account the different repo name formats for Arabic and other languages:
+                # (Arabic: 0025AH, 0050AH, ...; Persian: PER0025AH, PER0050AH, ...; Urdu: URD0025AH, ...)
+                try:
+                    if self.language != "ara":
+                        d = self.language.upper() + d
+                except:
+                    pass
                 return os.sep.join((base_pth, d))
             else:
                 raise Exception("Error: the date component of the URI was not defined")
@@ -1142,7 +1148,8 @@ Did you put a dot between date and author name?"
 
 
 def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False,
-               book_relations_fp="https://github.com/OpenITI/kitab-metadata-automation/raw/master/output/OpenITI_Github_clone_book_relations.json"):
+               book_relations_fp="https://github.com/OpenITI/kitab-metadata-automation/raw/master/output/OpenITI_Github_clone_book_relations.json",
+               non_25Y_folder=None):
     """Change a uri and put all files in the correct folder.
 
     If a version URI changes:
@@ -1189,6 +1196,11 @@ def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False,
             (the user will still be given the option to execute
             all proposed changes at the end);
             if True, all changes will be executed immediately.
+        book_relations_fp (str): path to the json file that
+            contains all book relations
+        non_25Y_folder (bool): If True, the function will take into
+            account that the corpus folder is not subdivided
+            into folders for each 25-year-period. Defaults to None.
 
     Returns:
         None
@@ -1213,15 +1225,19 @@ def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False,
             if not file.endswith(".md"):
                 if URI(file).build_uri(ext="") == old_uri.build_uri(ext=""):
                     if file.endswith(".yml"):
-                        move_yml(fp, new_uri, "version", execute)
+                        move_yml(fp, new_uri, "version", execute, 
+                                 non_25Y_folder=non_25Y_folder)
                     else:
                         old_file_uri = URI(fp)
                         new_uri.extension = old_file_uri.extension
-                        move_to_new_uri_pth(fp, new_uri, execute)
+                        move_to_new_uri_pth(fp, new_uri, execute,
+                                            non_25Y_folder=non_25Y_folder)
 
         # add readme and text_questionnaire files:
 
         target_folder = new_uri.build_pth("version")
+        if non_25Y_folder:
+            target_folder = re.sub("\d{4}AH", non_25Y_folder, target_folder)
         if execute:
             if "README.md" not in os.listdir(target_folder):
                 add_readme(target_folder)
@@ -1251,9 +1267,11 @@ def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False,
                         new_file_uri.title = new_uri.title
                     if file.endswith(".yml"):
                         new_fp = move_yml(fp, new_file_uri,
-                                          old_file_uri.uri_type, execute)
+                                          old_file_uri.uri_type, execute,
+                                          non_25Y_folder=non_25Y_folder)
                     else:
-                        new_fp = move_to_new_uri_pth(fp, new_file_uri, execute)
+                        new_fp = move_to_new_uri_pth(fp, new_file_uri, execute,
+                                                     non_25Y_folder=non_25Y_folder)
 
             # Deal with non-URI filenames last:
 
@@ -1326,7 +1344,8 @@ def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False,
 to abort: press Enter. ")
         if resp == "OK":
             print()
-            change_uri(old, new, old_base_pth, new_base_pth, execute=True)
+            change_uri(old, new, old_base_pth, new_base_pth, 
+                       execute=True, non_25Y_folder=non_25Y_folder)
         else:
             print("User aborted carrying out these changes!")
     print("Done")
@@ -1351,7 +1370,7 @@ def add_text_questionnaire(target_folder):
               mode="w", encoding="utf-8") as file:
         file.write(text_questionnaire_template)
 
-def add_character_count(tok_count, char_count, tar_uri, execute=False):
+def add_character_count(tok_count, char_count, tar_uri, execute=False, non_25Y_folder=None):
     """Add the character and token counts to the new version yml file
 
     Args:
@@ -1360,12 +1379,17 @@ def add_character_count(tok_count, char_count, tar_uri, execute=False):
         tar_uri (URI object): uri of the target text
         execute (bool): if True, the function will do its work silently.
           If False, it will only print a description of the action.
+        non_25Y_folder (str): name of the parent folder for the new files,
+            to be used instead of the 25 years folder (0025AH, 0050AH, ...).
+            Defaults to None (that is: use the auto-generated 25 years folder)
 
     Returns:
         None
     """
 
     tar_yfp = tar_uri.build_pth("version_yml")
+    if non_25Y_folder:
+        tar_yfp = re.sub("\d{4}AH", non_25Y_folder, tar_yfp)
     if execute:
         with open(tar_yfp, mode="r", encoding="utf-8") as file:
             yml_dic = yml.ymlToDic(file.read().strip())
@@ -1402,7 +1426,8 @@ def new_yml(tar_yfp, yml_type, execute=False):
             created_ymls.append(tar_yfp)
 
 
-def move_yml(yml_fp, new_uri, uri_type, execute=False):
+def move_yml(yml_fp, new_uri, uri_type, execute=False,
+             non_25Y_folder=None):
     """Replace the URI in the yml file
     and save the yml file in its new location.
 
@@ -1420,7 +1445,7 @@ def move_yml(yml_fp, new_uri, uri_type, execute=False):
     """
     new_yml_fp = new_uri.build_pth(uri_type=uri_type+"_yml")
     new_yml_folder = os.path.split(new_yml_fp)[0]
-    make_folder(new_yml_folder, new_uri, execute)
+    make_folder(new_yml_folder, new_uri, execute, non_25Y_folder=non_25Y_folder)
 
     if not execute:
         print("  Change URI inside yml file:")
@@ -1441,7 +1466,7 @@ def move_yml(yml_fp, new_uri, uri_type, execute=False):
     return new_yml_fp
 
 
-def make_folder(new_folder, new_uri, execute=False):
+def make_folder(new_folder, new_uri, execute=False, non_25Y_folder=None):
     """Check if folder exists; if not, make folder (and, if needed, parents)
 
     Args:
@@ -1461,6 +1486,8 @@ Make sure base path is correct.""".format(new_uri.base_pth)
         raise Exception(msg)
     if not os.path.exists(new_folder):
         author_folder = new_uri.build_pth("author")
+        if non_25Y_folder:
+            author_folder = re.sub("\d{4}AH", non_25Y_folder, author_folder)
         if not os.path.exists(author_folder):
             if execute:
                 os.makedirs(author_folder)
@@ -1471,6 +1498,8 @@ Make sure base path is correct.""".format(new_uri.base_pth)
             new_yml(new_uri.build_pth("author_yml"), "author_yml", execute)
         if new_uri.uri_type == "book" or new_uri.uri_type == "version":
             book_folder = new_uri.build_pth("book")
+            if non_25Y_folder:
+                book_folder = re.sub("\d{4}AH", non_25Y_folder, book_folder)
             if not os.path.exists(book_folder):
                 if execute:
                     os.makedirs(book_folder)
@@ -1483,6 +1512,8 @@ Make sure base path is correct.""".format(new_uri.base_pth)
                 new_yml(new_uri.build_pth("version_yml"),
                             "version_yml", execute)
                 target_folder = new_uri.build_pth("version")
+                if non_25Y_folder:
+                    target_folder = re.sub("\d{4}AH", non_25Y_folder, target_folder)
                 if execute:
                     if "README.md" not in os.listdir(target_folder):
                         add_readme(target_folder)
@@ -1491,7 +1522,7 @@ Make sure base path is correct.""".format(new_uri.base_pth)
              
 
 
-def move_to_new_uri_pth(old_fp, new_uri, execute=False):
+def move_to_new_uri_pth(old_fp, new_uri, execute=False, non_25Y_folder=None):
     """Move file to its new location.
 
     Args:
@@ -1501,13 +1532,19 @@ def move_to_new_uri_pth(old_fp, new_uri, execute=False):
             (the user will still be given the option to execute
             all proposed changes at the end);
             if True, all changes will be executed immediately.
+        non_25Y_folder (str): name of the parent folder for the new files,
+            to be used instead of the 25 years folder (0025AH, 0050AH, ...).
+            Defaults to None (that is: use the auto-generated 25 years folder)
 
     Returns:
         (str): path to the new file
     """
     new_folder = new_uri.build_pth(uri_type=new_uri.uri_type)
     new_fp = new_uri.build_pth(uri_type=new_uri.uri_type+"_file")
-    make_folder(new_folder, new_uri, execute)
+    if non_25Y_folder:
+        new_folder = re.sub("\d{4}AH", non_25Y_folder, new_folder)
+        new_fp = re.sub("\d{4}AH", non_25Y_folder, new_fp)
+    make_folder(new_folder, new_uri, execute, non_25Y_folder=non_25Y_folder)
     if execute:
         shutil.move(old_fp, new_fp)
         print("  Move", old_fp, "\n    to", new_fp)
@@ -1725,11 +1762,10 @@ def check_yml_files(start_folder, exclude=[],
             the user the option to execute the proposed changes.
 
     Returns:
-        None
+        list (of paths to yml files where token counts failed)
     """
     failed = []
     for fp in get_all_text_files_in_folder(start_folder, excluded_folders=exclude):
-        print(fp)
         uri = URI(fp)
         for yml_type in ("author", "book", "version"):
             yml_fn = uri.build_uri(uri_type="{}_yml".format(yml_type))
@@ -1749,6 +1785,7 @@ def check_yml_files(start_folder, exclude=[],
         for yml_fp in failed:
             print("*", yml_fp)
         print()
+    return failed
 
 
 if __name__ == "__main__":
