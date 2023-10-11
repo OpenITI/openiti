@@ -181,7 +181,7 @@ def get_character_names(characters, verbose=False):
 
 def text_cleaner(text):
     """Clean text by normalizing Arabic characters \
-    and removing all non-Arabic characters
+    and removing all Latin-language characters and non-word characters
 
     Args:
         text (str): the string to be cleaned
@@ -190,7 +190,9 @@ def text_cleaner(text):
         (str): the cleaned string
     """
     text = ara.normalize_ara_light(text)
-    text = re.sub("\W|\d|[A-z]", " ", text)
+    #text = re.sub("\W|\d|[A-z]", " ", text) # until 10/10/2023
+    latin_letters = "[" + ara.transcription_chars + "]"
+    text = re.sub("\W|\d|"+latin_letters, " ", text)
     text = re.sub(" +", " ", text)
     return text
 
