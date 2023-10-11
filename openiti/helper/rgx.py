@@ -182,7 +182,7 @@ page = dotall + r"(?:(?<={})|(?<={})|(?<={})).+?(?:{}|\Z)".format(vol_page_3,
                     vol_page_4, header_splitter, vol_page)
 
 # Hierarchical section tags:
-section_tag = "### \|\w*\|* "
+section_tag = "### \|\d*\|* "
 section_title = section_tag + "([^\r\n]*)"
 section = dotall + section_tag + r".+?(?=###|\Z)"
 section_text = dotall + section_tag + "[^\r\n]*[\r\n]+(.+?)(?=###|\Z)"
