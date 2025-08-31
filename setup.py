@@ -1,7 +1,7 @@
 import setuptools
 import openiti
 
-with open("README.md", "r") as fh:
+with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 ##################################################################
@@ -38,6 +38,6 @@ setuptools.setup(
         "bs4",
         "pygithub",
     ],
-    python_requires='>=3.4',
+    python_requires='>=3.6',
 )
 
