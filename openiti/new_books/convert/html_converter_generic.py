@@ -118,9 +118,9 @@ from openiti.new_books.convert.helper import html2md
 
 class GenericHtmlConverter(GenericConverter):
 
-    def __init__(self, dest_folder=None):
+    def __init__(self, dest_folder=None, overwrite=True):
         """Initialize the class and its super-class."""
-        super().__init__()
+        super().__init__(dest_folder=dest_folder, overwrite=overwrite)
         self.root_tag_string = "soup"
         self.unique_tags = dict()
 ##        if dest_folder == None:
