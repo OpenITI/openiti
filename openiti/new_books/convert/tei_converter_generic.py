@@ -151,7 +151,8 @@ class TeiConverter(GenericConverter):
                 item = fileDesc.find(k).text.strip()
             except:
                 item = ""
-            metadata += "#META# {}: {}\n".format(k, item)
+            if item:
+                metadata += "#META# {}: {}\n".format(k, item)
 
         source_d = {"title": "", "author": "n.n.", "editor": "n.n.",
                     "pubPlace": "n.p.", "publisher": "n.n.", "date": "n.d."}
@@ -178,8 +179,12 @@ class TeiConverter(GenericConverter):
         metadata += "#META# ed_info: {}\n".format(ed_info)
 
         text_tag = soup.find("text")
-        text_id = text_tag["id"]
-        metadata += "#META# coll_id: {}\n".format(text_id)
+        try:
+            text_id = text_tag["id"]
+            metadata += "#META# coll_id: {}\n".format(text_id)
+        except:
+            #print("no ID found in the metadata header")
+            pass
         metadata = self.magic_value + metadata + self.header_splitter
         return metadata
 
