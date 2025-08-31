@@ -11,10 +11,10 @@ the GRAR library to OpenITI mARkdown:
 * span conversion: the GRAR html seems to be a conversion of tei xml;
     the tei data is often embedded inside the id of a span.
 
-Inheritance schema of the GRARHtmlConverter:
+Inheritance schema of the ThielenHtmlConverter:
 
 ======================== ==========================
-MarkdownConverter        GRARHtmlConverter
+MarkdownConverter        ThielenHtmlConverter
 ======================== ==========================
 Options                  (inherited)
 DefaultOptions           (inherited)
