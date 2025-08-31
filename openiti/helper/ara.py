@@ -649,8 +649,8 @@ def normalize_per(text):
 
 
 def normalize_ara_light(text):
-    """Lighlty normalize Arabic strings:
-    fixing only Alifs, Alif Maqsuras;
+    """Lightly normalize Arabic strings:
+    fixing only Alifs, Alif Maqsuras; Persian ya's and kafs;
     replacing hamzas on carriers with standalone hamzas
 
     Args:
@@ -665,11 +665,13 @@ def normalize_ara_light(text):
         'مقرء فء'
         >>> normalize_ara_light("قهوة")
         'قهوة'
+        
     """
     text = normalize_composites(text)
     repl = [("أ", "ا"), ("ٱ", "ا"), ("آ", "ا"), ("إ", "ا"),    # alifs
             ("ى", "ي"),                                        # alif maqsura
             ("يء", "ء"), ("ىء", "ء"), ("ؤ", "ء"), ("ئ", "ء"),  # hamzas
+            ("ک", "ك"), ("ی", "ي"), ("ۀ", "ه"),                # Persian letters
             ]
     return normalize(text, repl)
     
@@ -692,7 +694,8 @@ def normalize_ara_heavy(text):
     repl = [("أ", "ا"), ("ٱ", "ا"), ("آ", "ا"), ("إ", "ا"),  # alifs
             ("ى", "ي"),                                      # alif maqsura
             ("ؤ", ""), ("ئ", ""), ("ء", ""),                 # hamzas
-            ("ة", "ه")                                       # ta marbuta
+            ("ک", "ك"), ("ی", "ي"),                          # Persian letters
+            ("ة", "ه"), ("ۀ", "ه"),                          # ta marbuta/ha
             ]
     return normalize(text, repl)
 
