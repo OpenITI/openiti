@@ -100,10 +100,13 @@ class GenericConverter(object):
         self.header_splitter = "\n\n#META#Header#End#\n\n"
         self.endnote_splitter = "\n\n### |EDITOR|\nENDNOTES:\n\n"
         #self.dest_folder = "converted"
-        if dest_folder == None:
-            self.dest_folder = "converted"
-        else:
+        #if dest_folder == None:
+        #    self.dest_folder = "converted"
+        #else:
+        if dest_folder:
             self.dest_folder = dest_folder
+        else:
+            self.dest_folder = None
         self.extension = ".automARkdown"
         
         # settings for line wrapping: max number of characters in a line
@@ -328,10 +331,11 @@ class GenericConverter(object):
             source_fn += self.extension
         else:
             source_fn = fn + self.extension
-        if self.dest_folder == "converted":
+        #if self.dest_folder == "converted":
+        if self.dest_folder is None:
             self.dest_folder = os.path.join(source_folder, "converted")
-            if not os.path.exists(self.dest_folder):
-                os.makedirs(self.dest_folder)
+        if not os.path.exists(self.dest_folder):
+            os.makedirs(self.dest_folder)
         self.dest_fp = os.path.join(self.dest_folder, source_fn)
         return self.dest_fp
 
