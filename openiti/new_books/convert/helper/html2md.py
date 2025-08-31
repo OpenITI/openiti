@@ -219,7 +219,8 @@ class MarkdownConverter(object):
 
         html = wrapped % html
         #soup = BeautifulSoup(html, 'html.parser')
-        soup = BeautifulSoup(html, 'html')
+        #soup = BeautifulSoup(html, 'html')
+        soup = BeautifulSoup(html, features="lxml")
         if 'strip' in self.options and self.options["strip"]:
             for tag in self.options["strip"]:
                 [t.decompose() for t in soup.find_all(tag)]
@@ -654,7 +655,7 @@ class MarkdownConverter(object):
         else:
             for td in el.find_all('td'):
                 #t.append(wrap_cell_text(td.text))
-                t.append(td.get_text(" ", strip=True))
+                t.append(td.get_text(" ", strip=True).replace("\n", " "))
             return '|{}|\n'.format("|".join(t))
 
     convert_ul = convert_list
@@ -732,7 +733,7 @@ if __name__ == "__main__":
     import doctest
     doctest.testmod()
 
-    soup = BeautifulSoup(test_html)
+    soup = BeautifulSoup(test_html, features="lxml")
     text_div = soup.html.body.div
     #print(text_div)
     #text=markdownify(text_div, md_style=ATX)
