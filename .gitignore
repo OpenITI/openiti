@@ -10,3 +10,4 @@ PyPi.txt
 .idea
 build/
 dist/
+openiti.egg-info/
