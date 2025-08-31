@@ -45,7 +45,7 @@ convert_ol               (inherited)
 convert_p                convert_p
 convert_table            (inherited)
 convert_tr               (inherited)
-convert_ul               (inherited)
+convert_ul               convert_ul
 convert_strong           (inherited)
                          convert_span
                          convert_div
@@ -219,6 +219,20 @@ class EShiaHtmlConverter(html2md.MarkdownConverter):
             return '\n\n# %s\n\n' % text if text else ''
         else:
             return '\n\n%s\n\n' % text if text else ''
+
+    def convert_ul(self, el, text):
+        """Converts <ul> tags.
+
+        Same as the standard ul tag conversion,
+        except that lists that have "quick-menue" id will be ignored.
+        """
+        try:  # will fail if el has no id attribute
+            if el["id"] == "quick-menue" :
+                return ""
+        except Exception as e:
+            pass
+        
+        return self.convert_list(el, text)
 
 
 def markdownify(html, **options):
