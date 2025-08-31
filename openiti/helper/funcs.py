@@ -5,6 +5,7 @@ import re
 import unicodedata
 import urllib.request as url
 import requests
+import bisect
 
 if __name__ == '__main__':
     from os import sys, path
@@ -340,20 +341,57 @@ def read_text(pth, max_header_lines=300, split_header=False, remove_header=False
 def absolute_path(path):
     return os.path.abspath(path)
 
-def get_page_number(page_numbers, pos):
-    """Get the page number of a token at index position `pos` in a string \
-    based on a dictionary `page_numbers` that contains the index positions \
-    of the page numbers in that string.
+
+def get_page_numbers(text, page_regex=r"PageV[^P]+P\d+[A-Z]?"):
+    """Get all page numbers and their locations (character offsets) in a text
 
     Args:
-        page_numbers (dict):
-            key: index of the last character of the page number in the string
-            value: page number
-        pos (int): the index position of the start of a token in the string
+        text (str): the text in which the page numbers should be found
+        page_regex (str): pattern that describes the page numbers in the text
+
+    Returns:
+        tuple of lists (page_numbers, page_ends)
     """
-    for k in sorted(page_numbers.keys()):
-        if pos < k:
-            return page_numbers[k]
+    matches = regex.finditer(page_regex, text)
+    page_numbers = []
+    page_ends = []
+    for m in matches:
+        page_numbers.append(m.group())
+        page_ends.append(m.end())
+    return (page_numbers, page_ends)
+
+def get_page_number(loc, page_numbers, page_ends):
+    """Find the page number of a specified character position in the text
+
+    NB: the page_numbers and page_ends lists can be generated
+        by the `get_page_numbers` function
+
+    Args:
+        loc (int): a character position in the text
+        page_numbers (list): a list of all page numbers in the text
+        page_ends (list): a list of the character position
+            of each page number in the text
+
+    Returns:
+        str
+    """
+    i = bisect.bisect_right(page_ends, loc)
+    return page_numbers[i]
+
+##def get_page_number(page_numbers, pos):
+##    """Get the page number of a token at index position `pos` in a string \
+##    based on a dictionary `page_numbers` that contains the index positions \
+##    of the page numbers in that string.
+##
+##    Args:
+##        page_numbers (dict):
+##            key: index of the last character of the page number in the string
+##            value: page number
+##        pos (int): the index position of the start of a token in the string
+##    """
+##    for k in sorted(page_numbers.keys()):
+##        if pos < k:
+##            return page_numbers[k]
 
 def report_missing_numbers(fp, no_regex="### \$ \((\d+)",
                            report_repeated_numbers=True):
@@ -375,20 +413,21 @@ def report_missing_numbers(fp, no_regex="### \$ \((\d+)",
     with open(fp, mode="r", encoding="utf-8") as file:
         text = file.read()
     current_num = 0
-    page_numbers = {m.end(): m.group(0) \
-                    for m in re.finditer("PageV\d+P\d+", text)}
+    #page_numbers = {m.end(): m.group(0) \
+    #                for m in re.finditer("PageV\d+P\d+", text)}
+    page_numbers, page_ends = get_page_numbers(text)
     for match in re.finditer(no_regex, text):
         no = int(match.group(1))
         if no == 1:
             current_num = 1
-            page = get_page_number(page_numbers, match.start())
+            page = get_page_number(match.start(), page_numbers, page_ends)
             print("start recounting from 1 at", page)
         elif no == current_num:
-            page = get_page_number(page_numbers, match.start())
+            page = get_page_number(match.start(), page_numbers, page_ends)
             if report_repeated_numbers:
                 print(page, no, "follows", current_num)
         elif no != current_num + 1:
-            page = get_page_number(page_numbers, match.start())
+            page = get_page_number(match.start(), page_numbers, page_ends)
             print(page, no, "follows", current_num)
             current_num = no
         else:
@@ -490,8 +529,8 @@ def get_semantic_tag_elements(tag_name, text, include_tag=False,
     return final_results
 
 
-def find_section_title(loc, section_titles, section_starts):
-    """Find the section title(s) for a character offset
+def get_section_title(loc, section_titles, section_starts):
+    """Find the section title(s) for a specified character offset in the text
 
     Args:
         loc (int): character offset for which the section title is wanted
@@ -499,7 +538,7 @@ def find_section_title(loc, section_titles, section_starts):
         section_starts (list): a list of character offsets of the
             starts of all sections in the text
     """
-    i = bisect(section_starts, loc)
+    i = bisect.bisect_left(section_starts, loc)
     return section_titles[i]
 
 def get_sections(text, section_header_regex="### .+", include_hierarchy=True):
