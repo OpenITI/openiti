@@ -195,13 +195,22 @@ class GenericEpubConverter(GenericConverter):
         html_files_dict = {os.path.split(fp)[-1] : fp for fp in html_files}
         toc_data = zp.read(toc_fp)
         toc_data = codecs.decode(toc_data, "utf-8")
-        soup = BeautifulSoup(toc_data)
-        toc_ol = soup.find("ol")
+        
+        
         toc = []
-        for a in toc_ol.find_all("a"):
-            fn = os.path.split(a.get("href"))[-1]
-            if fn in html_files_dict:
-                toc.append(html_files_dict[fn])
+        if toc_fp.endswith("ncx"):
+            soup = BeautifulSoup(toc_data, "lxml")
+            for c in soup.find_all("content"):
+                fn = os.path.split(c.get("src"))[-1]
+                if fn in html_files_dict:
+                    toc.append(html_files_dict[fn])
+        else:
+            soup = BeautifulSoup(toc_data)
+            toc_ol = soup.find("ol")
+            for a in toc_ol.find_all("a"):
+                fn = os.path.split(a.get("href"))[-1]
+                if fn in html_files_dict:
+                    toc.append(html_files_dict[fn])
         return toc
 
 
@@ -250,12 +259,23 @@ class GenericEpubConverter(GenericConverter):
             notes = self.endnote_splitter + notes
         return text_without_notes, notes
 
+    def find_toc_fn(self,src_fp):
+        """Try to find the file containing the table of contents automatically"""
+        zp = zipfile.ZipFile(src_fp)
+        for info in zp.infolist():
+            if "toc." in info.filename:
+                print(info.filename)
+                return info.filename
 
     def get_toc(self, src_fp):
         """Get the filename of the table of contents of the epub"""
         try:
             self.toc_fn
         except:
+            toc_fn = self.find_toc_fn(src_fp)
+            if toc_fn:
+                self.toc_fn = toc_fn
+                return toc_fn
             self.inspect_epub(src_fp)
             toc_input = """\
 Write the filename (with extension) of the table of contents
