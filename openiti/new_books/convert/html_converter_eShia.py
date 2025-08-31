@@ -187,7 +187,7 @@ class EShiaHtmlConverter(GenericHtmlConverter):
             metadata (str): metadata formatted in OpenITI format
                 (including the magic value and the header splitter)
         """
-        soup = BeautifulSoup(text)
+        soup = BeautifulSoup(text, features="lxml")
         meta_td = soup.find("td") # metadata is in first td tag
         
         # remove footnotes from metadata page:
@@ -326,7 +326,7 @@ class EShiaHtmlConverter(GenericHtmlConverter):
             if re.findall("PageV\d+P\d+", p):
                 text.append(p)
             else:
-                soup = BeautifulSoup(p)
+                soup = BeautifulSoup(p, features="lxml")
                 try:
                     t = html2md_eShia.markdownify(soup.td.prettify())
                 except:
@@ -347,6 +347,10 @@ class EShiaHtmlConverter(GenericHtmlConverter):
         text = re.sub("# \*\*\* (.+)\*\*\*", r"### ||| \1", text)
         # add footnotes after a title to same line as the title:
         text = re.sub("(### \|+ .+)[\r\n]+# (\[\d+\][\r\n]+)", r"\1 \2", text)
+        # format poetry (was formatted as tables):
+        #prev_line = r"((?:شعر|شاعر|نشذ|%~%).+\n+)"
+        pattern = r"(?<=\n)#? ?\|([^|\n]+)\|\|([^|\n]+)\| *(?=\n)"
+        text = re.sub(pattern, r"# \1 %~% \2", text)
         # remove floating hashtags and pipes
         text = re.sub("[\r\n]+# *([\r\n]+)", r"\1", text)
         text = re.sub("[\r\n]+\|+ *([\r\n]+)", r"\1", text)
