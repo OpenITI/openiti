@@ -1,0 +1,11 @@
+include README.md LICENSE
+recursive-include openiti *.py
+
+# Keep junk out of the sdist
+prune build
+prune dist
+prune .venv
+prune venv
+prune openiti.egg-info
+
+global-exclude *.pyc __pycache__ *.pyo *.pyd *.so *.dll

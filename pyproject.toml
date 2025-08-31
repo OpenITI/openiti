@@ -1,0 +1,59 @@
+# see https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
+
+[build-system]
+requires = ["setuptools>=68", "wheel", "setuptools-scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "openiti"
+dynamic = ["version"]   # get the version number from the git tag, see below
+description = "The official package for dealing with the OpenITI corpus"
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+  {name = "Sohail Merchant"},
+  {name = "Maxim Romanov"},
+  {name = "Masoumeh Seydi"},
+  {name = "Peter Verkinderen", email = "peter.verkinderen@gmail.com"}
+]
+keywords = ["OpenITI", "Islamicate", "Corpus", "Corpora", "Arabic", "Persian", "Urdu"]
+
+# runtime dependencies:
+dependencies = [
+  "beautifulsoup4",
+  "gitpython",
+  "lxml",
+  "pygithub",
+  "pypyodbc",
+  "requests",
+  "six"
+]
+
+# additional dependencies used only for docs/build tooling
+# (install using `pip install openiti[docs]`)
+[project.optional-dependencies]
+docs = [
+  "sphinx",
+  "sphinx_rtd_theme",
+]
+
+[project.urls]
+Repository = "https://github.com/OpenITI/openiti"
+Homepage = "https://openiti.org/"
+Documentation = "https://openiti.readthedocs.io/en/latest/"
+
+[tool.setuptools]
+package-dir = {"" = "."}
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["openiti*"]
+exclude = ["docs*", "build*", "dist*", "openiti.egg-info*", ".venv*"]
+
+
+# get the version number from the git tag:
+[tool.setuptools_scm]
+version_scheme = "post-release"
+local_scheme   = "no-local-version"
