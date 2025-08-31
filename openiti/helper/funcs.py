@@ -46,10 +46,10 @@ def get_all_text_files_in_folder(start_folder, excluded_folders=exclude_folders,
             (default: the list of excluded file names defined in this module)
 
     Examples:
-        > folder = r"D:\London\OpenITI\25Y_repos"
+        > folder = r"D:/OpenITI/25Y_repos"
         > for fp in get_all_text_files_in_folder(folder):
             print(fp)
-        > folder = r"D:\London\OpenITI\25Y_repos\0025AH"
+        > folder = r"D:/OpenITI/25Y_repos/0025AH"
         > AH0025_file_list = [fp for fp in get_all_text_files_in_folder(folder)]
     """
     for root, dirs, files in os.walk(start_folder):
@@ -82,10 +82,10 @@ def get_all_yml_files_in_folder(start_folder, yml_types,
             (default: the list of excluded file names defined in this module)
 
     Examples:
-        > folder = r"D:\London\OpenITI\25Y_repos"
+        > folder = r"D:/OpenITI/25Y_repos"
         > for fp in get_all_yml_files_in_folder(folder):
             print(fp)
-        > folder = r"D:\London\OpenITI\25Y_repos\0025AH"
+        > folder = r"D:/OpenITI/25Y_repos/0025AH"
         > AH0025_file_list = [fp for fp in get_all_text_files_in_folder(folder)]
     """
     dots = {"author": 1, "book": 2, "version": 3}
@@ -191,9 +191,9 @@ def text_cleaner(text):
         (str): the cleaned string
     """
     text = ara.normalize_ara_light(text)
-    #text = re.sub("\W|\d|[A-z]", " ", text) # until 10/10/2023
+    #text = re.sub(r"\W|\d|[A-z]", " ", text) # until 10/10/2023
     latin_letters = "[" + ara.transcription_chars + "]"
-    text = re.sub("\W|\d|"+latin_letters, " ", text)
+    text = re.sub(r"\W|\d|"+latin_letters, " ", text)
     text = re.sub(" +", " ", text)
     return text
 
@@ -352,7 +352,7 @@ def get_page_numbers(text, page_regex=r"PageV[^P]+P\d+[A-Z]?"):
     Returns:
         tuple of lists (page_numbers, page_ends)
     """
-    matches = regex.finditer(page_regex, text)
+    matches = re.finditer(page_regex, text)
     page_numbers = []
     page_ends = []
     for m in matches:
@@ -393,9 +393,9 @@ def get_page_number(loc, page_numbers, page_ends):
 ##        if pos < k:
 ##            return page_numbers[k]
 
-def report_missing_numbers(fp, no_regex="### \$ \((\d+)",
+def report_missing_numbers(fp, no_regex=r"### \$ \((\d+)",
                            report_repeated_numbers=True):
-    """Use a regular expression to check whether numbers\
+    r"""Use a regular expression to check whether numbers\
     (of books, pages, etc.) are in sequence and no numbers are missing.
 
     Arguments:
@@ -440,14 +440,14 @@ def natural_sort(obj):
     based on https://stackoverflow.com/a/16090640/4045481
     """
     natsort = lambda s: [int(t) if t.isdigit() else t.lower()
-                         for t in re.split('(\d+)', s)]
+                         for t in re.split(r'(\d+)', s)]
     return sorted(obj, key=natsort)
     
 
 def get_semantic_tag_elements(tag_name, text, include_tag=False,
                                   include_prefix=False, include_offsets=False,
                                   max_tokens=99, normalize_spaces=False):
-    """Extract semantic tags (the likes of @TOP\d\d+) from OpenITI texts
+    r"""Extract semantic tags (the likes of @TOP\d\d+) from OpenITI texts
 
     Args:
         tag_name (str): the tag you want to extract (e.g., @TOP, @PER, ...)
@@ -474,19 +474,19 @@ def get_semantic_tag_elements(tag_name, text, include_tag=False,
     not_token_not_tag = "[^@"+ar_tok[1:]
     n_tokens = "{1,"+str(max_tokens)+"}"
     #pattern = tag_name+"\d\d+(?:[^@\w]+\w+){1,"+str(max_tokens)+"}"
-    pattern = f"{tag_name}\d\d+(?:{not_token_not_tag}{ar_tok}){n_tokens}"
+    pattern = rf"{tag_name}\d\d+(?:{not_token_not_tag}{ar_tok}){n_tokens}"
     tmp_results = re.finditer(pattern, text)
 
     # select the amount of tokens as defined in the tag:
     final_results = []
     for result in tmp_results:
         # extract the tag from the result:
-        res_tag = re.findall(tag_name+"\d\d+", result.group())[0]
+        res_tag = re.findall(tag_name+r"\d\d+", result.group())[0]
         not_token = "[^"+ar_tok[1:]
         tokens = re.split("("+not_token+")", result.group()[len(res_tag):])
         # remove empty string matches:
         tokens = [tok for tok in tokens if tok != ""]
-        n_prefix, n_toks = re.findall("(\d)(\d+)", res_tag)[-1]
+        n_prefix, n_toks = re.findall(r"(\d)(\d+)", res_tag)[-1]
         if not include_tag:
             selected_toks = tokens[1:(2*int(n_toks))]
             cleaned_res = "".join(selected_toks)
@@ -532,13 +532,28 @@ def get_semantic_tag_elements(tag_name, text, include_tag=False,
 def get_section_title(loc, section_titles, section_starts):
     """Find the section title(s) for a specified character offset in the text
 
+    NB: you can generate the section_titles and section_starts lists
+        using the `get_sections` function
+
     Args:
         loc (int): character offset for which the section title is wanted
         section_titles (list): a list of all section titles in the document
         section_starts (list): a list of character offsets of the
             starts of all sections in the text
+
+    Examples:
+        >>> section_titles = ["Section 1", "Section 2", "Section 3"]
+        >>> section_starts = [0, 150, 200]
+        >>> get_section_title(10, section_titles, section_starts)
+        'Section 1'
+        >>> get_section_title(180, section_titles, section_starts)
+        'Section 2'
+        >>> get_section_title(210, section_titles, section_starts)
+        'Section 3'
     """
-    i = bisect.bisect_left(section_starts, loc)
+    i = bisect.bisect_left(section_starts, loc) -1
+    if i < 0:
+        return None
     return section_titles[i]
 
 def get_sections(text, section_header_regex="### .+", include_hierarchy=True):
@@ -553,6 +568,22 @@ def get_sections(text, section_header_regex="### .+", include_hierarchy=True):
 
     Returns:
         list (section_titles, section_starts)
+
+    Examples:
+        >>> text = '''### | فارس
+        ... ### || قصبة فارس
+        ... شيراز قصبة فارس.
+        ... PageV01P001'''
+        >>> section_titles, section_starts = get_sections(text)
+        >>> for title, start in zip(section_titles, section_starts):
+        ...     print(start, title)
+        0 ['### | فارس']
+        11 ['### | فارس', '### || قصبة فارس']
+        >>> section_titles, section_starts = get_sections(text, include_hierarchy=False)
+        >>> for title, start in zip(section_titles, section_starts):
+        ...     print(start, title)
+        0 ### | فارس
+        11 ### || قصبة فارس
     """
     section_titles = [] 
     section_starts = [] 
@@ -574,7 +605,420 @@ def get_sections(text, section_header_regex="### .+", include_hierarchy=True):
     return section_titles, section_starts
 
 
+def search_in_text(search_term, text, use_regex=False, verbose=True,
+        include_locations=False,
+        include_section_titles=False, include_pages=False,
+        section_titles=None, section_starts=None, include_hierarchy=True,
+        page_numbers=None, page_ends=None, page_regex=r"PageV[^P]+P\d+[A-Z]?"):
+    """Search a word or expression in the text
+
+    NB: by default, search terms are considered not to be regular expressions;
+    special characters will be escaped. If you want to search using regular
+    expressions, set the `use_regex` parameter to `True`,
+    or use the `search_regex_in_text` function instead.
+
+    By default, this function prints and returns a list of matches for the
+    search term.
+
+    You can include the page number and/or section title(s) for each match
+    by setting the `include_section_titles` and/or `include_pages` to `True`
+
+    You can provide lists of section titles, page numbers, and their
+    character offsets in the text; if you don't, the function will
+    generate these lists itself if needed.
+
+    Args:
+        search_term (str): the regular expression pattern to be searched
+        text (str): the text to be searched in
+        use_regex (bool): if True, regular expression patterns will be used
+        verbose (bool): if True, the matches will be printed
+        include_locations (bool): if True, the character index where each
+            match starts in the text will be included in the output
+        include_section_titles (bool): if True, the titles of the sections
+            in which the match was found will be included in the output
+        include_pages (bool): if True, page numbers of the pages
+            in which the match was found  will be included in the output
+        section_titles (list): a list of all section titles in the text;
+            generated by the `get_sections` function
+        section_starts (list): a list of the start position
+            of each section title; generated by the `get_sections` function
+        include_hierarchy (bool): if True, the titles of the parent section
+            will be included
+        page_numbers (list): a list of all page numbers in the text;
+            generated by the `get_page_numbers` function
+        page_ends (list): a list of the positions of each page number;
+            generated by the `get_page_numbers` function
+        page_regex (str): regular expressions pattern describing
+            the page number format used in the text
+
+    Returns:
+        list or list of lists ( [search_results[, locations][, sections][, pages]])
+
+    Examples:
+        >>> search_term = "شيراز"
+        >>> text = '''### | فارس
+        ... ### || قصبة فارس
+        ... شيراز قصبة فارس.
+        ... PageV01P001'''
+        >>> matches = search_in_text(search_term, text)
+        شيراز
+        ------
+        >>> matches = search_in_text(search_term, text, verbose=False)
+        >>> for match in matches:
+        ...    print(match)
+        شيراز
+        >>> matches, pages = search_in_text(search_term, text, verbose=False, include_pages=True)
+        >>> for match, page in zip(matches, pages):
+        ...     print(match)
+        ...     print(page)
+        شيراز
+        PageV01P001
+        >>> matches, titles, pages = search_in_text(search_term, text, verbose=False, \
+                                                    include_pages=True, \
+                                                    include_section_titles=True)
+        >>> for sections, match, page in zip(titles, matches, pages):
+        ...     for title in sections:
+        ...         print(title)
+        ...     print(match)
+        ...     print(page)
+        ### | فارس
+        ### || قصبة فارس
+        شيراز
+        PageV01P001
+    """
+    # escape special characters if regex search is not used:
+    if not use_regex:
+        search_term = re.escape(search_term)
+    
+    return search_regex_in_text(
+              search_term,
+              text,
+              verbose=verbose,
+              include_locations=include_locations,
+              include_section_titles=include_section_titles,
+              include_pages=include_pages,
+              section_titles=section_titles,
+              section_starts=section_starts,
+              include_hierarchy=include_hierarchy,
+              page_numbers=page_numbers,
+              page_ends=page_ends,
+              page_regex=page_regex
+              )
+
+def search_regex_in_text(search_term, text, verbose=True, include_locations=False,
+           include_section_titles=False, include_pages=False,
+           section_titles=None, section_starts=None, include_hierarchy=True,
+           page_numbers=None, page_ends=None, page_regex=r"PageV[^P]+P\d+[A-Z]?"):
+    """Search a regular expression in the text
+
+    By default, this function prints and returns a list of matches for the
+    search term.
+
+    You can include the page number and/or section title(s) for each match
+    by setting the `include_section_titles` and/or `include_pages` to `True`
+
+    You can provide lists of section titles, page numbers, and their
+    character offsets in the text; if you don't, the function will
+    generate these lists itself if needed.
+
+    Args:
+        search_term (str): the regular expression pattern to be searched
+        text (str): the text to be searched in
+        verbose (bool): if True, the matches will be printed
+        include_locations (bool): if True, the character index where each
+            match starts in the text will be included in the output
+        include_section_titles (bool): if True, the titles of the sections
+            in which the match was found will be included in the output
+        include_pages (bool): if True, page numbers of the pages
+            in which the match was found  will be included in the output
+        section_titles (list): a list of all section titles in the text;
+            generated by the `get_sections` function
+        section_starts (list): a list of the start position
+            of each section title; generated by the `get_sections` function
+        include_hierarchy (bool): if True, the titles of the parent section
+            will be included
+        page_numbers (list): a list of all page numbers in the text;
+            generated by the `get_page_numbers` function
+        page_ends (list): a list of the positions of each page number;
+            generated by the `get_page_numbers` function
+        page_regex (str): regular expressions pattern describing
+            the page number format used in the text
+
+    Returns:
+        list or tuple of lists ( (search_results[, locations][, sections][, pages]))
+
+    Examples:
+        >>> search_term = "شيراز"
+        >>> text = '''### | فارس
+        ... ### || قصبة فارس
+        ... شيراز قصبة فارس.
+        ... PageV01P001'''
+        >>> matches = search_regex_in_text(search_term, text)
+        شيراز
+        ------
+        >>> matches = search_regex_in_text(search_term, text, verbose=False)
+        >>> for match in matches:
+        ...    print(match)
+        شيراز
+        >>> matches, pages = search_regex_in_text(search_term, text, verbose=False, include_pages=True)
+        >>> for match, page in zip(matches, pages):
+        ...     print(match)
+        ...     print(page)
+        شيراز
+        PageV01P001
+        >>> matches, titles, pages = search_regex_in_text(search_term, text, verbose=False, \
+                                                    include_pages=True, \
+                                                    include_section_titles=True)
+        >>> for sections, match, page in zip(titles, matches, pages):
+        ...     for title in sections:
+        ...         print(title)
+        ...     print(match)
+        ...     print(page)
+        ### | فارس
+        ### || قصبة فارس
+        شيراز
+        PageV01P001
+    """
+
+    # get the required information on section titles and pages if not provided:
+    if include_section_titles and section_starts is None:
+        section_titles, section_starts = get_sections(text, include_hierarchy=include_hierarchy)
+    if include_pages and page_numbers is None:
+        page_numbers, page_ends = get_page_numbers(text, page_regex=page_regex)
+
+    # search for a word and get the section titles and page it was found in:
+    matches = re.finditer(search_term, text)
+    text_matches = []
+    pages = []
+    sections = []
+    locations = []
+    for m in matches:
+        loc = m.start()
+        if include_locations:
+            locations.append(loc)
+        if include_section_titles:
+            section = get_section_title(loc, section_titles, section_starts)
+            sections.append(section)
+            if verbose:
+                if include_hierarchy and isinstance(section, list):
+                    for s in section:
+                        print(s)
+                else:
+                    print(section)
+        if verbose:
+            print(m.group())
+        text_matches.append(m.group())
+        if include_pages:
+            page = get_page_number(loc, page_numbers, page_ends)
+            pages.append(page)
+            if verbose:
+                print(page)
+        if verbose:
+            print("------")
+        
+    # prepare the output:
+    to_be_returned = [text_matches]
+    if include_locations:
+        to_be_returned.append(locations)
+    if include_section_titles:
+        to_be_returned.append(sections)
+    if include_pages:
+        to_be_returned.append(pages)
+    if len(to_be_returned) == 1:
+        return text_matches
+    return to_be_returned
+
+
+def search_in_folder(search_term, folder,
+        exclude_folders=exclude_folders,
+        exclude_files=exclude_files, use_regex=False, verbose=True, include_locations=False,
+        include_section_titles=False, include_pages=False,
+        section_titles=None, section_starts=None, include_hierarchy=True,
+        page_numbers=None, page_ends=None, page_regex=r"PageV[^P]+P\d+[A-Z]?"):
+    """Search a word or expression in all text files in a folder
+
+    NB: by default, search terms are considered not to be regular expressions;
+    special characters will be escaped. If you want to search using regular
+    expressions, set the `use_regex` parameter to `True`,
+    or use the `search_regex_in_text` function instead.
+
+    By default, this function prints and returns a list of matches for the
+    search term.
+
+    You can include the page number and/or section title(s) for each match
+    by setting the `include_section_titles` and/or `include_pages` to `True`
+
+    You can provide lists of section titles, page numbers, and their
+    character offsets in the text; if you don't, the function will
+    generate these lists itself if needed.
+
+    Args:
+        search_term (str): the regular expression pattern to be searched
+        folder (str): path to the folder containing the texts to be searched in
+        exclude_folders (list): list of folder names that should be excluded
+            (default: the list of excluded folders defined in this module)
+        exclude_files (list): list of file names that should be excluded
+            (default: the list of excluded file names defined in this module)
+        use_regex (bool): if True, regular expression patterns will be used
+        verbose (bool): if True, the matches will be printed
+        include_locations (bool): if True, the character index where each
+            match starts in the text will be included in the output
+        include_section_titles (bool): if True, the titles of the sections
+            in which the match was found will be included in the output
+        include_pages (bool): if True, page numbers of the pages
+            in which the match was found  will be included in the output
+        section_titles (list): a list of all section titles in the text;
+            generated by the `get_sections` function
+        section_starts (list): a list of the start position
+            of each section title; generated by the `get_sections` function
+        include_hierarchy (bool): if True, the titles of the parent section
+            will be included
+        page_numbers (list): a list of all page numbers in the text;
+            generated by the `get_page_numbers` function
+        page_ends (list): a list of the positions of each page number;
+            generated by the `get_page_numbers` function
+        page_regex (str): regular expressions pattern describing
+            the page number format used in the text
+
+    Returns:
+        dictionary (
+            keys: file path,
+            values: list or tuple of lists ( (search_results[, locations][, sections][, pages]))
+
+    Examples:
+        > folder = r"D:/OpenITI/25Y_repos"
+        > search_term = "شيراز"
+        > results = search_in_folder(search_term, folder)
+        > for fp, matches in results.items():
+        ...    print(fn)
+        ...    for match in matches:
+        ...        print(match)
+        > results = search_in_folder(search_term, folder, include_pages=True)
+        > for fp, (matches, pages) in results.items():
+        ...    print(fn)
+        ...    for match, page in zip(matches, pages):
+        ...        print(match)
+        ...        print(page)
+    """
+    # escape special characters if regex search is not used:
+    if not use_regex:
+        search_term = re.escape(search_term)
+    
+    return search_regex_in_folder(
+              search_term,
+              folder,
+              verbose=verbose,
+              include_locations=include_locations,
+              include_section_titles=include_section_titles,
+              include_pages=include_pages,
+              section_titles=section_titles,
+              section_starts=section_starts,
+              include_hierarchy=include_hierarchy,
+              page_numbers=page_numbers,
+              page_ends=page_ends,
+              page_regex=page_regex
+              )
+
+
+
+def search_regex_in_folder(search_term, folder,
+        exclude_folders=exclude_folders,
+        exclude_files=exclude_files,
+        verbose=True, include_locations=False,
+        include_section_titles=False, include_pages=False,
+        section_titles=None, section_starts=None, include_hierarchy=True,
+        page_numbers=None, page_ends=None, page_regex=r"PageV[^P]+P\d+[A-Z]?"):
+    """Search a regular expression in the text
+
+    By default, this function prints and returns a list of matches for the
+    search term.
+
+    You can include the page number and/or section title(s) for each match
+    by setting the `include_section_title` and/or `include_pages` to `True`
+
+    You can provide lists of section titles, page numbers, and their
+    character offsets in the text; if you don't, the function will
+    generate these lists itself if needed.
+
+    Args:
+        search_term (str): the regular expression pattern to be searched
+        folder (str): path to the folder containing the texts to be searched in
+        exclude_folders (list): list of folder names that should be excluded
+            (default: the list of excluded folders defined in this module)
+        exclude_files (list): list of file names that should be excluded
+            (default: the list of excluded file names defined in this module)
+        verbose (bool): if True, the matches will be printed
+        include_locations (bool): if True, the character index where each
+            match starts in the text will be included in the output
+        include_section_titless (bool): if True, the titles of the sections
+            in which the match was found will be included in the output
+        include_pages (bool): if True, page numbers of the pages
+            in which the match was found  will be included in the output
+        section_titles (list): a list of all section titles in the text;
+            generated by the `get_sections` function
+        section_starts (list): a list of the start position
+            of each section title; generated by the `get_sections` function
+        include_hierarchy (bool): if True, the titles of the parent section
+            will be included
+        page_numbers (list): a list of all page numbers in the text;
+            generated by the `get_page_numbers` function
+        page_ends (list): a list of the positions of each page number;
+            generated by the `get_page_numbers` function
+        page_regex (str): regular expressions pattern describing
+            the page number format used in the text
+
+    Returns:
+        dictionary (
+            keys: file path,
+            values: list or tuple of lists ( (search_results[, locations][, sections][, pages]))
+
+    Examples:
+        > folder = r"D:/OpenITI/25Y_repos"
+        > search_term = "*.شيراز.*"
+        > results = search_regex_in_folder(search_term, folder)
+        > for fp, matches in results.items():
+        ...    print(fn)
+        ...    for match in matches:
+        ...        print(match)
+        > results = search_regex_in_folder(search_term, folder, include_pages=True)
+        > for fp, (matches, pages) in results.items():
+        ...    print(fn)
+        ...    for match, page in zip(matches, pages):
+        ...        print(match)
+        ...        print(page)
+    """
+    files = get_all_text_files_in_folder(folder, excluded_folders=exclude_folders,
+                                         exclude_files=exclude_files)
+    d = dict()
+    for fp in files:
+        if verbose:
+            print(fp)
+        with open(fp, mode="r", encoding="utf-8") as file:
+            text = file.read()
+        r = search_regex_in_text(
+              search_term,
+              text,
+              verbose=verbose,
+              include_locations=include_locations,
+              include_section_titles=include_section_titles,
+              include_pages=include_pages,
+              section_titles=section_titles,
+              section_starts=section_starts,
+              include_hierarchy=include_hierarchy,
+              page_numbers=page_numbers,
+              page_ends=page_ends,
+              page_regex=page_regex
+              )
+        d[fp] = r
+    return d
+
 if __name__ == "__main__":
+    search_term = "شيراز"
+    text = '''### | فارس
+    ### || قصبة فارس
+    شيراز قصبة فارس.
+    PageV01P001'''
+    
     import doctest
     doctest.testmod()
 
