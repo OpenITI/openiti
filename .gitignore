@@ -8,3 +8,4 @@ test/**
 old/**
 PyPi.txt
 .idea
+openiti.egg-info/
