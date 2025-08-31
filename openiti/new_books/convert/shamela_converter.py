@@ -264,16 +264,19 @@ class BokJsonConverter(generic_converter.GenericConverter):
         
         shamid = re.findall("\d+", source_fp)[-1]
 
-        book_data, toc_data, metadata = self.get_data(source_fp, shamid)
+        book_data, toc_data, metadata, shamid = self.get_data(source_fp, shamid)
+        
 
         metadata = self.format_metadata(metadata)
 
         text, notes = self.format_text(book_data, toc_data, shamid)
+        text = re.sub(" *LINE_END *", "\n# ", text)
         text = self.reflow(text)
         #text = self.add_milestones(text)
         text = self.post_process(text)
         notes = self.reflow(notes)
         notes = re.sub("(\n+)(?![\n~P])", r"\1# ", notes)
+        notes = re.sub("(?:[\r\n]*# )? *LINE_END *", "\n# ", notes)
         text = self.compose(metadata, text, notes)
         #print(9, text)
 
@@ -286,10 +289,12 @@ class BokJsonConverter(generic_converter.GenericConverter):
             json_folder = self.mdb2json(source_folder, fn_regex=fn_regex)
             print("conversion from mdb to json completed.")
             extensions = ["json"]
+            source_folder = json_folder
+
+        if dest_folder:
+            self.dest_folder = dest_folder
         else:
-            json_folder = os.path.join(self.dest_folder, "json")
-        source_folder = json_folder
-        self.dest_folder = os.path.join(self.dest_folder, "txt")
+            self.dest_folder = os.path.join(self.dest_folder, "txt")
         print("Converting from json to txt...")
         super().convert_files_in_folder(source_folder, extensions=extensions,
                                         fn_regex=fn_regex)
@@ -304,7 +309,6 @@ class BokJsonConverter(generic_converter.GenericConverter):
         if not os.path.exists(dest_folder):
             os.makedirs(dest_folder)
         mdb_files = []
-        print("source folder:", source_folder)
         for root, dirs, files in os.walk(source_folder):
             for fn in files:
                 if fn_regex:
@@ -405,7 +409,15 @@ class BokJsonConverter(generic_converter.GenericConverter):
         with open(source_fp, mode="r", encoding="utf-8") as file:
             data = json.load(file)
 
-        book_data = data["b"+shamid]
+        try:
+            book_data = data["b"+shamid]
+        except:
+            # sometimes, the ID number on the website is not the id number inside the file:
+            shamid = [k[1:] for k in data if re.match("b\d+", k)][0]
+            book_data = data["b"+shamid]
+
+        # make sure all keys in the dictionary are lower-case:
+        book_data = [{k.lower():v for k,v in d.items()} for d in book_data]
 
         # load the table of contents:
         toc_data = data["t"+shamid]
@@ -422,7 +434,7 @@ class BokJsonConverter(generic_converter.GenericConverter):
         else:
             book_meta = data["Main"]
 
-        return book_data, toc_data, book_meta
+        return book_data, toc_data, book_meta, shamid
 
     def format_text(self, book, toc, book_id):
         """Extract text from json, add page numbers and headings.
@@ -458,7 +470,7 @@ class BokJsonConverter(generic_converter.GenericConverter):
             for row in toc:
                 struct_dict[row["id"]].append(row)
             return struct_dict
-
+        print(toc)
         self.struct_dict = format_struct_dict(toc)
         #text = ["### |EDITOR|\n", ]
         text = []
@@ -474,8 +486,12 @@ class BokJsonConverter(generic_converter.GenericConverter):
                 book = sorted(book, key=lambda k: (int(k["part"]), int(k["page"])))
                 print("successful")
             except:
-                print("book no.", book_id, ": unable to sort pages by volume and page:", e)
-                print("Keep book in the current order.")
+                try:
+                    book = sorted(book, key=lambda k: (int(k["Part"]), int(k["page"])))
+                    print("successful")
+                except:
+                    print("book no.", book_id, ": unable to sort pages by volume and page:", e)
+                    print("Keep book in the current order.")
 
         for row in book:
             # set variables for current row:
@@ -556,10 +572,10 @@ class BokJsonConverter(generic_converter.GenericConverter):
                 tit = deNoise(el["tit"])
             except:
                 tit = "[NO TITLE]"
-            #print("title", tit)
+            # create a regex for the title that disregards non-alphanumeric characters:
             tit_regex = re.sub("(\w+)", r"W\1", tit)[1:]
             tit_regex = re.sub("\W+", r"", tit_regex)
-            tit_regex = re.sub("W", r"\W*", tit_regex)
+            tit_regex = re.sub("W", r"\\W*", tit_regex)
             tit_regex = ".*{}.*".format(tit_regex)
             #print("regex", tit_regex)
             if re.findall(tit_regex, passage_text):
@@ -578,6 +594,11 @@ class BokJsonConverter(generic_converter.GenericConverter):
         """Convert the metadata in the metadata dict to a string."""
         m = []
         fmt = "#META# {}: {}"
+        try:
+            for k,v in metadata.items():
+                pass
+        except: 
+            metadata = metadata[0]
         for k,v in metadata.items():
             if v:
                 # treat the "betaka" field different from the other fields.
@@ -597,9 +618,14 @@ class BokJsonConverter(generic_converter.GenericConverter):
                     #print(col_headers[i], field)
                     #print(re.sub(r"\.?\n+", ". ", str(field)))
                     m.append(fmt.format(k, re.sub(r"\.?[\r\n]+", ". ", str(v))))
-        for k,v in self.additional_meta.items():
-            m.append(fmt.format(k,v))
+        try:
+            for k,v in self.additional_meta.items():
+                m.append(fmt.format(k,v))
+        except:
+            if VERBOSE:
+                print("no additional metadata")
         metadata = "\n\n".join(m)
+        metadata = re.sub("(?: *LINE_END *)+", " ¶ ", metadata)
         return self.magic_value + metadata + self.header_splitter
 
     def pre_process(self, text):
@@ -641,6 +667,8 @@ class BokJsonConverter(generic_converter.GenericConverter):
 
         text = re.sub("\n{2,}", "\n", text)
         text = re.sub("[\r\n]+# *(?:[\r\n]+|\Z)", "\n", text)
+
+        text = re.sub(" ### ", "\n### ", text)
 
         return text
 
