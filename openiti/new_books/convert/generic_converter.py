@@ -312,6 +312,8 @@ class GenericConverter(object):
         # Save the file to the dest_fp:
         self.save_file(text, dest_fp)
 
+        return dest_fp
+
 
     def make_dest_fp(self, source_fp):
         """Make a filepath for the converted text file, \
