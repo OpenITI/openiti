@@ -559,7 +559,8 @@ class MarkdownConverter(object):
         """Convert list element tags <li>."""
         parent = el.parent
         if parent is not None and parent.name == 'ol':
-            bullet = '%s.' % (parent.index(el) + 1)
+            n = len(el.find_previous_siblings('li')) + 1
+            bullet = '%s.' % n
         else:
             depth = -1
             while el:
