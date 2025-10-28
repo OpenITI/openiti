@@ -242,7 +242,7 @@ from openiti.helper import yml
 
 
 os.sep = "/"
-ISO_CODES = re.split("[\n\r\s]+",
+ISO_CODES = re.split(r"[\n\r\s]+",
                      """aar abk ace ach ada ady afa afh afr ain aka akk alb sqi
 ale alg alt amh ang anp apa ara arc arg arm hye arn arp art arw asm ast ath aus
 ava ave awa aym aze bad bai bak bal bam ban baq eus bas bat bej bel bem ben ber
@@ -308,7 +308,18 @@ class URI:
                 * self.language: ara: ISO 639-2 language code
                 * self.edition_no: 1: edition version number
                   (different digitizations of the same edition get the same edition_no)
-                  
+
+        * MsTranscriptionURI: consists of
+          - MsURI: consists of:
+            * LocID: consists of
+              - international phone call number of the  country (self.country)
+              - city + institution (self.institution)
+            * MsID: collection + shelfmark: self.shelfmark
+          - MsTranscriptionID: self.transcr_id
+          - Lang: consists of one or more combinations of:
+              * languageID: ISO 639-2 language code
+              * transcription_type: 1 = undefined, 2 = diplomatic, 3 = normalized
+              
         * self.extension = mARkdown (can be inProgress, mARkdown, completed, "")
 
     Examples:
@@ -439,7 +450,7 @@ class URI:
     """
 
     def __init__(self, uri_string=None):
-        """Initialize the URI object and its components: if a uri_string is provided,
+        r"""Initialize the URI object and its components: if a uri_string is provided,
         it will be split into its components.
 
         Args:
@@ -471,14 +482,19 @@ class URI:
         self.version = ""
         self.language = ""
         self.edition_no = ""
+        self.country = ""
+        self.institution = ""
+        self.shelfmark = ""
+        self.transcr_id = ""
+        self.languages = dict()
         self.extension = ""
         if uri_string:
             if len(re.split(r"[\\/]", uri_string)) > 1: # deal with paths:
                 self.base_pth, self.uri_string = os.path.split(uri_string)
                 if self.data_in_25_year_repos:
                     # set self.base_pth to the parent of the 25Y folder:
-                    if re.search("\d{4}AH", self.base_pth):
-                        while not re.search("\d{4}AH",
+                    if re.search(r"\d{4}AH", self.base_pth):
+                        while not re.search(r"\d{4}AH",
                                             os.path.split(self.base_pth)[1]):
                             self.base_pth = os.path.split(self.base_pth)[0]
                         self.base_pth = os.path.split(self.base_pth)[0]
@@ -489,12 +505,13 @@ class URI:
                     #print("init: establishing self.base_pth")
                     #print("  ", self.base_pth)
                     #print("  split:", os.path.split(self.base_pth))
-                    while re.search("\d{4}[A-Za-z]",
+                    while re.search(r"\d{4}[A-Za-z]",
                                     os.path.split(self.base_pth)[1]):
                         self.base_pth = os.path.split(self.base_pth)[0]
                         #print("   >", self.base_pth)
             else:
                 self.uri_string = uri_string
+            # set all components of the URI (self.author etc.):
             self.split_uri(self.uri_string)
         else:
             self.uri_string = ""
@@ -518,18 +535,31 @@ class URI:
     @date.setter
     def date(self, date):
         """Set the URI's date property, after checking its conformity."""
-        self.__date = self.check_date(date)
+        self.__date = self.check_4digits(date)
+
+    @property
+    def country(self):
+        """Get the URI's country property"""
+        return self.__country
+
+    @country.setter
+    def country(self, country):
+        """Set the URI's country property, after checking its conformity."""
+        self.__country = self.check_4digits(country)
+
+    def check_4digits(self, n):
+        """Check if date/country code is valid (i.e., 4-digit number or empty string)"""
+        if n == "":
+            return ""
+        date = str(n)
+        if len(n) != 4:
+            msg = "Error: URI must start with a code of 4 digits "
+            msg += "({} has {}!)".format(n, len(n))
+            raise Exception(msg)
+        return n
 
     def check_date(self, date):
-        """Check if date is valid (i.e., 4-digit number or empty string)"""
-        if date == "":
-            return ""
-        date = str(date)
-        if len(date) != 4:
-            msg = "Date Error: URI must start with a date of 4 digits "
-            msg += "({} has {}!)".format(date, len(date))
-            raise Exception(msg)
-        return date
+        return self.check_4digits(date)
 
 
     @property
@@ -541,6 +571,16 @@ class URI:
     def author(self, author):
         """Set the URI's author property, after checking its conformity."""
         self.__author = self.check_ASCII_letters(author, "Author name")
+
+    @property
+    def institution(self):
+        """Get the URI's institution property"""
+        return self.__institution
+
+    @institution.setter
+    def institution(self, institution):
+        """Set the URI's author property, after checking its conformity."""
+        self.__institution = self.check_ASCII_letters(institution, "Institution name")
 
     def check_ASCII_letters(self, test_string, string_type):
         """Check whether the test_string only contains ASCII letters."""
@@ -563,7 +603,16 @@ class URI:
         #self.__title = self.check_ASCII_letters(title, "Book title")
         self.__title = self.check_ASCII(title, "Book title")
 
+    @property
+    def shelfmark(self):
+        """Get the URI's title property."""
+        return self.__shelfmark
 
+    @shelfmark.setter
+    def shelfmark(self, shelfmark):
+        """Set the URI's shelfmark property, after checking its conformity."""
+        self.__shelfmark = self.check_ASCII(shelfmark, "Manuscript shelfmark")
+        
     @property
     def version(self):
         """Set the URI's version property."""
@@ -574,15 +623,24 @@ class URI:
         """Set the URI's version property, after checking its conformity."""
         self.__version = self.check_ASCII(version, "Version string")
 
+    @property
+    def transcr_id(self):
+        """Set the URI's version property."""
+        return self.__transcr_id
+
+    @transcr_id.setter
+    def transcr_id(self, transcr_id):
+        """Set the URI's version property, after checking its conformity."""
+        self.__transcr_id = self.check_ASCII(transcr_id, "Transcription ID string")
+
     def check_ASCII(self, test_string, string_type):
         """Check whether the test_string only contains ASCII letters and digits."""
-        if re.findall("[^A-Za-z0-9]", test_string):
+        if re.findall("[^A-Za-z0-9_]", test_string):
             msg = "{0} Error: {0} ({1}) ".format(string_type, test_string)
             msg += "should not contain non-ASCII characters"
             msg += "(culprits: {})".format(re.findall("[^A-Za-z0-9]", test_string))
             raise Exception(msg)
         return test_string
-
 
     @property
     def language(self):
@@ -604,6 +662,16 @@ class URI:
             raise Exception(msg)
         return language
 
+    @property
+    def languages(self):
+        """Get the URI's languages property
+        (a dictionary with ISO 639-2 language code keys and numerical values)."""
+        return self.__languages
+
+    @languages.setter
+    def languages(self, languages):
+        """Set the URI's languages property, after checking its conformity."""
+        self.__languages = {self.check_language_code(k): int(v) for k,v in languages.items()}
 
     @property
     def edition_no(self):
@@ -679,6 +747,9 @@ class URI:
             >>> my_uri = URI()
             >>> my_uri.uri_type is None
             True
+            >>> my_uri = URI("MS0044LondonBL.Or123.AOCP20250101-ara1per3.completed")
+            >>> my_uri.uri_type
+            'transcription'
         """
         uri_type = None
         if self.date and self.author:
@@ -687,6 +758,12 @@ class URI:
                 uri_type = "book"
                 if self.version and self.language and self.edition_no:
                     uri_type = "version"
+        elif self.country and self.institution:
+            uri_type = "location"
+            if self.shelfmark:
+                uri_type = "manuscript"
+                if self.transcr_id and self.languages:
+                    uri_type = "transcription"
         return uri_type
 
     ############################################################################
@@ -733,11 +810,19 @@ class URI:
             >>> repr(my_uri)
             'uri(date:0255, author:Jahiz, title:Hayawan, version:Sham19Y0023775, \
 language:ara, edition_no:1, extension:)'
+            >>> my_uri = URI("MS0044LondonBL.Or123.AOCP20250101-ara1per3.completed")
+            >>> repr(my_uri)
+            "uri(country:0044, institution:LondonBL, shelfmark:Or123, transcr_id:AOCP20250101, languages:{'ara': '1', 'per': '3'}, extension:completed)"
             >>> my_uri = URI()
             >>> repr(my_uri)
-            'uri(date:, author:, title:, version:, language:, edition_no:, extension:)'
+            'uri()'
         """
-        component_names = "date author title version language edition_no extension"
+        if self.__date:
+            component_names = "date author title version language edition_no extension"
+        elif self.__country:
+            component_names = "country institution shelfmark transcr_id languages extension"
+        else:
+            return "uri()"
         fmt = [x+":{_URI__"+x+"}" for x in component_names.split()]
         fmt = "uri({})".format(", ".join(fmt))
         return fmt.format(**self.__dict__)
@@ -824,6 +909,15 @@ language:ara, edition_no:1, extension:)'
             >>> my_uri.language=""
             >>> my_uri.split_uri()
             ['0255', 'Jahiz', 'Hayawan']
+            >>> my_uri = URI("MS0044LondonBL.Or123.AOCP20250101-ara1per3.completed")
+            >>> print(repr(my_uri))
+            uri(country:0044, institution:LondonBL, shelfmark:Or123, transcr_id:AOCP20250101, languages:{'ara': '1', 'per': '3'}, extension:completed)
+            >>> my_uri.split_uri()
+            ['MS', '0044', 'LondonBL', 'Or123', 'AOCP20250101', 'ara', '1', 'per', '3', 'completed']
+            >>> my_uri.extension=""
+            >>> my_uri.language=""
+            >>> my_uri.split_uri()
+            ['MS', '0044', 'LondonBL', 'Or123']
         """
         if not uri_string:
             uri_string = self.build_uri()
@@ -836,48 +930,85 @@ language:ara, edition_no:1, extension:)'
             msg = "URI ({}) has too many parts separated by dots".format(uri_string)
             raise Exception(msg)
 
-        self.dateAuth = split_uri[0]
-        self.date = re.findall("^\d+", self.dateAuth)[0]
-        self.check_date(self.date)
-        self.author = self.dateAuth[4:]
-        if not self.author:
-            msg = "No author name found. \
+        if not split_uri[0].startswith("MS"):
+            self.dateAuth = split_uri[0]
+            self.date = re.findall(r"^\d+", self.dateAuth)[0]
+            self.check_4digits(self.date)
+            self.author = self.dateAuth[4:]
+            if not self.author:
+                msg = "No author name found. \
 Did you put a dot between date and author name?"
-            raise Exception(msg)
-        split_components = [self.date, self.author]
+                raise Exception(msg)
+            split_components = [self.date, self.author]
 
-        if len(split_uri) > 1:
-            if split_uri[1] != "yml":
-                self.title = split_uri[1]
-                split_components.append(self.title)
+            if len(split_uri) > 1:
+                if split_uri[1] != "yml":
+                    self.title = split_uri[1]
+                    split_components.append(self.title)
 
-        if len(split_uri) > 2:
-            if split_uri[2] != "yml":
-                self.versionLang = split_uri[2]
-                try:
-                    self.version, language = self.versionLang.split("-")
-                except:
-                    raise Exception("URI () misses language ")
-                self.check_ASCII(self.version, "Version ID")
-                split_components.append(self.version)
-                if language[-1].isnumeric():
-                    self.edition_no = re.findall("\d+", language)[0]
-                    self.language = re.sub("\d+", "", language)
-                    split_components.append(self.language)
-                    split_components.append(self.edition_no)
-                else:
-                    self.edition_no = ""
-                    self.language = language
-                    split_components.append(self.language)
-                self.check_language_code(self.language)
-        if len(split_uri) > 3:
-            #if split_uri[3] != "yml":
-            self.extension = split_uri[3]
-            split_components.append(self.extension)
-            #else:
-##                print("ERROR: extension '{}' not in the list\
-##of acceptable extensions. No extension recorded".format(split_uri[3]))
-            #    self.extension = ""
+            if len(split_uri) > 2:
+                if split_uri[2] != "yml":
+                    self.versionLang = split_uri[2]
+                    try:
+                        self.version, language = self.versionLang.split("-")
+                    except:
+                        raise Exception("URI () misses language ")
+                    self.check_ASCII(self.version, "Version ID")
+                    split_components.append(self.version)
+                    if language[-1].isnumeric():
+                        self.edition_no = re.findall(r"\d+", language)[0]
+                        self.language = re.sub(r"\d+", "", language)
+                        split_components.append(self.language)
+                        split_components.append(self.edition_no)
+                    else:
+                        self.edition_no = ""
+                        self.language = language
+                        split_components.append(self.language)
+                    self.check_language_code(self.language)
+            if len(split_uri) > 3:
+                #if split_uri[3] != "yml":
+                self.extension = split_uri[3]
+                split_components.append(self.extension)
+        else: # Manuscript URI
+            self.loc_id = split_uri[0]
+            self.country = re.findall(r"\d+", self.loc_id)[0]
+            self.check_4digits(self.country)
+            self.institution = self.loc_id[6:]
+            if not self.institution:
+                msg = "No country/institution name found. \
+Did you put a dot between country code and institution name?"
+                raise Exception(msg)
+            split_components = ["MS", self.country, self.institution]
+
+            if len(split_uri) > 1:
+                if split_uri[1] != "yml":
+                    self.shelfmark = split_uri[1]
+                    split_components.append(self.shelfmark)
+
+            if len(split_uri) > 2:
+                if split_uri[2] != "yml":
+                    self.transcrLang = split_uri[2]
+                    try:
+                        self.transcr_id, language_component = self.transcrLang.split("-")
+                    except:
+                        raise Exception("URI", uri_string, "misses language ")
+                    self.check_ASCII(self.transcr_id, "Transcription ID")
+                    split_components.append(self.transcr_id)
+                    self.languages = dict()
+                    lans = re.findall(r"([a-z]{3})(\d+)", language_component)
+                    if lans == []:
+                        raise Exception("language component", language_component, "is invalid in URI", uri_string)
+                    for lan_id, transcr_type in lans:
+                        self.check_language_code(lan_id)
+                        self.languages[lan_id] = transcr_type
+                        split_components.append(lan_id)
+                        split_components.append(transcr_type)
+                    
+            if len(split_uri) > 3:
+                #if split_uri[3] != "yml":
+                self.extension = split_uri[3]
+                split_components.append(self.extension)
+                
         return split_components
 
 
@@ -1237,7 +1368,7 @@ def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False,
 
         target_folder = new_uri.build_pth("version")
         if non_25Y_folder:
-            target_folder = re.sub("\d{4}AH", non_25Y_folder, target_folder)
+            target_folder = re.sub(r"\d{4}AH", non_25Y_folder, target_folder)
         if execute:
             if "README.md" not in os.listdir(target_folder):
                 add_readme(target_folder)
@@ -1389,7 +1520,7 @@ def add_character_count(tok_count, char_count, tar_uri, execute=False, non_25Y_f
 
     tar_yfp = tar_uri.build_pth("version_yml")
     if non_25Y_folder:
-        tar_yfp = re.sub("\d{4}AH", non_25Y_folder, tar_yfp)
+        tar_yfp = re.sub(r"\d{4}AH", non_25Y_folder, tar_yfp)
     if execute:
         with open(tar_yfp, mode="r", encoding="utf-8") as file:
             yml_dic = yml.ymlToDic(file.read().strip())
@@ -1489,7 +1620,7 @@ Make sure base path is correct.""".format(new_uri.base_pth)
     if not os.path.exists(new_folder):
         author_folder = new_uri.build_pth("author")
         if non_25Y_folder:
-            author_folder = re.sub("\d{4}AH", non_25Y_folder, author_folder)
+            author_folder = re.sub(r"\d{4}AH", non_25Y_folder, author_folder)
         if not os.path.exists(author_folder):
             if execute:
                 os.makedirs(author_folder)
@@ -1501,7 +1632,7 @@ Make sure base path is correct.""".format(new_uri.base_pth)
         if new_uri.uri_type == "book" or new_uri.uri_type == "version":
             book_folder = new_uri.build_pth("book")
             if non_25Y_folder:
-                book_folder = re.sub("\d{4}AH", non_25Y_folder, book_folder)
+                book_folder = re.sub(r"\d{4}AH", non_25Y_folder, book_folder)
             if not os.path.exists(book_folder):
                 if execute:
                     os.makedirs(book_folder)
@@ -1515,7 +1646,7 @@ Make sure base path is correct.""".format(new_uri.base_pth)
                             "version_yml", execute)
                 target_folder = new_uri.build_pth("version")
                 if non_25Y_folder:
-                    target_folder = re.sub("\d{4}AH", non_25Y_folder, target_folder)
+                    target_folder = re.sub(r"\d{4}AH", non_25Y_folder, target_folder)
                 if execute:
                     if "README.md" not in os.listdir(target_folder):
                         add_readme(target_folder)
@@ -1544,8 +1675,8 @@ def move_to_new_uri_pth(old_fp, new_uri, execute=False, non_25Y_folder=None):
     new_folder = new_uri.build_pth(uri_type=new_uri.uri_type)
     new_fp = new_uri.build_pth(uri_type=new_uri.uri_type+"_file")
     if non_25Y_folder:
-        new_folder = re.sub("\d{4}AH", non_25Y_folder, new_folder)
-        new_fp = re.sub("\d{4}AH", non_25Y_folder, new_fp)
+        new_folder = re.sub(r"\d{4}AH", non_25Y_folder, new_folder)
+        new_fp = re.sub(r"\d{4}AH", non_25Y_folder, new_fp)
     make_folder(new_folder, new_uri, execute, non_25Y_folder=non_25Y_folder)
     if execute:
         shutil.move(old_fp, new_fp)
@@ -1579,7 +1710,7 @@ def check_token_count(version_uri, ymlD, version_fp="", find_latest=True):
     if version_fp and not find_latest:
         fp = version_fp
     elif version_fp and find_latest:
-        version_fp = re.sub("\.mARkdown|\.completed|\.inProgress", "", version_fp)
+        version_fp = re.sub(r"\.mARkdown|\.completed|\.inProgress", "", version_fp)
         #for ext in [".mARkdown", ".completed", ".inProgress", ""]:
         for ext in [".mARkdown", ".completed", "", ".inProgress"]:
             fp = version_fp + ext
@@ -1719,7 +1850,7 @@ def check_yml_file(yml_fp, yml_type, version_fp=None, execute=False,
         # check whether the URI in the yml file is identical with that in the filename:
         if "URI" in key:
             fn = os.path.splitext(os.path.split(yml_fp)[-1])[0]
-            fn = re.sub("\.inProgress|\.mARkdown|\.completed", "", fn)
+            fn = re.sub(r"\.inProgress|\.mARkdown|\.completed", "", fn)
             if yml_d[key].strip() != fn:
                 print("URI", yml_d[key], "!= filename", fn)
                 if execute or input("Replace URI with filename? Y/N: ").lower() == "y":
