@@ -1413,7 +1413,8 @@ def new_yml(tar_yfp, yml_type, execute=False):
     """
     template = eval("{}_template".format(yml_type))
     yml_dic = yml.ymlToDic(template)
-    uri_key = "00#{}#URI######:".format(yml_type[:4].upper())
+    #uri_key = "00#{}#URI######:".format(yml_type[:4].upper())
+    uri_key = [k for k in yml_d.keys() if "#URI#" in k][0]
     u = URI(tar_yfp)
     u.extension = ""
     yml_dic[uri_key] = u.build_uri()
