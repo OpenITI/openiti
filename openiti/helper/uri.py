@@ -1451,7 +1451,8 @@ def move_yml(yml_fp, new_uri, uri_type, execute=False,
     if not execute:
         print("  Change URI inside yml file:")
     yml_dict = yml.readYML(yml_fp)
-    key = "00#{}#URI######:".format(uri_type[:4].upper())
+    #key = "00#{}#URI######:".format(uri_type[:4].upper())
+    key = [k for k in yml_d.keys() if "#URI#" in k][0]
     yml_dict[key] = new_uri.build_uri(uri_type=uri_type, ext="")
     yml_str = yml.dicToYML(yml_dict)
     if not execute:
