@@ -1,7 +1,7 @@
 """Get selected annotation issues from GitHub;
 optionally, print them or save them as a tsv file.
 
-Example::
+Example:
 
     issues = get_issues("OpenITI/Annotation",
                         issue_labels=["in progress"],
@@ -122,6 +122,10 @@ def get_issues(repo_name, access_token=None,
         (list): a list of github issues. 
     """
     if access_token == None:
+        print("You need to provide a GitHub Private Access token.")
+        print("If you don't have one for this repo,")
+        print("Create one at https://github.com/settings/personal-access-tokens")
+        print("(Make sure it has the rights to read issues and metadata)")
         access_token = input("Insert your GitHub Access token: ")
     g = Github(access_token)
     print("logged in")
@@ -147,12 +151,9 @@ def get_issues(repo_name, access_token=None,
 
 
 if __name__ == "__main__":
-    tok_fp = r"D:\London\OpenITI\metadata\automation\kitab-metadata-automation\kitab-metadata-automation\GitHub personalAccessTokenReadOnly.txt"
-    with open(tok_fp, mode="r") as file:
-        tok = file.read()
     issues = get_issues("OpenITI/Annotation",
                         issue_labels=["text tagged"],
-                        state="open", access_token=tok
+                        state="open"
                         )
     for issue in issues:
         print(issue)
