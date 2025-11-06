@@ -119,7 +119,7 @@ def ymlToDic(yml_str, reflow=False, yml_fp=""):
     return dic
 
 
-def readYML(fp, reflow=False):
+def readYML(fp, reflow=False, fix_yml_errors_silently=False):
     """Read a yml file and convert it into a dictionary.
 
     Args:
@@ -131,6 +131,8 @@ def readYML(fp, reflow=False):
             if set to True, new line characters will be removed
             (except double line breaks and line breaks in bullet lists)
             and the indentation and line length will be standardized.
+        fix_yml_errors_silently (bool): if False, user's judgment about the fix
+             will be asked before the fix is implemented
             
     Returns:
         (dict): dictionary representation of the yml key-value pairs
@@ -147,6 +149,9 @@ def readYML(fp, reflow=False):
         except Exception as e:
            print(fp)
            print(e)
+           return fix_broken_yml(fp, execute=fix_yml_errors_silently)
+           
+           
 
 
 def dicToYML(dic, max_length=80, reflow=True, break_long_words=False):
@@ -204,18 +209,17 @@ def dicToYML(dic, max_length=80, reflow=True, break_long_words=False):
 
             if "#URI#" not in i:
 
-                lines = re.split("¶", i)
+                lines = re.split(r"\s*¶\s*", i)
 
                 if len(lines) > 1:
-                    lines = [lines[0]] + [line if line.startswith((" ", "\t")) else "    "+line
-                                          for line in lines[1:]]
+                    lines = [lines[0]] + ["    "+line for line in lines[1:]]
                 
                 if reflow:
                     lines = ["\n    ".join(textwrap.wrap(line.strip(), max_length,
                                                          break_long_words=break_long_words))
                              for line in lines]
 
-                i = "\n    ".join(lines)
+                i = "\n".join(lines)
             data.append(i)
 
     return "\n".join(sorted(data))
