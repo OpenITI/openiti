@@ -97,6 +97,7 @@ html tags need to be converted:
 """
 
 import codecs
+import html
 import os
 import re
 import zipfile
@@ -113,6 +114,7 @@ if __name__ == '__main__':
 
 from openiti.new_books.convert.generic_converter import GenericConverter
 from openiti.new_books.convert.helper import html2md
+import html
 
 
 
@@ -127,7 +129,7 @@ class GenericHtmlConverter(GenericConverter):
 ##            self.dest_folder = "converted"
 ##        else:
 ##            self.dest_folder = dest_folder
-        self.VERBOSE = True
+        self.VERBOSE = False
         self.extension = ""
 
 
@@ -173,6 +175,15 @@ class GenericHtmlConverter(GenericConverter):
 ##
 ##        self.save_file(text, dest_fp)
 ##        #print("saved text to", dest_fp)
+
+    def post_process(self, text):
+        # replace html entities:
+        text = text.replace("&nbsp;", " ") # otherwise it will be replaced with \xa0
+        text = html.unescape(text)
+
+        text = super().post_process(text)
+
+        return text
 
 
     #def convert_html2md(self, html):
@@ -379,7 +390,7 @@ class GenericHtmlConverter(GenericConverter):
 if __name__ == "__main__":
     import doctest
     #doctest.testmod()
-    print("Passed all tests.")
+    #print("Passed all tests.")
 
     conv = GenericHtmlConverter()
     folder = r"G:\London\OpenITI\new\Rafed\test"
