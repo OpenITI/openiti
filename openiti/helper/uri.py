@@ -168,12 +168,14 @@ Examples:
     >>> t.data_in_25_year_repos = True
     
     >>> URI.data_in_25_year_repos = False
-    >>> u = URI("0255Jahiz.Hayawan")
-    >>> u.build_pth()
+    >>> t = URI("0255Jahiz.Hayawan")
+    >>> t.build_pth()
     './0255Jahiz/0255Jahiz.Hayawan'
     >>> URI.data_in_25_year_repos = True
-    >>> u.build_pth()
+    >>> t.build_pth()
     './0275AH/data/0255Jahiz/0255Jahiz.Hayawan'
+
+    
 
     ---------------------------------------------------------------------------
 
@@ -237,7 +239,9 @@ from openiti.helper.funcs import read_header, get_all_yml_files_in_folder, get_a
 from openiti.helper.ara import ar_cnt_file
 from openiti.helper.templates import author_yml_template, book_yml_template, \
                                      version_yml_template, readme_template, \
-                                     text_questionnaire_template
+                                     text_questionnaire_template, \
+                                     location_yml_template, manuscript_yml_template, \
+                                     transcription_yml_template
 from openiti.helper import yml
 
 
@@ -271,6 +275,10 @@ tai tam tat tel tem ter tet tgk tgl tha tib bod tig tir tiv tkl tlh tli tmh tog
 ton tpi tsi tsn tso tuk tum tup tur tut tvl twi tyv udm uga uig ukr umb und urd
 uzb vai ven vie vol vot wak wal war was wel cym wen wln wol xal xho yao yap yid
 yor ypk zap zbl zen zgh zha chi zho znd zul zun zxx zza""")
+
+additional_codes = "bac jup jua mpp ugo uga".split(" ")
+
+LANG_CODES = ISO_CODES + additional_codes
 
 extensions = ["inProgress", "completed", "mARkdown", "yml", "",
               "pdf", "zip", "rar"]
@@ -325,6 +333,7 @@ class URI:
     Examples:
         >>> from uri import URI
         >>> t = URI("0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed")
+        >>> u = URI("MS0044LondonBL.Or123.AOCP20250101-ara1per3.completed")
 
         Representations of a URI object: print() and repr():
 
@@ -332,6 +341,10 @@ class URI:
         uri(date:0255, author:Jahiz, title:Hayawan, version:Sham19Y0023775, language:ara, edition_no:1, extension:completed)
         >>> print(t)
         0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed
+        >>> print(repr(u))
+        uri(country:0044, institution:LondonBL, shelfmark:Or123, transcr_id:AOCP20250101, languages:{'ara': '1', 'per': '3'}, extension:completed)
+        >>> print(u)
+        MS0044LondonBL.Or123.AOCP20250101-ara1per3.completed
 
         Accessing components of the URI:
         
@@ -339,6 +352,10 @@ class URI:
         'Jahiz'
         >>> t.date
         '0255'
+        >>> u.institution
+        'LondonBL'
+        >>> u.transcr_id
+        'AOCP20250101'
 
         Getting URI's current uri_type ("author", "book", "version", None),
         i.e., the longest URI that can be built from the object's components:
@@ -350,6 +367,14 @@ class URI:
         'book'
         >>> t.date = ""
         >>> t.uri_type == None
+        True
+        >>> u.uri_type
+        'transcription'
+        >>> u.languages = None
+        >>> u.uri_type
+        'manuscript'
+        >>> u.country = ""
+        >>> u.uri_type == None
         True
 
         Building different versions of the URI
@@ -368,6 +393,22 @@ class URI:
         >>> t.build_uri("version_file")
         '0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed'
 
+        Building different versions of the URI
+        (uri_types: "location", "location_yml", "manuscript", "manuscript_yml",
+        "transcription", "transcription_yml", "transcription_file"):
+
+        >>> u = URI("MS0044LondonBL.Or123.AOCP20250101-ara1per3.completed")
+        >>> u.build_uri(uri_type="location")
+        'MS0044LondonBL'
+        >>> u.build_uri("manuscript")
+        'MS0044LondonBL.Or123'
+        >>> u.build_uri("manuscript_yml")
+        'MS0044LondonBL.Or123.yml'
+        >>> u.build_uri("transcription")
+        'MS0044LondonBL.Or123.AOCP20250101-ara1per3'
+        >>> u.build_uri("transcription_file")
+        'MS0044LondonBL.Or123.AOCP20250101-ara1per3.completed'
+
         Building paths based on the URI:
 
         >>> t.build_pth(uri_type="version", base_pth="D:\\test")
@@ -379,6 +420,15 @@ class URI:
         >>> t.build_pth(uri_type="book_yml")
         './0275AH/data/0255Jahiz/0255Jahiz.Hayawan/0255Jahiz.Hayawan.yml'
 
+        >>> u.build_pth(uri_type="transcription", base_pth="D:\\test")
+        'D:/test/data/MS0044LondonBL/MS0044LondonBL.Or123'
+        >>> u.build_pth(uri_type="transcription_file", base_pth="D:\\test")
+        'D:/test/data/MS0044LondonBL/MS0044LondonBL.Or123/MS0044LondonBL.Or123.AOCP20250101-ara1per3.completed'
+        >>> u.build_pth("transcription")
+        './data/MS0044LondonBL/MS0044LondonBL.Or123'
+        >>> u.build_pth(uri_type="manuscript_yml")
+        './data/MS0044LondonBL/MS0044LondonBL.Or123/MS0044LondonBL.Or123.yml'
+
         Without uri_type argument, build_pth() builds the fullest path it can:
 
         >>> t.build_pth()
@@ -387,11 +437,18 @@ class URI:
         >>> t.build_pth()
         './0275AH/data/0255Jahiz/0255Jahiz.Hayawan'
 
+        >>> u.build_pth()
+        './data/MS0044LondonBL/MS0044LondonBL.Or123/MS0044LondonBL.Or123.AOCP20250101-ara1per3.completed'
+        >>> u.languages=None  # (removing the languages property makes it impossible to build a version uri)
+        >>> u.build_pth()
+        './data/MS0044LondonBL/MS0044LondonBL.Or123'
+
         NB: by default, build_pth() takes the OpenITI folder structure
         into account, in which authors are grouped in 25-year batches
         by their death date.
         If you do not want to use this feature, set the URI class's
-        data_in_25_year_repos attribute to False:
+        data_in_25_year_repos attribute to False
+        (NB: for manuscripts, the 25-year batch structure is not used):
 
         >>> t.build_pth()
         './0275AH/data/0255Jahiz/0255Jahiz.Hayawan'
@@ -400,7 +457,7 @@ class URI:
         './0255Jahiz/0255Jahiz.Hayawan'
         >>> t.language="ara"
         >>> t.build_pth()
-        './0255Jahiz/0255Jahiz.Hayawan'
+        './0255Jahiz/0255Jahiz.Hayawan/0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed'
         >>> t.data_in_25_year_repos = True
         
         >>> URI.data_in_25_year_repos = False
@@ -447,6 +504,15 @@ class URI:
             # >>> URI("0255Jahiz.Hayawan.Shamela00123545-ara1.markdown")
             Exception: Extension (markdown) is not among the allowed extensions
             (['inProgress', 'completed', 'mARkdown', 'yml', ''])
+
+            # >>> u = URI()
+            # >>> u.institution = "0044LondonBL"
+            Exception: Institution name Error: Institution name (0044LondonBL)
+            should not contain digits or non-ASCII characters(culprits: ['0', '0', '4', '4'])
+
+            # >>> u.country = "0044LondonBL"
+            Exception: Error: only digits are allowed
+            (0044LondonBL also contains letters!)
     """
 
     def __init__(self, uri_string=None):
@@ -458,7 +524,8 @@ class URI:
                 0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1; 
                 0768IbnMuhammadTaqiDinBaclabakki.Hadith; 
                 0768IbnMuhammadTaqiDinBaclabakki; 
-                D:\OpenITI\25Yrepos\data\0275AH\0255Jahiz. 
+                D:\OpenITI\25Yrepos\data\0275AH\0255Jahiz;
+                MS0044LondonBL.Or123.AOCP20250101-ara1per3. 
                 Defaults to None
 
         Examples:
@@ -512,7 +579,8 @@ class URI:
             else:
                 self.uri_string = uri_string
             # set all components of the URI (self.author etc.):
-            self.split_uri(self.uri_string)
+            split_uri = self.split_uri(self.uri_string)
+            
         else:
             self.uri_string = ""
         # make it possible to set these values for every instance of the class:
@@ -552,7 +620,11 @@ class URI:
         if n == "":
             return ""
         date = str(n)
-        if len(n) != 4:
+        if re.findall("[A-Za-z]", date):
+            msg = "Error: only digits are allowed "
+            msg += "({} also contains letters!)".format(n)
+            raise Exception(msg)
+        elif len(n) != 4:
             msg = "Error: URI must start with a code of 4 digits "
             msg += "({} has {}!)".format(n, len(n))
             raise Exception(msg)
@@ -654,9 +726,10 @@ class URI:
 
     def check_language_code(self, language):
         """Check whether language is a valid ISO 639-2 language code."""
-        if language == "":
+        #if language == "":
+        if not language:
             return ""
-        if not language in ISO_CODES:
+        if not language in LANG_CODES:
             msg = "Language code ({}) ".format(language)
             msg += "should be an ISO 639-2 language code, consisting of 3 characters"
             raise Exception(msg)
@@ -671,6 +744,8 @@ class URI:
     @languages.setter
     def languages(self, languages):
         """Set the URI's languages property, after checking its conformity."""
+        if not languages:
+            languages = dict()
         self.__languages = {self.check_language_code(k): int(v) for k,v in languages.items()}
 
     @property
@@ -750,6 +825,9 @@ class URI:
             >>> my_uri = URI("MS0044LondonBL.Or123.AOCP20250101-ara1per3.completed")
             >>> my_uri.uri_type
             'transcription'
+            >>> my_uri.languages = ""
+            >>> my_uri.uri_type
+            'manuscript'
         """
         uri_type = None
         if self.date and self.author:
@@ -795,6 +873,23 @@ class URI:
             '0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1.yml'
             >>> my_uri("version_file", ext="completed")
             '0768IbnMuhammadTaqiDinBaclabakki.Hadith.Shamela0009426-ara1.completed'
+            >>> my_uri = URI("MS0044LondonBL.Or123.AOCP20250101-ara1per3.completed")
+            >>> my_uri()
+            'MS0044LondonBL.Or123.AOCP20250101-ara1per3.completed'
+            >>> my_uri("location")
+            'MS0044LondonBL'
+            >>> my_uri("location_yml")
+            'MS0044LondonBL.yml'
+            >>> my_uri("manuscript")
+            'MS0044LondonBL.Or123'
+            >>> my_uri("manuscript_yml")
+            'MS0044LondonBL.Or123.yml'
+            >>> my_uri("transcription")
+            'MS0044LondonBL.Or123.AOCP20250101-ara1per3'
+            >>> my_uri("transcription_yml")
+            'MS0044LondonBL.Or123.AOCP20250101-ara1per3.yml'
+            >>> my_uri("transcription_file", ext="completed")
+            'MS0044LondonBL.Or123.AOCP20250101-ara1per3.completed'
         """
         return self.build_uri(uri_type, ext)
 
@@ -838,6 +933,10 @@ language:ara, edition_no:1, extension:)'
             >>> my_uri.extension = "completed"
             >>> print(my_uri)
             0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed
+            >>> my_uri = URI("MS0044LondonBL.Or123.AOCP20250101-ara1per3.inProgress")
+            >>> my_uri.extension = "completed"
+            >>> print(my_uri)
+            MS0044LondonBL.Or123.AOCP20250101-ara1per3.completed
         """
         return self.build_uri()
 
@@ -858,6 +957,18 @@ language:ara, edition_no:1, extension:)'
             ara
             1
             inProgress
+            >>> my_uri = URI("MS0044LondonBL.Or123.AOCP20250101-ara1per3.completed")
+            >>> for component in my_uri: print(component)
+            MS
+            0044
+            LondonBL
+            Or123
+            AOCP20250101
+            ara
+            1
+            per
+            3
+            completed
             >>> my_uri = URI()
             >>> for component in my_uri: print(component)
 
@@ -915,7 +1026,7 @@ language:ara, edition_no:1, extension:)'
             >>> my_uri.split_uri()
             ['MS', '0044', 'LondonBL', 'Or123', 'AOCP20250101', 'ara', '1', 'per', '3', 'completed']
             >>> my_uri.extension=""
-            >>> my_uri.language=""
+            >>> my_uri.languages=""
             >>> my_uri.split_uri()
             ['MS', '0044', 'LondonBL', 'Or123']
         """
@@ -970,10 +1081,10 @@ Did you put a dot between date and author name?"
                 self.extension = split_uri[3]
                 split_components.append(self.extension)
         else: # Manuscript URI
-            self.loc_id = split_uri[0]
-            self.country = re.findall(r"\d+", self.loc_id)[0]
+            loc_id = split_uri[0]
+            self.country = re.findall(r"\d+", loc_id)[0]
             self.check_4digits(self.country)
-            self.institution = self.loc_id[6:]
+            self.institution = loc_id[6:]
             if not self.institution:
                 msg = "No country/institution name found. \
 Did you put a dot between country code and institution name?"
@@ -1008,7 +1119,6 @@ Did you put a dot between country code and institution name?"
                 #if split_uri[3] != "yml":
                 self.extension = split_uri[3]
                 split_components.append(self.extension)
-                
         return split_components
 
 
@@ -1031,6 +1141,20 @@ Did you put a dot between country code and institution name?"
                   (format: 0255Jahiz.Hayawan.Shamela000245-ara1.yml)
                 - "version_file": filename of the version text file\
                   (format: 0255Jahiz.Hayawan.Shamela000245-ara1.completed)
+                - "location": location URI\
+                  (format: MS0044LondonBL)
+                - "location_yml": filename of the location yml file\
+                  (format: MS0044LondonBL.yml)
+                - "manuscript": manuscript URI\
+                  (format: MS0044LondonBL.Or123)
+                - "manuscript_yml": filename of the manuscript yml file\
+                  (format: MS0044LondonBL.Or123.yml)
+                - "transcription": transcription URI\
+                  (format: MS0044LondonBL.Or123.AOCP20250101-ara1per3)
+                - "transcription_yml": filename of the transcription yml file\
+                  (format: MS0044LondonBL.Or123.AOCP20250101-ara1per3.yml)
+                - "transcription_file": filename of the transcription text file\
+                  (format: MS0044LondonBL.Or123.AOCP20250101-ara1per3.completed)
             ext (str): extension for the version_file uri string
                 (can be "completed", "inProgress", "mARkdown", "" or None).
 
@@ -1066,6 +1190,7 @@ Did you put a dot between country code and institution name?"
         self.uri_string = ""
 
         if not uri_type:
+            # VERSION/BOOK/AUTHOR URI:
             if self.version and self.language:
                 if self.extension:
                     return self.build_uri("version_file", ext=ext)
@@ -1077,6 +1202,16 @@ Did you put a dot between country code and institution name?"
                 return self.build_uri("author", ext=ext)
             elif self.date:
                 return self.build_uri("date", ext=ext)
+            # TRANSCRIPTION/MANUSCRIPT/LOCATION URI:
+            elif self.transcr_id and self.languages:
+                if self.extension:
+                    return self.build_uri("transcription_file", ext=ext)
+                else:
+                    return self.build_uri("transcription", ext=ext)
+            elif self.shelfmark:
+                return self.build_uri("manuscript", ext=ext)
+            elif self.country and self.institution:
+                return self.build_uri("location", ext=ext)
             else:
                 return ""
 
@@ -1115,6 +1250,38 @@ Did you put a dot between country code and institution name?"
                 raise Exception("Error: the version component of the URI was not defined")
             else:
                 raise Exception("Error: the language and version components of the URI were not defined")
+        elif "location" in uri_type:
+            if self.country and self.institution:
+                self.country = self.check_4digits(self.country)
+                self.uri_string = "MS{}{}".format(self.country, self.institution)
+            else:
+                raise Exception("Error: the location component of the URI was not defined")
+        elif "manuscript" in uri_type:
+            if self.shelfmark:
+                self.uri_string = "{}.{}".format(self.build_uri("location"), self.shelfmark)
+            else:
+                raise Exception("Error: the title component of the URI was not defined")
+        elif "transcription" in uri_type:
+            if self.transcr_id and self.languages:
+                lang_component = "".join([k+v for k,v in self.languages.items()])
+                self.uri_string =  "{}.{}-{}".format(self.build_uri("manuscript"),
+                                                       self.transcr_id,
+                                                       lang_component)
+                if "file" in uri_type:
+                    if ext != None:
+                        if ext != "":
+                            self.uri_string += ".{}".format(ext)
+                        # else: do not add an extension
+                    else:
+                        if self.extension:
+                            self.uri_string += ".{}".format(self.extension)
+            elif self.transcr_id:
+                raise Exception("Error: the language component of the URI was not defined")
+            elif self.languages:
+                raise Exception("Error: the transcription component of the URI was not defined")
+            else:
+                raise Exception("Error: the language and transcription components of the URI were not defined")
+
         if "yml" in uri_type:
             self.uri_string += ".yml"
         return self.uri_string
@@ -1174,11 +1341,12 @@ Did you put a dot between country code and institution name?"
             uri_type (str): the uri type of the path to be returned
             (defaults to None):
                 - "date" : only the 25-years openITI folder (format: 0275AH)
-                - "author" : authorUri (format: 0255Jahiz)
+                - "author" : path to the author folder
+                    (format: 0275AH/data/0255Jahiz)
                 - "author_yml" : path to the author yml file
-                    (format: 0275AH/0255Jahiz.yml)
+                    (format: 0275AH/data/0255Jahiz/0255Jahiz.yml)
                 - "book": path to the book folder
-                    (format: 0275AH/0255Jahiz/0255Jahiz.Hayawan)
+                    (format: 0275AH/data/0255Jahiz/0255Jahiz.Hayawan)
                 - "book_yml": path to the book yml file
                     (format: 0275AH/0255Jahiz/0255Jahiz.Hayawan/0255Jahiz.Hayawan.yml)
                 - "version": path to the book folder
@@ -1188,6 +1356,20 @@ Did you put a dot between country code and institution name?"
                     (format: 0275AH/data/0255Jahiz/0255Jahiz.Hayawan/0255Jahiz.Hayawan.Sham19Y0023775-ara1.yml)
                 - "version_file": path to the version text file
                     (format: 0275AH/data/0255Jahiz/0255Jahiz.Hayawan/0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed)
+                - "location": path to the location folder
+                    (format: data/MS0044LondonBL)
+                - "location_yml": path to the location yml file
+                    (format: data/MS0044LondonBL/MS0044LondonBL.yml)
+                - "manuscript": path to the manuscript folder
+                    (format: data/MS0044LondonBL/MS0044LondonBL.Or123)
+                - "manuscript_yml": path to the manuscript yml file
+                    (format: data/MS0044LondonBL/MS0044LondonBL.Or123/MS0044LondonBL.Or123.yml)
+                - "transcription": path to the manuscript folder in which the transcription resides
+                    (format: data/MS0044LondonBL/MS0044LondonBL.Or123)
+                - "transcription_yml": path to the transcription yml file\
+                    (format: data/MS0044LondonBL/MS0044LondonBL.Or123/MS0044LondonBL.Or123.AOCP20250101-ara1per3.yml)
+                - "transcription_file": path to the transcription text file\
+                    (format: data/MS0044LondonBL/MS0044LondonBL.Or123/MS0044LondonBL.Or123.AOCP20250101-ara1per3.completed)
             base_pth (str): path to the root folder,
                 to be prepended to the URI path
 
@@ -1210,6 +1392,21 @@ Did you put a dot between country code and institution name?"
             './master/0275AH/data/0255Jahiz/0255Jahiz.Hayawan/0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed'
              >>> my_uri.build_pth(base_pth="./master", uri_type="version")
             './master/0275AH/data/0255Jahiz/0255Jahiz.Hayawan'
+            >>> u = URI(MS0044LondonBL.Or123.AOCP20250101-ara1per3.completed)
+            >>> u.build_pth(uri_type="transcription", base_pth="D:\\test")
+            'D:/test/data/MS0044LondonBL/MS0044LondonBL.Or123'
+            >>> u.build_pth(uri_type="transcription_file", base_pth="D:\\test")
+            'D:/test/data/MS0044LondonBL/MS0044LondonBL.Or123/MS0044LondonBL.Or123.AOCP20250101-ara1per3.completed'
+            >>> u.build_pth("transcription")
+            './data/MS0044LondonBL/MS0044LondonBL.Or123'
+            >>> u.build_pth(uri_type="manuscript_yml")
+            './data/MS0044LondonBL/MS0044LondonBL.Or123/MS0044LondonBL.Or123.yml'
+            >>> u.build_pth()
+            './data/MS0044LondonBL/MS0044LondonBL.Or123/MS0044LondonBL.Or123.AOCP20250101-ara1per3.completed'
+            >>> u.languages=None  # (removing the languages property makes it impossible to build a version uri)
+            >>> u.build_pth()
+            './data/MS0044LondonBL/MS0044LondonBL.Or123'
+            
        """
         if base_pth is None:
             base_pth = self.base_pth
@@ -1227,7 +1424,18 @@ Did you put a dot between country code and institution name?"
                 return self.build_pth(uri_type="author", base_pth=base_pth)
             elif self.date:
                 return self.build_pth("date", base_pth=base_pth)
-
+            # TRANSCRIPTION/MANUSCRIPT/LOCATION URI:
+            elif self.transcr_id and self.languages:
+                if self.extension:
+                    return self.build_pth("transcription_file", base_pth=base_pth)
+                else:
+                    return self.build_pth("transcription", base_pth=base_pth)
+            elif self.shelfmark:
+                return self.build_pth("manuscript", base_pth=base_pth)
+            elif self.country and self.institution:
+                return self.build_pth("location", base_pth=base_pth)
+            else:
+                return ""
 
         if uri_type == "date":
             if self.date:
@@ -1258,11 +1466,16 @@ Did you put a dot between country code and institution name?"
                                 self.build_uri("book")))
         elif "version" in uri_type:
             pth = self.build_pth("book", base_pth)
-##            if "yml" in uri_type or "file" in uri_type:
-##                pth = (self.build_pth("book", base_pth))
-##            else:
-##                pth = os.sep.join((self.build_pth("book", base_pth),
-##                                   self.build_uri("version")))
+            
+        elif "location" in uri_type:
+            pth = os.sep.join((base_pth, "data", self.build_uri("location")))
+        elif "manuscript" in uri_type or "transcription" in uri_type:
+            pth = os.sep.join((self.build_pth("location", base_pth),
+                               self.build_uri("manuscript")))
+        else:
+            print("ERROR: unknown URI type", uri_type)
+            return ""
+            
         if "yml" in uri_type or "file" in uri_type:
             return pth + os.sep + self.build_uri(uri_type)
         else:
@@ -1349,7 +1562,23 @@ def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False,
         print("new uri:", new)
         print("Proposed changes:")
     old_folder = old_uri.build_pth()
-    if new_uri.uri_type == "version":
+
+    if "transcription" in new_uri.uri_type:
+        # only move yml and text file(s) of this specific version:
+        for file in os.listdir(old_folder):
+            fp = os.path.join(old_folder, file)
+            if not file.endswith(".md"):
+                if URI(file).build_uri(ext="") == old_uri.build_uri(ext=""):
+                    if file.endswith(".yml"):
+                        move_yml(fp, new_uri, "transcription", execute, 
+                                 non_25Y_folder=non_25Y_folder)
+                    else:
+                        old_file_uri = URI(fp)
+                        new_uri.extension = old_file_uri.extension
+                        move_to_new_uri_pth(fp, new_uri, execute,
+                                            non_25Y_folder=non_25Y_folder)
+
+    elif new_uri.uri_type == "version":
         # only move yml and text file(s) of this specific version:
         for file in os.listdir(old_folder):
             fp = os.path.join(old_folder, file)
@@ -1396,6 +1625,8 @@ def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False,
                     new_file_uri.author = new_uri.author
                     if new_uri.uri_type == "book":
                         new_file_uri.title = new_uri.title
+                    elif new_uri.uri_type == "manuscript":
+                        new_file_uri.shelfmark = new_uri.shelfmark
                     if file.endswith(".yml"):
                         new_fp = move_yml(fp, new_file_uri,
                                           old_file_uri.uri_type, execute,
@@ -1461,7 +1692,7 @@ def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False,
                 print("REMOVE AUTHOR FOLDER", old_folder)
         else:
             print("Old folder", old_folder, "does not exist!")
-    if new_uri.uri_type == "book":
+    elif new_uri.uri_type == "book":
         if os.path.exists(old_folder):
             if execute:
                 shutil.rmtree(old_folder)
@@ -1469,7 +1700,27 @@ def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False,
                 print("REMOVE BOOK FOLDER", old_folder)
         else:
             print("Old folder", old_folder, "does not exist!")
-
+    
+    elif new_uri.uri_type == "location":
+        if os.path.exists(old_folder):
+            if execute:
+                shutil.rmtree(old_folder)
+            else:
+                for ms_dir in os.listdir(old_folder):
+                    pth = os.path.join(old_folder, ms_dir)
+                    print("REMOVE MANUSCRIPT FOLDER", pth)
+                print("REMOVE LOCATION FOLDER", old_folder)
+        else:
+            print("Old folder", old_folder, "does not exist!")
+    elif new_uri.uri_type == "manuscript":
+        if os.path.exists(old_folder):
+            if execute:
+                shutil.rmtree(old_folder)
+            else:
+                print("REMOVE MANUSCRIPT FOLDER", old_folder)
+        else:
+            print("Old folder", old_folder, "does not exist!")
+            
     if not execute:
         resp = input("To carry out these changes: press OK+Enter; \
 to abort: press Enter. ")
@@ -1524,12 +1775,14 @@ def add_character_count(tok_count, char_count, tar_uri, execute=False, non_25Y_f
     if execute:
         with open(tar_yfp, mode="r", encoding="utf-8") as file:
             yml_dic = yml.ymlToDic(file.read().strip())
-            yml_dic["00#VERS#LENGTH###:"] = tok_count
-            yml_dic["00#VERS#CLENGTH##:"] = char_count
+            length_key = [k for k in yml_dic.keys() if "#LENGTH#" in k][0]
+            yml_dic[length_key] = tok_count
+            clength_key = [k for k in yml_dic.keys() if "#CLENGTH#" in k][0]
+            yml_dic[clength_key] = char_count
         with open(tar_yfp, mode="w", encoding="utf-8") as file:
-            file.write(yml.dicToYML(yml_dic))
+            file.write(yml.dicToYML(yml_dic, reflow=False))
     else:
-        print("  Add the character count to the version yml file")
+        print("  Add the character count to the yml file")
 
 
 def new_yml(tar_yfp, yml_type, execute=False):
@@ -1545,13 +1798,13 @@ def new_yml(tar_yfp, yml_type, execute=False):
     template = eval("{}_template".format(yml_type))
     yml_dic = yml.ymlToDic(template)
     #uri_key = "00#{}#URI######:".format(yml_type[:4].upper())
-    uri_key = [k for k in yml_d.keys() if "#URI#" in k][0]
+    uri_key = [k for k in yml_dic.keys() if "#URI#" in k][0]
     u = URI(tar_yfp)
     u.extension = ""
     yml_dic[uri_key] = u.build_uri()
     if execute:
         with open(tar_yfp, mode="w", encoding="utf-8") as file:
-            file.write(yml.dicToYML(yml_dic))
+            file.write(yml.dicToYML(yml_dic, reflow=False))
     else:
         if not tar_yfp in created_ymls:
             print("  Create temporary yml file", tar_yfp)
@@ -1581,11 +1834,11 @@ def move_yml(yml_fp, new_uri, uri_type, execute=False,
 
     if not execute:
         print("  Change URI inside yml file:")
-    yml_dict = yml.readYML(yml_fp)
+    yml_dic = yml.readYML(yml_fp)
     #key = "00#{}#URI######:".format(uri_type[:4].upper())
-    key = [k for k in yml_d.keys() if "#URI#" in k][0]
-    yml_dict[key] = new_uri.build_uri(uri_type=uri_type, ext="")
-    yml_str = yml.dicToYML(yml_dict)
+    key = [k for k in yml_dic.keys() if "#URI#" in k][0]
+    yml_dic[key] = new_uri.build_uri(uri_type=uri_type, ext="")
+    yml_str = yml.dicToYML(yml_dic, reflow=False)
     if not execute:
         print(yml_str)
 
@@ -1613,46 +1866,71 @@ def make_folder(new_folder, new_uri, execute=False, non_25Y_folder=None):
     Returns:
         None
     """
+    # TODO: TEST ME!
     if not os.path.exists(new_uri.base_pth):
         msg = """PathError: base path ({}) does not exist.
 Make sure base path is correct.""".format(new_uri.base_pth)
         raise Exception(msg)
     if not os.path.exists(new_folder):
-        author_folder = new_uri.build_pth("author")
-        if non_25Y_folder:
-            author_folder = re.sub(r"\d{4}AH", non_25Y_folder, author_folder)
-        if not os.path.exists(author_folder):
-            if execute:
-                os.makedirs(author_folder)
-            else:
-                if not author_folder in created_folders:
-                    print("  Make author_folder", author_folder)
-                    created_folders.append(author_folder)
-            new_yml(new_uri.build_pth("author_yml"), "author_yml", execute)
-        if new_uri.uri_type == "book" or new_uri.uri_type == "version":
-            book_folder = new_uri.build_pth("book")
+        if re.findall("author|book|version", new_uri.uri_type):
+            author_folder = new_uri.build_pth("author")
             if non_25Y_folder:
-                book_folder = re.sub(r"\d{4}AH", non_25Y_folder, book_folder)
-            if not os.path.exists(book_folder):
+                author_folder = re.sub(r"\d{4}AH", non_25Y_folder, author_folder)
+            if not os.path.exists(author_folder):
                 if execute:
-                    os.makedirs(book_folder)
+                    os.makedirs(author_folder)
                 else:
-                    if not book_folder in created_folders:
-                        print(" Make book_folder", book_folder)
-                        created_folders.append(book_folder)
-                new_yml(new_uri.build_pth("book_yml"), "book_yml", execute)
-            if new_uri.uri_type == "version":
-                new_yml(new_uri.build_pth("version_yml"),
-                            "version_yml", execute)
-                target_folder = new_uri.build_pth("version")
+                    if not author_folder in created_folders:
+                        print("  Make author_folder", author_folder)
+                        created_folders.append(author_folder)
+                new_yml(new_uri.build_pth("author_yml"), "author_yml", execute)
+            if new_uri.uri_type == "book" or new_uri.uri_type == "version":
+                book_folder = new_uri.build_pth("book")
                 if non_25Y_folder:
-                    target_folder = re.sub(r"\d{4}AH", non_25Y_folder, target_folder)
+                    book_folder = re.sub(r"\d{4}AH", non_25Y_folder, book_folder)
+                if not os.path.exists(book_folder):
+                    if execute:
+                        os.makedirs(book_folder)
+                    else:
+                        if not book_folder in created_folders:
+                            print(" Make book_folder", book_folder)
+                            created_folders.append(book_folder)
+                    new_yml(new_uri.build_pth("book_yml"), "book_yml", execute)
+                if new_uri.uri_type == "version":
+                    new_yml(new_uri.build_pth("version_yml"),
+                                "version_yml", execute)
+                    target_folder = new_uri.build_pth("version")
+                    if non_25Y_folder:
+                        target_folder = re.sub(r"\d{4}AH", non_25Y_folder, target_folder)
+                    if execute:
+                        if "README.md" not in os.listdir(target_folder):
+                            add_readme(target_folder)
+                        if "text_questionnaire.md" not in os.listdir(target_folder):
+                            add_text_questionnaire(target_folder)
+        else:
+            location_folder = new_uri.build_pth("location")
+            if not os.path.exists(location_folder):
                 if execute:
-                    if "README.md" not in os.listdir(target_folder):
-                        add_readme(target_folder)
-                    if "text_questionnaire.md" not in os.listdir(target_folder):
-                        add_text_questionnaire(target_folder)
-             
+                    os.makedirs(location_folder)
+                else:
+                    if not location_folder in created_folders:
+                        print("  Make location_folder", location_folder)
+                        created_folders.append(location_folder)
+                new_yml(new_uri.build_pth("location_yml"), "location_yml", execute)
+            if re.findall(r"manuscript|transcription", new_uri.uri_type):
+                manuscript_folder = new_uri.build_pth("manuscript")
+                if not os.path.exists(manuscript_folder):
+                    if execute:
+                        os.makedirs(manuscript_folder)
+                    else:
+                        if not manuscript_folder in created_folders:
+                            print(" Make manuscript_folder", manuscript_folder)
+                            created_folders.append(manuscript_folder)
+                    new_yml(new_uri.build_pth("manuscript_yml"), "manuscript_yml", execute)
+                if new_uri.uri_type == "transcription":
+                    new_yml(new_uri.build_pth("transcription_yml"),
+                                "transcription_yml", execute)
+                    target_folder = new_uri.build_pth("transcription")
 
 
 def move_to_new_uri_pth(old_fp, new_uri, execute=False, non_25Y_folder=None):
@@ -1672,6 +1950,7 @@ def move_to_new_uri_pth(old_fp, new_uri, execute=False, non_25Y_folder=None):
     Returns:
         (str): path to the new file
     """
+    # TO DO: CHECK ME!
     new_folder = new_uri.build_pth(uri_type=new_uri.uri_type)
     new_fp = new_uri.build_pth(uri_type=new_uri.uri_type+"_file")
     if non_25Y_folder:
@@ -1686,16 +1965,16 @@ def move_to_new_uri_pth(old_fp, new_uri, execute=False, non_25Y_folder=None):
     return new_fp
 
 
-#def check_token_count(version_uri, ymlD):
-def check_token_count(version_uri, ymlD, version_fp="", find_latest=True):
+#def check_token_count(version_uri, yml_dic):
+def check_token_count(uri, yml_dic, text_fp="", find_latest=True):
     """Check whether the token count in the version yml file agrees with the\
     actual token count of the text file.
 
     Args:
-        version_uri (URI object): version uri of the target text
-        ymlD (dict): dictionary containing the data from the relevant yml file
-        version_fp (str): file path to the target text
-        find_latest (bool): if False, the version_fp will be used as is;
+        uri (URI object): version/transcription uri of the target text
+        yml_dic (dict): dictionary containing the data from the relevant yml file
+        text_fp (str): file path to the target text
+        find_latest (bool): if False, text_fp will be used as is;
             if set to True, the script will find the most developed version of
             the text file, based on its extension (mARkdown > completed > inProgress)
     Returns:
@@ -1704,40 +1983,46 @@ def check_token_count(version_uri, ymlD, version_fp="", find_latest=True):
             tok_count (int): number of Arabic tokens in the target text
             char_count (int): number of Arabic characters in the target text
     """
-    
+    # TO DO: CHECK ME!
     # Get the count from the most complete version of the text file: 
     #fp = version_uri.build_pth(uri_type="version_file")
-    if version_fp and not find_latest:
-        fp = version_fp
-    elif version_fp and find_latest:
-        version_fp = re.sub(r"\.mARkdown|\.completed|\.inProgress", "", version_fp)
+    if text_fp and not find_latest:
+        fp = text_fp
+    elif text_fp and find_latest:
+        text_fp = re.sub(r"\.mARkdown|\.completed|\.inProgress", "", text_fp)
         #for ext in [".mARkdown", ".completed", ".inProgress", ""]:
         for ext in [".mARkdown", ".completed", "", ".inProgress"]:
-            fp = version_fp + ext
+            fp = text_fp + ext
             if os.path.exists(fp):
                 break
     else:
         #for ext in ["mARkdown", "completed", "inProgress", ""]:
         for ext in ["mARkdown", "completed", "", "inProgress"]:
-            version_uri.extension = ext
-            fp = version_uri.build_pth(uri_type="version_file")
+            uri.extension = ext
+            if "_file" in uri.uri_type:
+                uri_type = uri.uri_type
+            else:
+                uri_type = uri.uri_type + "file"
+            fp = uri.build_pth(uri_type=uri_type)
             if os.path.exists(fp):
                 break 
 
     tok_count = ar_cnt_file(fp, mode="token")
     char_count = ar_cnt_file(fp, mode="char")
-    len_key = "00#VERS#LENGTH###:"
-    char_len_key = "00#VERS#CLENGTH##:"
-    yml_tok_count = ymlD[len_key].strip()
+    #len_key = "00#VERS#LENGTH###:"
+    #char_len_key = "00#VERS#CLENGTH##:"
+    len_key = [k for k in yml_dic.keys() if "#LENGTH#" in k][0]
+    char_len_key = [k for k in yml_dic.keys() if "#CLENGTH#" in k][0]
+    yml_tok_count = yml_dic[len_key].strip()
     try:
-        yml_char_count = ymlD[char_len_key].strip()
+        yml_char_count = yml_dic[char_len_key].strip()
     except:
         yml_char_count = ""
     replace_tok_count = False
     for cnt, yml_cnt in [(tok_count, yml_tok_count),
                          (char_count, yml_char_count)]:
         if yml_cnt == "":
-            print("NO TOKEN COUNT", version_uri)
+            print("NO TOKEN COUNT", uri)
             replace_tok_count = True
         else:
             try:
@@ -1757,7 +2042,7 @@ def replace_tok_counts(missing_tok_count):
     Args:
         missing_tok_count (list): a list of tuples:
             uri (OpenITI URI object)
-            version_fp (str)
+            text_fp (str)
             token_count (int): the number of Arabic tokens in the text file
             char_count (int): the number of Arabic characters in the text file
 
@@ -1765,31 +2050,34 @@ def replace_tok_counts(missing_tok_count):
         None
     """
     print("replacing token count in {} files".format(len(missing_tok_count)))
-    for uri, version_fp, tok_count, char_count in missing_tok_count:
-        print(uri, version_fp)
+    for uri, text_fp, tok_count, char_count in missing_tok_count:
+        print(uri, text_fp)
         #yml_fp = uri.build_pth("version_yml")
-        if version_fp.endswith(("mARkdown", "completed", "inProgress")):
-            yml_fp = os.path.splitext(version_fp)[0] + ".yml"
+        if text_fp.endswith(("mARkdown", "completed", "inProgress")):
+            yml_fp = os.path.splitext(text_fp)[0] + ".yml"
         else:
-            yml_fp = version_fp + ".yml"
-        ymlD = yml.readYML(yml_fp)
-        len_key = "00#VERS#LENGTH###:"
-        ymlD[len_key] = str(tok_count)
-        char_len_key = "00#VERS#CLENGTH##:"
-        ymlD[char_len_key] = str(char_count)
-        ymlS = yml.dicToYML(ymlD)
+            yml_fp = text_fp + ".yml"
+        yml_dic = yml.readYML(yml_fp)
+        #len_key = "00#VERS#LENGTH###:"
+        len_key = [k for k in yml_dic.keys() if "#LENGTH#" in k][0]
+        yml_dic[len_key] = str(tok_count)
+        #char_len_key = "00#VERS#CLENGTH##:"
+        char_len_key = [k for k in yml_dic.keys() if "#CLENGTH#" in k][0]
+        yml_dic[char_len_key] = str(char_count)
+        ymlS = yml.dicToYML(yml_dic, reflow=False)
         with open(yml_fp, mode="w", encoding="utf-8") as outf:
             outf.write(ymlS)
 
-def check_yml_file(yml_fp, yml_type, version_fp=None, execute=False,
+def check_yml_file(yml_fp, yml_type, text_fp=None, execute=False,
                    check_token_counts=True):
     """Check whether a yml file exist, is valid, and contains no foreign keys
 
     Args:
         yml_fp (str): path to the yml file
-        yml_type (str): either "author", "book", or "version"
-        version_fp (str): path to the text file of the version
-            (only relevant for version yml files; default = None)
+        yml_type (str): either "author", "book", "version",
+            "location", "manuscript" or "transcription"
+        text_fp (str): path to the text file of the version/transcription
+            (only relevant for version/transcription yml files; default = None)
         execute (bool): if False, the user will be prompted
             before any changes are made to the yml file
         check_token_counts (bool): if True, the script will check
@@ -1798,6 +2086,7 @@ def check_yml_file(yml_fp, yml_type, version_fp=None, execute=False,
     Returns:
         None or yml_fp
     """
+    # TO DO: CHECK ME!
     yml_changed = False
     
     # Check if yml file exists:
@@ -1807,7 +2096,7 @@ def check_yml_file(yml_fp, yml_type, version_fp=None, execute=False,
         if execute or input("Create yml file? Y/N? ").lower() == "y":
             new_yml(yml_fp, yml_type+"_yml", True)
             print("New yml file created.")
-            yml_d = yml.readYML(yml_fp) 
+            yml_dic = yml.readYML(yml_fp) 
         else:
             print("No new yml file created. Check manually!")
             return yml_fp
@@ -1815,33 +2104,36 @@ def check_yml_file(yml_fp, yml_type, version_fp=None, execute=False,
 
     # Check if yml is valid:
     try:
-        yml_d = yml.readYML(yml_fp)
-        if yml_d == {}:
+        yml_dic = yml.readYML(yml_fp)
+        if yml_dic == {}:
             print("Empty yml file")
             if execute or input("Create yml file? Y/N? ").lower() == "y":
                 new_yml(yml_fp, yml_type+"_yml", True)
                 print("New yml file created.")
-                yml_d = yml.readYML(yml_fp)
+                yml_dic = yml.readYML(yml_fp)
             else:
                 print("No new file created. Check manually!")
                 return yml_fp
             
-        yml_d.keys()
+        yml_dic.keys()
     except Exception as e:
         print("invalid YML file structure:", yml_fp)
         print("Error message:", e)
-        yml_d = yml.fix_broken_yml(yml_fp, execute)
-        if yml_d:
+        yml_dic = yml.fix_broken_yml(yml_fp, execute)
+        if yml_dic:
             yml_changed = True
         else:
             return yml_fp
-    for key in list(yml_d.keys()):  # NB: list needed because otherwise keys cannot be deleted!
+    key_d = {"author": "AUTH", "book": "BOOK", "version": "VERS",
+             "location": "LOC", "manuscript": "MS", "transcription": "TRNS"}
+    for key in list(yml_dic.keys()):  # NB: list needed because otherwise keys cannot be deleted!
         
         # check if all keys have the prefix of the yml type (..#AUTH, ..#BOOK, ..#VERS):
-        if key[3:7] != yml_type.upper()[:4]:
+        #if key[3:7] != yml_type.upper()[:4]:
+        if key_d[yml_type.split("_")[0]] not in key:
             print("wrong key in yml file", yml_fp, ":", key)
             if execute or input("Delete yml key {}? Y/N: ".format(key)).lower() == "y":
-                del yml_d[key]
+                del yml_dic[key]
                 yml_changed = True
                 print("-> deleted yml key", key)
             else:
@@ -1851,23 +2143,27 @@ def check_yml_file(yml_fp, yml_type, version_fp=None, execute=False,
         if "URI" in key:
             fn = os.path.splitext(os.path.split(yml_fp)[-1])[0]
             fn = re.sub(r"\.inProgress|\.mARkdown|\.completed", "", fn)
-            if yml_d[key].strip() != fn:
-                print("URI", yml_d[key], "!= filename", fn)
+            if yml_dic[key].strip() != fn:
+                print("URI", yml_dic[key], "!= filename", fn)
                 if execute or input("Replace URI with filename? Y/N: ").lower() == "y":
-                    yml_d[key] = fn
+                    yml_dic[key] = fn
                     yml_changed = True
                     print("-> URI replaced with", fn)
                 else:
                     return yml_fp
                 
     # check whether version yml files contain token and character length values:
-    if yml_type == "version" and check_token_counts:
-        res = check_token_count(URI(yml_fp), yml_d, version_fp)
+    if yml_type in ["version", "transcription"] and check_token_counts:
+        res = check_token_count(URI(yml_fp), yml_dic, version_fp)
         if res:
             tok_count, char_count = res
             if execute or input("Change token count? Y/N? ").lower() == "y":
-                yml_d["00#VERS#LENGTH###:"] = str(tok_count)
-                yml_d["00#VERS#CLENGTH##:"] = str(char_count)
+                #yml_dic["00#VERS#LENGTH###:"] = str(tok_count)
+                #yml_dic["00#VERS#CLENGTH##:"] = str(char_count)
+                len_key = [k for k in yml_dic.keys() if "#LENGTH#" in k][0]
+                yml_dic[len_key] = str(tok_count)
+                char_len_key = [k for k in yml_dic.keys() if "#CLENGTH#" in k][0]
+                yml_dic[char_len_key] = str(tok_count)
                 yml_changed = True
                 print(yml_fp)
                 print("-> token and character counts changed")
@@ -1877,7 +2173,7 @@ def check_yml_file(yml_fp, yml_type, version_fp=None, execute=False,
     # save changes to yml file if anything has changed: 
     if yml_changed:
         with open(yml_fp, mode="w", encoding="utf-8") as file:
-            file.write(yml.dicToYML(yml_d))
+            file.write(yml.dicToYML(yml_dic, reflow=False))
 
 
 def check_yml_files(start_folder, exclude=[],
@@ -1927,8 +2223,8 @@ if __name__ == "__main__":
     print("passed doctests")
     print()
 
-    folder = r"D:\London\OpenITI\25Y_repos/0550AH/data/0548Shahrastani"
-    check_yml_files(folder)
+    test = URI("MS0044LondonBL.Or123.AOCP20250101-ara1per3.completed")
+
     input("CONTINUE?")
 
     # Additional tests:
