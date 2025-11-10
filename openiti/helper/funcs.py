@@ -74,7 +74,7 @@ def get_all_yml_files_in_folder(start_folder, yml_types,
 
     Args:
         start_folder (str): path to the folder containing the text files
-        yml_type (list): list of desired yml file types:
+        yml_types (list): list of desired yml file types:
             one or more of "author", "book", or "version"
         excluded_folders (list): list of folder names that should be excluded
             (default: the list of excluded folders defined in this module)
