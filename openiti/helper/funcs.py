@@ -75,7 +75,8 @@ def get_all_yml_files_in_folder(start_folder, yml_types,
     Args:
         start_folder (str): path to the folder containing the text files
         yml_types (list): list of desired yml file types:
-            one or more of "author", "book", or "version"
+            one or more of "author", "book", "version",
+            "location", "manuscript" or "transcription"
         excluded_folders (list): list of folder names that should be excluded
             (default: the list of excluded folders defined in this module)
         excluded_files (list): list of file names that should be excluded
@@ -88,7 +89,9 @@ def get_all_yml_files_in_folder(start_folder, yml_types,
         > folder = r"D:/OpenITI/25Y_repos/0025AH"
         > AH0025_file_list = [fp for fp in get_all_text_files_in_folder(folder)]
     """
-    dots = {"author": 1, "book": 2, "version": 3}
+    dots = {"author": 1, "book": 2, "version": 3,
+            "location": 1, "manuscript": 2, "transcription": 3,
+            }
     if isinstance(yml_types, str):
         yml_types = [yml_types,]
     for root, dirs, files in os.walk(start_folder):
