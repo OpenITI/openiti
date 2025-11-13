@@ -323,7 +323,7 @@ class URI:
               - international phone call number of the  country (self.country)
               - city + institution (self.institution)
             * MsID: collection + shelfmark: self.shelfmark
-          - MsTranscriptionID: self.transcr_id
+          - MsTranscriptionID: self.transcription
           - Lang: consists of one or more combinations of:
               * languageID: ISO 639-2 language code
               * transcription_type: 1 = undefined, 2 = diplomatic, 3 = normalized
@@ -342,7 +342,7 @@ class URI:
         >>> print(t)
         0255Jahiz.Hayawan.Sham19Y0023775-ara1.completed
         >>> print(repr(u))
-        uri(country:0044, institution:LondonBL, shelfmark:Or123, transcr_id:AOCP20250101, languages:{'ara': '1', 'per': '3'}, extension:completed)
+        uri(country:0044, institution:LondonBL, shelfmark:Or123, transcription:AOCP20250101, languages:{'ara': '1', 'per': '3'}, extension:completed)
         >>> print(u)
         MS0044LondonBL.Or123.AOCP20250101-ara1per3.completed
 
@@ -354,7 +354,7 @@ class URI:
         '0255'
         >>> u.institution
         'LondonBL'
-        >>> u.transcr_id
+        >>> u.transcription
         'AOCP20250101'
 
         Getting URI's current uri_type ("author", "book", "version", None),
@@ -552,7 +552,7 @@ class URI:
         self.country = ""
         self.institution = ""
         self.shelfmark = ""
-        self.transcr_id = ""
+        self.transcription = ""
         self.languages = dict()
         self.extension = ""
         if uri_string:
@@ -696,14 +696,14 @@ class URI:
         self.__version = self.check_ASCII(version, "Version string")
 
     @property
-    def transcr_id(self):
+    def transcription(self):
         """Set the URI's version property."""
-        return self.__transcr_id
+        return self.__transcription
 
-    @transcr_id.setter
-    def transcr_id(self, transcr_id):
+    @transcription.setter
+    def transcription(self, transcription):
         """Set the URI's version property, after checking its conformity."""
-        self.__transcr_id = self.check_ASCII(transcr_id, "Transcription ID string")
+        self.__transcription = self.check_ASCII(transcription, "Transcription ID string")
 
     def check_ASCII(self, test_string, string_type):
         """Check whether the test_string only contains ASCII letters and digits."""
@@ -840,7 +840,7 @@ class URI:
             uri_type = "location"
             if self.shelfmark:
                 uri_type = "manuscript"
-                if self.transcr_id and self.languages:
+                if self.transcription and self.languages:
                     uri_type = "transcription"
         return uri_type
 
@@ -907,7 +907,7 @@ class URI:
 language:ara, edition_no:1, extension:)'
             >>> my_uri = URI("MS0044LondonBL.Or123.AOCP20250101-ara1per3.completed")
             >>> repr(my_uri)
-            "uri(country:0044, institution:LondonBL, shelfmark:Or123, transcr_id:AOCP20250101, languages:{'ara': '1', 'per': '3'}, extension:completed)"
+            "uri(country:0044, institution:LondonBL, shelfmark:Or123, transcription:AOCP20250101, languages:{'ara': '1', 'per': '3'}, extension:completed)"
             >>> my_uri = URI()
             >>> repr(my_uri)
             'uri()'
@@ -915,7 +915,7 @@ language:ara, edition_no:1, extension:)'
         if self.__date:
             component_names = "date author title version language edition_no extension"
         elif self.__country:
-            component_names = "country institution shelfmark transcr_id languages extension"
+            component_names = "country institution shelfmark transcription languages extension"
         else:
             return "uri()"
         fmt = [x+":{_URI__"+x+"}" for x in component_names.split()]
@@ -1022,7 +1022,7 @@ language:ara, edition_no:1, extension:)'
             ['0255', 'Jahiz', 'Hayawan']
             >>> my_uri = URI("MS0044LondonBL.Or123.AOCP20250101-ara1per3.completed")
             >>> print(repr(my_uri))
-            uri(country:0044, institution:LondonBL, shelfmark:Or123, transcr_id:AOCP20250101, languages:{'ara': '1', 'per': '3'}, extension:completed)
+            uri(country:0044, institution:LondonBL, shelfmark:Or123, transcription:AOCP20250101, languages:{'ara': '1', 'per': '3'}, extension:completed)
             >>> my_uri.split_uri()
             ['MS', '0044', 'LondonBL', 'Or123', 'AOCP20250101', 'ara', '1', 'per', '3', 'completed']
             >>> my_uri.extension=""
@@ -1100,11 +1100,11 @@ Did you put a dot between country code and institution name?"
                 if split_uri[2] != "yml":
                     self.transcrLang = split_uri[2]
                     try:
-                        self.transcr_id, language_component = self.transcrLang.split("-")
+                        self.transcription, language_component = self.transcrLang.split("-")
                     except:
                         raise Exception("URI", uri_string, "misses language ")
-                    self.check_ASCII(self.transcr_id, "Transcription ID")
-                    split_components.append(self.transcr_id)
+                    self.check_ASCII(self.transcription, "Transcription ID")
+                    split_components.append(self.transcription)
                     self.languages = dict()
                     lans = re.findall(r"([a-z]{3})(\d+)", language_component)
                     if lans == []:
@@ -1203,7 +1203,7 @@ Did you put a dot between country code and institution name?"
             elif self.date:
                 return self.build_uri("date", ext=ext)
             # TRANSCRIPTION/MANUSCRIPT/LOCATION URI:
-            elif self.transcr_id and self.languages:
+            elif self.transcription and self.languages:
                 if self.extension:
                     return self.build_uri("transcription_file", ext=ext)
                 else:
@@ -1262,10 +1262,10 @@ Did you put a dot between country code and institution name?"
             else:
                 raise Exception("Error: the title component of the URI was not defined")
         elif "transcription" in uri_type:
-            if self.transcr_id and self.languages:
+            if self.transcription and self.languages:
                 lang_component = "".join([k+v for k,v in self.languages.items()])
                 self.uri_string =  "{}.{}-{}".format(self.build_uri("manuscript"),
-                                                       self.transcr_id,
+                                                       self.transcription,
                                                        lang_component)
                 if "file" in uri_type:
                     if ext != None:
@@ -1275,7 +1275,7 @@ Did you put a dot between country code and institution name?"
                     else:
                         if self.extension:
                             self.uri_string += ".{}".format(self.extension)
-            elif self.transcr_id:
+            elif self.transcription:
                 raise Exception("Error: the language component of the URI was not defined")
             elif self.languages:
                 raise Exception("Error: the transcription component of the URI was not defined")
@@ -1425,7 +1425,7 @@ Did you put a dot between country code and institution name?"
             elif self.date:
                 return self.build_pth("date", base_pth=base_pth)
             # TRANSCRIPTION/MANUSCRIPT/LOCATION URI:
-            elif self.transcr_id and self.languages:
+            elif self.transcription and self.languages:
                 if self.extension:
                     return self.build_pth("transcription_file", base_pth=base_pth)
                 else:
@@ -1752,7 +1752,8 @@ def add_text_questionnaire(target_folder):
               mode="w", encoding="utf-8") as file:
         file.write(text_questionnaire_template)
 
-def add_character_count(tok_count, char_count, tar_uri, execute=False, non_25Y_folder=None):
+def add_character_count(tok_count, char_count, tar_uri,
+                        execute=False, non_25Y_folder=None):
     """Add the character and token counts to the new version yml file
 
     Args:
@@ -1768,8 +1769,13 @@ def add_character_count(tok_count, char_count, tar_uri, execute=False, non_25Y_f
     Returns:
         None
     """
-
-    tar_yfp = tar_uri.build_pth("version_yml")
+    if "version" in tar_uri.uri_type:
+        tar_yfp = tar_uri.build_pth("version_yml")
+    elif "transcription" in tar_uri.uri_type:
+        tar_yfp = tar_uri.build_pth("transcription_yml")
+    else:
+        print("ABORTING: unsuitable uri type:", tar_uri.uri_type)
+        return
     if non_25Y_folder:
         tar_yfp = re.sub(r"\d{4}AH", non_25Y_folder, tar_yfp)
     if execute:
@@ -2152,9 +2158,9 @@ def check_yml_file(yml_fp, yml_type, text_fp=None, execute=False,
                 else:
                     return yml_fp
                 
-    # check whether version yml files contain token and character length values:
+    # check whether version/transcription yml files contain token and character length values:
     if yml_type in ["version", "transcription"] and check_token_counts:
-        res = check_token_count(URI(yml_fp), yml_dic, version_fp)
+        res = check_token_count(URI(yml_fp), yml_dic, text_fp)
         if res:
             tok_count, char_count = res
             if execute or input("Change token count? Y/N? ").lower() == "y":
@@ -2163,7 +2169,7 @@ def check_yml_file(yml_fp, yml_type, text_fp=None, execute=False,
                 len_key = [k for k in yml_dic.keys() if "#LENGTH#" in k][0]
                 yml_dic[len_key] = str(tok_count)
                 char_len_key = [k for k in yml_dic.keys() if "#CLENGTH#" in k][0]
-                yml_dic[char_len_key] = str(tok_count)
+                yml_dic[char_len_key] = str(char_count)
                 yml_changed = True
                 print(yml_fp)
                 print("-> token and character counts changed")
@@ -2196,19 +2202,35 @@ def check_yml_files(start_folder, exclude=[],
     failed = []
     for fp in get_all_text_files_in_folder(start_folder, excluded_folders=exclude):
         uri = URI(fp)
-        for yml_type in ("author", "book", "version"):
-            yml_fn = uri.build_uri(uri_type="{}_yml".format(yml_type))
-            if yml_type == "author":
-                if flat_folder:
-                    yml_fp = os.path.join(os.path.dirname(fp), yml_fn)
+        if "version" in uri.uri_type:
+            for yml_type in ("author", "book", "version"):
+                yml_fn = uri.build_uri(uri_type="{}_yml".format(yml_type))
+                if yml_type == "author":
+                    if flat_folder:
+                        yml_fp = os.path.join(os.path.dirname(fp), yml_fn)
+                    else:
+                        yml_fp = os.path.join(os.path.dirname(os.path.dirname(fp)), yml_fn)
                 else:
-                    yml_fp = os.path.join(os.path.dirname(os.path.dirname(fp)), yml_fn)
-            else:
-                yml_fp = os.path.join(os.path.dirname(fp), yml_fn)
-            r = check_yml_file(yml_fp, yml_type, version_fp=fp, execute=execute,
-                               check_token_counts=check_token_counts)
-            if r:
-                failed.append(r)
+                    yml_fp = os.path.join(os.path.dirname(fp), yml_fn)
+                r = check_yml_file(yml_fp, yml_type, text_fp=fp, execute=execute,
+                                   check_token_counts=check_token_counts)
+                if r:
+                    failed.append(r)
+        else:
+            for yml_type in ("location", "manuscript", "transcription"):
+                yml_fn = uri.build_uri(uri_type="{}_yml".format(yml_type))
+                if yml_type == "location":
+                    if flat_folder:
+                        yml_fp = os.path.join(os.path.dirname(fp), yml_fn)
+                    else:
+                        yml_fp = os.path.join(os.path.dirname(os.path.dirname(fp)), yml_fn)
+                else:
+                    yml_fp = os.path.join(os.path.dirname(fp), yml_fn)
+                r = check_yml_file(yml_fp, yml_type, text_fp=fp, execute=execute,
+                                   check_token_counts=check_token_counts)
+                if r:
+                    failed.append(r)
+            
     if failed:
         print("The following yml files could not be read. Please correct them manually:")
         for yml_fp in failed:
