@@ -168,7 +168,16 @@ def initialize_new_text(origin_fp, target_base_pth, execute=False, non_25Y_folde
     ori_uri = URI(origin_fp)
     tar_uri = copy.deepcopy(ori_uri)
     tar_uri.base_pth = target_base_pth
-    target_fp = tar_uri.build_pth("version_file")
+    if "version" in tar_uri.uri_type:
+        target_fp = tar_uri.build_pth("version_file")
+        yml_types = ("version_yml", "book_yml", "author_yml")
+    elif "transcription" in tar_uri.uri_type:
+        target_fp = tar_uri.build_pth("transcription_file")
+        yml_types = ("transcription_yml", "manuscript_yml", "location_yml")
+    else:
+        print("ABORTING: unsuitable uri type:", tar_uri.uri_type)
+        return
+    
     if non_25Y_folder:
         target_fp = re.sub("\d{4}AH", non_25Y_folder, target_fp)
         print("target_fp:", target_fp)
@@ -196,8 +205,8 @@ def initialize_new_text(origin_fp, target_base_pth, execute=False, non_25Y_folde
     move_to_new_uri_pth(origin_fp, tar_uri, execute, non_25Y_folder=non_25Y_folder)
 
     # Move or create the YML files:
-
-    for yf in ("version_yml", "book_yml", "author_yml"):
+    
+    for yf in yml_types:
         yfp = os.path.join(ori_uri.base_pth, ori_uri.build_uri(yf))
         tar_yfp = tar_uri.build_pth(yf)
         if non_25Y_folder:
