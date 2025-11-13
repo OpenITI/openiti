@@ -146,10 +146,18 @@ language_codes = [        # ISO 639-2B language codes: https://en.wikipedia.org/
     ]
 auth = r"\b\d{4}[A-Z][a-zA-Z]+"
 book = auth + "\.[A-Z][a-zA-Z]+"
-version = book + "\.\w+(?:Vols)?(?:BK\d+|[A-Z])*-(?:%s)+\d+" % "|".join(language_codes)
+#version = book + "\.\w+(?:Vols)?(?:BK\d+|[A-Z])*-(?:%s)+\d+" % "|".join(language_codes)
+version = book + "\.\w+(?:Vols)?(?:BK\d+|[A-Z])*-(?:[a-z]{3}\d+)+"
 author_uri = auth
 book_uri = book
 version_uri = version
+
+loc = r"MS\d{4}[A-Z][a-zA-Z]+"
+manuscr = loc + "\.[A-Z][a-zA-Z_0-9]+"
+transcr = manuscr + "\.\w+-(?:[a-z]{3}\d+)+"
+location_uri = loc
+manuscript_uri = manuscr
+transcription_uri = transcr
 
 # OpenITI text file names:
 extensions = ["inProgress", "completed", "mARkdown"]
