@@ -146,8 +146,12 @@ location_yml_template = """\
 
 manuscript_yml_template = """\
 00#MS#URI########: 
-00#MS#SHELFM#####: shelfmark, shelfmark 
+10#MS#SHELFM#####: shelfmark; shelfmark 
     [in one-to-one transcription]
+10#MS#GENRES#####: src@keyword, src@keyword, src@keyword
+10#MS#AUTHOR#AR##: author(s) on the front page and/or of parts
+    [in one-to-one transcription; replace language code if needed;
+    semicolon-separated]
 10#MS#TITLE#AR###: title(s) on the front page and/or of parts
     [in one-to-one transcription; replace language code if needed;
     semicolon-separated]
@@ -188,14 +192,15 @@ transcription_yml_template = """\
 00#TRNS#LENGTH###: number of tokens
 00#TRNS#URI######: 
 40#TRNS#PAGES####: pages transcribed: page_range
-80#TRNS#LINEMODEL: segmentation model used for line segmentation
-    (name and/or URL)
-80#TRNS#REGMODEL#: segmentation model used for region segmentation
+80#TRNS#BASED####: permalink, permalink, permalink
+80#TRNS#LINKS####: SOURCE@permalink, IIIF@permalink, PDF@permalink, 
+    BIBTEX@permalink
+80#TRNS#LINMODEL#: segmentation model used for line segmentation
     (name and/or URL)
 80#TRNS#RECMODEL#: recognition model used for transcription
     (name and/or URL)
-80#TRNS#LINKS####: SOURCE@permalink, IIIF@permalink, PDF@permalink, 
-    BIBTEX@permalink
+80#TRNS#REGMODEL#: segmentation model used for region segmentation
+    (name and/or URL)
 90#TRNS#CONTRIB##: TRANSCRIPTION@name, CORRECTION@name
    (latin characters; please use consistently)
 90#TRNS#COMMENT##: a free running comment here; you can add as many
