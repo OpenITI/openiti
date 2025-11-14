@@ -516,7 +516,7 @@ class MarkdownConverter(object):
             src = re.sub(self.options['image_link_regex'],
                          self.options['image_folder'], src)
 
-        return '\n![%s](%s%s)\n' % (alt, src, title_part)
+        return '![%s](%s%s)' % (alt, src, title_part)
 
     def convert_list(self, el, text):
         """Convert ordered and unordered html lists (<ul> and <ol> tags).
