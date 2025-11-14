@@ -143,7 +143,7 @@ def get_all_characters_in_folder(start_folder, verbose=False,
             fp = os.path.join(root, fn)
             extensions = [".completed", ".mARkdown", ".inProgress"]
             if os.path.splitext(fn)[1] in extensions \
-              or re.findall(r"(ara|per)\d$", fn):
+              or re.findall(r"-(?:\w\w\w\d)+$", fn):
                 if verbose:
                     print(len(all_characters), fn)
                 text_chars = get_all_characters_in_text(fp)
@@ -345,7 +345,7 @@ def absolute_path(path):
     return os.path.abspath(path)
 
 
-def get_page_numbers(text, page_regex=r"PageV[^P]+P\d+[A-Z]?"):
+def get_page_numbers(text, page_regex=r"(?:Folio|Page)(Beg|End)?V[^P]+P\d+[A-Z]?"):
     """Get all page numbers and their locations (character offsets) in a text
 
     Args:
