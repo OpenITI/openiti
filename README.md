@@ -1,7 +1,8 @@
 # openiti
 
-This is a first attempt to create a Python library that combines all often-used code in the OpenITI project. 
-Full documentation and deescription can be found here: <https://openiti.readthedocs.io/>
+A Python library that combines all often-used code in the OpenITI project. 
+
+Full documentation and description can be found here: <https://openiti.readthedocs.io/>
 
 # Installation
 
@@ -12,6 +13,36 @@ pip install OpenITI
 Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip install OpenITI`.
 
 ## Change log:
+
+### v.0.1.6: 
+- the library has been updated to deal with the new manuscript URIs
+  (see https://github.com/OpenITI/MSS)
+- `helper/yml.py`: 
+    * implement new manuscript URIs (see https://github.com/OpenITI/MSS).
+    * `readYML`: add `fix_yml_errors_silently` argument (default: False).
+        The function will now try to fix any faulty yml file.
+    * `ymlToDic`: idem
+    * `fix_broken_yml`: 
+      - previously, this function returned None if the yml could not be fixed.
+        It will now always return a dictionary
+        (keys that could not be fixed will not be in the dictionary).
+      - if `execute` is True, the fixed yml file will be saved to `fp` 
+        (if `silent` is False, the user's permission will be asked first)
+- `helper/uri.py`: implement new manuscript URIs (see https://github.com/OpenITI/MSS).
+  The components of these URIs are called location, manuscript and transcription IDs.
+- `helper/templates.py`: add templates for location, manuscript and transcription yml files.
+- `helper/rgx.py`: Add regexes for location, manuscript and transcription URIs.
+- `helper/funcs`:
+    * `get_all_yml_files_in_folder`: add "location", "manuscript" and "transcription" yml types
+    * `get_all_text_files_in_folder`: allow for multiple language components in version and transcription IDs
+    * `get_page_numbers`: Adapt the default `page_regex` argument to include page number formats like FolioVxxPxxxA, PageBegVxxPxxx and PageEndVxxPxxx.
+    * `get_all_characters_in_folder`: allow for multiple language components in version and transcription IDs
+- `new_books/add/add_books.py`: 
+    * `initialize_new_text`: adapt the function to new manuscript URIs
+- `new_books/convert/generic_converter`: `convert_file` function now returns the output path
+- `new_books/convert/helper/html2md.py`: 
+    * `convert_li`: fix numbered list numbering bug
+- `new_books/convert/html_converter_generic.py‎`: replace html entities
 
 ### v.0.1.5.11: 
 - minimum Python version bumped to 3.6 to allow the use of f-strings
