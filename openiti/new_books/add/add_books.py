@@ -29,7 +29,7 @@ if __name__ == '__main__':
 from openiti.helper.funcs import read_header
 from openiti.helper.ara import ar_cnt_file
 from openiti.helper.uri import move_to_new_uri_pth, add_character_count, URI, new_yml
-
+from openiti.helper.yml import readYML, check_yml_completeness, dicToYML
 
 created_ymls = []
 
@@ -91,7 +91,7 @@ def initialize_texts_from_CSV(csv_fp, old_base_pth="", new_base_pth="",
     if not execute:
         resp = input("To carry out these changes: press OK+Enter; \
 to abort: press Enter. ")
-        if resp == "OK":
+        if resp.upper() == "OK":
             initialize_texts_from_CSV(csv_fp, old_base_pth, new_base_pth,
                                       execute=True, non_25Y_folder=non_25Y_folder)
         else:
@@ -136,6 +136,50 @@ def initialize_new_texts_in_folder(folder, target_base_pth, execute=False,
                 initialize_new_text(fp, target_base_pth, execute, non_25Y_folder=non_25Y_folder)
 
 
+def replace_yml_values(yfp, tar_yfp, execute=False):
+    non_default_keys = check_yml_completeness(yfp)[0]
+    non_default_keys_tar = check_yml_completeness(tar_yfp)[0]
+    yml_d = readYML(yfp, reflow=False)
+    tar_d = readYML(tar_yfp, reflow=False)
+    changed = 0
+    for k in non_default_keys:
+        if k not in non_default_keys_tar:
+            tar_d[k] = yml_d[k]
+            changed += 1
+            if not execute:
+                print("Adding value to yml key", k)
+                print(yml_d[k])
+        elif tar_d[k] != yml_d[k]:
+            print("-----------")
+            print("Non-default value in both yml files:")
+            print("1. original:", k, tar_d[k])
+            print("2. new:", k, yml_d[k])
+            print("If you want to combine both, choose 3")
+            print("Alternatively, write a combined value yourself")
+            r = input("Your choice (default: keep original): ")
+            if r.strip() == "2":
+                tar_d[k] = yml_d
+                changed += 1
+            elif r.strip() == "3":
+                tar_d[k] += ";" + yml_d
+                changed += 1
+            elif r.strip() == "" or r.strip() == "1":
+                if not execute:
+                    print("  -> Keep original value")
+            else:
+                tar_d[k] = r.strip().replace("\\n", "\n")
+                changed += 1
+                
+    if changed:
+        if execute:
+            with open(tar_yfp, mode="w", encoding="utf-8") as file:
+                file.write(dicToYML(tar_d, reflow=False))
+        else:
+            print(changed, "yml values changed")
+            print(dicToYML(tar_d, reflow=False))
+    if execute:
+        os.remove(yfp)
+
 def initialize_new_text(origin_fp, target_base_pth, execute=False, non_25Y_folder=None):
     """Move a new text file to its OpenITI repo, creating yml files\
     if necessary (or copying them from the same folder if present).
@@ -179,7 +223,7 @@ def initialize_new_text(origin_fp, target_base_pth, execute=False, non_25Y_folde
         return
     
     if non_25Y_folder:
-        target_fp = re.sub("\d{4}AH", non_25Y_folder, target_fp)
+        target_fp = re.sub(r"\d{4}AH", non_25Y_folder, target_fp)
         print("target_fp:", target_fp)
 
     # Check whether the text file has OpenITI format:
@@ -210,12 +254,19 @@ def initialize_new_text(origin_fp, target_base_pth, execute=False, non_25Y_folde
         yfp = os.path.join(ori_uri.base_pth, ori_uri.build_uri(yf))
         tar_yfp = tar_uri.build_pth(yf)
         if non_25Y_folder:
-            tar_yfp = re.sub("\d{4}AH", non_25Y_folder, tar_yfp)
+            tar_yfp = re.sub(r"\d{4}AH", non_25Y_folder, tar_yfp)
         if os.path.exists(yfp):
             if execute:
-                shutil.move(yfp, tar_yfp)
+                if not os.path.exists(tar_yfp):
+                    shutil.move(yfp, tar_yfp)
+                else:
+                    replace_yml_values(yfp, tar_yfp, execute=execute)
             else:
-                print("  move", yfp, "to", tar_yfp)
+                if not os.path.exists(tar_yfp):
+                    print("  move", yfp, "to", tar_yfp)
+                else:
+                    print("yml file already exists: ", tar_yfp)
+                    replace_yml_values(yfp, tar_yfp, execute=execute)
         else:
             if not os.path.exists(tar_yfp):
                 new_yml(tar_yfp, yf, execute)
@@ -235,7 +286,7 @@ def initialize_new_text(origin_fp, target_base_pth, execute=False, non_25Y_folde
     if not execute:
         print("Execute these changes?")
         resp = input("Type OK + Enter to execute; press Enter to abort: ")
-        if resp == "OK":
+        if resp.upper() == "OK":
             initialize_new_text(origin_fp, target_base_pth, execute=True, 
                                 non_25Y_folder=non_25Y_folder)
         else:
