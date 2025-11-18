@@ -158,10 +158,10 @@ def replace_yml_values(yfp, tar_yfp, execute=False):
             print("Alternatively, write a combined value yourself")
             r = input("Your choice (default: keep original): ")
             if r.strip() == "2":
-                tar_d[k] = yml_d
+                tar_d[k] = yml_d[k]
                 changed += 1
             elif r.strip() == "3":
-                tar_d[k] += ";" + yml_d
+                tar_d[k] += ";" + yml_d[k]
                 changed += 1
             elif r.strip() == "" or r.strip() == "1":
                 if not execute:
