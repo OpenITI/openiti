@@ -162,7 +162,7 @@ Examples:
 
     >>> t.build_pth()
     './0275AH/data/0255Jahiz/0255Jahiz.Hayawan'
-    >>> t.data_in_25_year_repos = False
+    >>> t. = False
     >>> t.build_pth()
     './0255Jahiz/0255Jahiz.Hayawan'
     >>> t.data_in_25_year_repos = True
@@ -560,8 +560,8 @@ class URI:
                 self.base_pth, self.uri_string = os.path.split(uri_string)
                 if self.data_in_25_year_repos:
                     # set self.base_pth to the parent of the 25Y folder:
-                    if re.search(r"\d{4}AH", self.base_pth):
-                        while not re.search(r"\d{4}AH",
+                    if re.search(r"(?:[A-Z]{3})?\d{4}AH", self.base_pth):
+                        while not re.search(r"(?:[A-Z]{3})?\d{4}AH",
                                             os.path.split(self.base_pth)[1]):
                             self.base_pth = os.path.split(self.base_pth)[0]
                         self.base_pth = os.path.split(self.base_pth)[0]
@@ -1552,9 +1552,13 @@ def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False,
     print("old_base_pth:", old_base_pth)
     old = old.strip()
     old_uri = URI(old)
+    if non_25Y_folder:
+        old_uri.data_in_25_year_repos = False
     old_uri.base_pth = old_base_pth
     new = new.strip()
     new_uri = URI(new)
+    if non_25Y_folder:
+        new_uri.data_in_25_year_repos = False
     new_uri.base_pth = new_base_pth
 
     if not execute:
@@ -1597,7 +1601,7 @@ def change_uri(old, new, old_base_pth=None, new_base_pth=None, execute=False,
 
         target_folder = new_uri.build_pth("version")
         if non_25Y_folder:
-            target_folder = re.sub(r"\d{4}AH", non_25Y_folder, target_folder)
+            target_folder = re.sub(r"(?:[A-Z]{3})?\d{4}AH", non_25Y_folder, target_folder)
         if execute:
             if "README.md" not in os.listdir(target_folder):
                 add_readme(target_folder)
@@ -1777,7 +1781,7 @@ def add_character_count(tok_count, char_count, tar_uri,
         print("ABORTING: unsuitable uri type:", tar_uri.uri_type)
         return
     if non_25Y_folder:
-        tar_yfp = re.sub(r"\d{4}AH", non_25Y_folder, tar_yfp)
+        tar_yfp = re.sub(r"(?:[A-Z]{3})?\d{4}AH", non_25Y_folder, tar_yfp)
     if execute:
         with open(tar_yfp, mode="r", encoding="utf-8") as file:
             yml_dic = yml.ymlToDic(file.read().strip())
@@ -1881,7 +1885,7 @@ Make sure base path is correct.""".format(new_uri.base_pth)
         if re.findall("author|book|version", new_uri.uri_type):
             author_folder = new_uri.build_pth("author")
             if non_25Y_folder:
-                author_folder = re.sub(r"\d{4}AH", non_25Y_folder, author_folder)
+                author_folder = re.sub(r"(?:[A-Z]{3})?\d{4}AH", non_25Y_folder, author_folder)
             if not os.path.exists(author_folder):
                 if execute:
                     os.makedirs(author_folder)
@@ -1893,7 +1897,7 @@ Make sure base path is correct.""".format(new_uri.base_pth)
             if new_uri.uri_type == "book" or new_uri.uri_type == "version":
                 book_folder = new_uri.build_pth("book")
                 if non_25Y_folder:
-                    book_folder = re.sub(r"\d{4}AH", non_25Y_folder, book_folder)
+                    book_folder = re.sub(r"(?:[A-Z]{3})?\d{4}AH", non_25Y_folder, book_folder)
                 if not os.path.exists(book_folder):
                     if execute:
                         os.makedirs(book_folder)
@@ -1907,7 +1911,7 @@ Make sure base path is correct.""".format(new_uri.base_pth)
                                 "version_yml", execute)
                     target_folder = new_uri.build_pth("version")
                     if non_25Y_folder:
-                        target_folder = re.sub(r"\d{4}AH", non_25Y_folder, target_folder)
+                        target_folder = re.sub(r"(?:[A-Z]{3})?\d{4}AH", non_25Y_folder, target_folder)
                     if execute:
                         if "README.md" not in os.listdir(target_folder):
                             add_readme(target_folder)
@@ -1960,8 +1964,8 @@ def move_to_new_uri_pth(old_fp, new_uri, execute=False, non_25Y_folder=None):
     new_folder = new_uri.build_pth(uri_type=new_uri.uri_type)
     new_fp = new_uri.build_pth(uri_type=new_uri.uri_type+"_file")
     if non_25Y_folder:
-        new_folder = re.sub(r"\d{4}AH", non_25Y_folder, new_folder)
-        new_fp = re.sub(r"\d{4}AH", non_25Y_folder, new_fp)
+        new_folder = re.sub(r"(?:[A-Z]{3})?\d{4}AH", non_25Y_folder, new_folder)
+        new_fp = re.sub(r"(?:[A-Z]{3})?\d{4}AH", non_25Y_folder, new_fp)
     make_folder(new_folder, new_uri, execute, non_25Y_folder=non_25Y_folder)
     if execute:
         shutil.move(old_fp, new_fp)
