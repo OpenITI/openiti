@@ -2021,7 +2021,7 @@ def check_token_count(uri, yml_dic, text_fp="", find_latest=True):
 
     #tok_count = ar_cnt_file(fp, mode="token")
     #char_count = ar_cnt_file(fp, mode="char")
-    tok_count, char_count = funcs.count_toks(fp, incl_chars=True)
+    tok_count, char_count = count_toks(fp, incl_chars=True)
     
     #len_key = "00#VERS#LENGTH###:"
     #char_len_key = "00#VERS#CLENGTH##:"
