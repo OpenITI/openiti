@@ -162,7 +162,7 @@ Examples:
 
     >>> t.build_pth()
     './0275AH/data/0255Jahiz/0255Jahiz.Hayawan'
-    >>> t. = False
+    >>> t.data_in_25_year_repos = False
     >>> t.build_pth()
     './0255Jahiz/0255Jahiz.Hayawan'
     >>> t.data_in_25_year_repos = True
