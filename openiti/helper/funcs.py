@@ -12,6 +12,7 @@ if __name__ == '__main__':
     root_folder = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
     sys.path.append(root_folder)
 from openiti.helper import ara
+from openiti.helper import rgx
 
 splitter = "#META#Header#End#"
 milestone = "Milestone300"
@@ -182,6 +183,118 @@ def get_character_names(characters, verbose=False):
             print("{}\t{}".format(c, name))
     
     return char_dict
+
+
+def count_toks(text, incl_chars=False, return_tok_set=False, clean_tok_set=True,
+               tok_splitter=rgx.tok_splitter, do_not_count=rgx.do_not_count):
+    """Count non-tag tokens in text.
+    If `incl_chars`, the function will return both token and character counts.
+
+    Args:
+        text (str): text or path to text
+        incl_chars (bool): if True, both tokens and characters will be counted.
+           Defaults to False (count only tokens).
+        return_tok_set (bool): if True, the function will return a set
+           of all tokens in the text.
+        clean_tok_set (bool): if True, all non-word characters will
+           be removed from the token set.
+        tok_splitter (str): regex pattern on which the text should be split
+           into tokens and non-tokens
+        do_not_count (str): regex pattern to ignore tokens that contain
+           letters and numbers but should not be counted as tokens
+
+    Returns: int or (int, int) or (int, int)
+
+    Examples:
+        >>> text = 'This contains 4 tokens.'
+        >>> count_toks(text)
+        4
+        >>> count_toks(text, incl_chars=True)
+        (4, 19)
+        >>> _, toks = count_toks(text, return_tok_set=True)
+        >>> sorted(toks)
+        ['4', 'This', 'contains', 'tokens']
+        >>> _, toks = count_toks(text, return_tok_set=True, clean_tok_set=False)
+        >>> sorted(toks)
+        ['4', 'This', 'contains', 'tokens.']
+        >>> text = 'Tags are not counted: PageV01P234 @P02 @TOP2 YB1234'
+        >>> count_toks(text)
+        4
+        >>> text = 'Neither are markdown links: ![caption](path/to/image.png) [link](https://url.com)'
+        >>> count_toks(text)
+        4
+        >>> text = 'words split with hy-\\nphen are counted as a single token'
+        >>> count_toks(text)
+        10
+        >>> text = '''1. list numbers and footnote references (2) are not counted [3].'''
+        >>> count_toks(text)
+        8
+        >>> text = '|Tables|should not|\\n|be a | problem|'
+        >>> count_toks(text)
+        6
+    """
+    if os.path.isfile(text):
+        text = read_text(text, remove_header=True)
+
+    all_toks = re.split(tok_splitter, text)
+
+    n_toks = 0
+    n_chars = 0
+    tok_set = set()
+    for tok in all_toks:
+        if re.findall(r"\w", tok) and not re.findall(do_not_count, tok):
+            # do not count first half of hyphenated token at end of line:
+            if not tok.endswith("-"):
+                n_toks += 1
+            if incl_chars:
+                n_chars += len(re.findall(r"\w", tok))
+            if return_tok_set:
+                tok_set.add(tok)
+
+    if clean_tok_set:
+        tok_set = set([re.sub(r"\W+", "", tok) for tok in tok_set])
+
+    if incl_chars:
+        if return_tok_set:
+            return n_toks, n_chars, tok_set
+        else:
+            return n_toks, n_chars
+    else:
+        if return_tok_set:
+            return n_toks, tok_set
+        else:
+            return n_toks
+
+def count_chars(text, tok_splitter=rgx.tok_splitter, do_not_count=rgx.do_not_count):
+    """Count characters in non-tag tokens in text.
+
+    Args:
+        text (str): text or path to text
+        tok_splitter (str): regex pattern on which the text should be split
+           into tokens and non-tokens
+        do_not_count (str): regex pattern to ignore tokens that contain
+           letters and numbers but should not be counted as tokens
+
+    Returns: int
+
+    Examples:
+        >>> text = 'This contains 4 tokens'
+        >>> count_chars(text)
+        19
+        >>> text = 'Tags are not counted: PageV01P234 @P02 @TOP2 YB1234'
+        >>> count_chars(text)
+        17
+        >>> text = 'Neither are markdown links: ![caption](path/to/image.png) [link](https://url.com)'
+        >>> count_chars(text)
+        23
+        >>> text = '|Tables|should not|\\n|be a | problem|\\n'
+        >>> count_chars(text)
+        25
+    """
+    n_toks, n_chars = count_toks(text, incl_chars=True,
+                                 tok_splitter=tok_splitter,
+                                 do_not_count=do_not_count)
+    return n_chars
 
 def text_cleaner(text):
     """Clean text by normalizing Arabic characters \
