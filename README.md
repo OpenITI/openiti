@@ -14,6 +14,29 @@ Alternatively, you might need to use `pip3 install OpenITI` or `python -m pip in
 
 ## Change log:
 
+### v.0.1.6.1: 
+- With the arrival of texts in non-Arabic scripts, the way to calculate 
+  the number of tokens and characters in a text had to be changed; 
+  a new function, `helper.funcs.count_toks`, will count text tokens in any script.
+  Contrary to the Arabic-script-specific functions `helper.ara.ar_cnt_file`, 
+  `helper.ara.ar_ch_cnt` and `helper.ara.ar_tok_cnt`, the new function will also
+  count numbers in the text (an effort has been made not to count footnote 
+  references, list numbers etc.).
+- `helper/funcs.py`:
+  * `count_toks`: function to count tokens (and characters) in a text.
+    The function takes a path to a text or a text string. 
+    Set `incl_chars` to True to also calculate the character counts,
+    and set `return_tok_set` to True to also return a set of all tokens in the text.
+  * `count_chars.py`: count all the characters in non-tag tokens in a text.
+    Calls the `count_toks` function and returns only the character count.
+- `helper/ara.py`: move the regular expressions to `helper/rgx.py` and import them
+    into `helper/ara`. Users do not have to change their imports.
+- `helper/uri.py`: adapt functions to work with the new URI structure and 
+   subcorpora (PER, MSS)
+- `‎new_books/add/add_books.py`: 
+    * fix bug in yml value replacement
+    * replace the token count function
+
 ### v.0.1.6: 
 - the library has been updated to deal with the new manuscript URIs
   (see https://github.com/OpenITI/MSS)
