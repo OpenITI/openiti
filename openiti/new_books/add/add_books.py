@@ -26,8 +26,8 @@ if __name__ == '__main__':
     root_folder = path.dirname(path.dirname(root_folder))
     sys.path.append(root_folder)
 
-from openiti.helper.funcs import read_header
-from openiti.helper.ara import ar_cnt_file
+from openiti.helper.funcs import read_header, count_toks
+#from openiti.helper.ara import ar_cnt_file
 from openiti.helper.uri import move_to_new_uri_pth, add_character_count, URI, new_yml
 from openiti.helper.yml import readYML, check_yml_completeness, dicToYML
 
@@ -79,8 +79,9 @@ def initialize_texts_from_CSV(csv_fp, old_base_pth="", new_base_pth="",
         if new_base_pth:
             new_uri.base_pth = new_base_pth
         #char_count = ar_ch_len(old_fp)
-        tok_count = ar_cnt_file(old_fp, mode="token")
-        char_count = ar_cnt_file(old_fp, mode="char")
+        #tok_count = ar_cnt_file(old_fp, mode="token")
+        #char_count = ar_cnt_file(old_fp, mode="char")
+        tok_count, char_count = count_toks(old_fp, incl_chars=True)
 
         move_to_new_uri_pth(old_fp, new_uri, execute, 
                             non_25Y_folder=non_25Y_folder)
@@ -242,8 +243,9 @@ def initialize_new_text(origin_fp, target_base_pth, execute=False, non_25Y_folde
     # Count the Arabic characters in the text file:
 
     #tok_count = ar_ch_len(origin_fp)
-    tok_count = ar_cnt_file(origin_fp, mode="token")
-    char_count = ar_cnt_file(origin_fp, mode="char")
+    #tok_count = ar_cnt_file(origin_fp, mode="token")
+    #char_count = ar_cnt_file(origin_fp, mode="char")
+    tok_count, char_count = count_toks(origin_fp, incl_chars=True)
 
     # Move the text file:    
     move_to_new_uri_pth(origin_fp, tar_uri, execute, non_25Y_folder=non_25Y_folder)
@@ -361,8 +363,9 @@ def download_texts_from_CSV(csv_fp, base_url="", new_base_pth="",
                                 non_25Y_folder=non_25Y_folder)
 
             if not temp_fp.endswith("pdf") and not temp_fp.endswith("zip"):
-                tok_count = ar_cnt_file(temp_fp, mode="token")
-                char_count = ar_cnt_file(temp_fp, mode="char")
+                #tok_count = ar_cnt_file(temp_fp, mode="token")
+                #char_count = ar_cnt_file(temp_fp, mode="char")
+                tok_count, char_count = count_toks(temp_fp, incl_chars=True)
                 add_character_count(tok_count, char_count, new_uri, execute=True, 
                                     non_25Y_folder=non_25Y_folder)
 

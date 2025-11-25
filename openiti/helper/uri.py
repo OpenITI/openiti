@@ -235,14 +235,16 @@ if __name__ == '__main__':
     root_folder = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
     sys.path.append(root_folder)
 
-from openiti.helper.funcs import read_header, get_all_yml_files_in_folder, get_all_text_files_in_folder
-from openiti.helper.ara import ar_cnt_file
+from openiti.helper.funcs import read_header, get_all_yml_files_in_folder, \
+     get_all_text_files_in_folder, count_toks
+#from openiti.helper.ara import ar_cnt_file
 from openiti.helper.templates import author_yml_template, book_yml_template, \
                                      version_yml_template, readme_template, \
                                      text_questionnaire_template, \
                                      location_yml_template, manuscript_yml_template, \
                                      transcription_yml_template
 from openiti.helper import yml
+
 
 
 os.sep = "/"
@@ -2017,8 +2019,10 @@ def check_token_count(uri, yml_dic, text_fp="", find_latest=True):
             if os.path.exists(fp):
                 break 
 
-    tok_count = ar_cnt_file(fp, mode="token")
-    char_count = ar_cnt_file(fp, mode="char")
+    #tok_count = ar_cnt_file(fp, mode="token")
+    #char_count = ar_cnt_file(fp, mode="char")
+    tok_count, char_count = funcs.count_toks(fp, incl_chars=True)
+    
     #len_key = "00#VERS#LENGTH###:"
     #char_len_key = "00#VERS#CLENGTH##:"
     len_key = [k for k in yml_dic.keys() if "#LENGTH#" in k][0]
@@ -2028,22 +2032,22 @@ def check_token_count(uri, yml_dic, text_fp="", find_latest=True):
         yml_char_count = yml_dic[char_len_key].strip()
     except:
         yml_char_count = ""
-    replace_tok_count = False
-    for cnt, yml_cnt in [(tok_count, yml_tok_count),
-                         (char_count, yml_char_count)]:
+    replace_counts = False
+    for cnt_type, cnt, yml_cnt in [("token", tok_count, yml_tok_count),
+                                   ("character", char_count, yml_char_count)]:
         if yml_cnt == "":
-            print("NO TOKEN COUNT", uri)
-            replace_tok_count = True
+            print(cnt_type.upper(), "COUNT MISSING -", uri)
+            replace_counts = True
         else:
             try:
                 if int(yml_cnt) != cnt:
-                    replace_tok_count = True
-                    #print("TOKEN COUNT CHANGED", uri)
-                    #print(yml_tok_count, "!=", tok_count)
+                    print(cnt_type.upper(), "COUNT CHANGED -", uri)
+                    replace_counts = True
+                    
             except:
-                print("TOKEN COUNT {} IS NOT A NUMBER".format(yml_cnt), uri)
-                replace_tok_count = True
-    if replace_tok_count:
+                print(cnt_type.upper(), "COUNT {} IS NOT A NUMBER -".format(yml_cnt), uri)
+                replace_counts = True
+    if replace_counts:
         return tok_count, char_count
 
 def replace_tok_counts(missing_tok_count):
