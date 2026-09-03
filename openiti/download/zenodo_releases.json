@@ -1,0 +1,1480 @@
+[
+  {
+    "created": "2025-12-30T15:05:16.725699+00:00",
+    "modified": "2026-02-11T16:03:07.774090+00:00",
+    "id": 17767721,
+    "conceptrecid": "3082463",
+    "doi": "10.5281/zenodo.17767721",
+    "conceptdoi": "10.5281/zenodo.3082463",
+    "doi_url": "https://doi.org/10.5281/zenodo.17767721",
+    "metadata": {
+      "title": "OpenITI: a Machine-Readable Corpus of Islamicate Texts",
+      "doi": "10.5281/zenodo.17767721",
+      "publication_date": "2025-12-30",
+      "description": "<p><strong>Co-PIs:</strong> Matthew Thomas Miller (University of Maryland, College Park), Maxim G. Romanov (University of Hamburg), Sarah Bowen Savant (Aga Khan University-ISMC, London).</p>\n<p>The <a href=\"https://openiti.org/projects/OpenITI%20Corpus.html\">OpenITI corpus</a> is a multi-lingual, machine-actionable and scholarly corpus of Islamicate texts that aims to provide a key component for rendering the Islamicate textual tradition accessible to computational analysis and to new forms of digital scholarship.</p>\n<p dir=\"ltr\">As indicated by its name, the OpenITI corpus forms part of the broader and multi-institutional efforts of the <a href=\"https://openiti.org/\"><em>Open Islamicate Texts Initiative (OpenITI)</em></a>, which were first assembled into a corpus within the <strong>OpenArabic</strong> project, developed first at Tufts University (at The Perseus Project, 2013&ndash;2015) and then at Leipzig University (at the Alexander von Humboldt Chair for Digital Humanities, 2015&ndash;2017)&mdash;in both cases with the support and under the patronage of Prof. Gregory Crane. It aims to develop the digital infrastructure for the study of Islamicate cultures and to foster synergies and collaboration between computer science, digital humanities, and fields such as Islamic, Arabic, Persian, and Ottoman studies, and which is led by researchers at the Aga Khan University&rsquo;s Institute for the Study of Muslim Civilisations (AKU-ISMC) in London, the University of Hamburg (UHH), Roshan Institute for Persian Studies at the University of Maryland (College Park), and an interdisciplinary advisory board of leading scholars from relevant fields and has received funding from the <a href=\"https://erc.europa.eu/\">European Research Council (ERC)</a> under the European Union&rsquo;s Horizon 2020 research and innovation programme, awarded to the <a href=\"http://kitab-project.org/\">KITAB</a> (Grant Agreement No. 772989, PI Sarah Bowen Savant) and KITAB-Transform projects (Grant Agreement No. 101199672, PI Sarah Bowen Savant), the Mellon Foundation, and the <a href=\"https://www.qnl.qa/en\">Qatar National Library</a> in addition to support from the researchers&rsquo; home institutions.</p>\n<p dir=\"ltr\">&nbsp;</p>\n<p dir=\"ltr\">The present release of the OpenITI corpus contains all digital versions of a text that are available in the corpus (also available at the <a href=\"https://github.com/OpenITI/RELEASE\">https://github.com/OpenITI/RELEASE</a>). In case more than one version for a text exists, one of these versions will, however, be singled out as the primary version (referred to as 'PRI' in the metadata) while all the others will be categorised as secondary versions (referred to as 'SEC' in the metadata). <strong>OpenITI also releases a <a href=\"https://doi.org/10.5281/zenodo.7764025\">primary version of the OpenITI corpus</a></strong> consisting only of the primary versions which may be more convenient for most use cases.</p>\n<p dir=\"ltr\"><strong>Note on Release Numbering:</strong> Version <strong>2019.1.1</strong>&mdash;where <strong>2019</strong> is the year of the release, the first dotted number&mdash;<strong>.1</strong>&mdash;is the ordinal release number in 2019, and the second dotted number&mdash;<strong>.1</strong>&mdash;is the overall release number; the first dotted number will reset every year, while the second one will continue on increasing.</p>\n<p dir=\"ltr\">For more details on this specific version see the release notes.</p>\n<p dir=\"ltr\"><strong>Note:</strong> In case of any issues with unzipping the files on Windows using built-in utilities, please use free softwares, such as WinRAR and 7zip.</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>",
+      "access_right": "open",
+      "creators": [
+        {
+          "name": "Nigst, Lorenz",
+          "affiliation": "The Aga Khan University (International) in the United Kingdom"
+        },
+        {
+          "name": "Romanov, Maxim",
+          "affiliation": "Universität Hamburg"
+        },
+        {
+          "name": "Savant, Sarah Bowen",
+          "affiliation": "The Aga Khan University (International) in the United Kingdom"
+        },
+        {
+          "name": "Seydi, Masoumeh",
+          "affiliation": "The Aga Khan University (International) in the United Kingdom"
+        },
+        {
+          "name": "Verkinderen, Peter",
+          "affiliation": "The Aga Khan University (International) in the United Kingdom"
+        }
+      ],
+      "keywords": [
+        "Arabic; Classical Arabic; Corpus",
+        "Classical Arabic courpus",
+        "Islamicate texts"
+      ],
+      "related_identifiers": [
+        {
+          "identifier": "https://github.com/OpenITI/RELEASE/tree/v2019.1.1",
+          "relation": "isSupplementTo",
+          "scheme": "url"
+        },
+        {
+          "identifier": "10.5281/zenodo.7764026",
+          "relation": "hasPart",
+          "scheme": "doi"
+        }
+      ],
+      "version": "2025.1.9",
+      "resource_type": {
+        "title": "Dataset",
+        "type": "dataset"
+      },
+      "license": {
+        "id": "cc-by-nc-sa-4.0"
+      },
+      "grants": [
+        {
+          "code": "772989",
+          "internal_id": "10.13039/501100000780::772989",
+          "funder": {
+            "name": "European Commission",
+            "doi": "10.13039/501100000780",
+            "acronym": "EC"
+          },
+          "title": "Exploring Cultural Memory in the Pre-Modern Islamic World (700–1500):\nKnowledge, Information Technology, and the Arabic Book",
+          "acronym": "KITAB",
+          "program": "H2020-EU.1.1.",
+          "url": "https://cordis.europa.eu/projects/772989"
+        }
+      ],
+      "communities": [
+        {
+          "id": "eu"
+        }
+      ],
+      "relations": {
+        "version": [
+          {
+            "index": 8,
+            "is_last": true,
+            "parent": {
+              "pid_type": "recid",
+              "pid_value": "3082463"
+            }
+          }
+        ]
+      }
+    },
+    "title": "OpenITI: a Machine-Readable Corpus of Islamicate Texts",
+    "links": {
+      "self": "https://zenodo.org/api/records/17767721",
+      "self_html": "https://zenodo.org/records/17767721",
+      "preview_html": "https://zenodo.org/records/17767721?preview=1",
+      "doi": "https://doi.org/10.5281/zenodo.17767721",
+      "self_doi": "https://doi.org/10.5281/zenodo.17767721",
+      "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.17767721",
+      "reserve_doi": "https://zenodo.org/api/records/17767721/draft/pids/doi",
+      "parent": "https://zenodo.org/api/records/3082463",
+      "parent_html": "https://zenodo.org/records/3082463",
+      "parent_doi": "https://doi.org/10.5281/zenodo.3082463",
+      "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.3082463",
+      "self_iiif_manifest": "https://zenodo.org/api/iiif/record:17767721/manifest",
+      "self_iiif_sequence": "https://zenodo.org/api/iiif/record:17767721/sequence/default",
+      "files": "https://zenodo.org/api/records/17767721/files",
+      "media_files": "https://zenodo.org/api/records/17767721/media-files",
+      "archive": "https://zenodo.org/api/records/17767721/files-archive",
+      "archive_media": "https://zenodo.org/api/records/17767721/media-files-archive",
+      "latest": "https://zenodo.org/api/records/17767721/versions/latest",
+      "latest_html": "https://zenodo.org/records/17767721/latest",
+      "versions": "https://zenodo.org/api/records/17767721/versions",
+      "draft": "https://zenodo.org/api/records/17767721/draft",
+      "access_links": "https://zenodo.org/api/records/17767721/access/links",
+      "access_grants": "https://zenodo.org/api/records/17767721/access/grants",
+      "access_users": "https://zenodo.org/api/records/17767721/access/users",
+      "access_request": "https://zenodo.org/api/records/17767721/access/request",
+      "access": "https://zenodo.org/api/records/17767721/access",
+      "communities": "https://zenodo.org/api/records/17767721/communities",
+      "communities-suggestions": "https://zenodo.org/api/records/17767721/communities-suggestions",
+      "request_deletion": "https://zenodo.org/api/records/17767721/request-deletion",
+      "file_modification": "https://zenodo.org/api/records/17767721/file-modification",
+      "quota_increase": "https://zenodo.org/api/records/17767721/quota-increase",
+      "requests": "https://zenodo.org/api/records/17767721/requests"
+    },
+    "updated": "2026-02-11T16:03:07.774090+00:00",
+    "recid": "17767721",
+    "revision": 10,
+    "files": [
+      {
+        "id": "b08ad994-1e41-40d5-ad81-c4d7bd4b7d2d",
+        "key": "OpenITI_metadata_2025-1-9.tsv",
+        "size": 12092756,
+        "checksum": "md5:cb2226f64264efa964df9ef659d40199",
+        "links": {
+          "self": "https://zenodo.org/api/records/17767721/files/OpenITI_metadata_2025-1-9.tsv/content"
+        }
+      },
+      {
+        "id": "af5a7e3f-425a-4f6c-b42d-83d63e8baf48",
+        "key": "OpenITI_data_2025-1-9.zip",
+        "size": 5936029637,
+        "checksum": "md5:95cf19a9320fee6c37c4c26c9fa860b1",
+        "links": {
+          "self": "https://zenodo.org/api/records/17767721/files/OpenITI_data_2025-1-9.zip/content"
+        }
+      },
+      {
+        "id": "ed3a8d34-911a-449a-8063-2e40a1c3d321",
+        "key": "OpenITI_release-notes_2025-1-9.zip",
+        "size": 204028,
+        "checksum": "md5:e127a3fccd2df033a6462542820f55a0",
+        "links": {
+          "self": "https://zenodo.org/api/records/17767721/files/OpenITI_release-notes_2025-1-9.zip/content"
+        }
+      }
+    ],
+    "swh": null,
+    "owners": [
+      {
+        "id": "62646"
+      }
+    ],
+    "status": "published",
+    "stats": {
+      "downloads": 6850,
+      "unique_downloads": 4493,
+      "views": 20748,
+      "unique_views": 18883,
+      "version_downloads": 831,
+      "version_unique_downloads": 685,
+      "version_unique_views": 2491,
+      "version_views": 2710
+    },
+    "state": "done",
+    "submitted": true
+  },
+  {
+    "created": "2023-10-19T04:58:44.190781+00:00",
+    "modified": "2024-10-23T07:51:54.782913+00:00",
+    "id": 10007820,
+    "conceptrecid": "3082463",
+    "doi": "10.5281/zenodo.10007820",
+    "conceptdoi": "10.5281/zenodo.3082463",
+    "doi_url": "https://doi.org/10.5281/zenodo.10007820",
+    "metadata": {
+      "title": "OpenITI: a Machine-Readable Corpus of Islamicate Texts",
+      "doi": "10.5281/zenodo.10007820",
+      "publication_date": "2023-10-17",
+      "description": "<p><strong>Co-PIs</strong>: Matthew Thomas Miller (University of Maryland, College Park), Maxim G. Romanov (University of Hamburg), Sarah Bowen Savant (Aga Khan University&mdash;ISMC, London).</p>\n<p><em>Open Islamicate Texts Initiative</em> (<strong>OpenITI</strong>, see <a href=\"https://openiti.org/\">https://openiti.org/</a>)&nbsp;is a multi-institutional effort to construct the first machine-actionable scholarly corpus of premodern Islamicate texts. Led by researchers at the Aga Khan University, Institute for the Study of Muslim Civilisations (AKU-ISMC), University of Hamburg (UH), and the Roshan Institute for Persian Studies at the University of Maryland (College Park) and an interdisciplinary advisory board of leading digital humanists and Islamic, Persian, and Arabic studies scholars, <strong>OpenITI</strong> aims to provide the essential textual infrastructure in Arabic, Persian and other Islamicate languages for new forms of textual analysis and digital scholarship. In the process, OpenITI will enable new synergies between Digital Humanities and the inter-related Islamicate fields of Islamic, Persian, and Arabic Studies. In addition to support from the researchers&rsquo; home institutions, it is supported by funding from the <a href=\"https://erc.europa.eu/\">European Research Council</a> under the European Union&rsquo;s Horizon 2020 research and innovation programme, awarded to the <a href=\"http://kitab-project.org/\">KITAB</a> project (Grant Agreement No. 772989, PI Sarah Bowen Savant) and the <a href=\"https://www.qnl.qa/en\">Qatar National Library</a>.</p>\n<p>Currently, <strong>OpenITI</strong> contains almost exclusively Arabic texts, which were first assembled into a corpus within the <strong>OpenArabic</strong> project, developed first at Tufts University (at <em>The Perseus Project</em>, 2013&ndash;2015) and then at Leipzig University (at the Alexander von Humboldt Chair for Digital Humanities, 2015&ndash;2017)&mdash;in both cases with the support and under the patronage of Prof. Gregory Crane. The much more limited number of Persian texts were compiled during 2015&ndash;2016 in the Persian Digital Library (PDL) pilot (see <a href=\"https://persdigumd.github.io/PDL/\">Persian Digital Library by PersDigUMD</a>) at Roshan Institute for Persian Studies at the University of Maryland. These texts have not been made fully compatible with OpenITI mARkdown yet and will be made fully available in next releases.</p>\n<p>This release contains all digital versions of the same text that are available in the OpenITI corpus . <strong>We also release a <a href=\"https://doi.org/10.5281/zenodo.7764025\">'primary' version of the corpus</a></strong> that contains a single digital version for each text in the corpus that is marked as 'PRI' in the corpus metadata and may be more convenient for some use cases.</p>\n<p><strong>Note on Release Numbering</strong>: Version <strong>2019.1.1</strong>&mdash;where <strong>2019</strong> is the year of the release, the first dotted number&mdash;<strong>.1</strong>&mdash;is the ordinal release number in 2019, and the second dotted number&mdash;<strong>.1</strong>&mdash;is the overall release number; the first dotted number will reset every year, while the second one will continue on increasing.</p>\n<p>For more details: <a href=\"https://github.com/OpenITI/RELEASE\">https://github.com/OpenITI/RELEASE</a></p>\n<p><strong>Note: </strong>In case of any issues with unzipping the files on Windows using built-in utilities, please use free softwares, such as&nbsp;WinRAR and 7zip.</p>\n<p>&nbsp;</p>",
+      "access_right": "open",
+      "creators": [
+        {
+          "name": "Nigst, Lorenz",
+          "affiliation": "Aga Khan University"
+        },
+        {
+          "name": "Romanov, Maxim",
+          "affiliation": "Universität Hamburg"
+        },
+        {
+          "name": "Savant, Sarah Bowen",
+          "affiliation": "Aga Khan University"
+        },
+        {
+          "name": "Seydi, Masoumeh",
+          "affiliation": "Aga Khan University"
+        },
+        {
+          "name": "Verkinderen, Peter",
+          "affiliation": "Aga Khan University"
+        },
+        {
+          "name": "Hakimi, Hamidreza",
+          "affiliation": "Universität Hamburg"
+        }
+      ],
+      "keywords": [
+        "Arabic; Classical Arabic; Corpus",
+        "Classical Arabic courpus",
+        "Islamicate texts"
+      ],
+      "related_identifiers": [
+        {
+          "identifier": "https://github.com/OpenITI/RELEASE/tree/v2019.1.1",
+          "relation": "isSupplementTo",
+          "scheme": "url"
+        },
+        {
+          "identifier": "10.5281/zenodo.7764026",
+          "relation": "hasPart",
+          "scheme": "doi"
+        }
+      ],
+      "version": "2023.1.8",
+      "resource_type": {
+        "title": "Dataset",
+        "type": "dataset"
+      },
+      "license": {
+        "id": "cc-by-nc-sa-4.0"
+      },
+      "grants": [
+        {
+          "code": "772989",
+          "internal_id": "10.13039/501100000780::772989",
+          "funder": {
+            "name": "European Commission",
+            "doi": "10.13039/501100000780",
+            "acronym": "EC"
+          },
+          "title": "Exploring Cultural Memory in the Pre-Modern Islamic World (700–1500):\nKnowledge, Information Technology, and the Arabic Book",
+          "acronym": "KITAB",
+          "program": "H2020-EU.1.1.",
+          "url": "https://cordis.europa.eu/projects/772989"
+        }
+      ],
+      "communities": [
+        {
+          "id": "eu"
+        }
+      ],
+      "relations": {
+        "version": [
+          {
+            "index": 7,
+            "is_last": false,
+            "parent": {
+              "pid_type": "recid",
+              "pid_value": "3082463"
+            }
+          }
+        ]
+      }
+    },
+    "title": "OpenITI: a Machine-Readable Corpus of Islamicate Texts",
+    "links": {
+      "self": "https://zenodo.org/api/records/10007820",
+      "self_html": "https://zenodo.org/records/10007820",
+      "preview_html": "https://zenodo.org/records/10007820?preview=1",
+      "doi": "https://doi.org/10.5281/zenodo.10007820",
+      "self_doi": "https://doi.org/10.5281/zenodo.10007820",
+      "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.10007820",
+      "reserve_doi": "https://zenodo.org/api/records/10007820/draft/pids/doi",
+      "parent": "https://zenodo.org/api/records/3082463",
+      "parent_html": "https://zenodo.org/records/3082463",
+      "parent_doi": "https://doi.org/10.5281/zenodo.3082463",
+      "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.3082463",
+      "self_iiif_manifest": "https://zenodo.org/api/iiif/record:10007820/manifest",
+      "self_iiif_sequence": "https://zenodo.org/api/iiif/record:10007820/sequence/default",
+      "files": "https://zenodo.org/api/records/10007820/files",
+      "media_files": "https://zenodo.org/api/records/10007820/media-files",
+      "archive": "https://zenodo.org/api/records/10007820/files-archive",
+      "archive_media": "https://zenodo.org/api/records/10007820/media-files-archive",
+      "latest": "https://zenodo.org/api/records/10007820/versions/latest",
+      "latest_html": "https://zenodo.org/records/10007820/latest",
+      "versions": "https://zenodo.org/api/records/10007820/versions",
+      "draft": "https://zenodo.org/api/records/10007820/draft",
+      "access_links": "https://zenodo.org/api/records/10007820/access/links",
+      "access_grants": "https://zenodo.org/api/records/10007820/access/grants",
+      "access_users": "https://zenodo.org/api/records/10007820/access/users",
+      "access_request": "https://zenodo.org/api/records/10007820/access/request",
+      "access": "https://zenodo.org/api/records/10007820/access",
+      "communities": "https://zenodo.org/api/records/10007820/communities",
+      "communities-suggestions": "https://zenodo.org/api/records/10007820/communities-suggestions",
+      "request_deletion": "https://zenodo.org/api/records/10007820/request-deletion",
+      "file_modification": "https://zenodo.org/api/records/10007820/file-modification",
+      "quota_increase": "https://zenodo.org/api/records/10007820/quota-increase",
+      "requests": "https://zenodo.org/api/records/10007820/requests"
+    },
+    "updated": "2024-10-23T07:51:54.782913+00:00",
+    "recid": "10007820",
+    "revision": 14,
+    "files": [
+      {
+        "id": "6bcd6f80-e94a-4ee5-97bd-a2afab2af40e",
+        "key": "OpenITI_metadata_2023-1-8.csv",
+        "size": 11468560,
+        "checksum": "md5:6b398d58c23089a5dda2c9c21e95b298",
+        "links": {
+          "self": "https://zenodo.org/api/records/10007820/files/OpenITI_metadata_2023-1-8.csv/content"
+        }
+      },
+      {
+        "id": "e1b4fd36-e7b8-4041-b893-3dc5db88c8de",
+        "key": "data.zip",
+        "size": 5794098657,
+        "checksum": "md5:8563c35f71bb51d4509d839f8cf069e6",
+        "links": {
+          "self": "https://zenodo.org/api/records/10007820/files/data.zip/content"
+        }
+      },
+      {
+        "id": "54a8565f-6443-4ec4-94f0-0a5b65e10072",
+        "key": "release_notes.zip",
+        "size": 125371,
+        "checksum": "md5:3d3930f4acb65d6d21cdbe54f70126a9",
+        "links": {
+          "self": "https://zenodo.org/api/records/10007820/files/release_notes.zip/content"
+        }
+      }
+    ],
+    "swh": null,
+    "owners": [
+      {
+        "id": "62646"
+      }
+    ],
+    "status": "published",
+    "stats": {
+      "downloads": 6850,
+      "unique_downloads": 4493,
+      "views": 20748,
+      "unique_views": 18883,
+      "version_downloads": 1610,
+      "version_unique_downloads": 1166,
+      "version_unique_views": 2952,
+      "version_views": 3226
+    },
+    "state": "done",
+    "submitted": true
+  },
+  {
+    "created": "2023-03-01T12:25:10.687353+00:00",
+    "modified": "2023-11-22T10:51:43.293361+00:00",
+    "id": 7687795,
+    "conceptrecid": "3082463",
+    "doi": "10.5281/zenodo.7687795",
+    "conceptdoi": "10.5281/zenodo.3082463",
+    "doi_url": "https://doi.org/10.5281/zenodo.7687795",
+    "metadata": {
+      "title": "OpenITI: a Machine-Readable Corpus of Islamicate Texts",
+      "doi": "10.5281/zenodo.7687795",
+      "publication_date": "2023-02-24",
+      "description": "<p><strong>Co-PIs</strong>: Matthew Thomas Miller (University of Maryland, College Park), Maxim G. Romanov (University of Hamburg), Sarah Bowen Savant (Aga Khan University&mdash;ISMC, London).</p>\n\n<p><em>Open Islamicate Texts Initiative</em> (<strong>OpenITI</strong>, see <a href=\"https://openiti.org/\">https://openiti.org/</a>)&nbsp;is a multi-institutional effort to construct the first machine-actionable scholarly corpus of premodern Islamicate texts. Led by researchers at the Aga Khan University, Institute for the Study of Muslim Civilisations (AKU-ISMC), University of Hamburg (UH), and the Roshan Institute for Persian Studies at the University of Maryland (College Park) and an interdisciplinary advisory board of leading digital humanists and Islamic, Persian, and Arabic studies scholars, <strong>OpenITI</strong> aims to provide the essential textual infrastructure in Arabic, Persian and other Islamicate languages for new forms of textual analysis and digital scholarship. In the process, OpenITI will enable new synergies between Digital Humanities and the inter-related Islamicate fields of Islamic, Persian, and Arabic Studies. In addition to support from the researchers&rsquo; home institutions, it is supported by funding from the <a href=\"https://erc.europa.eu/\">European Research Council</a> under the European Union&rsquo;s Horizon 2020 research and innovation programme, awarded to the <a href=\"http://kitab-project.org/\">KITAB</a> project (Grant Agreement No. 772989, PI Sarah Bowen Savant) and the <a href=\"https://www.qnl.qa/en\">Qatar National Library</a>.</p>\n\n<p>Currently, <strong>OpenITI</strong> contains almost exclusively Arabic texts, which were first assembled into a corpus within the <strong>OpenArabic</strong> project, developed first at Tufts University (at <em>The Perseus Project</em>, 2013&ndash;2015) and then at Leipzig University (at the Alexander von Humboldt Chair for Digital Humanities, 2015&ndash;2017)&mdash;in both cases with the support and under the patronage of Prof. Gregory Crane. The much more limited number of Persian texts were compiled during 2015&ndash;2016 in the Persian Digital Library (PDL) pilot (see <a href=\"https://persdigumd.github.io/PDL/\">Persian Digital Library by PersDigUMD</a>) at Roshan Institute for Persian Studies at the University of Maryland. These texts have not been made fully compatible with OpenITI mARkdown yet and will be made fully available in next releases.</p>\n\n<p><strong>Note on Release Numbering</strong>: Version <strong>2019.1.1</strong>&mdash;where <strong>2019</strong> is the year of the release, the first dotted number&mdash;<strong>.1</strong>&mdash;is the ordinal release number in 2019, and the second dotted number&mdash;<strong>.1</strong>&mdash;is the overall release number; the first dotted number will reset every year, while the second one will continue on increasing.</p>\n\n<p>For more details: <a href=\"https://github.com/OpenITI/RELEASE\">https://github.com/OpenITI/RELEASE</a></p>\n\n<p><strong>Note: </strong>In case of any issues with unzipping the files on Windows using built-in utilities, please use free softwares, such as&nbsp;WinRAR and 7zip.</p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>",
+      "access_right": "open",
+      "creators": [
+        {
+          "name": "Nigst, Lorenz",
+          "affiliation": "Aga Khan University"
+        },
+        {
+          "name": "Romanov, Maxim",
+          "affiliation": "Universität Hamburg"
+        },
+        {
+          "name": "Savant, Sarah Bowen",
+          "affiliation": "Aga Khan University"
+        },
+        {
+          "name": "Seydi, Masoumeh",
+          "affiliation": "Aga Khan University"
+        },
+        {
+          "name": "Verkinderen, Peter",
+          "affiliation": "Aga Khan University"
+        }
+      ],
+      "keywords": [
+        "Arabic; Classical Arabic; Corpus"
+      ],
+      "related_identifiers": [
+        {
+          "identifier": "https://github.com/OpenITI/RELEASE/tree/v2019.1.1",
+          "relation": "isSupplementTo",
+          "scheme": "url"
+        },
+        {
+          "identifier": "10.5281/zenodo.7764026",
+          "relation": "hasPart",
+          "scheme": "doi"
+        }
+      ],
+      "version": "2022.2.7",
+      "resource_type": {
+        "title": "Dataset",
+        "type": "dataset"
+      },
+      "license": {
+        "id": "cc-by-nc-sa-4.0"
+      },
+      "grants": [
+        {
+          "code": "772989",
+          "internal_id": "10.13039/501100000780::772989",
+          "funder": {
+            "name": "European Commission",
+            "doi": "10.13039/501100000780",
+            "acronym": "EC"
+          },
+          "title": "Exploring Cultural Memory in the Pre-Modern Islamic World (700–1500):\nKnowledge, Information Technology, and the Arabic Book",
+          "acronym": "KITAB",
+          "program": "H2020-EU.1.1.",
+          "url": "https://cordis.europa.eu/projects/772989"
+        }
+      ],
+      "communities": [
+        {
+          "id": "eu"
+        }
+      ],
+      "relations": {
+        "version": [
+          {
+            "index": 6,
+            "is_last": false,
+            "parent": {
+              "pid_type": "recid",
+              "pid_value": "3082463"
+            }
+          }
+        ]
+      }
+    },
+    "title": "OpenITI: a Machine-Readable Corpus of Islamicate Texts",
+    "links": {
+      "self": "https://zenodo.org/api/records/7687795",
+      "self_html": "https://zenodo.org/records/7687795",
+      "preview_html": "https://zenodo.org/records/7687795?preview=1",
+      "doi": "https://doi.org/10.5281/zenodo.7687795",
+      "self_doi": "https://doi.org/10.5281/zenodo.7687795",
+      "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.7687795",
+      "reserve_doi": "https://zenodo.org/api/records/7687795/draft/pids/doi",
+      "parent": "https://zenodo.org/api/records/3082463",
+      "parent_html": "https://zenodo.org/records/3082463",
+      "parent_doi": "https://doi.org/10.5281/zenodo.3082463",
+      "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.3082463",
+      "self_iiif_manifest": "https://zenodo.org/api/iiif/record:7687795/manifest",
+      "self_iiif_sequence": "https://zenodo.org/api/iiif/record:7687795/sequence/default",
+      "files": "https://zenodo.org/api/records/7687795/files",
+      "media_files": "https://zenodo.org/api/records/7687795/media-files",
+      "archive": "https://zenodo.org/api/records/7687795/files-archive",
+      "archive_media": "https://zenodo.org/api/records/7687795/media-files-archive",
+      "latest": "https://zenodo.org/api/records/7687795/versions/latest",
+      "latest_html": "https://zenodo.org/records/7687795/latest",
+      "versions": "https://zenodo.org/api/records/7687795/versions",
+      "draft": "https://zenodo.org/api/records/7687795/draft",
+      "access_links": "https://zenodo.org/api/records/7687795/access/links",
+      "access_grants": "https://zenodo.org/api/records/7687795/access/grants",
+      "access_users": "https://zenodo.org/api/records/7687795/access/users",
+      "access_request": "https://zenodo.org/api/records/7687795/access/request",
+      "access": "https://zenodo.org/api/records/7687795/access",
+      "communities": "https://zenodo.org/api/records/7687795/communities",
+      "communities-suggestions": "https://zenodo.org/api/records/7687795/communities-suggestions",
+      "request_deletion": "https://zenodo.org/api/records/7687795/request-deletion",
+      "file_modification": "https://zenodo.org/api/records/7687795/file-modification",
+      "quota_increase": "https://zenodo.org/api/records/7687795/quota-increase",
+      "requests": "https://zenodo.org/api/records/7687795/requests"
+    },
+    "updated": "2023-11-22T10:51:43.293361+00:00",
+    "recid": "7687795",
+    "revision": 17,
+    "files": [
+      {
+        "id": "f5a74089-0609-4fea-9200-e3a67d56bc7b",
+        "key": "metadata.zip",
+        "size": 2671146,
+        "checksum": "md5:39376415fea35e52cabd9292a202fcee",
+        "links": {
+          "self": "https://zenodo.org/api/records/7687795/files/metadata.zip/content"
+        }
+      },
+      {
+        "id": "7627924a-d037-4aa8-b8ad-a90362fa7f0a",
+        "key": "release_notes.zip",
+        "size": 92733,
+        "checksum": "md5:02df73ee30a631da57c6d3d08fa9c9c7",
+        "links": {
+          "self": "https://zenodo.org/api/records/7687795/files/release_notes.zip/content"
+        }
+      },
+      {
+        "id": "4d9e7b56-f95b-47fb-9773-6d2f96d69766",
+        "key": "data.zip",
+        "size": 5714330175,
+        "checksum": "md5:9ff72190f7a94878834c131326d4f0b4",
+        "links": {
+          "self": "https://zenodo.org/api/records/7687795/files/data.zip/content"
+        }
+      }
+    ],
+    "swh": null,
+    "owners": [
+      {
+        "id": "62646"
+      }
+    ],
+    "status": "published",
+    "stats": {
+      "downloads": 6850,
+      "unique_downloads": 4493,
+      "views": 20748,
+      "unique_views": 18883,
+      "version_downloads": 570,
+      "version_unique_downloads": 457,
+      "version_unique_views": 971,
+      "version_views": 1116
+    },
+    "state": "done",
+    "submitted": true
+  },
+  {
+    "created": "2022-07-08T13:18:35.689002+00:00",
+    "modified": "2023-11-22T10:53:34.998796+00:00",
+    "id": 6808108,
+    "conceptrecid": "3082463",
+    "doi": "10.5281/zenodo.6808108",
+    "conceptdoi": "10.5281/zenodo.3082463",
+    "doi_url": "https://doi.org/10.5281/zenodo.6808108",
+    "metadata": {
+      "title": "OpenITI: a Machine-Readable Corpus of Islamicate Texts",
+      "doi": "10.5281/zenodo.6808108",
+      "publication_date": "2022-07-08",
+      "description": "<p><strong>Co-PIs</strong>: Matthew Thomas Miller (University of Maryland, College Park), Maxim G. Romanov (University of Vienna), Sarah Bowen Savant (Aga Khan University&mdash;ISMC, London).</p>\n\n<p><em>Open Islamicate Texts Initiative</em> (<strong>OpenITI</strong>, see <a href=\"https://iti-corpus.github.io/\">https://iti-corpus.github.io/</a>)&nbsp;is a multi-institutional effort to construct the first machine-actionable scholarly corpus of premodern Islamicate texts. Led by researchers at the Aga Khan University, Institute for the Study of Muslim Civilisations (AKU-ISMC), University of Vienna (UV), Leipzig University (LU), and the Roshan Institute for Persian Studies at the University of Maryland (College Park) and an interdisciplinary advisory board of leading digital humanists and Islamic, Persian, and Arabic studies scholars, <strong>OpenITI</strong> aims to provide the essential textual infrastructure in Arabic, Persian and other Islamicate languages for new forms of textual analysis and digital scholarship. In the process, OpenITI will enable new synergies between Digital Humanities and the inter-related Islamicate fields of Islamic, Persian, and Arabic Studies. In addition to support from the researchers&rsquo; home institutions, it is supported by funding from the <a href=\"https://erc.europa.eu/\">European Research Council</a> under the European Union&rsquo;s Horizon 2020 research and innovation programme, awarded to the <a href=\"http://kitab-project.org/\">KITAB</a> project (Grant Agreement No. 772989, PI Sarah Bowen Savant) and the <a href=\"https://www.qnl.qa/en\">Qatar National Library</a>.</p>\n\n<p>Currently, <strong>OpenITI</strong> contains almost exclusively Arabic texts, which were first assembled into a corpus within the <strong>OpenArabic</strong> project, developed first at Tufts University (at <em>The Perseus Project</em>, 2013&ndash;2015) and then at Leipzig University (at the Alexander von Humboldt Chair for Digital Humanities, 2015&ndash;2017)&mdash;in both cases with the support and under the patronage of Prof. Gregory Crane. The much more limited number of Persian texts were compiled during 2015&ndash;2016 in the Persian Digital Library (PDL) pilot (see <a href=\"https://persdigumd.github.io/PDL/\">Persian Digital Library by PersDigUMD</a>) at Roshan Institute for Persian Studies at the University of Maryland. These texts have not been made fully compatible with OpenITI mARkdown yet and will be made fully available in next releases.</p>\n\n<p><strong>Note on Release Numbering</strong>: Version <strong>2019.1.1</strong>&mdash;where <strong>2019</strong> is the year of the release, the first dotted number&mdash;<strong>.1</strong>&mdash;is the ordinal release number in 2019, and the second dotted number&mdash;<strong>.1</strong>&mdash;is the overall release number; the first dotted number will reset every year, while the second one will continue on increasing.</p>\n\n<p>For more details: <a href=\"https://github.com/OpenITI/RELEASE\">https://github.com/OpenITI/RELEASE</a></p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>",
+      "access_right": "open",
+      "creators": [
+        {
+          "name": "Nigst, Lorenz",
+          "affiliation": "Aga Khan University"
+        },
+        {
+          "name": "Romanov, Maxim",
+          "affiliation": "Universität Hamburg"
+        },
+        {
+          "name": "Savant, Sarah Bowen",
+          "affiliation": "Aga Khan University"
+        },
+        {
+          "name": "Seydi, Masoumeh",
+          "affiliation": "Aga Khan University"
+        },
+        {
+          "name": "Verkinderen, Peter",
+          "affiliation": "Aga Khan University"
+        }
+      ],
+      "keywords": [
+        "Arabic; Classical Arabic; Corpus"
+      ],
+      "related_identifiers": [
+        {
+          "identifier": "https://github.com/OpenITI/RELEASE/tree/v2019.1.1",
+          "relation": "isSupplementTo",
+          "scheme": "url"
+        }
+      ],
+      "version": "2022.1.6",
+      "resource_type": {
+        "title": "Dataset",
+        "type": "dataset"
+      },
+      "license": {
+        "id": "cc-by-nc-sa-4.0"
+      },
+      "grants": [
+        {
+          "code": "772989",
+          "internal_id": "10.13039/501100000780::772989",
+          "funder": {
+            "name": "European Commission",
+            "doi": "10.13039/501100000780",
+            "acronym": "EC"
+          },
+          "title": "Exploring Cultural Memory in the Pre-Modern Islamic World (700–1500):\nKnowledge, Information Technology, and the Arabic Book",
+          "acronym": "KITAB",
+          "program": "H2020-EU.1.1.",
+          "url": "https://cordis.europa.eu/projects/772989"
+        }
+      ],
+      "communities": [
+        {
+          "id": "eu"
+        }
+      ],
+      "relations": {
+        "version": [
+          {
+            "index": 5,
+            "is_last": false,
+            "parent": {
+              "pid_type": "recid",
+              "pid_value": "3082463"
+            }
+          }
+        ]
+      }
+    },
+    "title": "OpenITI: a Machine-Readable Corpus of Islamicate Texts",
+    "links": {
+      "self": "https://zenodo.org/api/records/6808108",
+      "self_html": "https://zenodo.org/records/6808108",
+      "preview_html": "https://zenodo.org/records/6808108?preview=1",
+      "doi": "https://doi.org/10.5281/zenodo.6808108",
+      "self_doi": "https://doi.org/10.5281/zenodo.6808108",
+      "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.6808108",
+      "reserve_doi": "https://zenodo.org/api/records/6808108/draft/pids/doi",
+      "parent": "https://zenodo.org/api/records/3082463",
+      "parent_html": "https://zenodo.org/records/3082463",
+      "parent_doi": "https://doi.org/10.5281/zenodo.3082463",
+      "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.3082463",
+      "self_iiif_manifest": "https://zenodo.org/api/iiif/record:6808108/manifest",
+      "self_iiif_sequence": "https://zenodo.org/api/iiif/record:6808108/sequence/default",
+      "files": "https://zenodo.org/api/records/6808108/files",
+      "media_files": "https://zenodo.org/api/records/6808108/media-files",
+      "archive": "https://zenodo.org/api/records/6808108/files-archive",
+      "archive_media": "https://zenodo.org/api/records/6808108/media-files-archive",
+      "latest": "https://zenodo.org/api/records/6808108/versions/latest",
+      "latest_html": "https://zenodo.org/records/6808108/latest",
+      "versions": "https://zenodo.org/api/records/6808108/versions",
+      "draft": "https://zenodo.org/api/records/6808108/draft",
+      "access_links": "https://zenodo.org/api/records/6808108/access/links",
+      "access_grants": "https://zenodo.org/api/records/6808108/access/grants",
+      "access_users": "https://zenodo.org/api/records/6808108/access/users",
+      "access_request": "https://zenodo.org/api/records/6808108/access/request",
+      "access": "https://zenodo.org/api/records/6808108/access",
+      "communities": "https://zenodo.org/api/records/6808108/communities",
+      "communities-suggestions": "https://zenodo.org/api/records/6808108/communities-suggestions",
+      "request_deletion": "https://zenodo.org/api/records/6808108/request-deletion",
+      "file_modification": "https://zenodo.org/api/records/6808108/file-modification",
+      "quota_increase": "https://zenodo.org/api/records/6808108/quota-increase",
+      "requests": "https://zenodo.org/api/records/6808108/requests"
+    },
+    "updated": "2023-11-22T10:53:34.998796+00:00",
+    "recid": "6808108",
+    "revision": 19,
+    "files": [
+      {
+        "id": "7e8372c9-32ae-40b3-9299-99bb1cfdb28d",
+        "key": "release_notes.zip",
+        "size": 107070,
+        "checksum": "md5:beb03ef40b6864ab9b2507f2a13942b5",
+        "links": {
+          "self": "https://zenodo.org/api/records/6808108/files/release_notes.zip/content"
+        }
+      },
+      {
+        "id": "a72977a0-d588-494d-9324-e6f9fa37d291",
+        "key": "metadata.zip",
+        "size": 2633542,
+        "checksum": "md5:54090d3fbc3a730cfe5480146f122f5d",
+        "links": {
+          "self": "https://zenodo.org/api/records/6808108/files/metadata.zip/content"
+        }
+      },
+      {
+        "id": "dddd03b1-3d5d-4c48-a4de-f68b49689254",
+        "key": "data.zip",
+        "size": 5677003721,
+        "checksum": "md5:079ee997459caa94da71de4cd00162d2",
+        "links": {
+          "self": "https://zenodo.org/api/records/6808108/files/data.zip/content"
+        }
+      }
+    ],
+    "swh": null,
+    "owners": [
+      {
+        "id": "62646"
+      }
+    ],
+    "status": "published",
+    "stats": {
+      "downloads": 6850,
+      "unique_downloads": 4493,
+      "views": 20748,
+      "unique_views": 18883,
+      "version_downloads": 467,
+      "version_unique_downloads": 356,
+      "version_unique_views": 1545,
+      "version_views": 1657
+    },
+    "state": "done",
+    "submitted": true
+  },
+  {
+    "created": "2021-10-18T16:58:07.896956+00:00",
+    "modified": "2023-10-09T09:05:01.961396+00:00",
+    "id": 5550338,
+    "conceptrecid": "3082463",
+    "doi": "10.5281/zenodo.5550338",
+    "conceptdoi": "10.5281/zenodo.3082463",
+    "doi_url": "https://doi.org/10.5281/zenodo.5550338",
+    "metadata": {
+      "title": "OpenITI: a Machine-Readable Corpus of Islamicate Texts",
+      "doi": "10.5281/zenodo.5550338",
+      "publication_date": "2021-10-18",
+      "description": "<p><strong>Co-PIs</strong>: Matthew Thomas Miller (University of Maryland, College Park), Maxim G. Romanov (University of Vienna), Sarah Bowen Savant (Aga Khan University&mdash;ISMC, London).</p>\n\n<p><em>Open Islamicate Texts Initiative</em> (<strong>OpenITI</strong>)&nbsp;is a multi-institutional effort to construct the first machine-actionable scholarly corpus of premodern Islamicate texts. Led by researchers at the Aga Khan University, Institute for the Study of Muslim Civilisations (AKU-ISMC), University of Vienna (UV), Leipzig University (LU), and the Roshan Institute for Persian Studies at the University of Maryland (College Park) and an interdisciplinary advisory board of leading digital humanists and Islamic, Persian, and Arabic studies scholars, <strong>OpenITI</strong> aims to provide the essential textual infrastructure in Arabic, Persian and other Islamicate languages for new forms of textual analysis and digital scholarship. In the process, OpenITI will enable new synergies between Digital Humanities and the inter-related Islamicate fields of Islamic, Persian, and Arabic Studies. In addition to support from the researchers&rsquo; home institutions, it is supported by funding from the <a href=\"https://erc.europa.eu/\">European Research Council</a> under the European Union&rsquo;s Horizon 2020 research and innovation programme, awarded to the <a href=\"http://kitab-project.org/\">KITAB</a> project (Grant Agreement No. 772989, PI Sarah Bowen Savant) and the <a href=\"https://www.qnl.qa/en\">Qatar National Library</a>.</p>\n\n<p>Currently, <strong>OpenITI</strong> contains almost exclusively Arabic texts, which were first assembled into a corpus within the <strong>OpenArabic</strong> project, developed first at Tufts University (at <em>The Perseus Project</em>, 2013&ndash;2015) and then at Leipzig University (at the Alexander von Humboldt Chair for Digital Humanities, 2015&ndash;2017)&mdash;in both cases with the support and under the patronage of Prof. Gregory Crane. The much more limited number of Persian texts were compiled during 2015&ndash;2016 in the Persian Digital Library (PDL) pilot (see <a href=\"https://persdigumd.github.io/PDL/\">Persian Digital Library by PersDigUMD</a>) at Roshan Institute for Persian Studies at the University of Maryland. These texts have not been made fully compatible with OpenITI mARkdown yet and will be made fully available in next releases.</p>\n\n<p><strong>Note on Release Numbering</strong>: Version <strong>2019.1.1</strong>&mdash;where <strong>2019</strong> is the year of the release, the first dotted number&mdash;<strong>.1</strong>&mdash;is the ordinal release number in 2019, and the second dotted number&mdash;<strong>.1</strong>&mdash;is the overall release number; the first dotted number will reset every year, while the second one will continue on increasing.</p>\n\n<p>For more details: <a href=\"https://github.com/OpenITI/RELEASE\">https://github.com/OpenITI/RELEASE</a></p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>",
+      "access_right": "open",
+      "creators": [
+        {
+          "name": "Nigst, Lorenz",
+          "affiliation": "Aga Khan University"
+        },
+        {
+          "name": "Romanov, Maxim",
+          "affiliation": "University of Vienna"
+        },
+        {
+          "name": "Savant, Sarah Bowen",
+          "affiliation": "Aga Khan University"
+        },
+        {
+          "name": "Seydi, Masoumeh",
+          "affiliation": "University of Leipzig"
+        },
+        {
+          "name": "Verkinderen, Peter",
+          "affiliation": "Aga Khan University"
+        }
+      ],
+      "keywords": [
+        "Arabic; Classical Arabic; Corpus"
+      ],
+      "related_identifiers": [
+        {
+          "identifier": "https://github.com/OpenITI/RELEASE/tree/v2019.1.1",
+          "relation": "isSupplementTo",
+          "scheme": "url"
+        }
+      ],
+      "version": "2021.2.5",
+      "resource_type": {
+        "title": "Dataset",
+        "type": "dataset"
+      },
+      "license": {
+        "id": "cc-by-nc-sa-4.0"
+      },
+      "grants": [
+        {
+          "code": "772989",
+          "internal_id": "10.13039/501100000780::772989",
+          "funder": {
+            "name": "European Commission",
+            "doi": "10.13039/501100000780",
+            "acronym": "EC"
+          },
+          "title": "Exploring Cultural Memory in the Pre-Modern Islamic World (700–1500):\nKnowledge, Information Technology, and the Arabic Book",
+          "acronym": "KITAB",
+          "program": "H2020-EU.1.1.",
+          "url": "https://cordis.europa.eu/projects/772989"
+        }
+      ],
+      "communities": [
+        {
+          "id": "eu"
+        }
+      ],
+      "relations": {
+        "version": [
+          {
+            "index": 4,
+            "is_last": false,
+            "parent": {
+              "pid_type": "recid",
+              "pid_value": "3082463"
+            }
+          }
+        ]
+      }
+    },
+    "title": "OpenITI: a Machine-Readable Corpus of Islamicate Texts",
+    "links": {
+      "self": "https://zenodo.org/api/records/5550338",
+      "self_html": "https://zenodo.org/records/5550338",
+      "preview_html": "https://zenodo.org/records/5550338?preview=1",
+      "doi": "https://doi.org/10.5281/zenodo.5550338",
+      "self_doi": "https://doi.org/10.5281/zenodo.5550338",
+      "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.5550338",
+      "reserve_doi": "https://zenodo.org/api/records/5550338/draft/pids/doi",
+      "parent": "https://zenodo.org/api/records/3082463",
+      "parent_html": "https://zenodo.org/records/3082463",
+      "parent_doi": "https://doi.org/10.5281/zenodo.3082463",
+      "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.3082463",
+      "self_iiif_manifest": "https://zenodo.org/api/iiif/record:5550338/manifest",
+      "self_iiif_sequence": "https://zenodo.org/api/iiif/record:5550338/sequence/default",
+      "files": "https://zenodo.org/api/records/5550338/files",
+      "media_files": "https://zenodo.org/api/records/5550338/media-files",
+      "archive": "https://zenodo.org/api/records/5550338/files-archive",
+      "archive_media": "https://zenodo.org/api/records/5550338/media-files-archive",
+      "latest": "https://zenodo.org/api/records/5550338/versions/latest",
+      "latest_html": "https://zenodo.org/records/5550338/latest",
+      "versions": "https://zenodo.org/api/records/5550338/versions",
+      "draft": "https://zenodo.org/api/records/5550338/draft",
+      "access_links": "https://zenodo.org/api/records/5550338/access/links",
+      "access_grants": "https://zenodo.org/api/records/5550338/access/grants",
+      "access_users": "https://zenodo.org/api/records/5550338/access/users",
+      "access_request": "https://zenodo.org/api/records/5550338/access/request",
+      "access": "https://zenodo.org/api/records/5550338/access",
+      "communities": "https://zenodo.org/api/records/5550338/communities",
+      "communities-suggestions": "https://zenodo.org/api/records/5550338/communities-suggestions",
+      "request_deletion": "https://zenodo.org/api/records/5550338/request-deletion",
+      "file_modification": "https://zenodo.org/api/records/5550338/file-modification",
+      "quota_increase": "https://zenodo.org/api/records/5550338/quota-increase",
+      "requests": "https://zenodo.org/api/records/5550338/requests"
+    },
+    "updated": "2023-10-09T09:05:01.961396+00:00",
+    "recid": "5550338",
+    "revision": 13,
+    "files": [
+      {
+        "id": "634ee51a-4265-4464-b6b9-6f08f61a84e9",
+        "key": "metadata.zip",
+        "size": 3226765,
+        "checksum": "md5:649f44c146f9ebe3c6d736949cbb949f",
+        "links": {
+          "self": "https://zenodo.org/api/records/5550338/files/metadata.zip/content"
+        }
+      },
+      {
+        "id": "e4b40b09-87d4-41b1-9e1c-3c37833b8168",
+        "key": "data.zip",
+        "size": 5125344672,
+        "checksum": "md5:1d337299c85829796ee433843a3630b1",
+        "links": {
+          "self": "https://zenodo.org/api/records/5550338/files/data.zip/content"
+        }
+      },
+      {
+        "id": "cc4f9d9d-5fd8-4472-94e3-af20ec6c89d9",
+        "key": "release_notes.zip",
+        "size": 93112,
+        "checksum": "md5:ece9474fe18ca7c4e7b0aec5b39c95bc",
+        "links": {
+          "self": "https://zenodo.org/api/records/5550338/files/release_notes.zip/content"
+        }
+      }
+    ],
+    "swh": null,
+    "owners": [
+      {
+        "id": "62646"
+      }
+    ],
+    "status": "published",
+    "stats": {
+      "downloads": 6850,
+      "unique_downloads": 4493,
+      "views": 20748,
+      "unique_views": 18883,
+      "version_downloads": 659,
+      "version_unique_downloads": 509,
+      "version_unique_views": 1506,
+      "version_views": 1703
+    },
+    "state": "done",
+    "submitted": true
+  },
+  {
+    "created": "2021-02-06T13:16:58.794439+00:00",
+    "modified": "2023-10-09T09:05:01.870122+00:00",
+    "id": 4513723,
+    "conceptrecid": "3082463",
+    "doi": "10.5281/zenodo.4513723",
+    "conceptdoi": "10.5281/zenodo.3082463",
+    "doi_url": "https://doi.org/10.5281/zenodo.4513723",
+    "metadata": {
+      "title": "OpenITI: a Machine-Readable Corpus of Islamicate Texts",
+      "doi": "10.5281/zenodo.4513723",
+      "publication_date": "2021-02-05",
+      "description": "<p><strong>Co-PIs</strong>: Matthew Thomas Miller (University of Maryland, College Park), Maxim G. Romanov (University of Vienna), Sarah Bowen Savant (Aga Khan University&mdash;ISMC, London).</p>\n\n<p><em>Open Islamicate Texts Initiative</em> (<strong>OpenITI</strong>, see <a href=\"https://iti-corpus.github.io/\">https://iti-corpus.github.io/</a>)&nbsp;is a multi-institutional effort to construct the first machine-actionable scholarly corpus of premodern Islamicate texts. Led by researchers at the Aga Khan University, Institute for the Study of Muslim Civilisations (AKU-ISMC), University of Vienna (UV), Leipzig University (LU), and the Roshan Institute for Persian Studies at the University of Maryland (College Park) and an interdisciplinary advisory board of leading digital humanists and Islamic, Persian, and Arabic studies scholars, <strong>OpenITI</strong> aims to provide the essential textual infrastructure in Arabic, Persian and other Islamicate languages for new forms of textual analysis and digital scholarship. In the process, OpenITI will enable new synergies between Digital Humanities and the inter-related Islamicate fields of Islamic, Persian, and Arabic Studies. In addition to support from the researchers&rsquo; home institutions, it is supported by funding from the <a href=\"https://erc.europa.eu/\">European Research Council</a> under the European Union&rsquo;s Horizon 2020 research and innovation programme, awarded to the <a href=\"http://kitab-project.org/\">KITAB</a> project (Grant Agreement No. 772989, PI Sarah Bowen Savant) and the <a href=\"https://www.qnl.qa/en\">Qatar National Library</a>.</p>\n\n<p>Currently, <strong>OpenITI</strong> contains almost exclusively Arabic texts, which were first assembled into a corpus within the <strong>OpenArabic</strong> project, developed first at Tufts University (at <em>The Perseus Project</em>, 2013&ndash;2015) and then at Leipzig University (at the Alexander von Humboldt Chair for Digital Humanities, 2015&ndash;2017)&mdash;in both cases with the support and under the patronage of Prof. Gregory Crane. The much more limited number of Persian texts were compiled during 2015&ndash;2016 in the Persian Digital Library (PDL) pilot (see <a href=\"https://persdigumd.github.io/PDL/\">Persian Digital Library by PersDigUMD</a>) at Roshan Institute for Persian Studies at the University of Maryland. These texts have not been made fully compatible with OpenITI mARkdown yet and will be made fully available in next releases.</p>\n\n<p><strong>Note on Release Numbering</strong>: Version <strong>2019.1.1</strong>&mdash;where <strong>2019</strong> is the year of the release, the first dotted number&mdash;<strong>.1</strong>&mdash;is the ordinal release number in 2019, and the second dotted number&mdash;<strong>.1</strong>&mdash;is the overall release number; the first dotted number will reset every year, while the second one will continue on increasing.</p>\n\n<p>For more details: <a href=\"https://github.com/OpenITI/RELEASE\">https://github.com/OpenITI/RELEASE</a></p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>",
+      "access_right": "open",
+      "creators": [
+        {
+          "name": "Lorenz Nigst",
+          "affiliation": "Aga Khan University"
+        },
+        {
+          "name": "Maxim Romanov",
+          "affiliation": "University of Vienna"
+        },
+        {
+          "name": "Sarah Bowen Savant",
+          "affiliation": "Aga Khan University"
+        },
+        {
+          "name": "Masoumeh Seydi",
+          "affiliation": "University of Leipzig"
+        },
+        {
+          "name": "Peter Verkinderen",
+          "affiliation": "Aga Khan University"
+        }
+      ],
+      "keywords": [
+        "Arabic; Classical Arabic; Corpus"
+      ],
+      "related_identifiers": [
+        {
+          "identifier": "https://github.com/OpenITI/RELEASE/tree/v2019.1.1",
+          "relation": "isSupplementTo",
+          "scheme": "url"
+        }
+      ],
+      "version": "2021.1.4",
+      "resource_type": {
+        "title": "Dataset",
+        "type": "dataset"
+      },
+      "license": {
+        "id": "cc-by-nc-sa-4.0"
+      },
+      "grants": [
+        {
+          "code": "772989",
+          "internal_id": "10.13039/501100000780::772989",
+          "funder": {
+            "name": "European Commission",
+            "doi": "10.13039/501100000780",
+            "acronym": "EC"
+          },
+          "title": "Exploring Cultural Memory in the Pre-Modern Islamic World (700–1500):\nKnowledge, Information Technology, and the Arabic Book",
+          "acronym": "KITAB",
+          "program": "H2020-EU.1.1.",
+          "url": "https://cordis.europa.eu/projects/772989"
+        }
+      ],
+      "communities": [
+        {
+          "id": "eu"
+        }
+      ],
+      "relations": {
+        "version": [
+          {
+            "index": 3,
+            "is_last": false,
+            "parent": {
+              "pid_type": "recid",
+              "pid_value": "3082463"
+            }
+          }
+        ]
+      }
+    },
+    "title": "OpenITI: a Machine-Readable Corpus of Islamicate Texts",
+    "links": {
+      "self": "https://zenodo.org/api/records/4513723",
+      "self_html": "https://zenodo.org/records/4513723",
+      "preview_html": "https://zenodo.org/records/4513723?preview=1",
+      "doi": "https://doi.org/10.5281/zenodo.4513723",
+      "self_doi": "https://doi.org/10.5281/zenodo.4513723",
+      "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.4513723",
+      "reserve_doi": "https://zenodo.org/api/records/4513723/draft/pids/doi",
+      "parent": "https://zenodo.org/api/records/3082463",
+      "parent_html": "https://zenodo.org/records/3082463",
+      "parent_doi": "https://doi.org/10.5281/zenodo.3082463",
+      "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.3082463",
+      "self_iiif_manifest": "https://zenodo.org/api/iiif/record:4513723/manifest",
+      "self_iiif_sequence": "https://zenodo.org/api/iiif/record:4513723/sequence/default",
+      "files": "https://zenodo.org/api/records/4513723/files",
+      "media_files": "https://zenodo.org/api/records/4513723/media-files",
+      "archive": "https://zenodo.org/api/records/4513723/files-archive",
+      "archive_media": "https://zenodo.org/api/records/4513723/media-files-archive",
+      "latest": "https://zenodo.org/api/records/4513723/versions/latest",
+      "latest_html": "https://zenodo.org/records/4513723/latest",
+      "versions": "https://zenodo.org/api/records/4513723/versions",
+      "draft": "https://zenodo.org/api/records/4513723/draft",
+      "access_links": "https://zenodo.org/api/records/4513723/access/links",
+      "access_grants": "https://zenodo.org/api/records/4513723/access/grants",
+      "access_users": "https://zenodo.org/api/records/4513723/access/users",
+      "access_request": "https://zenodo.org/api/records/4513723/access/request",
+      "access": "https://zenodo.org/api/records/4513723/access",
+      "communities": "https://zenodo.org/api/records/4513723/communities",
+      "communities-suggestions": "https://zenodo.org/api/records/4513723/communities-suggestions",
+      "request_deletion": "https://zenodo.org/api/records/4513723/request-deletion",
+      "file_modification": "https://zenodo.org/api/records/4513723/file-modification",
+      "quota_increase": "https://zenodo.org/api/records/4513723/quota-increase",
+      "requests": "https://zenodo.org/api/records/4513723/requests"
+    },
+    "updated": "2023-10-09T09:05:01.870122+00:00",
+    "recid": "4513723",
+    "revision": 14,
+    "files": [
+      {
+        "id": "a7d47c59-2448-427f-99ab-1b33d4493a42",
+        "key": "data.zip",
+        "size": 5298548364,
+        "checksum": "md5:0c42a80a785aad569a85f77e3eb793d0",
+        "links": {
+          "self": "https://zenodo.org/api/records/4513723/files/data.zip/content"
+        }
+      },
+      {
+        "id": "5f44b1ab-e647-4df5-852c-f669c819882f",
+        "key": "metadata.zip",
+        "size": 2539220,
+        "checksum": "md5:1bbf3f844d26b6a6b0529e34c4798289",
+        "links": {
+          "self": "https://zenodo.org/api/records/4513723/files/metadata.zip/content"
+        }
+      },
+      {
+        "id": "ad6ee48f-b505-4f75-9d44-111d74c324e2",
+        "key": "release_notes.zip",
+        "size": 143370,
+        "checksum": "md5:bc0181d42961b5f5704f3a147d98ff78",
+        "links": {
+          "self": "https://zenodo.org/api/records/4513723/files/release_notes.zip/content"
+        }
+      }
+    ],
+    "swh": null,
+    "owners": [
+      {
+        "id": "62646"
+      }
+    ],
+    "status": "published",
+    "stats": {
+      "downloads": 6850,
+      "unique_downloads": 4493,
+      "views": 20748,
+      "unique_views": 18883,
+      "version_downloads": 482,
+      "version_unique_downloads": 399,
+      "version_unique_views": 1750,
+      "version_views": 1910
+    },
+    "state": "done",
+    "submitted": true
+  },
+  {
+    "created": "2020-10-09T13:42:50.565199+00:00",
+    "modified": "2023-10-09T09:05:01.763143+00:00",
+    "id": 4075046,
+    "conceptrecid": "3082463",
+    "doi": "10.5281/zenodo.4075046",
+    "conceptdoi": "10.5281/zenodo.3082463",
+    "doi_url": "https://doi.org/10.5281/zenodo.4075046",
+    "metadata": {
+      "title": "OpenITI: a Machine-Readable Corpus of Islamicate Texts",
+      "doi": "10.5281/zenodo.4075046",
+      "publication_date": "2020-10-06",
+      "description": "<p><strong>Co-PIs</strong>: Matthew Thomas Miller (University of Maryland, College Park), Maxim G. Romanov (University of Vienna), Sarah Bowen Savant (Aga Khan University&mdash;ISMC, London).</p>\n\n<p><em>Open Islamicate Texts Initiative</em> (<strong>OpenITI</strong>, see <a href=\"https://iti-corpus.github.io/\">https://iti-corpus.github.io/</a>)&nbsp;is a multi-institutional effort to construct the first machine-actionable scholarly corpus of premodern Islamicate texts. Led by researchers at the Aga Khan University, Institute for the Study of Muslim Civilisations (AKU-ISMC), University of Vienna (UV), Leipzig University (LU), and the Roshan Institute for Persian Studies at the University of Maryland (College Park) and an interdisciplinary advisory board of leading digital humanists and Islamic, Persian, and Arabic studies scholars, <strong>OpenITI</strong> aims to provide the essential textual infrastructure in Arabic, Persian and other Islamicate languages for new forms of textual analysis and digital scholarship. In the process, OpenITI will enable new synergies between Digital Humanities and the inter-related Islamicate fields of Islamic, Persian, and Arabic Studies. In addition to support from the researchers&rsquo; home institutions, it is supported by funding from the <a href=\"https://erc.europa.eu/\">European Research Council</a> under the European Union&rsquo;s Horizon 2020 research and innovation programme, awarded to the <a href=\"http://kitab-project.org/\">KITAB</a> project (Grant Agreement No. 772989, PI Sarah Bowen Savant) and the <a href=\"https://www.qnl.qa/en\">Qatar National Library</a>.</p>\n\n<p>Currently, <strong>OpenITI</strong> contains almost exclusively Arabic texts, which were first assembled into a corpus within the <strong>OpenArabic</strong> project, developed first at Tufts University (at <em>The Perseus Project</em>, 2013&ndash;2015) and then at Leipzig University (at the Alexander von Humboldt Chair for Digital Humanities, 2015&ndash;2017)&mdash;in both cases with the support and under the patronage of Prof. Gregory Crane. The much more limited number of Persian texts were compiled during 2015&ndash;2016 in the Persian Digital Library (PDL) pilot (see <a href=\"https://persdigumd.github.io/PDL/\">Persian Digital Library by PersDigUMD</a>) at Roshan Institute for Persian Studies at the University of Maryland. These texts have not been made fully compatible with OpenITI mARkdown yet and will be made fully available in next releases.</p>\n\n<p><strong>Note on Release Numbering</strong>: Version <strong>2019.1.1</strong>&mdash;where <strong>2019</strong> is the year of the release, the first dotted number&mdash;<strong>.1</strong>&mdash;is the ordinal release number in 2019, and the second dotted number&mdash;<strong>.1</strong>&mdash;is the overall release number; the first dotted number will reset every year, while the second one will continue on increasing.</p>\n\n<p>For more details: <a href=\"https://github.com/OpenITI/RELEASE\">https://github.com/OpenITI/RELEASE</a></p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>",
+      "access_right": "open",
+      "creators": [
+        {
+          "name": "Lorenz Nigst",
+          "affiliation": "Aga Khan University"
+        },
+        {
+          "name": "Maxim Romanov",
+          "affiliation": "University of Vienna"
+        },
+        {
+          "name": "Sarah Bowen Savant",
+          "affiliation": "Aga Khan University"
+        },
+        {
+          "name": "Masoumeh Seydi",
+          "affiliation": "University of Leipzig"
+        },
+        {
+          "name": "Peter Verkinderen",
+          "affiliation": "Aga Khan University"
+        }
+      ],
+      "keywords": [
+        "Arabic; Classical Arabic; Corpus"
+      ],
+      "related_identifiers": [
+        {
+          "identifier": "https://github.com/OpenITI/RELEASE/tree/v2019.1.1",
+          "relation": "isSupplementTo",
+          "scheme": "url"
+        }
+      ],
+      "version": "2020.2.3",
+      "resource_type": {
+        "title": "Dataset",
+        "type": "dataset"
+      },
+      "license": {
+        "id": "cc-by-nc-sa-4.0"
+      },
+      "communities": [
+        {
+          "id": "eu"
+        }
+      ],
+      "relations": {
+        "version": [
+          {
+            "index": 2,
+            "is_last": false,
+            "parent": {
+              "pid_type": "recid",
+              "pid_value": "3082463"
+            }
+          }
+        ]
+      }
+    },
+    "title": "OpenITI: a Machine-Readable Corpus of Islamicate Texts",
+    "links": {
+      "self": "https://zenodo.org/api/records/4075046",
+      "self_html": "https://zenodo.org/records/4075046",
+      "preview_html": "https://zenodo.org/records/4075046?preview=1",
+      "doi": "https://doi.org/10.5281/zenodo.4075046",
+      "self_doi": "https://doi.org/10.5281/zenodo.4075046",
+      "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.4075046",
+      "reserve_doi": "https://zenodo.org/api/records/4075046/draft/pids/doi",
+      "parent": "https://zenodo.org/api/records/3082463",
+      "parent_html": "https://zenodo.org/records/3082463",
+      "parent_doi": "https://doi.org/10.5281/zenodo.3082463",
+      "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.3082463",
+      "self_iiif_manifest": "https://zenodo.org/api/iiif/record:4075046/manifest",
+      "self_iiif_sequence": "https://zenodo.org/api/iiif/record:4075046/sequence/default",
+      "files": "https://zenodo.org/api/records/4075046/files",
+      "media_files": "https://zenodo.org/api/records/4075046/media-files",
+      "archive": "https://zenodo.org/api/records/4075046/files-archive",
+      "archive_media": "https://zenodo.org/api/records/4075046/media-files-archive",
+      "latest": "https://zenodo.org/api/records/4075046/versions/latest",
+      "latest_html": "https://zenodo.org/records/4075046/latest",
+      "versions": "https://zenodo.org/api/records/4075046/versions",
+      "draft": "https://zenodo.org/api/records/4075046/draft",
+      "access_links": "https://zenodo.org/api/records/4075046/access/links",
+      "access_grants": "https://zenodo.org/api/records/4075046/access/grants",
+      "access_users": "https://zenodo.org/api/records/4075046/access/users",
+      "access_request": "https://zenodo.org/api/records/4075046/access/request",
+      "access": "https://zenodo.org/api/records/4075046/access",
+      "communities": "https://zenodo.org/api/records/4075046/communities",
+      "communities-suggestions": "https://zenodo.org/api/records/4075046/communities-suggestions",
+      "request_deletion": "https://zenodo.org/api/records/4075046/request-deletion",
+      "file_modification": "https://zenodo.org/api/records/4075046/file-modification",
+      "quota_increase": "https://zenodo.org/api/records/4075046/quota-increase",
+      "requests": "https://zenodo.org/api/records/4075046/requests"
+    },
+    "updated": "2023-10-09T09:05:01.763143+00:00",
+    "recid": "4075046",
+    "revision": 15,
+    "files": [
+      {
+        "id": "898673fd-cc71-4046-b9c4-974ed2db248b",
+        "key": "OpenITI-v2020.2.3.zip",
+        "size": 4063843696,
+        "checksum": "md5:491639bebaa364ca766221615039c32b",
+        "links": {
+          "self": "https://zenodo.org/api/records/4075046/files/OpenITI-v2020.2.3.zip/content"
+        }
+      }
+    ],
+    "swh": null,
+    "owners": [
+      {
+        "id": "62646"
+      }
+    ],
+    "status": "published",
+    "stats": {
+      "downloads": 6850,
+      "unique_downloads": 4493,
+      "views": 20748,
+      "unique_views": 18883,
+      "version_downloads": 225,
+      "version_unique_downloads": 178,
+      "version_unique_views": 1657,
+      "version_views": 1820
+    },
+    "state": "done",
+    "submitted": true
+  },
+  {
+    "created": "2020-06-15T17:49:03.787195+00:00",
+    "modified": "2023-10-09T09:05:01.667052+00:00",
+    "id": 3891466,
+    "conceptrecid": "3082463",
+    "doi": "10.5281/zenodo.3891466",
+    "conceptdoi": "10.5281/zenodo.3082463",
+    "doi_url": "https://doi.org/10.5281/zenodo.3891466",
+    "metadata": {
+      "title": "OpenITI: a Machine-Readable Corpus of Islamicate Texts",
+      "doi": "10.5281/zenodo.3891466",
+      "publication_date": "2020-06-15",
+      "description": "<p><strong>Co-PIs</strong>: Matthew Thomas Miller (University of Maryland, College Park), Maxim G. Romanov (University of Vienna), Sarah Bowen Savant (Aga Khan University&mdash;ISMC, London).</p>\n\n<p><em>Open Islamicate Texts Initiative</em> (<strong>OpenITI</strong>, see <a href=\"https://iti-corpus.github.io/\">https://iti-corpus.github.io/</a>)&nbsp;is a multi-institutional effort to construct the first machine-actionable scholarly corpus of premodern Islamicate texts. Led by researchers at the Aga Khan University, Institute for the Study of Muslim Civilisations (AKU-ISMC), University of Vienna (UV), Leipzig University (LU), and the Roshan Institute for Persian Studies at the University of Maryland (College Park) and an interdisciplinary advisory board of leading digital humanists and Islamic, Persian, and Arabic studies scholars, <strong>OpenITI</strong> aims to provide the essential textual infrastructure in Arabic, Persian and other Islamicate languages for new forms of textual analysis and digital scholarship. In the process, OpenITI will enable new synergies between Digital Humanities and the inter-related Islamicate fields of Islamic, Persian, and Arabic Studies. In addition to support from the researchers&rsquo; home institutions, it is supported by funding from the <a href=\"https://erc.europa.eu/\">European Research Council</a> under the European Union&rsquo;s Horizon 2020 research and innovation programme, awarded to the <a href=\"http://kitab-project.org/\">KITAB</a> project (Grant Agreement No. 772989, PI Sarah Bowen Savant) and the <a href=\"https://www.qnl.qa/en\">Qatar National Library</a>.</p>\n\n<p>Currently, <strong>OpenITI</strong> contains almost exclusively Arabic texts, which were first assembled into a corpus within the <strong>OpenArabic</strong> project, developed first at Tufts University (at <em>The Perseus Project</em>, 2013&ndash;2015) and then at Leipzig University (at the Alexander von Humboldt Chair for Digital Humanities, 2015&ndash;2017)&mdash;in both cases with the support and under the patronage of Prof. Gregory Crane. The much more limited number of Persian texts were compiled during 2015&ndash;2016 in the Persian Digital Library (PDL) pilot (see <a href=\"https://persdigumd.github.io/PDL/\">Persian Digital Library by PersDigUMD</a>) at Roshan Institute for Persian Studies at the University of Maryland. These texts have not been made fully compatible with OpenITI mARkdown yet and will be made fully available in next releases.</p>\n\n<p><strong>Note on Release Numbering</strong>: Version <strong>2019.1.1</strong>&mdash;where <strong>2019</strong> is the year of the release, the first dotted number&mdash;<strong>.1</strong>&mdash;is the ordinal release number in 2019, and the second dotted number&mdash;<strong>.1</strong>&mdash;is the overall release number; the first dotted number will reset every year, while the second one will continue on increasing.</p>\n\n<p>For more details: <a href=\"https://github.com/OpenITI/RELEASE\">https://github.com/OpenITI/RELEASE</a></p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>",
+      "access_right": "open",
+      "creators": [
+        {
+          "name": "Lorenz Nigst",
+          "affiliation": "Aga Khan University"
+        },
+        {
+          "name": "Maxim Romanov",
+          "affiliation": "University of Vienna"
+        },
+        {
+          "name": "Sarah Bowen Savant",
+          "affiliation": "Aga Khan University"
+        },
+        {
+          "name": "Masoumeh Seydi",
+          "affiliation": "University of Leipzig"
+        },
+        {
+          "name": "Peter Verkinderen",
+          "affiliation": "Aga Khan University"
+        }
+      ],
+      "keywords": [
+        "Arabic; Classical Arabic; Corpus"
+      ],
+      "related_identifiers": [
+        {
+          "identifier": "https://github.com/OpenITI/RELEASE/tree/v2019.1.1",
+          "relation": "isSupplementTo",
+          "scheme": "url"
+        }
+      ],
+      "version": "2020.1.2",
+      "resource_type": {
+        "title": "Dataset",
+        "type": "dataset"
+      },
+      "license": {
+        "id": "cc-by-nc-sa-4.0"
+      },
+      "communities": [
+        {
+          "id": "eu"
+        }
+      ],
+      "relations": {
+        "version": [
+          {
+            "index": 1,
+            "is_last": false,
+            "parent": {
+              "pid_type": "recid",
+              "pid_value": "3082463"
+            }
+          }
+        ]
+      }
+    },
+    "title": "OpenITI: a Machine-Readable Corpus of Islamicate Texts",
+    "links": {
+      "self": "https://zenodo.org/api/records/3891466",
+      "self_html": "https://zenodo.org/records/3891466",
+      "preview_html": "https://zenodo.org/records/3891466?preview=1",
+      "doi": "https://doi.org/10.5281/zenodo.3891466",
+      "self_doi": "https://doi.org/10.5281/zenodo.3891466",
+      "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.3891466",
+      "reserve_doi": "https://zenodo.org/api/records/3891466/draft/pids/doi",
+      "parent": "https://zenodo.org/api/records/3082463",
+      "parent_html": "https://zenodo.org/records/3082463",
+      "parent_doi": "https://doi.org/10.5281/zenodo.3082463",
+      "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.3082463",
+      "self_iiif_manifest": "https://zenodo.org/api/iiif/record:3891466/manifest",
+      "self_iiif_sequence": "https://zenodo.org/api/iiif/record:3891466/sequence/default",
+      "files": "https://zenodo.org/api/records/3891466/files",
+      "media_files": "https://zenodo.org/api/records/3891466/media-files",
+      "archive": "https://zenodo.org/api/records/3891466/files-archive",
+      "archive_media": "https://zenodo.org/api/records/3891466/media-files-archive",
+      "latest": "https://zenodo.org/api/records/3891466/versions/latest",
+      "latest_html": "https://zenodo.org/records/3891466/latest",
+      "versions": "https://zenodo.org/api/records/3891466/versions",
+      "draft": "https://zenodo.org/api/records/3891466/draft",
+      "access_links": "https://zenodo.org/api/records/3891466/access/links",
+      "access_grants": "https://zenodo.org/api/records/3891466/access/grants",
+      "access_users": "https://zenodo.org/api/records/3891466/access/users",
+      "access_request": "https://zenodo.org/api/records/3891466/access/request",
+      "access": "https://zenodo.org/api/records/3891466/access",
+      "communities": "https://zenodo.org/api/records/3891466/communities",
+      "communities-suggestions": "https://zenodo.org/api/records/3891466/communities-suggestions",
+      "request_deletion": "https://zenodo.org/api/records/3891466/request-deletion",
+      "file_modification": "https://zenodo.org/api/records/3891466/file-modification",
+      "quota_increase": "https://zenodo.org/api/records/3891466/quota-increase",
+      "requests": "https://zenodo.org/api/records/3891466/requests"
+    },
+    "updated": "2023-10-09T09:05:01.667052+00:00",
+    "recid": "3891466",
+    "revision": 21,
+    "files": [
+      {
+        "id": "9ccd6064-2982-42f3-bf64-bc9786a83a32",
+        "key": "OpenITI-v2020.1.2.zip",
+        "size": 3730574927,
+        "checksum": "md5:3d2e9094303e2eeffdd5cab1acf349b3",
+        "links": {
+          "self": "https://zenodo.org/api/records/3891466/files/OpenITI-v2020.1.2.zip/content"
+        }
+      }
+    ],
+    "swh": null,
+    "owners": [
+      {
+        "id": "62646"
+      }
+    ],
+    "status": "published",
+    "stats": {
+      "downloads": 6850,
+      "unique_downloads": 4493,
+      "views": 20748,
+      "unique_views": 18883,
+      "version_downloads": 274,
+      "version_unique_downloads": 187,
+      "version_unique_views": 1511,
+      "version_views": 1642
+    },
+    "state": "done",
+    "submitted": true
+  },
+  {
+    "created": "2019-05-21T14:19:43.508275+00:00",
+    "modified": "2023-10-09T09:05:01.541706+00:00",
+    "id": 3082464,
+    "conceptrecid": "3082463",
+    "doi": "10.5281/zenodo.3082464",
+    "conceptdoi": "10.5281/zenodo.3082463",
+    "doi_url": "https://doi.org/10.5281/zenodo.3082464",
+    "metadata": {
+      "title": "OpenITI: a Machine-Readable Corpus of Islamicate Texts",
+      "doi": "10.5281/zenodo.3082464",
+      "publication_date": "2019-05-20",
+      "description": "<p><strong>Co-PIs</strong>: Matthew Thomas Miller (University of Maryland, College Park), Maxim G. Romanov (University of Vienna), Sarah Bowen Savant (Aga Khan University&mdash;ISMC, London).</p>\n\n<p><em>Open Islamicate Texts Initiative</em> (<strong>OpenITI</strong>, see <a href=\"https://openiti.github.io/\">https://openiti.github.io/</a>) is a multi-institutional effort to construct the first machine-actionable scholarly corpus of premodern Islamicate texts. Led by researchers at the Aga Khan University, Institute for the Study of Muslim Civilisations (AKU-ISMC), University of Vienna (UV), Leipzig University (LU), and the Roshan Institute for Persian Studies at the University of Maryland (College Park) and an interdisciplinary advisory board of leading digital humanists and Islamic, Persian, and Arabic studies scholars, <strong>OpenITI</strong> aims to provide the essential textual infrastructure in Arabic, Persian and other Islamicate languages for new forms of textual analysis and digital scholarship. In the process, OpenITI will enable new synergies between Digital Humanities and the inter-related Islamicate fields of Islamic, Persian, and Arabic Studies. In addition to support from the researchers&rsquo; home institutions, it is supported by funding from the <a href=\"https://erc.europa.eu/\">European Research Council</a> under the European Union&rsquo;s Horizon 2020 research and innovation programme, awarded to the <a href=\"http://kitab-project.org/\">KITAB</a> project (Grant Agreement No. 772989, PI Sarah Bowen Savant) and the <a href=\"https://www.qnl.qa/en\">Qatar National Library</a>.</p>\n\n<p>Currently, <strong>OpenITI</strong> contains almost exclusively Arabic texts, which were first assembled into a corpus within the <strong>OpenArabic</strong> project, developed first at Tufts University (at <em>The Perseus Project</em>, 2013&ndash;2015) and then at Leipzig University (at the Alexander von Humboldt Chair for Digital Humanities, 2015&ndash;2017)&mdash;in both cases with the support and under the patronage of Prof. Gregory Crane. The much more limited number of Persian texts were compiled during 2015&ndash;2016 in the Persian Digital Library (PDL) pilot (see <a href=\"https://persdigumd.github.io/PDL/\">Persian Digital Library by PersDigUMD</a>) at Roshan Institute for Persian Studies at the University of Maryland. These texts have not been made fully compatible with OpenITI mARkdown yet and will be made fully available in next releases.</p>\n\n<p><strong>Note on Release Numbering</strong>: Version <strong>2019.1.1</strong>&mdash;where <strong>2019</strong> is the year of the release, the first dotted number&mdash;<strong>.1</strong>&mdash;is the ordinal release number in 2019, and the second dotted number&mdash;<strong>.1</strong>&mdash;is the overall release number; the first dotted number will reset every year, while the second one will continue on increasing.</p>\n\n<p>For more details: <a href=\"https://github.com/OpenITI/RELEASE\">https://github.com/OpenITI/RELEASE</a></p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>",
+      "access_right": "open",
+      "creators": [
+        {
+          "name": "Maxim Romanov",
+          "affiliation": "University of Vienna"
+        },
+        {
+          "name": "Masoumeh Seydi",
+          "affiliation": "University of Leipzig"
+        }
+      ],
+      "keywords": [
+        "Arabic; Classical Arabic; Corpus"
+      ],
+      "related_identifiers": [
+        {
+          "identifier": "https://github.com/OpenITI/RELEASE/tree/v2019.1.1",
+          "relation": "isSupplementTo",
+          "scheme": "url"
+        }
+      ],
+      "version": "2019.1.1",
+      "resource_type": {
+        "title": "Dataset",
+        "type": "dataset"
+      },
+      "license": {
+        "id": "cc-by-nc-sa-4.0"
+      },
+      "communities": [
+        {
+          "id": "eu"
+        }
+      ],
+      "relations": {
+        "version": [
+          {
+            "index": 0,
+            "is_last": false,
+            "parent": {
+              "pid_type": "recid",
+              "pid_value": "3082463"
+            }
+          }
+        ]
+      }
+    },
+    "title": "OpenITI: a Machine-Readable Corpus of Islamicate Texts",
+    "links": {
+      "self": "https://zenodo.org/api/records/3082464",
+      "self_html": "https://zenodo.org/records/3082464",
+      "preview_html": "https://zenodo.org/records/3082464?preview=1",
+      "doi": "https://doi.org/10.5281/zenodo.3082464",
+      "self_doi": "https://doi.org/10.5281/zenodo.3082464",
+      "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.3082464",
+      "reserve_doi": "https://zenodo.org/api/records/3082464/draft/pids/doi",
+      "parent": "https://zenodo.org/api/records/3082463",
+      "parent_html": "https://zenodo.org/records/3082463",
+      "parent_doi": "https://doi.org/10.5281/zenodo.3082463",
+      "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.3082463",
+      "self_iiif_manifest": "https://zenodo.org/api/iiif/record:3082464/manifest",
+      "self_iiif_sequence": "https://zenodo.org/api/iiif/record:3082464/sequence/default",
+      "files": "https://zenodo.org/api/records/3082464/files",
+      "media_files": "https://zenodo.org/api/records/3082464/media-files",
+      "archive": "https://zenodo.org/api/records/3082464/files-archive",
+      "archive_media": "https://zenodo.org/api/records/3082464/media-files-archive",
+      "latest": "https://zenodo.org/api/records/3082464/versions/latest",
+      "latest_html": "https://zenodo.org/records/3082464/latest",
+      "versions": "https://zenodo.org/api/records/3082464/versions",
+      "draft": "https://zenodo.org/api/records/3082464/draft",
+      "access_links": "https://zenodo.org/api/records/3082464/access/links",
+      "access_grants": "https://zenodo.org/api/records/3082464/access/grants",
+      "access_users": "https://zenodo.org/api/records/3082464/access/users",
+      "access_request": "https://zenodo.org/api/records/3082464/access/request",
+      "access": "https://zenodo.org/api/records/3082464/access",
+      "communities": "https://zenodo.org/api/records/3082464/communities",
+      "communities-suggestions": "https://zenodo.org/api/records/3082464/communities-suggestions",
+      "request_deletion": "https://zenodo.org/api/records/3082464/request-deletion",
+      "file_modification": "https://zenodo.org/api/records/3082464/file-modification",
+      "quota_increase": "https://zenodo.org/api/records/3082464/quota-increase",
+      "requests": "https://zenodo.org/api/records/3082464/requests"
+    },
+    "updated": "2023-10-09T09:05:01.541706+00:00",
+    "recid": "3082464",
+    "revision": 34,
+    "files": [
+      {
+        "id": "49a0ba3c-f8f5-44c7-9b8d-5a4e548b6062",
+        "key": "OpenITI/RELEASE-v2019.1.1.zip",
+        "size": 4137549017,
+        "checksum": "md5:8215dace13290a80509f83371b7631c5",
+        "links": {
+          "self": "https://zenodo.org/api/records/3082464/files/OpenITI/RELEASE-v2019.1.1.zip/content"
+        }
+      }
+    ],
+    "swh": null,
+    "owners": [
+      {
+        "id": "62646"
+      }
+    ],
+    "status": "published",
+    "stats": {
+      "downloads": 6850,
+      "unique_downloads": 4493,
+      "views": 20748,
+      "unique_views": 18883,
+      "version_downloads": 1727,
+      "version_unique_downloads": 551,
+      "version_unique_views": 4469,
+      "version_views": 4920
+    },
+    "state": "done",
+    "submitted": true
+  }
+]
