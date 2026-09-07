@@ -23,6 +23,7 @@ import sys
 import time
 
 ALL_LANGUAGES = ["ARA", "PER", "URD"]
+_HERE = os.path.dirname(os.path.abspath(__file__))
 
 def download_file(url, dest_path, chunk_size=1024 * 1024, 
                   expected_size=None, max_retries=10, timeout=60):
@@ -276,7 +277,8 @@ def unzip_via_temp(zip_fp, dest_folder, remove_zip=True):
         print(f"Removed {zip_fn}.")
     
 
-def from_zenodo(release_no, dest_folder, unzip=True, remove_zip=True):
+def from_zenodo(release_no, dest_folder, primary_only=True,
+                unzip=True, remove_zip=True):
     """Download a specific release of OpenITI from Zenodo
     and save it to the destination folder.
 
@@ -285,6 +287,10 @@ def from_zenodo(release_no, dest_folder, unzip=True, remove_zip=True):
             (e.g., "2025.1.9" or 9).
         dest_folder (str): The folder where the downloaded files will be saved.
             A subfolder named {release_no} will be created in this folder.
+        primary_only (bool): the OpenITI corpus contains multiple versions
+            for some texts. With primary_only=True, the release with
+            only one version (the primary version) of each text
+            will be downloaded. 
         unzip (bool): Whether to unzip the downloaded files. Defaults to True.
         remove_zip (bool): Whether to remove the zip files
             after successful unzipping. Defaults to True.
@@ -303,23 +309,59 @@ def from_zenodo(release_no, dest_folder, unzip=True, remove_zip=True):
         resp.raise_for_status()
         return resp.json()["hits"]["hits"]
 
-    def find_version(versions, release_number, retried=False):
-        if len(str(release_number)) > 3:
-            release_number = release_number.replace("v", "")
-            for record in versions:
-                if record.get("metadata", {}).get("version") == release_number:
-                    return record
-        else:
-            for record in versions:
-                if record.get("metadata", {}).get("version", "").split(".")[-1] == str(release_number):
-                    return record
+    def find_version(versions, release_number,
+                     primary_only=True, retried=False):
+        """Return metadata for the requested version.
+        If it is not found, updated metadata for all releases
+        will be downloaded from the API once (retried=False).
+        If the primary_only release is not found, even
+        after updated metadata was downloaded,
+        the full release version metadata of the requested version
+        will be downloaded.
 
-        # if the release number was not found, check for new releases via the Zenodo API:
+        Args:
+            versions (list): list of version metadata dictionaries,
+                downloaded from the Zenodo API (or from the local copy)
+            release_number (str or int): OpenITI release number (YYYY.N.N or N)
+            primary_only (bool): whether the release with only one primary
+                version of each text should be downloaded, or the release
+                with all versions of each text
+            retried (bool): whether updated version metadata from the
+                API has already been downloaded.
+
+        Returns:
+            tuple (dict, bool)
+        """
+        release_number = str(release_number).replace("v", "")
+        
+        for record in versions:
+            no = record.get("metadata", {}).get("version", "")
+            if len(release_number) <= 3:
+                no = no.split(".")[-1]
+            if no == release_number:
+                return record, primary_only
+
+        # if the release number was not found,
+        # check for new releases via the Zenodo API:
+        if primary_only:
+            first_id = "7764026"
+        else:
+            first_id = "3082464"
         if not retried:
+            print("Release version not found in cached release metadata")
+            print("=> Downloading updated release metadata from the Zenodo API.")
             API_BASE = "https://zenodo.org/api/records"
-            V2019_ID = "3082464"
-            all_versions_from_api = get_all_versions_meta(API_BASE, V2019_ID)
-            return find_version(all_versions_from_api, release_number, retried=True)
+            all_versions_from_api = get_all_versions_meta(API_BASE, first_id)
+            return find_version(all_versions_from_api, release_number,
+                                primary_only=primary_only, retried=True)
+        elif primary_only:
+            print("Release with only primary texts not found")
+            print("=> Downloading release with all texts.")
+            json_fp = os.path.join(_HERE, "zenodo_releases.json")
+            with open(json_fp, "r", encoding="utf-8") as file:
+                versions = json.load(file)
+            return find_version(versions, release_number,
+                                primary_only=False, retried=False)
         else:
             available = [r.get("metadata", {}).get("version") for r in versions]
             raise ValueError(
@@ -328,29 +370,42 @@ def from_zenodo(release_no, dest_folder, unzip=True, remove_zip=True):
 
     def normalize_filename(filename):
         # Remove any OpenITI/RELEASE prefixes:
-        filename = re.sub(r"OpenITI[/\-_]|RELEASE[/\-_]", "", filename)
+        filename = re.sub(r"OpenITI[-_/]|RELEASE[-_/]", "", filename)
 
-        # remove the release_number from the filename; it will be part of the path:
+        # remove the release_number from the filename;
+        # it will be part of the path:
         filename = re.sub(r"[-_]?v?"+release_number, "", filename)
+        short_release_no = release_number.split(".")[-1]
+        filename = re.sub(r"[-_]?v?"+short_release_no, "", filename)
+
+        # remove the pri suffix:
+        filename = re.sub(r"[-_]?pri[-_]?", "", filename)
+
             
         return filename
         
     # load Zenodo release metadata:
-    _HERE = os.path.dirname(os.path.abspath(__file__))
-    json_fp = os.path.join(_HERE, "zenodo_releases.json")
+    if primary_only:
+        json_fn = "zenodo_releases_pri.json"
+    else:
+        json_fn = "zenodo_releases.json"   
+    json_fp = os.path.join(_HERE, json_fn)
     import json
     with open(json_fp, "r", encoding="utf-8") as file:
         versions = json.load(file)
 
     # find the requested release:
     print("Finding the URL for the release on Zenodo...")
-    record = find_version(versions, release_no)
+    record, primary_only = find_version(versions, release_no,
+                                        primary_only=primary_only)
     release_number = record.get("metadata", {}).get("version").replace("v", "")
     print(f"Found release {release_number} -> record id {record['id']}")
 
     # prepare outfolder:
     if release_number not in dest_folder:
         dest_folder = os.path.join(dest_folder, release_number)
+        if primary_only:
+            dest_folder += "_pri"
     os.makedirs(dest_folder, exist_ok=True)
 
     # download all files in the release:

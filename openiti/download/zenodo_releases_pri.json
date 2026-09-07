@@ -1,0 +1,488 @@
+[
+    {
+    "created": "2026-02-12T09:36:21.169184+00:00",
+    "modified": "2026-06-09T14:56:36.654604+00:00",
+    "id": 18613982,
+    "conceptrecid": "7764025",
+    "doi": "10.5281/zenodo.18613982",
+    "conceptdoi": "10.5281/zenodo.7764025",
+    "doi_url": "https://doi.org/10.5281/zenodo.18613982",
+    "metadata": {
+        "title": "OpenITI: a Machine-Readable Corpus of Islamicate Texts; Primary Version",
+        "doi": "10.5281/zenodo.18613982",
+        "publication_date": "2026-02-12",
+        "description": "\u003Cp\u003EThis is a partial release of the data in the \u003Ca href=\"https://doi.org/10.5281/zenodo.3082463\"\u003EOpenITI corpus\u003C/a\u003E. Whereas the main release of the corpus often contains multiple digital versions of the same text, this release contains a single digital version for each text in the corpus (the version marked as \"primary\" (PRI) in the corpus metadata).\u003C/p\u003E\n\u003Cp\u003EThe version numbers corresponds to the versions of the main releases.\u003C/p\u003E\n\u003Cp\u003E&nbsp;\u003C/p\u003E\n\u003Cp\u003E&nbsp;\u003C/p\u003E",
+        "access_right": "open",
+        "creators": [
+        {
+            "name": "Nigst, Lorenz",
+            "affiliation": "The Aga Khan University (International) in the United Kingdom"
+        },
+        {
+            "name": "Romanov, Maxim",
+            "affiliation": "University of Hamburg"
+        },
+        {
+            "name": "Savant, Sarah Bowen",
+            "affiliation": "The Aga Khan University (International) in the United Kingdom"
+        },
+        {
+            "name": "Seydi, Masoumeh",
+            "affiliation": "The Aga Khan University (International) in the United Kingdom"
+        },
+        {
+            "name": "Verkinderen, Peter",
+            "affiliation": "The Aga Khan University (International) in the United Kingdom"
+        }
+        ],
+        "keywords": [
+        "Arabic; Classical Arabic; Corpus"
+        ],
+        "related_identifiers": [
+        {
+            "identifier": "10.5281/zenodo.7687795",
+            "relation": "isPartOf",
+            "scheme": "doi"
+        }
+        ],
+        "version": "2025.1.9",
+        "resource_type": {
+        "title": "Dataset",
+        "type": "dataset"
+        },
+        "license": {
+        "id": "cc-by-nc-sa-4.0"
+        },
+        "grants": [
+        {
+            "code": "772989",
+            "internal_id": "10.13039/501100000780::772989",
+            "funder": {
+            "name": "European Commission",
+            "doi": "10.13039/501100000780",
+            "acronym": "EC"
+            },
+            "title": "Exploring Cultural Memory in the Pre-Modern Islamic World (700–1500):\nKnowledge, Information Technology, and the Arabic Book",
+            "acronym": "KITAB",
+            "program": "H2020-EU.1.1.",
+            "url": "https://cordis.europa.eu/projects/772989"
+        }
+        ],
+        "communities": [
+        {
+            "id": "eu"
+        }
+        ],
+        "relations": {
+        "version": [
+            {
+            "index": 2,
+            "is_last": true,
+            "parent": {
+                "pid_type": "recid",
+                "pid_value": "7764025"
+            }
+            }
+        ]
+        }
+    },
+    "title": "OpenITI: a Machine-Readable Corpus of Islamicate Texts; Primary Version",
+    "links": {
+        "self": "https://zenodo.org/api/records/18613982",
+        "self_html": "https://zenodo.org/records/18613982",
+        "preview_html": "https://zenodo.org/records/18613982?preview=1",
+        "doi": "https://doi.org/10.5281/zenodo.18613982",
+        "self_doi": "https://doi.org/10.5281/zenodo.18613982",
+        "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.18613982",
+        "reserve_doi": "https://zenodo.org/api/records/18613982/draft/pids/doi",
+        "parent": "https://zenodo.org/api/records/7764025",
+        "parent_html": "https://zenodo.org/records/7764025",
+        "parent_doi": "https://doi.org/10.5281/zenodo.7764025",
+        "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.7764025",
+        "self_iiif_manifest": "https://zenodo.org/api/iiif/record:18613982/manifest",
+        "self_iiif_sequence": "https://zenodo.org/api/iiif/record:18613982/sequence/default",
+        "files": "https://zenodo.org/api/records/18613982/files",
+        "media_files": "https://zenodo.org/api/records/18613982/media-files",
+        "archive": "https://zenodo.org/api/records/18613982/files-archive",
+        "archive_media": "https://zenodo.org/api/records/18613982/media-files-archive",
+        "latest": "https://zenodo.org/api/records/18613982/versions/latest",
+        "latest_html": "https://zenodo.org/records/18613982/latest",
+        "versions": "https://zenodo.org/api/records/18613982/versions",
+        "draft": "https://zenodo.org/api/records/18613982/draft",
+        "access_links": "https://zenodo.org/api/records/18613982/access/links",
+        "access_grants": "https://zenodo.org/api/records/18613982/access/grants",
+        "access_users": "https://zenodo.org/api/records/18613982/access/users",
+        "access_request": "https://zenodo.org/api/records/18613982/access/request",
+        "access": "https://zenodo.org/api/records/18613982/access",
+        "communities": "https://zenodo.org/api/records/18613982/communities",
+        "communities-suggestions": "https://zenodo.org/api/records/18613982/communities-suggestions",
+        "request_deletion": "https://zenodo.org/api/records/18613982/request-deletion",
+        "file_modification": "https://zenodo.org/api/records/18613982/file-modification",
+        "quota_increase": "https://zenodo.org/api/records/18613982/quota-increase",
+        "requests": "https://zenodo.org/api/records/18613982/requests"
+    },
+    "updated": "2026-06-09T14:56:36.654604+00:00",
+    "recid": "18613982",
+    "revision": 6,
+    "files": [
+        {
+        "id": "29f71929-2d82-4722-9558-09b587782afc",
+        "key": "OpenITI-pri-data_v9.zip",
+        "size": 2861555297,
+        "checksum": "md5:67e93d2669ac9e78204bbe4200748749",
+        "links": {
+            "self": "https://zenodo.org/api/records/18613982/files/OpenITI-pri-data_v9.zip/content"
+        }
+        },
+        {
+        "id": "7d08d830-a544-4da9-9b55-c64713f7489f",
+        "key": "OpenITI_metadata_2025-1-9_pri.tsv",
+        "size": 7012606,
+        "checksum": "md5:b786907514b438a5a27558f521c312a1",
+        "links": {
+            "self": "https://zenodo.org/api/records/18613982/files/OpenITI_metadata_2025-1-9_pri.tsv/content"
+        }
+        }
+    ],
+    "swh": null,
+    "owners": [
+        {
+        "id": "62646"
+        }
+    ],
+    "status": "published",
+    "stats": {
+        "downloads": 616,
+        "unique_downloads": 520,
+        "views": 1454,
+        "unique_views": 1372,
+        "version_downloads": 210,
+        "version_unique_downloads": 149,
+        "version_unique_views": 392,
+        "version_views": 415
+    },
+    "state": "done",
+    "submitted": true
+    },
+    {
+    "created": "2023-10-19T20:22:36.856998+00:00",
+    "modified": "2023-10-19T20:22:37.136950+00:00",
+    "id": 10021513,
+    "conceptrecid": "7764025",
+    "doi": "10.5281/zenodo.10021513",
+    "conceptdoi": "10.5281/zenodo.7764025",
+    "doi_url": "https://doi.org/10.5281/zenodo.10021513",
+    "metadata": {
+        "title": "OpenITI: a Machine-Readable Corpus of Islamicate Texts; Primary Version",
+        "doi": "10.5281/zenodo.10021513",
+        "publication_date": "2023-10-18",
+        "description": "\u003Cp\u003EThis is a partial release of the data in the \u003Ca href=\"https://doi.org/10.5281/zenodo.3082463\"\u003EOpenITI corpus\u003C/a\u003E. Whereas the main release of the corpus often contains multiple digital versions of the same text, this release contains a single digital version for each text in the corpus (the version marked as &quot;primary&quot; (PRI) in the corpus metadata).\u003C/p\u003E\n\n\u003Cp\u003EThe version numbers corresponds to the versions of the main releases.\u003C/p\u003E\n\n\u003Cp\u003E&nbsp;\u003C/p\u003E\n\n\u003Cp\u003E&nbsp;\u003C/p\u003E",
+        "access_right": "open",
+        "creators": [
+        {
+            "name": "Nigst, Lorenz",
+            "affiliation": "Aga Khan University"
+        },
+        {
+            "name": "Romanov, Maxim",
+            "affiliation": "University of Hamburg"
+        },
+        {
+            "name": "Savant, Sarah Bowen",
+            "affiliation": "Aga Khan University"
+        },
+        {
+            "name": "Seydi, Masoumeh",
+            "affiliation": "Aga Khan University"
+        },
+        {
+            "name": "Verkinderen, Peter",
+            "affiliation": "Aga Khan University"
+        }
+        ],
+        "keywords": [
+        "Arabic; Classical Arabic; Corpus"
+        ],
+        "related_identifiers": [
+        {
+            "identifier": "10.5281/zenodo.7687795",
+            "relation": "isPartOf",
+            "scheme": "doi"
+        }
+        ],
+        "version": "2023.1.8",
+        "resource_type": {
+        "title": "Dataset",
+        "type": "dataset"
+        },
+        "license": {
+        "id": "cc-by-nc-sa-4.0"
+        },
+        "grants": [
+        {
+            "code": "772989",
+            "internal_id": "10.13039/501100000780::772989",
+            "funder": {
+            "name": "European Commission",
+            "doi": "10.13039/501100000780",
+            "acronym": "EC"
+            },
+            "title": "Exploring Cultural Memory in the Pre-Modern Islamic World (700–1500):\nKnowledge, Information Technology, and the Arabic Book",
+            "acronym": "KITAB",
+            "program": "H2020-EU.1.1.",
+            "url": "https://cordis.europa.eu/projects/772989"
+        }
+        ],
+        "communities": [
+        {
+            "id": "eu"
+        }
+        ],
+        "relations": {
+        "version": [
+            {
+            "index": 1,
+            "is_last": false,
+            "parent": {
+                "pid_type": "recid",
+                "pid_value": "7764025"
+            }
+            }
+        ]
+        }
+    },
+    "title": "OpenITI: a Machine-Readable Corpus of Islamicate Texts; Primary Version",
+    "links": {
+        "self": "https://zenodo.org/api/records/10021513",
+        "self_html": "https://zenodo.org/records/10021513",
+        "preview_html": "https://zenodo.org/records/10021513?preview=1",
+        "doi": "https://doi.org/10.5281/zenodo.10021513",
+        "self_doi": "https://doi.org/10.5281/zenodo.10021513",
+        "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.10021513",
+        "reserve_doi": "https://zenodo.org/api/records/10021513/draft/pids/doi",
+        "parent": "https://zenodo.org/api/records/7764025",
+        "parent_html": "https://zenodo.org/records/7764025",
+        "parent_doi": "https://doi.org/10.5281/zenodo.7764025",
+        "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.7764025",
+        "self_iiif_manifest": "https://zenodo.org/api/iiif/record:10021513/manifest",
+        "self_iiif_sequence": "https://zenodo.org/api/iiif/record:10021513/sequence/default",
+        "files": "https://zenodo.org/api/records/10021513/files",
+        "media_files": "https://zenodo.org/api/records/10021513/media-files",
+        "archive": "https://zenodo.org/api/records/10021513/files-archive",
+        "archive_media": "https://zenodo.org/api/records/10021513/media-files-archive",
+        "latest": "https://zenodo.org/api/records/10021513/versions/latest",
+        "latest_html": "https://zenodo.org/records/10021513/latest",
+        "versions": "https://zenodo.org/api/records/10021513/versions",
+        "draft": "https://zenodo.org/api/records/10021513/draft",
+        "access_links": "https://zenodo.org/api/records/10021513/access/links",
+        "access_grants": "https://zenodo.org/api/records/10021513/access/grants",
+        "access_users": "https://zenodo.org/api/records/10021513/access/users",
+        "access_request": "https://zenodo.org/api/records/10021513/access/request",
+        "access": "https://zenodo.org/api/records/10021513/access",
+        "communities": "https://zenodo.org/api/records/10021513/communities",
+        "communities-suggestions": "https://zenodo.org/api/records/10021513/communities-suggestions",
+        "request_deletion": "https://zenodo.org/api/records/10021513/request-deletion",
+        "file_modification": "https://zenodo.org/api/records/10021513/file-modification",
+        "quota_increase": "https://zenodo.org/api/records/10021513/quota-increase",
+        "requests": "https://zenodo.org/api/records/10021513/requests"
+    },
+    "updated": "2023-10-19T20:22:37.136950+00:00",
+    "recid": "10021513",
+    "revision": 4,
+    "files": [
+        {
+        "id": "648ae119-2b34-4ecc-9094-4a8f72beec3a",
+        "key": "OpenITI-pri-data_v8.zip",
+        "size": 2721798420,
+        "checksum": "md5:abec36b55ed2bed99bd9c31e3abd544c",
+        "links": {
+            "self": "https://zenodo.org/api/records/10021513/files/OpenITI-pri-data_v8.zip/content"
+        }
+        },
+        {
+        "id": "928ca2fc-e648-4af6-9811-c06e8f1914ea",
+        "key": "OpenITI_metadata_2023-1-8_pri.csv",
+        "size": 6774882,
+        "checksum": "md5:4a38da90fa42bdeb97f0d9de2eac5555",
+        "links": {
+            "self": "https://zenodo.org/api/records/10021513/files/OpenITI_metadata_2023-1-8_pri.csv/content"
+        }
+        }
+    ],
+    "swh": null,
+    "owners": [
+        {
+        "id": "62646"
+        }
+    ],
+    "status": "published",
+    "stats": {
+        "downloads": 616,
+        "unique_downloads": 520,
+        "views": 1454,
+        "unique_views": 1372,
+        "version_downloads": 341,
+        "version_unique_downloads": 307,
+        "version_unique_views": 745,
+        "version_views": 787
+    },
+    "state": "done",
+    "submitted": true
+    },
+    {
+    "created": "2023-03-23T15:00:38.850051+00:00",
+    "modified": "2023-03-24T02:26:38.596698+00:00",
+    "id": 7764026,
+    "conceptrecid": "7764025",
+    "doi": "10.5281/zenodo.7764026",
+    "conceptdoi": "10.5281/zenodo.7764025",
+    "doi_url": "https://doi.org/10.5281/zenodo.7764026",
+    "metadata": {
+        "title": "OpenITI: a Machine-Readable Corpus of Islamicate Texts; Primary Version",
+        "doi": "10.5281/zenodo.7764026",
+        "publication_date": "2023-03-23",
+        "description": "\u003Cp\u003EThis is a partial release of the data in the \u003Ca href=\"https://doi.org/10.5281/zenodo.3082463\"\u003EOpenITI corpus\u003C/a\u003E. Whereas the main release of the corpus often contains multiple digital versions of the same text, this release contains a single digital version for each text in the corpus (the version marked as &quot;primary&quot; (PRI) in the corpus metadata).\u003C/p\u003E\n\n\u003Cp\u003EThe version numbers corresponds to the versions of the main releases.\u003C/p\u003E\n\n\u003Cp\u003E&nbsp;\u003C/p\u003E\n\n\u003Cp\u003E&nbsp;\u003C/p\u003E",
+        "access_right": "open",
+        "creators": [
+        {
+            "name": "Nigst, Lorenz",
+            "affiliation": "Aga Khan University"
+        },
+        {
+            "name": "Romanov, Maxim",
+            "affiliation": "University of Hamburg"
+        },
+        {
+            "name": "Savant, Sarah Bowen",
+            "affiliation": "Aga Khan University"
+        },
+        {
+            "name": "Seydi, Masoumeh",
+            "affiliation": "Aga Khan University"
+        },
+        {
+            "name": "Verkinderen, Peter",
+            "affiliation": "Aga Khan University"
+        }
+        ],
+        "keywords": [
+        "Arabic; Classical Arabic; Corpus"
+        ],
+        "related_identifiers": [
+        {
+            "identifier": "10.5281/zenodo.7687795",
+            "relation": "isPartOf",
+            "scheme": "doi"
+        }
+        ],
+        "version": "2022.2.7",
+        "resource_type": {
+        "title": "Dataset",
+        "type": "dataset"
+        },
+        "license": {
+        "id": "cc-by-nc-sa-4.0"
+        },
+        "grants": [
+        {
+            "code": "772989",
+            "internal_id": "10.13039/501100000780::772989",
+            "funder": {
+            "name": "European Commission",
+            "doi": "10.13039/501100000780",
+            "acronym": "EC"
+            },
+            "title": "Exploring Cultural Memory in the Pre-Modern Islamic World (700–1500):\nKnowledge, Information Technology, and the Arabic Book",
+            "acronym": "KITAB",
+            "program": "H2020-EU.1.1.",
+            "url": "https://cordis.europa.eu/projects/772989"
+        }
+        ],
+        "communities": [
+        {
+            "id": "eu"
+        }
+        ],
+        "relations": {
+        "version": [
+            {
+            "index": 0,
+            "is_last": false,
+            "parent": {
+                "pid_type": "recid",
+                "pid_value": "7764025"
+            }
+            }
+        ]
+        }
+    },
+    "title": "OpenITI: a Machine-Readable Corpus of Islamicate Texts; Primary Version",
+    "links": {
+        "self": "https://zenodo.org/api/records/7764026",
+        "self_html": "https://zenodo.org/records/7764026",
+        "preview_html": "https://zenodo.org/records/7764026?preview=1",
+        "doi": "https://doi.org/10.5281/zenodo.7764026",
+        "self_doi": "https://doi.org/10.5281/zenodo.7764026",
+        "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.7764026",
+        "reserve_doi": "https://zenodo.org/api/records/7764026/draft/pids/doi",
+        "parent": "https://zenodo.org/api/records/7764025",
+        "parent_html": "https://zenodo.org/records/7764025",
+        "parent_doi": "https://doi.org/10.5281/zenodo.7764025",
+        "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.7764025",
+        "self_iiif_manifest": "https://zenodo.org/api/iiif/record:7764026/manifest",
+        "self_iiif_sequence": "https://zenodo.org/api/iiif/record:7764026/sequence/default",
+        "files": "https://zenodo.org/api/records/7764026/files",
+        "media_files": "https://zenodo.org/api/records/7764026/media-files",
+        "archive": "https://zenodo.org/api/records/7764026/files-archive",
+        "archive_media": "https://zenodo.org/api/records/7764026/media-files-archive",
+        "latest": "https://zenodo.org/api/records/7764026/versions/latest",
+        "latest_html": "https://zenodo.org/records/7764026/latest",
+        "versions": "https://zenodo.org/api/records/7764026/versions",
+        "draft": "https://zenodo.org/api/records/7764026/draft",
+        "access_links": "https://zenodo.org/api/records/7764026/access/links",
+        "access_grants": "https://zenodo.org/api/records/7764026/access/grants",
+        "access_users": "https://zenodo.org/api/records/7764026/access/users",
+        "access_request": "https://zenodo.org/api/records/7764026/access/request",
+        "access": "https://zenodo.org/api/records/7764026/access",
+        "communities": "https://zenodo.org/api/records/7764026/communities",
+        "communities-suggestions": "https://zenodo.org/api/records/7764026/communities-suggestions",
+        "request_deletion": "https://zenodo.org/api/records/7764026/request-deletion",
+        "file_modification": "https://zenodo.org/api/records/7764026/file-modification",
+        "quota_increase": "https://zenodo.org/api/records/7764026/quota-increase",
+        "requests": "https://zenodo.org/api/records/7764026/requests"
+    },
+    "updated": "2023-03-24T02:26:38.596698+00:00",
+    "recid": "7764026",
+    "revision": 5,
+    "files": [
+        {
+        "id": "8b2be3cd-5907-4cc3-95f2-aaabee0cd91c",
+        "key": "OpenITI-pri-data_v7.zip",
+        "size": 2771572200,
+        "checksum": "md5:c6ca0c04f511a197c9403788848d8f53",
+        "links": {
+            "self": "https://zenodo.org/api/records/7764026/files/OpenITI-pri-data_v7.zip/content"
+        }
+        }
+    ],
+    "swh": null,
+    "owners": [
+        {
+        "id": "62646"
+        }
+    ],
+    "status": "published",
+    "stats": {
+        "downloads": 616,
+        "unique_downloads": 520,
+        "views": 1454,
+        "unique_views": 1372,
+        "version_downloads": 65,
+        "version_unique_downloads": 64,
+        "version_unique_views": 234,
+        "version_views": 251
+    },
+    "state": "done",
+    "submitted": true
+    }
+]
