@@ -128,7 +128,7 @@ noise = re.compile(""" ّ    | # Tashdīd / Shadda
                        ࣱ    | # Quranic Open Ḍammatān
                        ࣲ    | # Quranic Open Kasratān
                        ٰ    | # Dagger Alif
-                       ـ     # Taṭwīl / Kashīda
+                       ـ   | # Taṭwīl / Kashīda
                        ٖ    | # ARABIC SUBSCRIPT ALEF
                        ٗ    | # ARABIC INVERTED DAMMA
                        ۡ    | # ARABIC SMALL HIGH DOTLESS HEAD OF KHAH = Qur'anic sukūn
