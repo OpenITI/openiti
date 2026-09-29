@@ -296,20 +296,41 @@ def count_chars(text, tok_splitter=rgx.tok_splitter, do_not_count=rgx.do_not_cou
                                  do_not_count=do_not_count)
     return n_chars
 
-def text_cleaner(text):
+def text_cleaner(text, new_lines_replacement=" "):
     """Clean text by normalizing Arabic characters \
     and removing all Latin-language characters and non-word characters
 
     Args:
         text (str): the string to be cleaned
+        new_lines_replacement (str): string that replaces each run of
+            new line characters (together with any whitespace and
+            removed characters around it). Runs of spaces in the
+            output, including inside this string, are collapsed to one.
+            Use e.g. " [SEP] " for a separator token, or "\\n"
+            to keep the line breaks. Defaults to a space.
 
     Returns:
         (str): the cleaned string
+
+    Examples:
+        >>> text_cleaner("كتاب\\nباب الصلاة (p. 12)\\n\\n\\nقال")
+        'كتاب باب الصلاة قال'
+        >>> text_cleaner("كتاب\\nباب الصلاة (p. 12)\\n . \\nقال", " [SEP] ")
+        'كتاب [SEP] باب الصلاة [SEP] قال'
+        >>> text_cleaner("كتاب  \\r\\n  باب", "  ")
+        'كتاب باب'
+        >>> text_cleaner("كتاب\\nباب", "\\n")
+        'كتاب\\nباب'
     """
     text = ara.normalize_ara_light(text)
     #text = re.sub(r"\W|\d|[A-z]", " ", text) # until 10/10/2023
     latin_letters = "[" + ara.transcription_chars + "]"
-    text = re.sub(r"\W|\d|"+latin_letters, " ", text)
+    #text = re.sub(r"\W|\d|"+latin_letters, " ", text) # until 29/09/2026
+    # same as \W, but keep new line characters for now:
+    text = re.sub(r"[^\w\n]|\d|"+latin_letters, " ", text)
+    # replace each run of new lines (plus surrounding whitespace)
+    # with the caller's string (using lambda: no backslash/group interpretation):
+    text = re.sub(r"\s*\n\s*", lambda m: new_lines_replacement, text)
     text = re.sub(" +", " ", text)
     return text
 
