@@ -297,7 +297,7 @@ def count_chars(text, tok_splitter=rgx.tok_splitter, do_not_count=rgx.do_not_cou
     return n_chars
 
 def text_cleaner(text, new_lines_replacement=" ", per_to_ara=True,
-                 denoise_text=True, alif_hamza=True):
+                 denoise_text=True, alif_seat=True), alif_maqsura=True, hamza=True:
     """Clean text by normalizing Arabic characters \
     and removing all Latin-language characters and non-word characters, including Latin and Arabic numbers
 
@@ -315,9 +315,12 @@ def text_cleaner(text, new_lines_replacement=" ", per_to_ara=True,
         denoise_text (bool): passed to ara.normalize_ara_light: if True,
             remove vowels, shadda, tatweel and other non-consonantal
             characters before cleaning. Defaults to True.
-        alif_hamza (bool): passed to ara.normalize_ara_light: if True,
-            normalize alif variants, alif maqsura and hamzas on carriers.
-            Defaults to True.
+        alif_seat (bool): passed to ara.normalize_ara_light: if True,
+            replace alif variants with bare alif. Defaults to True
+        alif_maqsura (bool): passed to ara.normalize_ara_light: if True, 
+            replace alif maqsura with ya. Defaults to True
+        hamza (bool): passed to ara.normalize_ara_light: replace hamzas on/after 
+            waw or ya carriers with standalone hamzas. Defaults to True.
 
     Returns:
         (str): the cleaned string
@@ -335,18 +338,21 @@ def text_cleaner(text, new_lines_replacement=" ", per_to_ara=True,
         'كتب الشيخ كتابي'
         >>> text_cleaner("کتابی", per_to_ara=False)
         'کتابی'
-        >>> text_cleaner("أحمد يحيى مقرئ", alif_hamza=False)
+        >>> text_cleaner("أحمد يحيى مقرئ", alif_seat=False, alif_maqsura=False, hamza=False)
         'أحمد يحيى مقرئ'
     """
     text = ara.normalize_ara_light(text, per_to_ara=per_to_ara,
                                    denoise_text=denoise_text,
-                                   alif_hamza=alif_hamza)
+                                   alif_seat=alif_seat,
+                                   alif_maqsura=alif_maqsura,
+                                   hamza=hamza)
     #text = re.sub(r"\W|\d|[A-z]", " ", text) # until 10/10/2023
     latin_letters = "[" + ara.transcription_chars + "]"
     #text = re.sub(r"\W|\d|"+latin_letters, " ", text) # until 29/09/2026
-    # same as \W, but keep new line characters for now:
-    text = re.sub(r"[^\w\n]|\d|"+latin_letters, " ", text)
-    # replace each run of new lines (plus surrounding whitespace)
+    # replace Latin-script letters, numbers, underscores and 
+    # non-alphanumeric characters (except new line characters):
+    text = re.sub(r"[^\w\n]|\d|_|"+latin_letters, " ", text)
+    # separately replace each run of new lines (plus surrounding whitespace)
     # with the caller's string (using lambda: no backslash/group interpretation):
     text = re.sub(r"\s*\n\s*", lambda m: new_lines_replacement, text)
     text = re.sub(" +", " ", text)
