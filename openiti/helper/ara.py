@@ -63,7 +63,7 @@ def normalize_per(text):
         'درباره'
 
     """
-
+    text = normalize_composites(text)
     repl = [
         ('ك', 'ک'),
         ('[أاإٱ]', 'ا'),
@@ -91,13 +91,12 @@ def normalize_per_to_ara(text):
         >>> normalize_per_to_ara("دربارۀ")
         'درباره'
     """
-    repl = [("ک", "ك"), ("ی", "ي"), ("ۀ", "ه"),                # Persian letters
-            ]
+    repl = [("ک", "ك"), ("ی", "ي"), ("ۀ", "ه")]
     return normalize(text, repl)
 
 
 def normalize_ara_light(text, per_to_ara=True, denoise_text=True,
-                        alif_hamza=True):
+                        alif_seat=True, alif_maqsura=True, hamzas=True):
     """Lightly normalize Arabic strings:
     removing vowels and other noise (optional);
     fixing only Alifs, Alif Maqsuras (optional); Persian ya's and kafs (optional);
@@ -111,9 +110,12 @@ def normalize_ara_light(text, per_to_ara=True, denoise_text=True,
         denoise_text (bool): if True, first remove vowels, shadda,
             tatweel and other non-consonantal characters
             (see denoise). Defaults to True.
-        alif_hamza (bool): if True, replace alif variants with bare alif,
-            alif maqsura with ya, and hamzas on carriers with
-            standalone hamzas. Defaults to True.
+        alif_seat (bool): if True, replace alif variants with bare alif.
+            Defaults to True
+        alif_maqsura (bool): if True, replace alif maqsura with ya.
+            Defaults to True
+        hamza: replace hamzas on/after waw or ya carriers with standalone hamzas. 
+            Defaults to True.
 
     Examples:
         >>> normalize_ara_light("ألف الف إلف آلف ٱلف")
@@ -132,18 +134,21 @@ def normalize_ara_light(text, per_to_ara=True, denoise_text=True,
         'كتابي درباره'
         >>> normalize_ara_light("کتابی دربارۀ", per_to_ara=False)
         'کتابی دربارۀ'
-        >>> normalize_ara_light("أحمد يحيى مقرئ", alif_hamza=False)
+        >>> normalize_ara_light("أحمد يحيى مقرئ", alif_seat=False, alif_maqsura=True, hamza=True)
         'أحمد يحيى مقرئ'
         
     """
     if denoise_text:
         text = denoise(text)
     text = normalize_composites(text)
-    if alif_hamza:
-        repl = [("أ", "ا"), ("ٱ", "ا"), ("آ", "ا"), ("إ", "ا"),    # alifs
-                ("ى", "ي"),                                        # alif maqsura
-                ("يء", "ء"), ("ىء", "ء"), ("ؤ", "ء"), ("ئ", "ء"),  # hamzas
-                ]
+    repl = []
+    if alif_seat:
+        repl += [("أ", "ا"), ("ٱ", "ا"), ("آ", "ا"), ("إ", "ا")]
+    if alif_maqsura:
+        repl += [("ى", "ي")]
+    if hamza:
+        repl += [("يء", "ء"), ("ىء", "ء"), ("ؤ", "ء"), ("ئ", "ء")]
+    if repl:
         text = normalize(text, repl)
     if per_to_ara:
         text = normalize_per_to_ara(text)
