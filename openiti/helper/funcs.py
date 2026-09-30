@@ -296,9 +296,10 @@ def count_chars(text, tok_splitter=rgx.tok_splitter, do_not_count=rgx.do_not_cou
                                  do_not_count=do_not_count)
     return n_chars
 
-def text_cleaner(text, new_lines_replacement=" "):
+def text_cleaner(text, new_lines_replacement=" ", per_to_ara=True,
+                 denoise_text=True, alif_hamza=True):
     """Clean text by normalizing Arabic characters \
-    and removing all Latin-language characters and non-word characters
+    and removing all Latin-language characters and non-word characters, including Latin and Arabic numbers
 
     Args:
         text (str): the string to be cleaned
@@ -308,6 +309,15 @@ def text_cleaner(text, new_lines_replacement=" "):
             output, including inside this string, are collapsed to one.
             Use e.g. " [SEP] " for a separator token, or "\\n"
             to keep the line breaks. Defaults to a space.
+        per_to_ara (bool): passed to ara.normalize_ara_light: if True,
+            convert Persian kaf, ya and ha with hamza above to their
+            Arabic equivalents. Defaults to True.
+        denoise_text (bool): passed to ara.normalize_ara_light: if True,
+            remove vowels, shadda, tatweel and other non-consonantal
+            characters before cleaning. Defaults to True.
+        alif_hamza (bool): passed to ara.normalize_ara_light: if True,
+            normalize alif variants, alif maqsura and hamzas on carriers.
+            Defaults to True.
 
     Returns:
         (str): the cleaned string
@@ -321,8 +331,16 @@ def text_cleaner(text, new_lines_replacement=" "):
         'كتاب باب'
         >>> text_cleaner("كتاب\\nباب", "\\n")
         'كتاب\\nباب'
+        >>> text_cleaner("كَتَبَ الشَّيْخُ\\nکتابی")
+        'كتب الشيخ كتابي'
+        >>> text_cleaner("کتابی", per_to_ara=False)
+        'کتابی'
+        >>> text_cleaner("أحمد يحيى مقرئ", alif_hamza=False)
+        'أحمد يحيى مقرئ'
     """
-    text = ara.normalize_ara_light(text)
+    text = ara.normalize_ara_light(text, per_to_ara=per_to_ara,
+                                   denoise_text=denoise_text,
+                                   alif_hamza=alif_hamza)
     #text = re.sub(r"\W|\d|[A-z]", " ", text) # until 10/10/2023
     latin_letters = "[" + ara.transcription_chars + "]"
     #text = re.sub(r"\W|\d|"+latin_letters, " ", text) # until 29/09/2026

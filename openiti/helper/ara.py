@@ -77,13 +77,43 @@ def normalize_per(text):
     return normalize(text, repl)
 
 
-def normalize_ara_light(text):
-    """Lightly normalize Arabic strings:
-    fixing only Alifs, Alif Maqsuras; Persian ya's and kafs;
-    replacing hamzas on carriers with standalone hamzas
+def normalize_per_to_ara(text):
+    """Convert Persian letter forms to their Arabic equivalents:
+    Persian kaf (ک) and ya (ی) to Arabic kaf (ك) and ya (ي),
+    and ha with hamza above (ۀ) to ha (ه)
 
     Args:
         text (str): the string that needs to be normalized
+
+    Examples:
+        >>> normalize_per_to_ara("کتابی")
+        'كتابي'
+        >>> normalize_per_to_ara("دربارۀ")
+        'درباره'
+    """
+    repl = [("ک", "ك"), ("ی", "ي"), ("ۀ", "ه"),                # Persian letters
+            ]
+    return normalize(text, repl)
+
+
+def normalize_ara_light(text, per_to_ara=True, denoise_text=True,
+                        alif_hamza=True):
+    """Lightly normalize Arabic strings:
+    removing vowels and other noise (optional);
+    fixing only Alifs, Alif Maqsuras (optional); Persian ya's and kafs (optional);
+    replacing hamzas on carriers with standalone hamzas (optional)
+
+    Args:
+        text (str): the string that needs to be normalized
+        per_to_ara (bool): if True, convert Persian kaf, ya and
+            ha with hamza above to their Arabic equivalents
+            (see normalize_per_to_ara). Defaults to True.
+        denoise_text (bool): if True, first remove vowels, shadda,
+            tatweel and other non-consonantal characters
+            (see denoise). Defaults to True.
+        alif_hamza (bool): if True, replace alif variants with bare alif,
+            alif maqsura with ya, and hamzas on carriers with
+            standalone hamzas. Defaults to True.
 
     Examples:
         >>> normalize_ara_light("ألف الف إلف آلف ٱلف")
@@ -94,15 +124,30 @@ def normalize_ara_light(text):
         'مقرء فء'
         >>> normalize_ara_light("قهوة")
         'قهوة'
+        >>> normalize_ara_light("شَيْءٌ")
+        'شء'
+        >>> normalize_ara_light("شَيْءٌ", denoise_text=False)
+        'شَيْءٌ'
+        >>> normalize_ara_light("کتابی دربارۀ")
+        'كتابي درباره'
+        >>> normalize_ara_light("کتابی دربارۀ", per_to_ara=False)
+        'کتابی دربارۀ'
+        >>> normalize_ara_light("أحمد يحيى مقرئ", alif_hamza=False)
+        'أحمد يحيى مقرئ'
         
     """
+    if denoise_text:
+        text = denoise(text)
     text = normalize_composites(text)
-    repl = [("أ", "ا"), ("ٱ", "ا"), ("آ", "ا"), ("إ", "ا"),    # alifs
-            ("ى", "ي"),                                        # alif maqsura
-            ("يء", "ء"), ("ىء", "ء"), ("ؤ", "ء"), ("ئ", "ء"),  # hamzas
-            ("ک", "ك"), ("ی", "ي"), ("ۀ", "ه"),                # Persian letters
-            ]
-    return normalize(text, repl)
+    if alif_hamza:
+        repl = [("أ", "ا"), ("ٱ", "ا"), ("آ", "ا"), ("إ", "ا"),    # alifs
+                ("ى", "ي"),                                        # alif maqsura
+                ("يء", "ء"), ("ىء", "ء"), ("ؤ", "ء"), ("ئ", "ء"),  # hamzas
+                ]
+        text = normalize(text, repl)
+    if per_to_ara:
+        text = normalize_per_to_ara(text)
+    return text
     
 
 def normalize_ara_heavy(text):
