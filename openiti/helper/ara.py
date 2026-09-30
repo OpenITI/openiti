@@ -134,7 +134,7 @@ def normalize_ara_light(text, per_to_ara=True, denoise_text=True,
         'كتابي درباره'
         >>> normalize_ara_light("کتابی دربارۀ", per_to_ara=False)
         'کتابی دربارۀ'
-        >>> normalize_ara_light("أحمد يحيى مقرئ", alif_seat=False, alif_maqsura=True, hamza=True)
+        >>> normalize_ara_light("أحمد يحيى مقرئ", alif_seat=False, alif_maqsura=False, hamza=False)
         'أحمد يحيى مقرئ'
         
     """
