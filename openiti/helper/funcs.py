@@ -296,20 +296,66 @@ def count_chars(text, tok_splitter=rgx.tok_splitter, do_not_count=rgx.do_not_cou
                                  do_not_count=do_not_count)
     return n_chars
 
-def text_cleaner(text):
+def text_cleaner(text, new_lines_replacement=" ", per_to_ara=True,
+                 denoise_text=True, alif_seat=True, alif_maqsura=True,
+                 hamza=True):
     """Clean text by normalizing Arabic characters \
-    and removing all Latin-language characters and non-word characters
+    and removing all Latin-language characters and non-word characters, including Latin and Arabic numbers
 
     Args:
         text (str): the string to be cleaned
+        new_lines_replacement (str): string that replaces each run of
+            new line characters (together with any whitespace and
+            removed characters around it). Runs of spaces in the
+            output, including inside this string, are collapsed to one.
+            Use e.g. " [SEP] " for a separator token, or "\\n"
+            to keep the line breaks. Defaults to a space.
+        per_to_ara (bool): passed to ara.normalize_ara_light: if True,
+            convert Persian kaf, ya and ha with hamza above to their
+            Arabic equivalents. Defaults to True.
+        denoise_text (bool): passed to ara.normalize_ara_light: if True,
+            remove vowels, shadda, tatweel and other non-consonantal
+            characters before cleaning. Defaults to True.
+        alif_seat (bool): passed to ara.normalize_ara_light: if True,
+            replace alif variants with bare alif. Defaults to True
+        alif_maqsura (bool): passed to ara.normalize_ara_light: if True, 
+            replace alif maqsura with ya. Defaults to True
+        hamza (bool): passed to ara.normalize_ara_light: replace hamzas on/after 
+            waw or ya carriers with standalone hamzas. Defaults to True.
 
     Returns:
         (str): the cleaned string
+
+    Examples:
+        >>> text_cleaner("كتاب\\nباب الصلاة (p. 12)\\n\\n\\nقال")
+        'كتاب باب الصلاة قال'
+        >>> text_cleaner("كتاب\\nباب الصلاة (p. 12)\\n . \\nقال", " [SEP] ")
+        'كتاب [SEP] باب الصلاة [SEP] قال'
+        >>> text_cleaner("كتاب  \\r\\n  باب", "  ")
+        'كتاب باب'
+        >>> text_cleaner("كتاب\\nباب", "\\n")
+        'كتاب\\nباب'
+        >>> text_cleaner("كَتَبَ الشَّيْخُ\\nکتابی")
+        'كتب الشيخ كتابي'
+        >>> text_cleaner("کتابی", per_to_ara=False)
+        'کتابی'
+        >>> text_cleaner("أحمد يحيى مقرئ", alif_seat=False, alif_maqsura=False, hamza=False)
+        'أحمد يحيى مقرئ'
     """
-    text = ara.normalize_ara_light(text)
+    text = ara.normalize_ara_light(text, per_to_ara=per_to_ara,
+                                   denoise_text=denoise_text,
+                                   alif_seat=alif_seat,
+                                   alif_maqsura=alif_maqsura,
+                                   hamza=hamza)
     #text = re.sub(r"\W|\d|[A-z]", " ", text) # until 10/10/2023
     latin_letters = "[" + ara.transcription_chars + "]"
-    text = re.sub(r"\W|\d|"+latin_letters, " ", text)
+    #text = re.sub(r"\W|\d|"+latin_letters, " ", text) # until 29/09/2026
+    # replace Latin-script letters, numbers, underscores and 
+    # non-alphanumeric characters (except new line characters):
+    text = re.sub(r"[^\w\n]|\d|_|"+latin_letters, " ", text)
+    # separately replace each run of new lines (plus surrounding whitespace)
+    # with the caller's string (using lambda: no backslash/group interpretation):
+    text = re.sub(r"\s*\n\s*", lambda m: new_lines_replacement, text)
     text = re.sub(" +", " ", text)
     return text
 
