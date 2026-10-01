@@ -297,7 +297,8 @@ def count_chars(text, tok_splitter=rgx.tok_splitter, do_not_count=rgx.do_not_cou
     return n_chars
 
 def text_cleaner(text, new_lines_replacement=" ", per_to_ara=True,
-                 denoise_text=True, alif_seat=True), alif_maqsura=True, hamza=True:
+                 denoise_text=True, alif_seat=True, alif_maqsura=True,
+                 hamza=True):
     """Clean text by normalizing Arabic characters \
     and removing all Latin-language characters and non-word characters, including Latin and Arabic numbers
 

@@ -96,7 +96,7 @@ def normalize_per_to_ara(text):
 
 
 def normalize_ara_light(text, per_to_ara=True, denoise_text=True,
-                        alif_seat=True, alif_maqsura=True, hamzas=True):
+                        alif_seat=True, alif_maqsura=True, hamza=True):
     """Lightly normalize Arabic strings:
     removing vowels and other noise (optional);
     fixing only Alifs, Alif Maqsuras (optional); Persian ya's and kafs (optional);
@@ -114,7 +114,8 @@ def normalize_ara_light(text, per_to_ara=True, denoise_text=True,
             Defaults to True
         alif_maqsura (bool): if True, replace alif maqsura with ya.
             Defaults to True
-        hamza: replace hamzas on/after waw or ya carriers with standalone hamzas. 
+        hamza (bool): if True, replace hamzas on/after waw or ya carriers
+            with standalone hamzas.
             Defaults to True.
 
     Examples:
